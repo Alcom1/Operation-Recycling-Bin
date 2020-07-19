@@ -1,0 +1,28 @@
+{
+    "gameObjects" : [
+        {    
+            "name" : "TextDrawer",
+            "params" : 
+            {
+                "zIndex" : 100,
+                "position" : {"x" : 2, "y" : 2},
+                "text" : "This is a text box",
+                "font" : "16pt Consolas",
+                "color" : "white",
+                "centered" : false
+            }
+        },
+        {    
+            "name" : "TextDrawer",
+            "params" : 
+            {
+                "zIndex" : 100,
+                "position" : {"x" : 2, "y" : 3},
+                "text" : "This is also a text box.",
+                "font" : "16pt Consolas",
+                "color" : "white",
+                "centered" : false
+            }
+        }
+    ]
+}
