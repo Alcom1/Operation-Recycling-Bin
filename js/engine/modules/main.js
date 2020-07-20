@@ -86,37 +86,26 @@ engine.main = (function() {
 		scene.draw(ctx);
 	};
 		
-	//Load a scene
+	//start loading a scene
 	function loadScene(sceneName) {
 		
-		var newScene = loadJson(sceneName);
-		
-		scene.clear();
-		scene.init();
+		var xhr = new XMLHttpRequest();
+		xhr.overrideMimeType("application/json");
+		xhr.open('GET', sceneName, true);
+		xhr.onload = loadSceneCallback;
+		xhr.send();
+	};
 
-		newScene.gameObjects.forEach(function(o) {
-			callObject(o.name, o.params || {});
+	//callback function for when scene data is loaded.
+	function loadSceneCallback(e) {
+		scene.clear();	//Clear all existing game objects
+
+		JSON.parse(e.currentTarget.responseText).gameObjects.forEach(function(o) {
+	
+			scene.pushGOinit(new window[o.name](o.params || {}));
 		});
 
 		scene.sortGO();	//Sort all new game objects.
-	};
-
-	//XMLHttpRequest methods
-	function loadJson(fileName) {
-
-		var xhr = new XMLHttpRequest();
-		xhr.overrideMimeType("application/json");
-		xhr.open('GET', fileName, false);
-		xhr.send();
-		return JSON.parse(xhr.responseText);
-	}
-
-	//Instantiate object by name and args.
-	function callObject(name, args) {
-
-		var gameObject = new window[name](args);
-
-		scene.pushGOinit(gameObject);
 	}
 		
 	//Draw filled text

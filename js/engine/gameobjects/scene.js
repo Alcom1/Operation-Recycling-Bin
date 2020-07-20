@@ -5,12 +5,6 @@ var Scene = function() {
 	this.newScene = "";
 }
 
-//Init
-Scene.prototype.init = function() {
-	
-	this.gameObjects.push(new GameObject({ parent : this }));
-}
-
 //Clear
 Scene.prototype.clear = function() {
 	
