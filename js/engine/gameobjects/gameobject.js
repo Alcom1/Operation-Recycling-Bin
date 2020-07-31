@@ -8,8 +8,6 @@ var GameObject = function(args, nextScene) {
 	this.tag = args.tag;
 
 	this.nextScene = nextScene;
-
-    this.parent = args.parent;
 }
 
 //Set a New Scene to load it
@@ -24,16 +22,6 @@ GameObject.prototype.update = function(dt, gPos) {
 
 //Game object draw
 GameObject.prototype.draw = function(ctx) {
-	
-}
-
-//Add a new game object to the current game
-GameObject.prototype.push = function(gameObject) {
-	this.parent.push(gameObject);
-}
-
-//Game object collision
-GameObject.prototype.collide = function(other, pos) {
 	
 }
 
