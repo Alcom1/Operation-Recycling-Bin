@@ -9,7 +9,7 @@ engine.managerTag = (function() {
 	//Init
 	function init()
 	{
-
+        var masterArray = [];
     }
     
     //Push a game object to the master array
@@ -50,19 +50,12 @@ engine.managerTag = (function() {
             gos.tag = gameObject.tag
         }).gameObjects;
     }
-
-    //Clear the current list of game objects
-    function clear()
-    {
-        var masterArray = [];
-    }
     
 	//Return
 	return {
         init : init,
         push : push,
         get : get,
-        clear : clear,
     }
     
 }());

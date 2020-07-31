@@ -17,7 +17,7 @@ GameObject.prototype.update = function(dt, gPos) {
 
 //Set a New Scene to load it
 GameObject.prototype.loadScene = function(newScene) {
-	this.parent.loadScene(newScene);
+	engine.scene.setNextScene(newScene);
 }
 
 //Game object draw

@@ -10,9 +10,7 @@ engine.main = (function() {
 		lastTime = 0, 				// used by calculateDeltaTime() 
 		debug = true,				// debug
 		showCol = false,			// show collisions
-		animationID = 0,			// ID index of the current frame.
-		scene = new Scene(),		// Current scene
-		indexS = -1;				// Index of the current scene
+		animationID = 0 			// ID index of the current frame
 		
 	//Initialization
 	function init(element, sceneName, width, height) {
@@ -49,10 +47,7 @@ engine.main = (function() {
 		ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
 		//Check for and load new scene
-		if(scene.newScene) {
-			loadScene(scene.newScene);
-			scene.newScene = "";
-		}
+		loadScene(engine.scene.getNextScene())
 		
 		//Update
 		update(dt);
@@ -77,18 +72,20 @@ engine.main = (function() {
 	//Update logic
 	function update(dt) {
 		
-		scene.update(dt);
+		engine.scene.update(dt);
 	};
 		
 	//Draw the main scene
 	function draw(ctx) {
 		
-		scene.draw(ctx);
+		engine.scene.draw(ctx);
 	};
 		
 	//start loading a scene
 	function loadScene(sceneName) {
 		
+		if(!sceneName) { return; }
+
 		var xhr = new XMLHttpRequest();
 		xhr.overrideMimeType("application/json");
 		xhr.open('GET', sceneName, true);
@@ -98,16 +95,16 @@ engine.main = (function() {
 
 	//callback function for when scene data is loaded.
 	function loadSceneCallback(e) {
-		scene.clear();	//Clear all existing game objects
-		engine.managerTag.clear();
+		engine.scene.init();		//Clear all existing game objects
+		engine.managerTag.init();	//Clear all tags
 
 		JSON.parse(e.currentTarget.responseText).gameObjects.forEach(function(o) {
 			var go = new window[o.name](o.params || {});
-			scene.pushinit(go);
+			engine.scene.pushinit(go);
 			engine.managerTag.push(go);
 		});
 
-		scene.sort();	//Sort all new game objects.
+		engine.scene.sort();	//Sort all new game objects.
 	}
 		
 	//Draw filled text
