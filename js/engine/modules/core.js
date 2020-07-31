@@ -1,8 +1,8 @@
 //engine
 var engine = engine || {}
 
-//Main object literal
-engine.main = (function() {
+//Engine core
+engine.core = (function() {
 	var WIDTH = 650, 				// Canvas width (set to default)
 		HEIGHT = 420,				// Canvas height (set to default)
 		canvas = undefined,			// Canvas
@@ -17,9 +17,6 @@ engine.main = (function() {
 	//Initialization
 	function init(element, sceneName, width, height) {
 
-		//Init log
-		console.log("app.main.init() called");
-		
 		// init canvas
 		canvas = element;
 		canvas.width = width || WIDTH;
@@ -166,7 +163,7 @@ engine.main = (function() {
 		var now, fps;
 		now = (+new Date); 
 		fps = 1000 / (now - lastTime);
-		fps = clamp(fps, 12, 240);
+		fps = engine.math.clamp(fps, 12, 240);
 		lastTime = now; 
 		return 1/fps;
 	}

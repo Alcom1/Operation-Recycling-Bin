@@ -1,6 +1,4 @@
 //Vector constructor
-//Choice 0 takes x and y
-//Choice 1 takes angle and magnitude
 var Vect = function(a, b) {
 	
 	this.x = a;
@@ -117,8 +115,3 @@ Vect.prototype.getMagnitudeSquared = function() {
 
 	return this.x * this.x + this.y * this.y;
 }
-
-//ENUM
-TYPE_VECT = Object.freeze({
-    CARTESIAN: 1,
-    POLAR: 2});

@@ -1,7 +1,7 @@
 //engine
 var engine = engine || {};
 
-//Module that handles.
+//Module that handles tags and game objects grouped by tag.
 engine.managerTag = (function() {
 
     var masterArray = [];
