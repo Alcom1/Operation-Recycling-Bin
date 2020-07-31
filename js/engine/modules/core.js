@@ -84,8 +84,8 @@ engine.core = (function() {
             var gameObject = gameObjects[i];
             ctx.save();
                 ctx.translate(
-                    gameObject.gpos.x * 15 + gameObject.spos.x, 
-                    gameObject.gpos.y * 18 + gameObject.spos.y);
+                    gameObject.gpos.x * engine.math.gmultx + gameObject.spos.x, 
+           			gameObject.gpos.y * engine.math.gmulty + gameObject.spos.y);
                 gameObject.draw(ctx);
             ctx.restore();
         }

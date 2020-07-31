@@ -1,9 +1,6 @@
 //Test point object
-var TextDrawer = function(args) {
+var TextDrawer = function(args) { GameObject.call(this, args);
 
-    GameObject.call(this, args);
-    
-    this.gpos = new Vect(args.position.x, args.position.y);
     this.text = args.text;
     this.font = args.font || "16pt Consolas";
     this.color = args.color || "white";

@@ -1,10 +1,10 @@
 //Base game object
 var GameObject = function(args, nextScene) {
 
-	this.gpos = new Vect(0,0);		//Grid position
-	this.spos = new Vect(0,0);		//Sub position
+    this.gpos = new Vect(args.position.x, args.position.y);	//Grid position
+	this.spos = new Vect(0,0);								//Sub position
 
-	this.zIndex = args.zIndex != null ? args.zIndex : 0	//zIndex compared to sibling objects.
+	this.zIndex = args.zIndex != null ? args.zIndex : 0		//zIndex compared to other objects.
 	this.tag = args.tag;
 
 	this.nextScene = nextScene;
