@@ -50,12 +50,19 @@ engine.managerTag = (function() {
             gos.tag = gameObject.tag
         }).gameObjects;
     }
+
+	//Init
+	function clear()
+	{
+        var masterArray = [];
+    }
     
 	//Return
 	return {
         init : init,
         push : push,
         get : get,
+        clear : clear,
     }
     
 }());
