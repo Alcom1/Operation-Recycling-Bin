@@ -99,13 +99,15 @@ engine.main = (function() {
 	//callback function for when scene data is loaded.
 	function loadSceneCallback(e) {
 		scene.clear();	//Clear all existing game objects
+		engine.managerTag.clear();
 
 		JSON.parse(e.currentTarget.responseText).gameObjects.forEach(function(o) {
-	
-			scene.pushGOinit(new window[o.name](o.params || {}));
+			var go = new window[o.name](o.params || {});
+			scene.pushinit(go);
+			engine.managerTag.push(go);
 		});
 
-		scene.sortGO();	//Sort all new game objects.
+		scene.sort();	//Sort all new game objects.
 	}
 		
 	//Draw filled text

@@ -12,20 +12,20 @@ Scene.prototype.clear = function() {
 }
 
 //Push Game Object
-Scene.prototype.pushGO = function(gameObject) {
+Scene.prototype.push = function(gameObject) {
 	
-	this.pushGOinit(gameObject);
-	this.sortGO(gameObject);
+	this.pushinit(gameObject);
+	this.sort(gameObject);
 }
 
 //Push initial Game Object without sorting it.
-Scene.prototype.pushGOinit = function(gameObject) {
+Scene.prototype.pushinit = function(gameObject) {
 	
 	this.gameObjects.push(gameObject);
 }
 
 //Sort Game Objects
-Scene.prototype.sortGO = function()
+Scene.prototype.sort = function()
 {
 	//Sort game objects by z-index.
 	this.gameObjects.sort(

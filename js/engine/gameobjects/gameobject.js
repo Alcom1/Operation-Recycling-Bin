@@ -4,12 +4,9 @@ var GameObject = function(args) {
 	this.gpos = new Vect(0,0);		//Grid position
 	this.spos = new Vect(0,0);		//Sub position
 
-	if(args.zIndex != null) {		//zIndex compared to sibling objects.
-		this.zIndex = args.zIndex;
-	}
-	else {
-		this.zIndex = 0;
-	}
+	this.zIndex = args.zIndex != null ? args.zIndex : 0	//zIndex compared to sibling objects.
+	this.tag = args.tag;
+
     this.parent = args.parent;
 }
 
@@ -28,9 +25,9 @@ GameObject.prototype.draw = function(ctx) {
 	
 }
 
-//
-GameObject.prototype.pushGO = function(gameObject) {
-	this.parent.pushGO(gameObject);
+//Add a new game object to the current game
+GameObject.prototype.push = function(gameObject) {
+	this.parent.push(gameObject);
 }
 
 //Game object collision
