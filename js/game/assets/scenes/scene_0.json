@@ -1,4 +1,8 @@
 {
+    "params" : {
+        "zIndex" : 0,
+        "name" : "TestScene"
+    },
     "gameObjects" : [
         {    
             "name" : "TextDrawer",

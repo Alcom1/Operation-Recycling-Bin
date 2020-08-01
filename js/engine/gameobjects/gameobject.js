@@ -4,7 +4,7 @@ var GameObject = function(args, nextScene) {
     this.gpos = new Vect(args.position.x, args.position.y);	//Grid position
 	this.spos = new Vect(0,0);								//Sub position
 
-	this.zIndex = args.zIndex != null ? args.zIndex : 0		//zIndex compared to other objects.
+	this.zIndex = args.zIndex != null ? args.zIndex : 0		//zIndex
 	this.tag = args.tag;
 
 	this.nextScene = nextScene;

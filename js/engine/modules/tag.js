@@ -4,24 +4,47 @@ var engine = engine || {};
 //Module that handles tags and game objects grouped by tag.
 engine.managerTag = (function() {
 
-    var masterArray = [];
+    var masterGroup = [];   //Master group containing scene groups.
+    var TAGLESS_TAG = "tagless"
 
 	//Init
 	function init()
 	{
-        var masterArray = [];
+        var masterGroup = [];
     }
     
-    //Push a game object to the master array
-    function push(gameObject)
+    //Push a game object to the master group
+    function push(gameObject, sceneName)
     {
-        if(gameObject.tag == null)
+        var curr = masterGroup.find(sg =>
         {
-            console.log("Game object does not have tag.")
-            return;
-        }
+            return sg.name == sceneName;
+        })
 
-        var curr = masterArray.find(gos =>
+        if(curr == null)
+        {
+            console.log("New Scene Group : " + sceneName)
+
+            masterGroup.push({
+                name : sceneName,
+                sceneGroup : [{
+                    tag : gameObject.tag,
+                    gameObjects : [gameObject]}]
+            })
+        }
+        else
+        {
+            console.log("Existing Scene Group : " + sceneName)
+            pushGO(gameObject, curr.sceneGroup)
+        }
+    }
+
+    //Push a game object to the scene group
+    function pushGO(gameObject, sceneGroup)
+    {
+        gameObject.tag = gameObject.tag || TAGLESS_TAG
+
+        var curr = sceneGroup.find(gos =>
         {
             return gos.tag == gameObject.tag
         })
@@ -30,7 +53,7 @@ engine.managerTag = (function() {
         {
             console.log("New game object list created for tag " + gameObject.tag)
 
-            masterArray.push({
+            sceneGroup.push({
                 tag : gameObject.tag,
                 gameObjects : [gameObject]
             })
@@ -43,18 +66,21 @@ engine.managerTag = (function() {
     }
     
     //Returns the mouse position
-    function get(tag)
+    function get(tag, sceneName)
     {
-        return masterArray.find(gos =>
+        return masterGroup.find(sg =>
         {
-            gos.tag = gameObject.tag
+            return sg.name == sceneName;
+        }).sceneGroup.find(gos =>
+        {
+            return gos.tag == tag
         }).gameObjects;
     }
 
 	//Init
-	function clear()
+	function clear(sceneName)
 	{
-        var masterArray = [];
+        masterGroup = masterGroup.filter(sg => sg != sceneName);
     }
     
 	//Return

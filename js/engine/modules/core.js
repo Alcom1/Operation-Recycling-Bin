@@ -11,7 +11,7 @@ engine.core = (function() {
 		debug = true,				// debug
 		showCol = false,			// show collisions
 		animationID = 0, 			// ID index of the current frame
-		gameObjects = [],
+		scenes = [],
 		nextScene = { sceneName : ""};
 		
 	//Initialization
@@ -71,24 +71,13 @@ engine.core = (function() {
 	//Update logic
 	function update(dt) {
 
-        for(var i = 0; i < gameObjects.length; i++) {
-        
-            gameObjects[i].update(dt, null);
-        }
+		scenes.forEach(s => s.update(dt));
 	}
 		
 	//Draw the main scene
 	function draw(ctx) {
-		
-        for(var i = 0; i < gameObjects.length; i++) {
-            var gameObject = gameObjects[i];
-            ctx.save();
-                ctx.translate(
-                    gameObject.gpos.x * engine.math.gmultx + gameObject.spos.x, 
-           			gameObject.gpos.y * engine.math.gmulty + gameObject.spos.y);
-                gameObject.draw(ctx);
-            ctx.restore();
-        }
+
+		scenes.forEach(s => s.draw(ctx));
 	}
 
 	//Clear
@@ -106,7 +95,7 @@ engine.core = (function() {
 	function sort()
 	{
 		//Sort game objects by z-index.
-		gameObjects.sort(
+		scenes.sort(
 			function(a, b) {
 		
 				if(a.zIndex == b.zIndex)
@@ -130,16 +119,18 @@ engine.core = (function() {
 
 	//callback function for when scene data is loaded.
 	function loadSceneCallback(e) {
-		clear();					//Clear all existing game objects
-		engine.managerTag.init();	//Clear all tags
+		var sceneData = JSON.parse(e.currentTarget.responseText);
+		var scene = new Scene(sceneData.params);
 
-		JSON.parse(e.currentTarget.responseText).gameObjects.forEach(function(o) {
+		sceneData.gameObjects.forEach(function(o) {
 			var go = new window[o.name](o.params || {}, nextScene);
-			push(go);
-			engine.managerTag.push(go);
+			scene.push(go);
+			engine.managerTag.push(go, scene.name);
 		});
 
-		sort();	//Sort all new game objects.
+		scene.sort();	//Sort all new game objects.
+		scenes.push(scene);
+		sort();
 	}
 		
 	//Draw filled text
