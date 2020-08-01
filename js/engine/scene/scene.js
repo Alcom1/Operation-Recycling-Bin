@@ -47,23 +47,19 @@ Scene.prototype.loadScene = function(newScene) {
 
 //Scene update
 Scene.prototype.update = function(dt) {
-	
-	for(var i = 0; i < this.gameObjects.length; i++) {
-        
-		this.gameObjects[i].update(dt, null);
-	}
+
+	this.gameObjects.forEach(go =>  go.update(dt, null));
 }
 
 //Scene draw
 Scene.prototype.draw = function(ctx) {
 	
-	for(var i = 0; i < this.gameObjects.length; i++) {
-		var gameObject = this.gameObjects[i];
+	this.gameObjects.forEach(go => {
 		ctx.save();
 			ctx.translate(
-				gameObject.gpos.x * engine.math.gmultx + gameObject.spos.x, 
-				gameObject.gpos.y * engine.math.gmulty + gameObject.spos.y);
-			gameObject.draw(ctx);
+			go.gpos.x * engine.math.gmultx + go.spos.x, 
+			go.gpos.y * engine.math.gmulty + go.spos.y);
+			go.draw(ctx);
 		ctx.restore();
-	}
+	})
 }
