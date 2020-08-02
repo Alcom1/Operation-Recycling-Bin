@@ -5,17 +5,21 @@ var engine = engine || {}
 engine.core = (function() {
 	var WIDTH = 650, 				// Canvas width (set to default)
 		HEIGHT = 420,				// Canvas height (set to default)
+		scenePath = "",				// Path scenes are located in
 		canvas = undefined,			// Canvas
 		ctx = undefined,			// Canvas context
 		lastTime = 0, 				// used by calculateDeltaTime() 
 		debug = true,				// debug
-		showCol = false,			// show collisions
 		animationID = 0, 			// ID index of the current frame
 		scenes = [],
-		nextScene = { sceneName : ""};
-		
+		pushSceneNames = [],
+		killSceneNames = []
+
 	//Initialization
-	function init(element, sceneName, width, height) {
+	function init(element, scenePathName, startScene, width, height) {
+
+		//Scene path
+		scenePath = scenePathName
 
 		// init canvas
 		canvas = element;
@@ -27,7 +31,7 @@ engine.core = (function() {
 		canvas.onmousemove = engine.managerMouse.update.bind(this);
 
 		// load the first scene
-		loadScene(sceneName);
+		loadScene(startScene);
 		
 		// start the game loop
 		frame();
@@ -45,8 +49,12 @@ engine.core = (function() {
 		//Clear
 		ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
-		//Check for and load new scene
-		loadScene(nextScene.sceneName)
+		//Check for and load new scenes
+		pushSceneNames.forEach(sn => loadScene(sn));
+		pushSceneNames = [];
+
+		//Check for and clear cut scenes
+		unLoadScenes(killSceneNames);
 		
 		//Update
 		update(dt);
@@ -80,17 +88,6 @@ engine.core = (function() {
 		scenes.forEach(s => s.draw(ctx));
 	}
 
-	//Clear
-	function clear() {
-		gameObjects = [];
-	}
-
-	//Push initial Game Object without sorting it.
-	function push(gameObject) {
-		
-		gameObjects.push(gameObject);
-	}
-
 	//Sort Game Objects
 	function sort()
 	{
@@ -112,7 +109,7 @@ engine.core = (function() {
 
 		var xhr = new XMLHttpRequest();
 		xhr.overrideMimeType("application/json");
-		xhr.open('GET', sceneName, true);
+		xhr.open('GET', scenePath + sceneName + ".json", true);
 		xhr.onload = loadSceneCallback;
 		xhr.send();
 	}
@@ -123,7 +120,7 @@ engine.core = (function() {
 		var scene = new Scene(sceneData.params);
 
 		sceneData.gameObjects.forEach(function(o) {
-			var go = new window[o.name](o.params || {}, nextScene);
+			var go = new window[o.name](o.params || {});
 			scene.push(go);
 			engine.managerTag.push(go, scene.name);
 		});
@@ -131,6 +128,57 @@ engine.core = (function() {
 		scene.sort();	//Sort all new game objects.
 		scenes.push(scene);
 		sort();
+	}
+
+	//unload a scene
+	function unLoadScenes()
+	{
+		scenes = scenes.filter(s => !killSceneNames.includes(s.name));
+		killSceneNames = [];
+	}
+	
+	//set scene fileNames to be loaded
+	function pushScenes(fileNames)
+	{
+		if(Array.isArray(fileNames))
+		{
+			fileNames.forEach(s => pushScene(s))
+		}
+		else
+		{
+			pushScene(fileNames)
+		}
+	}
+	
+	//set scenes to be unloaded
+	function killScenes(sceneNames)
+	{
+		if(Array.isArray(sceneNames))
+		{
+			sceneNames.forEach(s => killScene(s))
+		}
+		else
+		{
+			killScene(sceneNames)
+		}
+	}
+	
+	//set a scene file name to be loaded
+	function pushScene(fileName)
+	{
+		if(!pushSceneNames.includes(fileName))
+		{
+			pushSceneNames.push(fileName);
+		}
+	}
+	
+	//set a scene to be unloaded
+	function killScene(sceneName)
+	{
+		if(!killSceneNames.includes(sceneName))
+		{
+			killSceneNames.push(sceneName);
+		}
 	}
 		
 	//Draw filled text
@@ -160,7 +208,9 @@ engine.core = (function() {
 	}
 
 	return {
-		init : init
+		init : init,
+		pushScenes : pushScenes,
+		killScenes : killScenes,
 	}
 }());
 

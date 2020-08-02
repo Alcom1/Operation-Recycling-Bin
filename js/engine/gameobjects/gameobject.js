@@ -1,18 +1,16 @@
 //Base game object
-var GameObject = function(args, nextScene) {
+var GameObject = function(args) {
 
     this.gpos = new Vect(args.position.x, args.position.y);	//Grid position
 	this.spos = new Vect(0,0);								//Sub position
 
 	this.zIndex = args.zIndex != null ? args.zIndex : 0		//zIndex
 	this.tag = args.tag;
-
-	this.nextScene = nextScene;
 }
 
 //Set a New Scene to load it
 GameObject.prototype.loadScene = function(newSceneName) {
-	this.nextScene.sceneName = newSceneName;
+	engine.main.pushScene(newSceneName);
 }
 
 //Game object update
