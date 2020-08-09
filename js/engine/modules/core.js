@@ -117,10 +117,10 @@ engine.core = (function() {
 	//callback function for when scene data is loaded.
 	function loadSceneCallback(e) {
 		var sceneData = JSON.parse(e.currentTarget.responseText);
-		var scene = new Scene(sceneData.params);
+		var scene = new Scene(sceneData.scene);
 
 		sceneData.gameObjects.forEach(function(o) {
-			var go = new window[o.name](o.params || {});
+			var go = new window[o.name](o || {});
 			scene.push(go);
 			engine.managerTag.push(go, scene.name);
 		});

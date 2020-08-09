@@ -1,4 +1,4 @@
-//Test point object
+//Brick object
 var Brick = function(args) { GameObject.call(this, args);
 
     this.color = args.color || "white";

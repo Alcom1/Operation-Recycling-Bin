@@ -27,8 +27,8 @@ Scene.prototype.pushinit = function(gameObject) {
 }
 
 //Sort Game Objects
-Scene.prototype.sort = function()
-{
+Scene.prototype.sort = function() {
+
 	//Sort game objects by z-index.
 	this.gameObjects.sort(
 		function(a, b) {
@@ -42,13 +42,14 @@ Scene.prototype.sort = function()
 
 //Set a New Scene to load it
 Scene.prototype.loadScene = function(newScene) {
+
 	this.newScene = newScene;
 }
 
 //Scene update
 Scene.prototype.update = function(dt) {
 
-	this.gameObjects.forEach(go =>  go.update(dt, null));
+	this.gameObjects.forEach(go =>  go.update(dt));
 }
 
 //Scene draw
