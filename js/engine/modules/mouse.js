@@ -5,15 +5,29 @@ var engine = engine || {};
 engine.managerMouse = (function() {
 
     var mousePos; //Mouse position.
+    var mousePressed = false;
+    var flip = false;
 
 	//Init
-	function init()
+	function init(element)
 	{
         mousePos = new Vect(0, 0);
-	}
+        element.addEventListener("mousedown", function() {
+            mousePressed = true;
+        })
+        element.addEventListener("mouseup", function() {
+            mousePressed = false;
+        })
+    }
     
-    //Update the mouse module.
-    function update(e)
+    //Update the mouse for a frame
+    function update(dt)
+    {
+        flip = !mousePressed;
+    }
+    
+    //Update the mouse position.
+    function updatePos(e)
     {
         mousePos = getMouse(e);
     }
@@ -33,12 +47,34 @@ engine.managerMouse = (function() {
     {
         return mousePos;
     }
-	
+
+    //Returns if mouse is pressed
+    function isPressed()
+    {
+        return mousePressed;
+    }
+
+    //Returns if mouse was pressed last frame
+    function wasPressed()
+    {
+        return mousePressed && flip;
+    }
+
+    //Returns if mouse was relesed pre
+    function wasReleased()
+    {
+        return !mousePressed && !flip;
+    }
+    
 	//Return
 	return {
-		init : init,
+        init : init,
         update : update,
+        updatePos : updatePos,
         getPos : getPos,
+        isPressed : isPressed,
+        wasPressed : wasPressed,
+        wasReleased : wasReleased
     }
     
 }());

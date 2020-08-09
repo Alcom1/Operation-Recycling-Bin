@@ -28,7 +28,7 @@ engine.core = (function() {
 		ctx = canvas.getContext('2d');
 		
 		// canvas actions
-		canvas.onmousemove = engine.managerMouse.update.bind(this);
+		canvas.onmousemove = engine.managerMouse.updatePos.bind(this);
 
 		// load the first scene
 		loadScene(startScene);
@@ -61,6 +61,9 @@ engine.core = (function() {
 		
 		//Draw
 		draw(ctx);
+
+		//Module updates
+		engine.managerMouse.update(dt);
 		
 		//Draw debug info
 		if (debug)
