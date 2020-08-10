@@ -8,14 +8,14 @@ engine.managerTag = (function() {
     var TAGLESS_TAG = "tagless"
 
 	//Init
-	function init()
-	{
+	function init() {
+
         var masterGroup = [];
     }
     
     //Push a game object to the master group
-    function push(gameObject, sceneName)
-    {
+    function push(gameObject, sceneName) {
+
         var curr = masterGroup.find(sg =>
         {
             return sg.name == sceneName;
@@ -40,8 +40,8 @@ engine.managerTag = (function() {
     }
 
     //Push a game object to the scene group
-    function pushGO(gameObject, sceneGroup)
-    {
+    function pushGO(gameObject, sceneGroup) {
+
         gameObject.tag = gameObject.tag || TAGLESS_TAG
 
         var curr = sceneGroup.find(gos =>
@@ -66,8 +66,8 @@ engine.managerTag = (function() {
     }
     
     //Returns the mouse position
-    function get(tag, sceneName)
-    {
+    function get(tag, sceneName) {
+
         return masterGroup.find(sg =>
         {
             return sg.name == sceneName;
@@ -78,8 +78,8 @@ engine.managerTag = (function() {
     }
 
 	//Init
-	function clear(sceneName)
-	{
+	function clear(sceneName) {
+
         masterGroup = masterGroup.filter(sg => sg != sceneName);
     }
     

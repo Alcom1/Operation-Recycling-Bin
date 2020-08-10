@@ -9,8 +9,8 @@ engine.managerMouse = (function() {
     var flip = false;
 
 	//Init
-	function init(element)
-	{
+	function init(element) {
+
         mousePos = new Vect(0, 0);
         element.addEventListener("mousedown", function() {
             mousePressed = true;
@@ -21,14 +21,14 @@ engine.managerMouse = (function() {
     }
     
     //Update the mouse for a frame
-    function update(dt)
-    {
+    function update(dt) {
+
         flip = !mousePressed;
     }
     
     //Update the mouse position.
-    function updatePos(e)
-    {
+    function updatePos(e) {
+
         mousePos = getMouse(e);
     }
     
@@ -43,26 +43,26 @@ engine.managerMouse = (function() {
     }
     
     //Returns the mouse position
-    function getPos()
-    {
+    function getPos() {
+
         return mousePos;
     }
 
     //Returns if mouse is pressed
-    function isPressed()
-    {
+    function isPressed() {
+
         return mousePressed;
     }
 
     //Returns if mouse was pressed last frame
-    function wasPressed()
-    {
+    function wasPressed() {
+
         return mousePressed && flip;
     }
 
     //Returns if mouse was relesed pre
-    function wasReleased()
-    {
+    function wasReleased() {
+
         return !mousePressed && !flip;
     }
     

@@ -12,8 +12,8 @@ TextDrawer.prototype = Object.create(GameObject.prototype);
 //Game object draw
 TextDrawer.prototype.draw = function(ctx) {
     
-    if(this.centered)
-    {
+    if(this.centered) {
+
         ctx.textAlign = "center";
         ctx.textBaseline = "middle"; 
     }

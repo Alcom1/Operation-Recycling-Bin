@@ -1,6 +1,6 @@
 {
     "scene" : {
-        "name" : "TestScene",
+        "name" : "GameScene",
         "zIndex" : 0
     },
     "gameObjects" : [

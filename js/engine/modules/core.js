@@ -92,8 +92,8 @@ engine.core = (function() {
 	}
 
 	//Sort Game Objects
-	function sort()
-	{
+	function sort() {
+
 		//Sort game objects by z-index.
 		scenes.sort(
 			function(a, b) {
@@ -122,7 +122,7 @@ engine.core = (function() {
 		var sceneData = JSON.parse(e.currentTarget.responseText);
 		var scene = new Scene(sceneData.scene);
 
-		sceneData.gameObjects.forEach(function(o) {
+		sceneData.gameObjects.forEach(o => {
 			var go = new window[o.name](o || {});
 			scene.push(go);
 			engine.managerTag.push(go, scene.name);
@@ -134,15 +134,15 @@ engine.core = (function() {
 	}
 
 	//unload a scene
-	function unLoadScenes()
-	{
+	function unLoadScenes() {
+
 		scenes = scenes.filter(s => !killSceneNames.includes(s.name));
 		killSceneNames = [];
 	}
 	
 	//set scene fileNames to be loaded
-	function pushScenes(fileNames)
-	{
+	function pushScenes(fileNames) {
+
 		if(Array.isArray(fileNames))
 		{
 			fileNames.forEach(s => pushScene(s))
@@ -154,8 +154,8 @@ engine.core = (function() {
 	}
 	
 	//set scenes to be unloaded
-	function killScenes(sceneNames)
-	{
+	function killScenes(sceneNames) {
+
 		if(Array.isArray(sceneNames))
 		{
 			sceneNames.forEach(s => killScene(s))
@@ -167,8 +167,8 @@ engine.core = (function() {
 	}
 	
 	//set a scene file name to be loaded
-	function pushScene(fileName)
-	{
+	function pushScene(fileName) {
+
 		if(!pushSceneNames.includes(fileName))
 		{
 			pushSceneNames.push(fileName);
@@ -176,8 +176,8 @@ engine.core = (function() {
 	}
 	
 	//set a scene to be unloaded
-	function killScene(sceneName)
-	{
+	function killScene(sceneName) {
+
 		if(!killSceneNames.includes(sceneName))
 		{
 			killSceneNames.push(sceneName);

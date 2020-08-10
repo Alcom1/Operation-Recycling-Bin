@@ -17,14 +17,30 @@ Cursor.prototype.update = function(dt) {
     this.color = this.originalColor
     this.radius = this.originalRadius;
 
-    if(engine.managerMouse.isPressed())
-    {
+    if(engine.managerMouse.isPressed()) {
+
         this.radius = 15;
     }
-    if(engine.managerMouse.wasPressed() || engine.managerMouse.wasReleased())
-    {
+    if(engine.managerMouse.wasPressed() || engine.managerMouse.wasReleased()) {
+
         this.color = "yellow"
         this.radius = 50;
+    }
+    if(engine.managerMouse.wasPressed()) {
+
+        engine.managerTag.get("Brick", "GameScene").forEach(b => {
+            var minX = b.gpos.x * engine.math.gmultx
+            var minY = b.gpos.y * engine.math.gmulty
+
+            if(
+                this.spos.x > minX &&
+                this.spos.y > minY &&
+                this.spos.x < minX + engine.math.gmultx * b.width  &&
+                this.spos.y < minY + engine.math.gmulty )
+            {
+                b.color = "Green"
+            }
+        });
     }
 }
 
