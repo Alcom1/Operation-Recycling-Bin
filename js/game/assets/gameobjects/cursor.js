@@ -11,8 +11,8 @@ var Cursor = function(args) { GameObject.call(this, args);
 Cursor.prototype = Object.create(GameObject.prototype);
 
 //Initialize a game object after its scene is loaded.
-GameObject.prototype.init = function() {
-    this.bricks = engine.managerTag.get("Brick", "GameScene");
+Cursor.prototype.init = function() {
+    this.brickHandler = engine.managerTag.get("BrickHandler", "GameScene")[0];
 }
 
 //Game object update
@@ -33,19 +33,19 @@ Cursor.prototype.update = function(dt) {
     }
     if(engine.managerMouse.wasPressed()) {
 
-        this.bricks.forEach(b => {
-            var minX = b.gpos.x * engine.math.gmultx
-            var minY = b.gpos.y * engine.math.gmulty
+        this.brickHandler.rows.forEach(r => r.bricks.forEach(b => {
 
-            if(
-                this.spos.x > minX &&
-                this.spos.y > minY &&
-                this.spos.x < minX + engine.math.gmultx * b.width  &&
-                this.spos.y < minY + engine.math.gmulty )
+            if(engine.math.colPointRectGrid(
+                this.spos.x,
+                this.spos.y,
+                b.gpos.x,
+                b.gpos.y,
+                b.width,
+                1))
             {
                 b.color = "Green"
             }
-        });
+        }));
     }
 }
 

@@ -5,12 +5,15 @@
     },
     "gameObjects" : [
         {
+            "name" : "BrickHandler"
+        },
+        {
             "name" : "Cursor",
             "zIndex" : 50,
             "color" : "Red"
         },
         {    
-            "name" : "Clicker",
+            "name" : "CursorPos",
             "zIndex" : 100,
             "position" : {"x" : 2, "y" : 2},
             "font" : "16pt Consolas",

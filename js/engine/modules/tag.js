@@ -16,13 +16,10 @@ engine.managerTag = (function() {
     //Push a game object to the master group
     function push(gameObject, sceneName) {
 
-        var curr = masterGroup.find(sg =>
-        {
-            return sg.name == sceneName;
-        })
+        var curr = masterGroup.find(sg => sg.name == sceneName );
 
-        if(curr == null)
-        {
+        if(curr == null) {
+
             console.log("New Scene Group : " + sceneName)
 
             masterGroup.push({
@@ -32,8 +29,8 @@ engine.managerTag = (function() {
                     gameObjects : [gameObject]}]
             })
         }
-        else
-        {
+        else {
+
             console.log("Existing Scene Group : " + sceneName)
             pushGO(gameObject, curr.sceneGroup)
         }
@@ -44,13 +41,10 @@ engine.managerTag = (function() {
 
         gameObject.tag = gameObject.tag || TAGLESS_TAG
 
-        var curr = sceneGroup.find(gos =>
-        {
-            return gos.tag == gameObject.tag
-        })
+        var curr = sceneGroup.find(gos => gos.tag == gameObject.tag);
 
-        if(curr == null)
-        {
+        if(curr == null) {
+
             console.log("New game object list created for tag " + gameObject.tag)
 
             sceneGroup.push({
@@ -58,8 +52,8 @@ engine.managerTag = (function() {
                 gameObjects : [gameObject]
             })
         }
-        else
-        {
+        else {
+
             console.log("New game object added to list for tag " + gameObject.tag)
             curr.gameObjects.push(gameObject)
         }
@@ -68,11 +62,11 @@ engine.managerTag = (function() {
     //Returns the mouse position
     function get(tag, sceneName) {
 
-        return masterGroup.find(sg =>
-        {
+        return masterGroup.find(sg => {
+
             return sg.name == sceneName;
-        }).sceneGroup.find(gos =>
-        {
+        }).sceneGroup.find(gos => {
+
             return gos.tag == tag
         }).gameObjects;
     }
