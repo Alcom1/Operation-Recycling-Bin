@@ -10,6 +10,11 @@ var Cursor = function(args) { GameObject.call(this, args);
 
 Cursor.prototype = Object.create(GameObject.prototype);
 
+//Initialize a game object after its scene is loaded.
+GameObject.prototype.init = function() {
+    this.bricks = engine.managerTag.get("Brick", "GameScene");
+}
+
 //Game object update
 Cursor.prototype.update = function(dt) {
     this.spos = engine.managerMouse.getPos();
@@ -28,7 +33,7 @@ Cursor.prototype.update = function(dt) {
     }
     if(engine.managerMouse.wasPressed()) {
 
-        engine.managerTag.get("Brick", "GameScene").forEach(b => {
+        this.bricks.forEach(b => {
             var minX = b.gpos.x * engine.math.gmultx
             var minY = b.gpos.y * engine.math.gmulty
 

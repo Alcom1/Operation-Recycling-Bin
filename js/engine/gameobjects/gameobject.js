@@ -10,6 +10,11 @@ var GameObject = function(args) {
 	this.tag = args.tag || args.name;
 }
 
+//Initialize a game object after its scene is loaded.
+GameObject.prototype.init = function() {
+
+}
+
 //Set a New Scene to load it
 GameObject.prototype.loadScene = function(newSceneName) {
 	engine.main.pushScene(newSceneName);

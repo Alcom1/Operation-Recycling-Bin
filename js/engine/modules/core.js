@@ -129,6 +129,7 @@ engine.core = (function() {
 		});
 
 		scene.sort();	//Sort all new game objects.
+		scene.init();	//Initialize all new objects in scene.
 		scenes.push(scene);
 		sort();
 	}

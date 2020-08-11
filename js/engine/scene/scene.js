@@ -7,6 +7,12 @@ var Scene = function(args) {
 	this.newScene = "";
 }
 
+//Initialize all game objects in this scene
+Scene.prototype.init = function() {
+
+	this.gameObjects.forEach(go =>  go.init());
+}
+
 //Clear
 Scene.prototype.clear = function() {
 	
