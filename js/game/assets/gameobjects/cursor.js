@@ -43,7 +43,7 @@ Cursor.prototype.update = function(dt) {
                 b.width,
                 1))
             {
-                b.color = "Green"
+                b.color = b.isGrey ? "Grey" : "Green";
             }
         }));
     }

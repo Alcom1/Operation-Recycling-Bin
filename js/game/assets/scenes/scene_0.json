@@ -82,6 +82,11 @@
         },
         {    
             "name" : "Brick",
+            "position" : {"x" : 22, "y" : 14},
+            "width" : 8
+        },
+        {    
+            "name" : "Brick",
             "position" : {"x" : 17, "y" : 14},
             "color" : "cornflowerblue",
             "width" : 4
@@ -109,6 +114,11 @@
             "position" : {"x" : 17, "y" : 18},
             "color" : "cornflowerblue",
             "width" : 4
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 15, "y" : 19},
+            "width" : 8
         }
     ]
 }
