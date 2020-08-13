@@ -31,10 +31,16 @@ Cursor.prototype.update = function(dt) {
 
         this.color = "yellow"
         this.radius = 15;
-    }
-    if(engine.managerMouse.wasPressed()) {
 
-        this.brickHandler.getAdjacent(this.spos).forEach(b => b.color = "Green");
+        if(engine.managerMouse.wasPressed()) {
+    
+            this.brickHandler.selectBricks(this.spos);
+        }
+        
+        if(engine.managerMouse.wasReleased()) {
+    
+            this.brickHandler.deselectBricks();
+        }
     }
 }
 
