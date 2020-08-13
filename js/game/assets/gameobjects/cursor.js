@@ -1,7 +1,7 @@
 //Cursor object
 var Cursor = function(args) { GameObject.call(this, args);
 
-    this.originalRadius = args.radius || 8
+    this.originalRadius = args.radius || 4
     this.radius = this.originalRadius;
 
     this.originalColor = args.color || "white"
@@ -24,28 +24,17 @@ Cursor.prototype.update = function(dt) {
 
     if(engine.managerMouse.isPressed()) {
 
-        this.radius = 15;
+        this.color = "yellow"
+        this.radius = 6;
     }
     if(engine.managerMouse.wasPressed() || engine.managerMouse.wasReleased()) {
 
         this.color = "yellow"
-        this.radius = 50;
+        this.radius = 15;
     }
     if(engine.managerMouse.wasPressed()) {
 
-        this.brickHandler.rows.forEach(r => r.bricks.forEach(b => {
-
-            if(engine.math.colPointRectGrid(
-                this.spos.x,
-                this.spos.y,
-                b.gpos.x,
-                b.gpos.y,
-                b.width,
-                1))
-            {
-                b.color = b.isGrey ? "Grey" : "Green";
-            }
-        }));
+        this.brickHandler.getAdjacent(this.spos).forEach(b => b.color = "Green");
     }
 }
 

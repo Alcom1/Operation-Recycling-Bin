@@ -6,7 +6,7 @@ var GameObject = function(args) {
     this.gpos = new Vect(args.position.x, args.position.y);	//Grid position
 	this.spos = new Vect(0,0);								//Sub position
 
-	this.zIndex = args.zIndex != null ? args.zIndex : 0		//zIndex
+	this.zIndex = args.zIndex ?? 0							//zIndex
 	this.tag = args.tag || args.name;
 }
 

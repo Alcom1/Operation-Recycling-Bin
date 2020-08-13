@@ -31,6 +31,11 @@ engine.math = (function() {
             rw * gmultx,
             rh * gmulty);
     }
+
+    function col1D(a1, a2, b1, b2) {
+        
+        return a2 > b1 && a1 < b2
+    }
     
 	//Return
 	return {
@@ -38,6 +43,7 @@ engine.math = (function() {
         gmulty : gmulty,
         colPointRect : colPointRect,
         colPointRectGrid : colPointRectGrid,
+        col1D : col1D,
         clamp : clamp,
     }
     

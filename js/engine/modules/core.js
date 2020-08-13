@@ -94,15 +94,8 @@ engine.core = (function() {
 	//Sort Game Objects
 	function sort() {
 
-		//Sort game objects by z-index.
-		scenes.sort(
-			function(a, b) {
-		
-				if(a.zIndex == b.zIndex)
-					return 0;
-				
-				return a.zIndex > b.zIndex;
-			});
+		//Sort scenes by z-index.
+		scenes.sort((a, b) => a.zIndex - b.zIndex);
 	}
 		
 	//start loading a scene

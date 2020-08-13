@@ -22,13 +22,6 @@ Scene.prototype.clear = function() {
 //Push Game Object
 Scene.prototype.push = function(gameObject) {
 	
-	this.pushinit(gameObject);
-	this.sort(gameObject);
-}
-
-//Push initial Game Object without sorting it.
-Scene.prototype.pushinit = function(gameObject) {
-	
 	this.gameObjects.push(gameObject);
 }
 
@@ -36,14 +29,7 @@ Scene.prototype.pushinit = function(gameObject) {
 Scene.prototype.sort = function() {
 
 	//Sort game objects by z-index.
-	this.gameObjects.sort(
-		function(a, b) {
-	
-			if(a.zIndex == b.zIndex)
-				return 0;
-			
-			return a.zIndex > b.zIndex;
-		});
+	this.gameObjects.sort((a, b) => a.zIndex - b.zIndex);
 }
 
 //Set a New Scene to load it

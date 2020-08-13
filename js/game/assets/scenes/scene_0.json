@@ -117,6 +117,36 @@
         },
         {    
             "name" : "Brick",
+            "position" : {"x" : 12, "y" : 14},
+            "color" : "cornflowerblue",
+            "width" : 4
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 12, "y" : 15},
+            "color" : "cornflowerblue",
+            "width" : 4
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 12, "y" : 16},
+            "color" : "cornflowerblue",
+            "width" : 3
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 12, "y" : 17},
+            "color" : "cornflowerblue",
+            "width" : 3
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 12, "y" : 18},
+            "color" : "cornflowerblue",
+            "width" : 4
+        },
+        {    
+            "name" : "Brick",
             "position" : {"x" : 15, "y" : 19},
             "width" : 8
         }

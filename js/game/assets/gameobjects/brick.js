@@ -4,6 +4,7 @@ var Brick = function(args) { GameObject.call(this, args);
     this.color = args.color || "Grey";
     this.isGrey = !args.color
     this.width = args.width || 1;
+    this.isChecked = false;
 }
 
 Brick.prototype = Object.create(GameObject.prototype);
