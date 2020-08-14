@@ -79,10 +79,10 @@ engine.managerTag = (function() {
     
 	//Return
 	return {
-        init : init,
-        push : push,
-        get : get,
-        clear : clear,
+        init,
+        push,
+        get,
+        clear,
     }
     
 }());

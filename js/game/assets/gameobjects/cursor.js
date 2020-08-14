@@ -1,11 +1,23 @@
 //Cursor object
 var Cursor = function(args) { GameObject.call(this, args);
 
-    this.originalRadius = args.radius || 4
-    this.radius = this.originalRadius;
+    this.ppos = new Vect(0, 0);                 //Previous pressed position
+    this.pLength = 20;                          //Distance to enter carry state
+    this.pDir = 0;                              //Direction the cursor was dragged in.
 
-    this.originalColor = args.color || "white"
-    this.color = this.originalColor;
+    this.originalRadius = args.radius || 4      //Starting radius of the cursor
+    this.radius = this.originalRadius;          //Current radius of the cursor
+
+    this.originalColor = args.color || "white"  //Starting color of the cursor
+    this.color = this.originalColor;            //Current color of the cursor
+
+    this.states = Object.freeze({               //Cursor states
+        NONE : 0,
+        DRAG : 1,
+        CARRY : 2
+    });
+
+    this.state = this.states.NONE;              //Current cursor state
 }
 
 Cursor.prototype = Object.create(GameObject.prototype);
@@ -22,25 +34,59 @@ Cursor.prototype.update = function(dt) {
     this.color = this.originalColor
     this.radius = this.originalRadius;
 
-    if(engine.managerMouse.isPressed()) {
+    //Mouse states
+    switch(engine.managerMouse.getMouseState()) {
 
-        this.color = "yellow"
-        this.radius = 6;
-    }
-    if(engine.managerMouse.wasPressed() || engine.managerMouse.wasReleased()) {
+        //ISPRESSED
+        case engine.managerMouse.mouseStates.ISPRESSED : this.color = "yellow"; this.radius = 6;
 
-        this.color = "yellow"
-        this.radius = 15;
+            //Get difference between current and pressed positions
+            var diff = this.spos.y - this.ppos.y;
 
-        if(engine.managerMouse.wasPressed()) {
-    
-            this.brickHandler.selectBricks(this.spos, -1);
-        }
+            //Pressed cursor states states
+            switch(this.state) {
+
+                //DRAGGING
+                case this.states.DRAG :
+                    if(Math.abs(diff) > this.pLength) {                         //If we've dragged a sufficient distance
+                                                                                
+                        this.state = this.states.CARRY;                         //Start carrying
+                        this.pDir = Math.sign(diff);                            //Get the direction we're selecting bricks in
+                        this.brickHandler.selectBricks(this.ppos, this.pDir);   //Select bricks
+                    }
+                    break;
+
+                //CARRYING
+                case this.states.CARRY :
+                    if(Math.sign(diff) != this.pDir && Math.abs(diff) > this.pLength) {
         
-        if(engine.managerMouse.wasReleased()) {
-    
+                        this.brickHandler.reselectBricks();
+                        this.pDir = -this.pDir;
+                        this.brickHandler.selectBricks(this.ppos, this.pDir);
+                    }
+                    break;
+            }
+            break;
+
+        //WASPRESSED
+        case engine.managerMouse.mouseStates.WASPRESSED : this.radius = 15;
+
+            //Deselect bricks for a new selection
             this.brickHandler.deselectBricks();
-        }
+    
+            //If this cursor selected a brick, set it to DRAGGING state.
+            if(this.brickHandler.selectSingle(this.spos)) {
+                this.state = this.states.DRAG;
+                this.ppos = this.spos;
+            }
+            break;
+
+        //WASRELEASED
+        case engine.managerMouse.mouseStates.WASRELEASED : this.radius = 15;
+            
+            //Reset state upon release
+            this.state = this.states.NONE;
+            break;
     }
 }
 

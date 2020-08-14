@@ -205,9 +205,9 @@ engine.core = (function() {
 	}
 
 	return {
-		init : init,
-		pushScenes : pushScenes,
-		killScenes : killScenes,
+		init,
+		pushScenes,
+		killScenes,
 	}
 }());
 

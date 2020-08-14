@@ -8,6 +8,13 @@ engine.managerMouse = (function() {
     var mousePressed = false;
     var flip = false;
 
+    var mouseStates = Object.freeze({
+        ISRELEASED : 0,
+        WASPRESSED : 1,
+        ISPRESSED : 2,
+        WASRELEASED : 3,
+    })
+
 	//Init
 	function init(element) {
 
@@ -48,33 +55,31 @@ engine.managerMouse = (function() {
         return mousePos;
     }
 
-    //Returns if mouse is pressed
-    function isPressed() {
-
-        return mousePressed;
-    }
-
-    //Returns if mouse was pressed last frame
-    function wasPressed() {
-
-        return mousePressed && flip;
-    }
-
-    //Returns if mouse was relesed pre
-    function wasReleased() {
-
-        return !mousePressed && !flip;
+    //Get the current state of the mouse
+    function getMouseState() {
+        
+        if (mousePressed && flip) {
+            return mouseStates.WASPRESSED
+        }
+        else if(mousePressed) {
+            return mouseStates.ISPRESSED
+        }
+        else if(!mousePressed && !flip) {
+            return mouseStates.WASRELEASED
+        }
+        else {
+            return mouseStates.ISRELEASED
+        }
     }
     
 	//Return
 	return {
-        init : init,
-        update : update,
-        updatePos : updatePos,
-        getPos : getPos,
-        isPressed : isPressed,
-        wasPressed : wasPressed,
-        wasReleased : wasReleased
+        init,
+        update,
+        updatePos,
+        getPos,
+        getMouseState,
+        mouseStates
     }
     
 }());

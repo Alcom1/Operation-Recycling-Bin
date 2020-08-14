@@ -39,12 +39,12 @@ engine.math = (function() {
     
 	//Return
 	return {
-        gmultx : gmultx,
-        gmulty : gmulty,
-        colPointRect : colPointRect,
-        colPointRectGrid : colPointRectGrid,
-        col1D : col1D,
-        clamp : clamp,
+        gmultx,
+        gmulty,
+        colPointRect,
+        colPointRectGrid,
+        col1D,
+        clamp,
     }
     
 }());
