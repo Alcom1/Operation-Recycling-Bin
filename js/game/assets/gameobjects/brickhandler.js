@@ -2,6 +2,7 @@
 var BrickHandler = function(args) { GameObject.call(this, args);
     this.rows = [];
     this.bricks = [];
+    this.count = 0;
 }
 
 BrickHandler.prototype = Object.create(GameObject.prototype);
@@ -56,7 +57,7 @@ BrickHandler.prototype.deselectBricks = function() {
 }
 
 //Set bricks to selected based on a provided cursor position
-BrickHandler.prototype.selectBricks = function(pos) {
+BrickHandler.prototype.selectBricks = function(pos, dir) {
 
     for (var row of this.rows) {
 
@@ -70,7 +71,10 @@ BrickHandler.prototype.selectBricks = function(pos) {
                 brick.width,
                 1)) {
 
-                this.recurseBrick(brick, 0)?.forEach(b => b.isSelected = true);
+                this.count = 0;
+                this.bricks.forEach(b => b.number = 0)
+
+                this.recurseBrick(brick, dir)?.forEach(b => b.isSelected = true);
                 this.bricks.forEach(b => b.isChecked = false);  //Uncheck all bricks before returning
             }
         }
@@ -78,34 +82,24 @@ BrickHandler.prototype.selectBricks = function(pos) {
 }
 
 //Recursively select bricks.
-BrickHandler.prototype.recurseBrick = function(brick1, prevDir) {
-    if (brick1.isGrey) { return null }
+BrickHandler.prototype.recurseBrick = function(brick1, dir) {
+    brick1.number = this.count++; 
+    if (brick1.isGrey) { return null; }
+
     brick1.isChecked = true;
 
-    var newBricks = [brick1]
+    var newBricks = [brick1];
 
-    for (var dir of [-1, 1]) {
+    for (var brick2 of this.rows.find(r => r.row == brick1.gpos.y + dir)?.bricks ?? []) {
 
-        for (var brick2 of this.rows.find(r => r.row == brick1.gpos.y + dir)?.bricks ?? []) {
+        if (!brick2.isChecked &&
+            engine.math.col1D(
+            brick1.gpos.x, brick1.gpos.x + brick1.width, 
+            brick2.gpos.x, brick2.gpos.x + brick2.width)) {
 
-            if (!brick2.isChecked &&
-                engine.math.col1D(
-                brick1.gpos.x, brick1.gpos.x + brick1.width, 
-                brick2.gpos.x, brick2.gpos.x + brick2.width)) {
-    
-                var rr = this.recurseBrick(brick2, dir);
-    
-                if(rr || prevDir != dir) { 
-                    
-                    newBricks = newBricks.concat(rr ?? []);
-                }
-                else {
-                    
-                    return null;
-                }
-            }
+            newBricks = newBricks.concat(this.recurseBrick(brick2, dir) ?? []);
         }
     }
-    
+
     return newBricks;
 }

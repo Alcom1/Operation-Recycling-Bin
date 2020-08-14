@@ -6,6 +6,7 @@ var Brick = function(args) { GameObject.call(this, args);
     this.width = args.width || 1;
     this.isSelected = false;
     this.isChecked = false;
+    this.number = 0;
 }
 
 Brick.prototype = Object.create(GameObject.prototype);
@@ -18,4 +19,8 @@ Brick.prototype.draw = function(ctx) {
         1, 
         this.width * engine.math.gmultx - 2, 
         engine.math.gmulty - 2);
+
+    ctx.font = "Consolas";
+    ctx.fillStyle = "black"; 
+    ctx.fillText(this.number, 4, 12);
 }

@@ -40,7 +40,7 @@
         },
         {    
             "name" : "Brick",
-            "position" : {"x" : 17, "y" : 8},
+            "position" : {"x" : 14, "y" : 8},
             "color" : "orange",
             "width" : 6
         },
@@ -87,68 +87,63 @@
         },
         {    
             "name" : "Brick",
-            "position" : {"x" : 17, "y" : 14},
+            "position" : {"x" : 15, "y" : 14},
             "color" : "cornflowerblue",
             "width" : 4
         },
         {    
             "name" : "Brick",
-            "position" : {"x" : 17, "y" : 15},
+            "position" : {"x" : 15, "y" : 15},
             "color" : "cornflowerblue",
             "width" : 4
         },
         {    
             "name" : "Brick",
-            "position" : {"x" : 17, "y" : 16},
+            "position" : {"x" : 15, "y" : 16},
             "color" : "cornflowerblue",
             "width" : 3
         },
         {    
             "name" : "Brick",
-            "position" : {"x" : 17, "y" : 17},
+            "position" : {"x" : 15, "y" : 17},
             "color" : "cornflowerblue",
             "width" : 3
         },
         {    
             "name" : "Brick",
-            "position" : {"x" : 17, "y" : 18},
+            "position" : {"x" : 15, "y" : 18},
             "color" : "cornflowerblue",
             "width" : 4
         },
         {    
             "name" : "Brick",
-            "position" : {"x" : 12, "y" : 14},
+            "position" : {"x" : 12, "y" : 9},
             "color" : "cornflowerblue",
             "width" : 4
         },
         {    
             "name" : "Brick",
-            "position" : {"x" : 12, "y" : 15},
+            "position" : {"x" : 12, "y" : 10},
             "color" : "cornflowerblue",
             "width" : 4
         },
         {    
             "name" : "Brick",
-            "position" : {"x" : 12, "y" : 16},
+            "position" : {"x" : 12, "y" : 11},
             "color" : "cornflowerblue",
             "width" : 3
         },
         {    
             "name" : "Brick",
-            "position" : {"x" : 12, "y" : 17},
+            "position" : {"x" : 12, "y" : 12},
             "color" : "cornflowerblue",
             "width" : 3
         },
         {    
             "name" : "Brick",
-            "position" : {"x" : 12, "y" : 18},
+            "position" : {"x" : 12, "y" : 13},
             "color" : "cornflowerblue",
             "width" : 4
-        },
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 15, "y" : 19},
-            "width" : 8
         }
     ]
 }

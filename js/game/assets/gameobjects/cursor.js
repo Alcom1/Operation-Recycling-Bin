@@ -34,7 +34,7 @@ Cursor.prototype.update = function(dt) {
 
         if(engine.managerMouse.wasPressed()) {
     
-            this.brickHandler.selectBricks(this.spos);
+            this.brickHandler.selectBricks(this.spos, -1);
         }
         
         if(engine.managerMouse.wasReleased()) {
