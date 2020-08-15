@@ -85,6 +85,33 @@
             "position" : {"x" : 22, "y" : 14},
             "width" : 8
         },
+
+
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 8, "y" : 7},
+            "color" : "orange",
+            "width" : 4
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 6, "y" : 8},
+            "color" : "orange",
+            "width" : 4
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 10, "y" : 8},
+            "color" : "orange",
+            "width" : 4
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 8, "y" : 9},
+            "color" : "orange",
+            "width" : 4
+        },
+
         {    
             "name" : "Brick",
             "position" : {"x" : 15, "y" : 14},

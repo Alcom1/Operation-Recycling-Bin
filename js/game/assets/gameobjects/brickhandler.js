@@ -116,7 +116,16 @@ BrickHandler.prototype.recurseBrick = function(brick1, dir) {
             brick2.gpos.x, brick2.gpos.x + brick2.width)) {
 
             //Recursively check the new brick and add the results to the current selection of new bricks
-            newBricks = newBricks.concat(this.recurseBrick(brick2, dir) ?? []);
+            var rr = this.recurseBrick(brick2, dir)                
+            
+            if(rr) { 
+                    
+                newBricks = newBricks.concat(rr ?? []);
+            }
+            else {
+                
+                return null;
+            }
         }
     }
 

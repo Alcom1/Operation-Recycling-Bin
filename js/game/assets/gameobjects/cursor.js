@@ -83,7 +83,12 @@ Cursor.prototype.update = function(dt) {
 
         //WASRELEASED
         case engine.managerMouse.mouseStates.WASRELEASED : this.radius = 15;
-            
+
+            //Deselect if we didn't carry yet.
+            if(this.states.DRAG) {
+                this.brickHandler.deselectBricks();
+            }
+
             //Reset state upon release
             this.state = this.states.NONE;
             break;
