@@ -94,14 +94,18 @@ BrickHandler.prototype.selectBricks = function(pos, dir) {
         this.bricks.forEach(b => b.number = 0)          //Reset brick counters
     
         this.recurseBrick(this.selectedBrick, dir)?.forEach(b => b.isSelected = true);  //Recursively select bricks
-        this.bricks.forEach(b => b.isChecked = false);  //Uncheck all bricks before finishing
+        this.bricks.forEach(b => { b.isChecked = false; b.isStopping = false; });       //Clear all recursions states
     }
 }
 
 //Recursively select bricks.
 BrickHandler.prototype.recurseBrick = function(brick1, state) {
     brick1.number = this.count++;       //Count this brick
-    if (brick1.isGrey) { return null; } //Return nothing if this is a grey brick
+    
+    if (brick1.isGrey ||                //Return nothing if this is a grey brick or is stopping recursion.
+        brick1.isStopping) { 
+        return null; 
+    } 
 
     brick1.isChecked = true;            //This brick has been checked
 
@@ -126,8 +130,9 @@ BrickHandler.prototype.recurseBrick = function(brick1, state) {
                         
                     newBricks = newBricks.concat(rr ?? []);
                 }
-                else {
-                    
+                else {                          //Stop checks if the recusion was blocked and there as been no direction change.
+                    brick2.isStopping = true;   //This brick will also act as a grey brick and block all recursion.
+                    brick2.isChecked = false;   //This brick should still be checked.
                     return null;
                 }
             }
