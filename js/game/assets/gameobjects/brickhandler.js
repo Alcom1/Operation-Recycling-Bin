@@ -99,7 +99,7 @@ BrickHandler.prototype.selectBricks = function(pos, dir) {
 }
 
 //Recursively select bricks.
-BrickHandler.prototype.recurseBrick = function(brick1, dir) {
+BrickHandler.prototype.recurseBrick = function(brick1, state) {
     brick1.number = this.count++;       //Count this brick
     if (brick1.isGrey) { return null; } //Return nothing if this is a grey brick
 
@@ -107,24 +107,29 @@ BrickHandler.prototype.recurseBrick = function(brick1, dir) {
 
     var newBricks = [brick1];           //Current brick is a new brick in the selection
 
-    //If row in the direction (above/below) has bricks, check each brick
-    for (var brick2 of this.rows.find(r => r.row == brick1.gpos.y + dir)?.bricks ?? []) {
+    //For directions
+    for (var dir of [-1, 1]) {
 
-        if (!brick2.isChecked &&        //If brick hasn't been checked
-            engine.math.col1D(          //If brick is in contact with the previous brick
-            brick1.gpos.x, brick1.gpos.x + brick1.width, 
-            brick2.gpos.x, brick2.gpos.x + brick2.width)) {
+        //If row in the direction (above/below) has bricks, check each brick
+        for (var brick2 of this.rows.find(r => r.row == brick1.gpos.y + dir)?.bricks ?? []) {
 
-            //Recursively check the new brick and add the results to the current selection of new bricks
-            var rr = this.recurseBrick(brick2, dir)                
-            
-            if(rr) { 
-                    
-                newBricks = newBricks.concat(rr ?? []);
-            }
-            else {
+            if (!brick2.isChecked &&        //If brick hasn't been checked
+                engine.math.col1D(          //If brick is in contact with the previous brick
+                brick1.gpos.x, brick1.gpos.x + brick1.width, 
+                brick2.gpos.x, brick2.gpos.x + brick2.width)) {
+
+                //Recursively check the new brick and add the results to the current selection of new bricks
+                var rr = this.recurseBrick(brick2, dir == state ? dir : 0)  //If the direction has changed, neutralize direction checks.             
                 
-                return null;
+                //Don't stop checks after the direction has changed once.
+                if(rr || state != 0) { 
+                        
+                    newBricks = newBricks.concat(rr ?? []);
+                }
+                else {
+                    
+                    return null;
+                }
             }
         }
     }
