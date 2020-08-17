@@ -48,22 +48,18 @@ Cursor.prototype.update = function(dt) {
 
                 //DRAGGING
                 case this.states.DRAG :
-                    if(Math.abs(diff) > this.pLength) {                         //If we've dragged a sufficient distance
+                    if(Math.abs(diff) > this.pLength) {                             //If we've dragged a sufficient distance
                                                                                 
-                        this.state = this.states.CARRY;                         //Start carrying
-                        this.pDir = Math.sign(diff);                            //Get the direction we're selecting bricks in
-                        this.brickHandler.selectBricks(this.ppos, this.pDir);   //Select bricks
+                        this.pDir = Math.sign(diff);                                //Get the direction we're selecting bricks in
+                        if(this.brickHandler.selectBricks(this.ppos, this.pDir)){   //Select bricks
+                            this.state = this.states.CARRY;                         //Start carrying if we selected some bricks
+                        }   
                     }
                     break;
 
                 //CARRYING
-                case this.states.CARRY :
-                    if(Math.sign(diff) != this.pDir && Math.abs(diff) > this.pLength) {
-        
-                        this.brickHandler.reselectBricks();
-                        this.pDir = -this.pDir;
-                        this.brickHandler.selectBricks(this.ppos, this.pDir);
-                    }
+                case this.states.CARRY : 
+                    //Nothing in CARRY state at the moment.
                     break;
             }
             break;

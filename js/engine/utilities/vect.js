@@ -1,14 +1,29 @@
 //Vector constructor
-var Vect = function(a, b) {
+var Vect = function(x, y) {
 	
-	this.x = a;
-	this.y = b;
+	this.x = x;
+	this.y = y;
 }
 
 //Returns this vector
 Vect.prototype.get = function() {
 
 	return new Vect(this.x, this.y, 0);
+}
+
+//Sets the values of this vector
+Vect.prototype.set = function(a, b) {
+
+	if(b != null) {
+
+		this.x = a;
+		this.y = b;
+	}
+	else {
+
+		this.x = a.x;
+		this.y = a.y;
+	}
 }
 
 //Vector addition
