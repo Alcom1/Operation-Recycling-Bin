@@ -26,8 +26,8 @@ Brick.prototype.update = function(dt) {
 Brick.prototype.draw = function(ctx) {
     ctx.fillStyle = 
         this.isSelected ? "White" : 
-        this.isPressed ? "#CCC" :
         this.isGrey ? "Grey" :
+        this.isPressed ? "#CCC" :
         this.color
     ctx.fillRect(
         1, 
