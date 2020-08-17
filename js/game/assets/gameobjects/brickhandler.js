@@ -94,18 +94,18 @@ BrickHandler.prototype.selectBricks = function(pos, dir) {
         var selection = this.recurseBrick(this.selectedBrick, [dir], true); //Recursively get the initial selection of bricks.
         selection?.forEach(b => b.isSelected = true);                       //
 
-        //Mark all bricks that lead to a grey brick as not floating.
+        //Mark all bricks that lead to a grey brick as grounded (not floating).
         if(selection != null) {
             this.bricksGrey.forEach(b => {  //For each grey brick
                 if(!b.isChecked) {          //Don't check checked grey bricks. (Reduces redundancy)
-                    this.recurseBrick(b, [-1, 1], false).forEach(c => c.isNotFloat = true)  //Recursively check for not-float.
+                    this.recurseBrick(b, [-1, 1], false).forEach(c => c.isGrounded = true)  //Recursively check for grounded bricks.
                 }
             });
         }
 
         //Select floating bricks and clear recursion states
         this.bricks.forEach(b => {
-            if(!b.isNotFloat && selection != null) {    //If we have a selection and this brick is floating
+            if(!b.isGrounded && selection != null) {    //If we have a selection and this brick is floating
                 b.isSelected = true;                    //Select the floating brick
             }
             b.clearRecursion();

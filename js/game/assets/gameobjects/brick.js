@@ -8,7 +8,7 @@ var Brick = function(args) { GameObject.call(this, args);
     this.isPressed = false;         //If we are pressing on this brick
     this.isSelected = false;        //If this brick is selected
 
-    this.isNotFloat = false;        //Temporary recursion state
+    this.isGrounded = false;        //Temporary recursion state
     this.isChecked = false;         //Temporary recursion state
     this.number = 0;                //Debug
 }
@@ -41,6 +41,6 @@ Brick.prototype.clearSelection = function() {
 
 //Clear this brick's recursion states
 Brick.prototype.clearRecursion = function() {
-    this.isNotFloat = false;
+    this.isGrounded = false;
     this.isChecked = false;
 }
