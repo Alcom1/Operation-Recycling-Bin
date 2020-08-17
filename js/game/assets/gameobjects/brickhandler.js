@@ -53,13 +53,13 @@ BrickHandler.prototype.init = function() {
 BrickHandler.prototype.deselectBricks = function() {
 
     this.selectedBrick = null;
-    this.bricks.forEach(b => b.isSelected = false);
+    this.bricks.forEach(b => b.clearSelection());
 }
 
 //Reselect all bricks (Set all bricks to a state for reselection)
 BrickHandler.prototype.reselectBricks = function() {
 
-    this.bricks.forEach(b => b.isSelected = false);
+    this.bricks.forEach(b => b.clearSelection());
 }
 
 //Select a single brick
@@ -77,7 +77,7 @@ BrickHandler.prototype.selectSingle = function(pos) {
             1)) {
 
             this.selectedBrick = brick;             //Establish current selected brick
-            this.selectedBrick.isSelected = true;   //Set brick to selected
+            this.selectedBrick.isPressed = true;    //Set brick to selected
             return this.selectedBrick;              //Return selected brick
         }
     }
@@ -91,62 +91,41 @@ BrickHandler.prototype.selectBricks = function(pos, dir) {
     //if there is currently a selected brick
     if (this.selectedBrick != null) {
 
-        var selection = this.recurseBrick(this.selectedBrick, dir);
-        selection?.forEach(b => b.isSelected = true);
+        var selection = this.recurseBrick(this.selectedBrick, [dir], true); //Recursively get the initial selection of bricks.
+        selection?.forEach(b => b.isSelected = true);                       //
 
+        //Mark all bricks that lead to a grey brick as not floating.
         if(selection != null) {
-            this.bricksGrey.forEach(b => this.recurseAnti(b).forEach(c => c.isAnti = true));
+            this.bricksGrey.forEach(b => {  //For each grey brick
+                if(!b.isChecked) {          //Don't check checked grey bricks. (Reduces redundancy)
+                    this.recurseBrick(b, [-1, 1], false).forEach(c => c.isNotFloat = true)  //Recursively check for not-float.
+                }
+            });
         }
 
+        //Select floating bricks and clear recursion states
         this.bricks.forEach(b => {
-            if(!b.isAnti && selection != null) {
-                b.isSelected = true;
+            if(!b.isNotFloat && selection != null) {    //If we have a selection and this brick is floating
+                b.isSelected = true;                    //Select the floating brick
             }
-            b.isChecked = false;
-            b.isAnti = false;
+            b.clearRecursion();
         });
     }
 }
 
 //Recursively select bricks.
-BrickHandler.prototype.recurseBrick = function(brick1, dir) {
-    if (brick1.isGrey) { return null; } //Return nothing if this is a grey brick or is stopping recursion.
-
-    brick1.isChecked = true;            //This brick has been checked
-
-    var selection = [brick1];           //Current brick is a new brick in the selection
-
-    //If row in the direction (above/below) has bricks, check each brick
-    for (var brick2 of this.rows.find(r => r.row == brick1.gpos.y + dir)?.bricks ?? []) {
-
-        if (!brick2.isChecked &&        //If brick hasn't been checked
-            engine.math.col1D(          //If brick is in contact with the previous brick
-            brick1.gpos.x, brick1.gpos.x + brick1.width, 
-            brick2.gpos.x, brick2.gpos.x + brick2.width)) {
-
-            //Recursively check the new brick and add the results to the current selection of new bricks
-            var rr = this.recurseBrick(brick2, dir)
-
-            if(rr) {
-                selection = selection.concat(rr);
-            }
-            else {
-                return null;
-            }
-        }
+BrickHandler.prototype.recurseBrick = function(brick1, dirs, checkGrey) {
+    if (checkGrey &&            //Return nothing for greybricks  
+        brick1.isGrey) {                   
+        return null; 
     }
 
-    return selection;   //Return all new bricks
-}
+    brick1.isChecked = true;    //This brick has been checked
 
-//Recursively select bricks.
-BrickHandler.prototype.recurseAnti = function(brick1) {
+    var selection = [brick1];   //Current brick is a new brick in the selection
 
-    brick1.isChecked = true;            //This brick has been checked
-
-    var selection = [brick1];           //Current brick is a new brick in the selection
     //For directions
-    for (var dir of [-1, 1]) {
+    for (var dir of dirs) {
 
         //If row in the direction (above/below) has bricks, check each brick
         for (var brick2 of this.rows.find(r => r.row == brick1.gpos.y + dir)?.bricks ?? []) {
@@ -156,8 +135,8 @@ BrickHandler.prototype.recurseAnti = function(brick1) {
                 brick1.gpos.x, brick1.gpos.x + brick1.width, 
                 brick2.gpos.x, brick2.gpos.x + brick2.width)) {
 
-                //Recursively check the new brick and add the results to the current selection of new bricks
-                var rr = this.recurseAnti(brick2, dir)
+                //Recursively check the new brick and add the results to the current selection
+                var rr = this.recurseBrick(brick2, dirs, checkGrey)
 
                 if(rr) {
                     selection = selection.concat(rr);
@@ -169,5 +148,5 @@ BrickHandler.prototype.recurseAnti = function(brick1) {
         }
     }
 
-    return selection;   //Return all new bricks
+    return selection;   //Return selection
 }

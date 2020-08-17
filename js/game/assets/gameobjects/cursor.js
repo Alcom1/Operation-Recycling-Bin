@@ -31,7 +31,7 @@ Cursor.prototype.init = function() {
 Cursor.prototype.update = function(dt) {
     this.spos = engine.managerMouse.getPos();
 
-    this.color = this.originalColor
+    this.color = this.originalColor;
     this.radius = this.originalRadius;
 
     //Mouse states
