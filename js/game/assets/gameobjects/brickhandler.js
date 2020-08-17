@@ -13,6 +13,7 @@ BrickHandler.prototype.init = function() {
 
     //Establish bricks
     this.bricks = engine.managerTag.get("Brick", "GameScene")
+    this.bricksGrey = this.bricks.filter(b => b.isGrey == true);
 
     //Divide bricks into rows
     this.bricks.forEach(b => {
@@ -90,27 +91,60 @@ BrickHandler.prototype.selectBricks = function(pos, dir) {
     //if there is currently a selected brick
     if (this.selectedBrick != null) {
 
-        this.count = 0;                                 //Reset counter
-        this.bricks.forEach(b => b.number = 0)          //Reset brick counters
-    
-        this.recurseBrick(this.selectedBrick, dir)?.forEach(b => b.isSelected = true);  //Recursively select bricks
-        this.bricks.forEach(b => { b.isChecked = false; b.isStopping = false; });       //Clear all recursions states
+        var selection = this.recurseBrick(this.selectedBrick, dir);
+        selection?.forEach(b => b.isSelected = true);
+
+        if(selection != null) {
+            this.bricksGrey.forEach(b => this.recurseAnti(b).forEach(c => c.isAnti = true));
+        }
+
+        this.bricks.forEach(b => {
+            if(!b.isAnti && selection != null) {
+                b.isSelected = true;
+            }
+            b.isChecked = false;
+            b.isAnti = false;
+        });
     }
 }
 
 //Recursively select bricks.
-BrickHandler.prototype.recurseBrick = function(brick1, state) {
-    brick1.number = this.count++;       //Count this brick
-    
-    if (brick1.isGrey ||                //Return nothing if this is a grey brick or is stopping recursion.
-        brick1.isStopping) { 
-        return null; 
-    } 
+BrickHandler.prototype.recurseBrick = function(brick1, dir) {
+    if (brick1.isGrey) { return null; } //Return nothing if this is a grey brick or is stopping recursion.
 
     brick1.isChecked = true;            //This brick has been checked
 
-    var newBricks = [brick1];           //Current brick is a new brick in the selection
+    var selection = [brick1];           //Current brick is a new brick in the selection
 
+    //If row in the direction (above/below) has bricks, check each brick
+    for (var brick2 of this.rows.find(r => r.row == brick1.gpos.y + dir)?.bricks ?? []) {
+
+        if (!brick2.isChecked &&        //If brick hasn't been checked
+            engine.math.col1D(          //If brick is in contact with the previous brick
+            brick1.gpos.x, brick1.gpos.x + brick1.width, 
+            brick2.gpos.x, brick2.gpos.x + brick2.width)) {
+
+            //Recursively check the new brick and add the results to the current selection of new bricks
+            var rr = this.recurseBrick(brick2, dir)
+
+            if(rr) {
+                selection = selection.concat(rr);
+            }
+            else {
+                return null;
+            }
+        }
+    }
+
+    return selection;   //Return all new bricks
+}
+
+//Recursively select bricks.
+BrickHandler.prototype.recurseAnti = function(brick1) {
+
+    brick1.isChecked = true;            //This brick has been checked
+
+    var selection = [brick1];           //Current brick is a new brick in the selection
     //For directions
     for (var dir of [-1, 1]) {
 
@@ -123,21 +157,17 @@ BrickHandler.prototype.recurseBrick = function(brick1, state) {
                 brick2.gpos.x, brick2.gpos.x + brick2.width)) {
 
                 //Recursively check the new brick and add the results to the current selection of new bricks
-                var rr = this.recurseBrick(brick2, dir == state ? dir : 0)  //If the direction has changed, neutralize direction checks.             
-                
-                //Don't stop checks after the direction has changed once.
-                if(rr || state != 0) { 
-                        
-                    newBricks = newBricks.concat(rr ?? []);
+                var rr = this.recurseAnti(brick2, dir)
+
+                if(rr) {
+                    selection = selection.concat(rr);
                 }
-                else {                          //Stop checks if the recusion was blocked and there as been no direction change.
-                    brick2.isStopping = true;   //This brick will also act as a grey brick and block all recursion.
-                    brick2.isChecked = false;   //This brick should still be checked.
+                else {
                     return null;
                 }
             }
         }
     }
 
-    return newBricks;                   //Return all new bricks
+    return selection;   //Return all new bricks
 }
