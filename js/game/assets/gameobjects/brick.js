@@ -25,10 +25,12 @@ Brick.prototype.update = function(dt) {
 //Game object draw
 Brick.prototype.draw = function(ctx) {
     ctx.fillStyle = 
-        this.isSelected ? "White" : 
         this.isGrey ? "Grey" :
-        this.isPressed ? "#CCC" :
-        this.color
+        this.color;
+    ctx.globalAlpha =
+        this.isPressed ? 0.8 :
+        this.isSelected ? 0.5 :
+        1.0;
     ctx.fillRect(
         1, 
         1, 
@@ -44,9 +46,15 @@ Brick.prototype.select = function(pos) {
 
 //Clear this brick's selection states
 Brick.prototype.clearSelection = function() {
+    if(this.isSelected) {
+        this.gpos.set(
+            this.gpos.x + Math.round(this.spos.x / engine.math.gmultx),
+            this.gpos.y + Math.round(this.spos.y / engine.math.gmulty))
+    }
     this.isPressed = false; 
     this.isSelected = false;
     this.spos.set(0, 0);        //Reset position
+    this.selectedPos.set(0, 0);
 }
 
 //Clear this brick's recursion states

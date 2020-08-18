@@ -16,23 +16,50 @@ BrickHandler.prototype.init = function() {
     this.bricksGrey = this.bricks.filter(b => b.isGrey == true);
 
     //Divide bricks into rows
-    this.bricks.forEach(b => {
+    this.bricks.forEach(b => this.addBrick(b));
 
-        var curr = this.rows.find(r => r.row == b.gpos.y)   //Get current row
+    //Sort
+    this.sort();
+}
 
-        if(curr == null) {          //If row does not exist, create a new one.
+//Deselect all bricks
+BrickHandler.prototype.deselectBricks = function() {
 
-            this.rows.push({
+    this.selectedBrick = null;                      //Clear selected brick
+    this.bricks.forEach(b => b.clearSelection());   //Clear selected status
 
-                row : b.gpos.y,
-                bricks : [b]
-            })
-        }
-        else {                      //If row exists, add bricks to it.
-
-            curr.bricks.push(b);
-        }
+    //Move bricks to the new row
+    this.rows.forEach(r => {
+        var move = r.bricks.filter(b => b.gpos.y != r.row);
+        r.bricks = r.bricks.filter(b => b.gpos.y == r.row);
+        move.forEach(b => this.addBrick(b));
     });
+
+    //Sort
+    this.sort();
+}
+
+//Add a brick to the brickhandler
+BrickHandler.prototype.addBrick = function(brick) {
+
+    var curr = this.rows.find(r => r.row == brick.gpos.y)   //Get current row
+
+    if(curr == null) {          //If row does not exist, create a new one.
+
+        this.rows.push({
+
+            row : brick.gpos.y,
+            bricks : [brick]
+        })
+    }
+    else {                      //If row exists, add bricks to it.
+
+        curr.bricks.push(brick);
+    }
+}
+
+//Sort bricks
+BrickHandler.prototype.sort = function() {
 
     //Sort rows
     this.rows.sort(
@@ -47,19 +74,6 @@ BrickHandler.prototype.init = function() {
 
 			return a.gpos.x > b.gpos.x;
 		}));
-}
-
-//Deselect all bricks
-BrickHandler.prototype.deselectBricks = function() {
-
-    this.selectedBrick = null;
-    this.bricks.forEach(b => b.clearSelection());
-}
-
-//Reselect all bricks (Set all bricks to a state for reselection)
-BrickHandler.prototype.reselectBricks = function() {
-
-    this.bricks.forEach(b => b.clearSelection());
 }
 
 //Select a single brick
@@ -98,7 +112,9 @@ BrickHandler.prototype.selectBricks = function(pos, dir) {
         if(selection != null) {
             this.bricksGrey.forEach(b => {  //For each grey brick
                 if(!b.isChecked) {          //Don't check checked grey bricks. (Reduces redundancy)
-                    this.recurseBrick(b, [-1, 1], false).forEach(c => c.isGrounded = true)  //Recursively check for grounded bricks.
+                    this.recurseBrick(b, [-1, 1], false).forEach(c => {
+                        c.isGrounded = true
+                    })  //Recursively check for grounded bricks.
                 }
             });
         }

@@ -2,7 +2,7 @@
 var Cursor = function(args) { GameObject.call(this, args);
 
     this.ppos = new Vect(0, 0);                 //Previous pressed position
-    this.pLength = 20;                          //Distance to enter carry state
+    this.pLength = 10;                          //Distance to enter carry state
     this.pDir = 0;                              //Direction the cursor was dragged in.
 
     this.originalRadius = args.radius || 4      //Starting radius of the cursor
