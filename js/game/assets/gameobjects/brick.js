@@ -18,7 +18,15 @@ Brick.prototype = Object.create(GameObject.prototype);
 
 Brick.prototype.update = function(dt) {
     if(this.isSelected) {
+
+        //Poisition based difference between stored selected position and new cursor position
         this.spos = engine.managerMouse.getPos().getSub(this.selectedPos);
+
+        //Grid positioning
+        this.spos.sub({
+            x : this.spos.x % engine.math.gmultx,
+            y : this.spos.y % engine.math.gmulty
+        })
     }
 }
 
