@@ -22,6 +22,31 @@ BrickHandler.prototype.init = function() {
     this.sort();
 }
 
+//Check selection collision
+BrickHandler.prototype.checkSelectionCollision = function() {
+
+    //For each selected brick
+    for(var brick1 of this.bricks.filter(b => b.isSelected == true)) {
+
+        //Combine grid positions and sub positions for true positions
+        var tposx = brick1.gpos.x + Math.round(brick1.spos.x / engine.math.gmultx);
+        var tposy = brick1.gpos.y + Math.round(brick1.spos.y / engine.math.gmulty);
+
+        //Check collision between current selected brick and every brick in its potential new row.
+        for(var brick2 of this.rows.find(r => r.row == tposy)?.bricks ?? []) {
+            if (!brick2.isSelected && 
+                engine.math.col1D(
+                tposx, tposx + brick1.width,
+                brick2.gpos.x, brick2.gpos.x + brick2.width)) {
+
+                return false;   //If there is a collision, stop and return false.
+            }
+        }
+    }
+
+    return true;
+}
+
 //Deselect all bricks
 BrickHandler.prototype.deselectBricks = function() {
 
