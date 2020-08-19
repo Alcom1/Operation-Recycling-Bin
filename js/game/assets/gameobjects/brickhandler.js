@@ -25,6 +25,8 @@ BrickHandler.prototype.init = function() {
 //Check selection collision
 BrickHandler.prototype.checkSelectionCollision = function() {
 
+    var ret = false;
+
     //For each selected brick
     for(var brick1 of this.bricks.filter(b => b.isSelected == true)) {
 
@@ -42,9 +44,31 @@ BrickHandler.prototype.checkSelectionCollision = function() {
                 return false;   //If there is a collision, stop and return false.
             }
         }
+
+        //Check collision between current selected brick and every brick in its potential adjacent rows.
+        if(!ret) {
+            //For directions
+            for (var dir of [-1, 1]) {
+
+                //If row in the direction (above/below) has bricks, check each brick
+                for (var brick2 of this.rows.find(r => r.row == tposy + dir)?.bricks ?? []) {
+                    if (!brick2.isSelected && 
+                        engine.math.col1D(
+                        tposx, tposx + brick1.width,
+                        brick2.gpos.x, brick2.gpos.x + brick2.width)) {
+        
+                        ret = true; //If there was an adjacent brick, break;
+                        break;
+                    }
+                }
+                if(ret) {
+                    break;          //If there was an adjacent brick, break;
+                }
+            }
+        }
     }
 
-    return true;
+    return ret; //Return true if there was no same-row collision and at least one case of adjacent-row collision.
 }
 
 //Deselect all bricks

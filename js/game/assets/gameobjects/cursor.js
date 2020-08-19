@@ -79,7 +79,7 @@ Cursor.prototype.update = function(dt) {
         case engine.managerMouse.mouseStates.WASRELEASED : this.radius = 15;
 
             //Reset state upon release
-            if(this.brickHandler.checkSelectionCollision()) {
+            if(this.state != this.states.CARRY || this.brickHandler.checkSelectionCollision()) {
 
                 //Deselect if we didn't carry yet.
                 if(this.states.DRAG) {
