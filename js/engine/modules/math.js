@@ -36,6 +36,19 @@ engine.math = (function() {
         
         return a2 > b1 && a1 < b2
     }
+
+    function colorMult(color, mult) {
+        var channels = [];
+
+        for(i = 0; i < 3; i++) {
+            channels[i] = color.substr(2 * i + 1, 2);
+        }
+
+        channels.forEach((c, i) => channels[i] = clamp(Math.round(parseInt(c, 16) * mult), 0, 255));
+        channels.forEach((c, i) => channels[i] = ("0" + c.toString(16)).substr(-2));
+
+        return "#" + channels.join('');
+    }
     
 	//Return
 	return {
@@ -45,6 +58,7 @@ engine.math = (function() {
         colPointRectGrid,
         col1D,
         clamp,
+        colorMult
     }
     
 }());

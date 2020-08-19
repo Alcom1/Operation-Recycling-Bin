@@ -11,7 +11,7 @@ var GameObject = function(args) {
 }
 
 //Initialize a game object after its scene is loaded.
-GameObject.prototype.init = function() {
+GameObject.prototype.init = function(ctx) {
 
 }
 
@@ -29,4 +29,3 @@ GameObject.prototype.update = function(dt) {
 GameObject.prototype.draw = function(ctx) {
 	
 }
-

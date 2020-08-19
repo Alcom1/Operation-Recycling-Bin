@@ -9,7 +9,7 @@ var BrickHandler = function(args) { GameObject.call(this, args);
 BrickHandler.prototype = Object.create(GameObject.prototype);
 
 //Initialize a game object after its scene is loaded.
-BrickHandler.prototype.init = function() {
+BrickHandler.prototype.init = function(ctx) {
 
     //Establish bricks
     this.bricks = engine.managerTag.get("Brick", "GameScene")

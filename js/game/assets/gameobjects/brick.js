@@ -2,6 +2,10 @@
 var Brick = function(args) { GameObject.call(this, args);
 
     this.color = args.color;            //The color of this brick
+    this.colorDark = null;
+
+    this.zIndex = this.gpos.x - this.gpos.y * 100;  //Z-sort vertically and then horizontally.
+
     this.isGrey = !args.color;          //If this is a static grey brick
     this.width = args.width || 1;       //Width of this brick
 
@@ -15,6 +19,16 @@ var Brick = function(args) { GameObject.call(this, args);
 }
 
 Brick.prototype = Object.create(GameObject.prototype);
+
+Brick.prototype.init = function(ctx) {
+    
+    //Initialize colors
+    ctx.fillStyle = 
+        this.isGrey ? "Grey" :
+        this.color;
+
+    this.colorDark = engine.math.colorMult(ctx.fillStyle, 0.625);
+}
 
 Brick.prototype.update = function(dt) {
     if(this.isSelected) {
@@ -32,18 +46,47 @@ Brick.prototype.update = function(dt) {
 
 //Game object draw
 Brick.prototype.draw = function(ctx) {
-    ctx.fillStyle = 
-        this.isGrey ? "Grey" :
-        this.color;
+
+    //Global transparency for selection states
     ctx.globalAlpha =
         this.isPressed ? 0.8 :
         this.isSelected ? 0.5 :
         1.0;
+
+    //Base rectangle color
+    ctx.fillStyle = 
+        this.isGrey ? "Grey" :
+        this.color;
+
+    //Base rectangle
     ctx.fillRect(
-        1, 
-        1, 
-        this.width * engine.math.gmultx - 2, 
-        engine.math.gmulty - 2);
+        2, 
+        0, 
+        this.width * engine.math.gmultx, 
+        engine.math.gmulty);
+
+    //Border style
+    ctx.strokeStyle = this.colorDark;
+    ctx.lineWidth = 1;
+    ctx.lineCap = "square";
+
+    //Border
+    ctx.beginPath();
+    ctx.moveTo(1.5, 0.5);
+    ctx.lineTo(1.5, engine.math.gmulty - 0.5);
+    ctx.lineTo(this.width * engine.math.gmultx + 2, engine.math.gmulty - 0.5);
+    ctx.stroke();
+
+    //Right face style
+    ctx.fillStyle = this.colorDark;
+
+    //Right face
+    ctx.beginPath();
+    ctx.moveTo(this.width * engine.math.gmultx + 2, engine.math.gmulty + 0);
+    ctx.lineTo(this.width * engine.math.gmultx + 2, 0);
+    ctx.lineTo(this.width * engine.math.gmultx + 13, -11);
+    ctx.lineTo(this.width * engine.math.gmultx + 13, engine.math.gmulty - 11);
+    ctx.fill();
 }
 
 //Setup this brick for selecting

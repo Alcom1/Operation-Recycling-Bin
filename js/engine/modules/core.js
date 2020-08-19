@@ -121,8 +121,8 @@ engine.core = (function() {
 			engine.managerTag.push(go, scene.name);
 		});
 
-		scene.sort();	//Sort all new game objects.
-		scene.init();	//Initialize all new objects in scene.
+		scene.sort();		//Sort all new game objects.
+		scene.init(ctx);	//Initialize all new objects in scene.
 		scenes.push(scene);
 		sort();
 	}

@@ -9,7 +9,7 @@
         },
         {
             "name" : "Cursor",
-            "zIndex" : 50,
+            "zIndex" : 500,
             "color" : "Red"
         },
         {    

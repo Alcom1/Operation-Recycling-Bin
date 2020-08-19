@@ -8,9 +8,11 @@ var Scene = function(args) {
 }
 
 //Initialize all game objects in this scene
-Scene.prototype.init = function() {
+Scene.prototype.init = function(ctx) {
 
-	this.gameObjects.forEach(go =>  go.init());
+	ctx.save();
+		this.gameObjects.forEach(go =>  go.init(ctx));
+	ctx.restore();
 }
 
 //Clear

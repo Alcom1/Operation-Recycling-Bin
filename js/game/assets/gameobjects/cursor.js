@@ -23,7 +23,7 @@ var Cursor = function(args) { GameObject.call(this, args);
 Cursor.prototype = Object.create(GameObject.prototype);
 
 //Initialize a game object after its scene is loaded.
-Cursor.prototype.init = function() {
+Cursor.prototype.init = function(ctx) {
     this.brickHandler = engine.managerTag.get("BrickHandler", "GameScene")[0];
 }
 
