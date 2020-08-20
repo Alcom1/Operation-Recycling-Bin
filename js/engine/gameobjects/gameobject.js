@@ -8,6 +8,8 @@ var GameObject = function(args) {
 
 	this.zIndex = args.zIndex ?? 0							//zIndex
 	this.tag = args.tag || args.name;
+
+	this.parent = null;		//Parent is established when game objects are pushed into the scene.
 }
 
 //Initialize a game object after its scene is loaded.

@@ -46,6 +46,7 @@ Cursor.prototype.update = function(dt) {
                                                                         
                 this.pDir = Math.sign(diff);                                //Get the direction we're selecting bricks in
                 if(this.brickHandler.selectBricks(this.ppos, this.pDir)){   //Select bricks
+                    this.parent.sort();                                     //Sort for new brick z-indices
                     this.state = this.states.CARRY;                         //Start carrying if we selected some bricks
                 }   
             }
@@ -84,6 +85,7 @@ Cursor.prototype.update = function(dt) {
                 //Deselect if we didn't carry yet.
                 if(this.states.DRAG) {
                     this.brickHandler.deselectBricks();
+                    this.parent.sort(); //Sort for new brick z-indices
                 }
 
                 this.state = this.states.NONE;
