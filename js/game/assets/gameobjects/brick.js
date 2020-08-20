@@ -96,6 +96,70 @@ Brick.prototype.draw = function(ctx) {
     ctx.lineTo(this.width * engine.math.gmultx + 13, -11);
     ctx.lineTo(this.width * engine.math.gmultx + 2, 0);
     ctx.fill();
+
+    //Stud
+    for(j = 0; j < this.width; j++) {
+
+        //Stud
+        for(i = 1; i >= 0; i--) {
+
+            var xoff = 15 * j + i * 6;
+            var yoff = i * 6;
+
+            //Stud column style
+            var gradient = ctx.createLinearGradient(6 + xoff, 0, 17 + xoff, 0);
+            gradient.addColorStop(0, this.color);
+            gradient.addColorStop(1, this.colorDark);
+            ctx.fillStyle = gradient;
+
+            //Stud column
+            ctx.beginPath();
+            ctx.ellipse(11.5 + xoff, -3 - yoff, 5.5, 2, 0, 0, Math.PI);
+            ctx.ellipse(11.5 + xoff, -6 - yoff, 5.5, 2, 0, Math.PI, 0);
+            ctx.fill();
+
+            //Stud top style
+            ctx.fillStyle = this.colorBright;
+
+            //Stud top
+            ctx.beginPath();
+            ctx.ellipse(11.5 + xoff, -6 - yoff, 5.5, 2, 0, 0, 2 * Math.PI);
+            ctx.fill();
+
+            //Draw holes in studs if they are grey
+            if(this.isGrey) {
+
+                //Stud grey hole style
+                ctx.fillStyle = this.color;
+    
+                //Stud grey hole
+                ctx.beginPath();
+                ctx.ellipse(11.5 + xoff, -6 - yoff, 3.2, 1.6, 0, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+        }
+    }
+
+    //Grey holes
+    if(this.isGrey) {
+        for(j = 1; j < this.width; j++) {
+            
+            var xoff = 15 * j
+
+            //Hole border
+            ctx.beginPath();
+            ctx.arc(2 + xoff, 8, 5.5, 0, 2 * Math.PI);
+            ctx.stroke();
+
+            //Hole center style
+            ctx.fillStyle = this.colorDark;
+
+            //Hole center
+            ctx.beginPath();
+            ctx.arc(2 + xoff, 8, 3.5, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+    }
 }
 
 //Setup this brick for selecting
