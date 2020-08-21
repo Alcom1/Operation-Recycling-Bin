@@ -24,12 +24,12 @@ Cursor.prototype = Object.create(GameObject.prototype);
 
 //Initialize a game object after its scene is loaded.
 Cursor.prototype.init = function(ctx) {
-    this.brickHandler = engine.managerTag.get("BrickHandler", "GameScene")[0];
+    this.brickHandler = engine.tag.get("BrickHandler", "GameScene")[0];
 }
 
 //Game object update
 Cursor.prototype.update = function(dt) {
-    this.spos = engine.managerMouse.getPos();
+    this.spos = engine.mouse.getPos();
 
     this.color = this.originalColor;
     this.radius = this.originalRadius;
@@ -59,10 +59,10 @@ Cursor.prototype.update = function(dt) {
     }
 
     //Mouse states
-    switch(engine.managerMouse.getMouseState()) {
+    switch(engine.mouse.getMouseState()) {
 
         //WASPRESSED
-        case engine.managerMouse.mouseStates.WASPRESSED : this.radius = 15;
+        case engine.mouse.mouseStates.WASPRESSED : this.radius = 15;
 
             if(this.state == this.states.NONE) {
                 //Deselect bricks for a new selection
@@ -77,7 +77,7 @@ Cursor.prototype.update = function(dt) {
             break;
 
         //WASRELEASED
-        case engine.managerMouse.mouseStates.WASRELEASED : this.radius = 15;
+        case engine.mouse.mouseStates.WASRELEASED : this.radius = 15;
 
             //Reset state upon release
             if(this.state != this.states.CARRY || this.brickHandler.checkSelectionCollision()) {

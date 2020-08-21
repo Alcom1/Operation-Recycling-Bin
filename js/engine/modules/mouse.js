@@ -1,8 +1,8 @@
 //engine
 var engine = engine || {};
 
-//Module that plays and manages sounds.
-engine.managerMouse = (function() {
+//Module that manages mouse movement and states.
+engine.mouse = (function() {
 
     var mousePos; //Mouse position.
     var mousePressed = false;

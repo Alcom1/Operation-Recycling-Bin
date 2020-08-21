@@ -1,10 +1,12 @@
 //Load
 window.onload = function() {
 
-	//Main
-	engine.managerTag.init();
-	engine.managerMouse.init(
-		document.querySelector('canvas'));
+	//Secondary modules
+	engine.baker.init(document.querySelector('canvas'));
+	engine.mouse.init(document.querySelector('canvas'));
+	engine.tag.init();
+
+	//Primary module
 	engine.core.init(
 		document.querySelector('canvas'), 
 		"js/game/assets/scenes/",

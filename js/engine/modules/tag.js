@@ -2,7 +2,7 @@
 var engine = engine || {};
 
 //Module that handles tags and game objects grouped by tag.
-engine.managerTag = (function() {
+engine.tag = (function() {
 
     var masterGroup = [];   //Master group containing scene groups.
     var TAGLESS_TAG = "tagless"

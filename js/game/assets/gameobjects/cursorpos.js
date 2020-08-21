@@ -7,6 +7,6 @@ CursorPos.prototype = Object.create(TextDrawer.prototype);
 
 //Game object update
 CursorPos.prototype.update = function(dt) {
-    var currentMouse = engine.managerMouse.getPos();
+    var currentMouse = engine.mouse.getPos();
     this.text = "{" + currentMouse.x + "," + currentMouse.y + "}";
 }

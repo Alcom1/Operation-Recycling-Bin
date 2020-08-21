@@ -5,6 +5,8 @@ var Brick = function(args) { GameObject.call(this, args);
     this.colorDark = null;
     this.colorBright = null;
 
+    this.image = null;                                      //Baked image data for this brick
+
     this.zIndex = this.gpos.x - this.gpos.y * 100;          //Z-sort vertically and then horizontally.
 
     this.isGrey = !args.color;          //If this is a static grey brick
@@ -28,13 +30,22 @@ Brick.prototype.init = function(ctx) {
 
     this.colorDark = engine.math.colorMult(ctx.fillStyle, 0.625);
     this.colorBright = engine.math.colorAdd(ctx.fillStyle, 48);
+
+    //Bake image of brick
+    this.image = new Image;
+    this.image.src = engine.baker.bake(
+        this, 
+        this.drawBrick, 
+        this.width * engine.math.gmultx + 12,
+        32,
+        "BRICK." + this.width + "." + this.color);
 }
 
 Brick.prototype.update = function(dt) {
     if(this.isSelected) {
 
         //Poisition based difference between stored selected position and new cursor position
-        this.spos = engine.managerMouse.getPos().getSub(this.selectedPos);
+        this.spos = engine.mouse.getPos().getSub(this.selectedPos);
 
         //Grid positioning
         this.spos.sub({
@@ -46,12 +57,47 @@ Brick.prototype.update = function(dt) {
 
 //Game object draw
 Brick.prototype.draw = function(ctx) {
-
+    
     //Global transparency for selection states
     ctx.globalAlpha =
         this.isPressed ? 0.8 :
         this.isSelected ? 0.5 :
         1.0;
+    
+    ctx.drawImage(this.image, 0, -engine.math.drawOffset);
+}
+
+//Setup this brick for selecting
+Brick.prototype.select = function(pos) {
+    this.isSelected = true; 
+    this.selectedPos.set(pos);
+    this.zIndex = 49000;
+}
+
+//Clear this brick's selection states
+Brick.prototype.clearSelection = function() {
+    if(this.isSelected) {
+        this.gpos.set(
+            this.gpos.x + Math.round(this.spos.x / engine.math.gmultx),
+            this.gpos.y + Math.round(this.spos.y / engine.math.gmulty))
+    }
+    this.isPressed = false; 
+    this.isSelected = false;
+    this.spos.set(0, 0);                            //Reset position
+    this.selectedPos.set(0, 0);
+    this.zIndex = this.gpos.x - this.gpos.y * 100;  //Set z-index
+}
+
+//Clear this brick's recursion states
+Brick.prototype.clearRecursion = function() {
+    this.isGrounded = false;
+    this.isChecked = false;
+}
+
+Brick.prototype.drawBrick = function(ctx) {
+
+    //Offset for baked drawing.
+    ctx.translate(0, engine.math.drawOffset);
 
     //Base rectangle color
     ctx.fillStyle = this.color;
@@ -103,7 +149,7 @@ Brick.prototype.draw = function(ctx) {
         //Stud
         for(i = 1; i >= 0; i--) {
 
-            var xoff = 15 * j + i * 6;
+            var xoff = engine.math.gmultx * j + i * 6;
             var yoff = i * 6;
 
             //Stud column style
@@ -144,7 +190,7 @@ Brick.prototype.draw = function(ctx) {
     if(this.isGrey) {
         for(j = 1; j < this.width; j++) {
             
-            var xoff = 15 * j
+            var xoff = engine.math.gmultx * j
 
             //Hole border
             ctx.beginPath();
@@ -160,31 +206,4 @@ Brick.prototype.draw = function(ctx) {
             ctx.fill();
         }
     }
-}
-
-//Setup this brick for selecting
-Brick.prototype.select = function(pos) {
-    this.isSelected = true; 
-    this.selectedPos.set(pos);
-    this.zIndex = 49000;
-}
-
-//Clear this brick's selection states
-Brick.prototype.clearSelection = function() {
-    if(this.isSelected) {
-        this.gpos.set(
-            this.gpos.x + Math.round(this.spos.x / engine.math.gmultx),
-            this.gpos.y + Math.round(this.spos.y / engine.math.gmulty))
-    }
-    this.isPressed = false; 
-    this.isSelected = false;
-    this.spos.set(0, 0);                            //Reset position
-    this.selectedPos.set(0, 0);
-    this.zIndex = this.gpos.x - this.gpos.y * 100;  //Set z-index
-}
-
-//Clear this brick's recursion states
-Brick.prototype.clearRecursion = function() {
-    this.isGrounded = false;
-    this.isChecked = false;
 }

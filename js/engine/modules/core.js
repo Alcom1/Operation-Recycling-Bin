@@ -3,6 +3,7 @@ var engine = engine || {}
 
 //Engine core
 engine.core = (function() {
+	
 	var WIDTH = 650, 				// Canvas width (set to default)
 		HEIGHT = 420,				// Canvas height (set to default)
 		scenePath = "",				// Path scenes are located in
@@ -28,7 +29,7 @@ engine.core = (function() {
 		ctx = canvas.getContext('2d');
 		
 		// canvas actions
-		canvas.onmousemove = engine.managerMouse.updatePos.bind(this);
+		canvas.onmousemove = engine.mouse.updatePos.bind(this);
 
 		// load the first scene
 		loadScene(startScene);
@@ -63,7 +64,7 @@ engine.core = (function() {
 		draw(ctx);
 
 		//Module updates
-		engine.managerMouse.update(dt);
+		engine.mouse.update(dt);
 		
 		//Draw debug info
 		if (debug)
@@ -118,7 +119,7 @@ engine.core = (function() {
 		sceneData.gameObjects.forEach(o => {
 			var go = new window[o.name](o || {});
 			scene.push(go);
-			engine.managerTag.push(go, scene.name);
+			engine.tag.push(go, scene.name);
 		});
 
 		scene.sort();		//Sort all new game objects.

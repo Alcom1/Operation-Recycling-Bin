@@ -12,7 +12,7 @@ BrickHandler.prototype = Object.create(GameObject.prototype);
 BrickHandler.prototype.init = function(ctx) {
 
     //Establish bricks
-    this.bricks = engine.managerTag.get("Brick", "GameScene")
+    this.bricks = engine.tag.get("Brick", "GameScene")
     this.bricksGrey = this.bricks.filter(b => b.isGrey == true);
 
     //Divide bricks into rows
