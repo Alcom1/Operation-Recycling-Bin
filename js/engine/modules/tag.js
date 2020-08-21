@@ -14,7 +14,7 @@ engine.tag = (function() {
     }
     
     //Push a game object to the master group
-    function push(gameObject, sceneName) {
+    function pushGOToScene(gameObject, sceneName) {
 
         var curr = masterGroup.find(sg => sg.name == sceneName );
 
@@ -32,12 +32,12 @@ engine.tag = (function() {
         else {
 
             console.log("Existing Scene Group : " + sceneName)
-            pushGO(gameObject, curr.sceneGroup)
+            pushGOToGroup(gameObject, curr.sceneGroup)
         }
     }
 
     //Push a game object to the scene group
-    function pushGO(gameObject, sceneGroup) {
+    function pushGOToGroup(gameObject, sceneGroup) {
 
         gameObject.tag = gameObject.tag || TAGLESS_TAG
 
@@ -80,7 +80,7 @@ engine.tag = (function() {
 	//Return
 	return {
         init,
-        push,
+        pushGO : pushGOToScene,
         get,
         clear,
     }

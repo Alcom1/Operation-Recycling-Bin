@@ -117,9 +117,9 @@ engine.core = (function() {
 		var scene = new Scene(sceneData.scene);
 
 		sceneData.gameObjects.forEach(o => {
-			var go = new window[o.name](o || {});
-			scene.push(go);
-			engine.tag.push(go, scene.name);
+			var go = new window[o.name]({...o, scene});
+			scene.pushGO(go);
+			engine.tag.pushGO(go, scene.name);
 		});
 
 		scene.sort();		//Sort all new game objects.

@@ -71,7 +71,7 @@ BrickHandler.prototype.checkSelectionCollision = function() {
 BrickHandler.prototype.deselectBricks = function() {
 
     this.selectedBrick = null;                      //Clear selected brick
-    this.bricks.forEach(b => b.clearSelection());   //Clear selected status
+    this.bricks.forEach(b => b.deselect());   //Clear selected status
 
     //Move bricks to the new row
     this.rows.forEach(r => {
@@ -136,7 +136,7 @@ BrickHandler.prototype.selectSingle = function(pos) {
             1)) {
 
             this.selectedBrick = brick;             //Establish current selected brick
-            this.selectedBrick.isPressed = true;    //Set brick to selected
+            this.selectedBrick.press();             //Set brick to selected
             return this.selectedBrick;              //Return selected brick
         }
     }

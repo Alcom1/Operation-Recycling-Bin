@@ -7,6 +7,7 @@ engine.math = (function() {
     var gmultx = 15;
     var gmulty = 18;
     var drawOffset = 14;
+    var subCursorZIndex = 49000;
 
     //constrain value between min and max (inclusive)
     function clamp(val, min, max) {
@@ -77,6 +78,7 @@ engine.math = (function() {
         gmultx,
         gmulty,
         drawOffset,
+        subCursorZIndex,
         colPointRect,
         colPointRectGrid,
         col1D,

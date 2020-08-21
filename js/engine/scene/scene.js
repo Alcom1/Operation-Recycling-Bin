@@ -22,7 +22,7 @@ Scene.prototype.clear = function() {
 }
 
 //Push Game Object
-Scene.prototype.push = function(gameObject) {
+Scene.prototype.pushGO = function(gameObject) {
 	
 	gameObject.parent = this;			//Establish parent scene before pushing
 	this.gameObjects.push(gameObject);

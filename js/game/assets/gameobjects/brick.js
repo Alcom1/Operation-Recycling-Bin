@@ -1,16 +1,16 @@
 //Brick object
 var Brick = function(args) { GameObject.call(this, args);
 
-    this.color = engine.math.colorTranslate(args.color);    //The color of this brick
+    this.color = engine.math.colorTranslate(args.color);        //The color of this brick
     this.colorDark = null;
     this.colorBright = null;
 
-    this.image = null;                                      //Baked image data for this brick
-
-    this.zIndex = this.gpos.x - this.gpos.y * 100;          //Z-sort vertically and then horizontally.
+    this.image = null;                                          //Baked image data for this brick
 
     this.isGrey = !args.color;          //If this is a static grey brick
     this.width = args.width || 1;       //Width of this brick
+
+    this.zIndex = this.gpos.x - this.gpos.y * 100 + this.width; //Z-sort vertically and then horizontally.
 
     this.isPressed = false;             //If we are pressing on this brick
     this.isSelected = false;            //If this brick is selected
@@ -19,6 +19,20 @@ var Brick = function(args) { GameObject.call(this, args);
 
     this.isGrounded = false;            //Temporary recursion state
     this.isChecked = false;             //Temporary recursion state
+
+    this.studs = [];
+
+    for(var i = 0; i < this.width; i++) {
+        this.studs.push(new BrickStud({ 
+            ...args, 
+            position : {
+                x : args.position.x + i, 
+                y : args.position.y - 1
+            }
+        }));
+        this.parent.pushGO(this.studs[i]);
+    }
+
 }
 
 Brick.prototype = Object.create(GameObject.prototype);
@@ -51,7 +65,10 @@ Brick.prototype.update = function(dt) {
         this.spos.sub({
             x : this.spos.x % engine.math.gmultx,
             y : this.spos.y % engine.math.gmulty
-        })
+        });
+
+        //Set studs to match the position of this brick while selected.
+        this.resetStuds();
     }
 }
 
@@ -64,18 +81,34 @@ Brick.prototype.draw = function(ctx) {
         this.isSelected ? 0.5 :
         1.0;
     
+    //Draw the stored image for this brick
     ctx.drawImage(this.image, 0, -engine.math.drawOffset);
+}
+
+//Reset studs to match the position of this brick
+Brick.prototype.resetStuds = function() {
+    this.studs.forEach((s, i) => {
+        s.gpos.set(this.gpos.x + i, this.gpos.y - 1);
+        s.spos.set(this.spos);
+    });
+}
+
+//Setup this brick for pressing
+Brick.prototype.press = function() {
+    this.isPressed = true;
+    this.studs.forEach(s => s.press());
 }
 
 //Setup this brick for selecting
 Brick.prototype.select = function(pos) {
     this.isSelected = true; 
     this.selectedPos.set(pos);
-    this.zIndex = 49000;
+    this.zIndex = engine.math.subCursorZIndex;
+    this.studs.forEach(s => s.select());
 }
 
 //Clear this brick's selection states
-Brick.prototype.clearSelection = function() {
+Brick.prototype.deselect = function() {
     if(this.isSelected) {
         this.gpos.set(
             this.gpos.x + Math.round(this.spos.x / engine.math.gmultx),
@@ -83,9 +116,11 @@ Brick.prototype.clearSelection = function() {
     }
     this.isPressed = false; 
     this.isSelected = false;
-    this.spos.set(0, 0);                            //Reset position
+    this.spos.set(0, 0);                                        //Reset position
     this.selectedPos.set(0, 0);
-    this.zIndex = this.gpos.x - this.gpos.y * 100;  //Set z-index
+    this.zIndex = this.gpos.x - this.gpos.y * 100 + this.width; //Set z-index
+    this.resetStuds();                                          //Reset studs to match the final brick position
+    this.studs.forEach(s => s.deselect());                //Clear stud selection states.
 }
 
 //Clear this brick's recursion states
@@ -142,49 +177,6 @@ Brick.prototype.drawBrick = function(ctx) {
     ctx.lineTo(this.width * engine.math.gmultx + 13, -11);
     ctx.lineTo(this.width * engine.math.gmultx + 2, 0);
     ctx.fill();
-
-    //Stud
-    for(j = 0; j < this.width; j++) {
-
-        //Stud
-        for(i = 1; i >= 0; i--) {
-
-            var xoff = engine.math.gmultx * j + i * 6;
-            var yoff = i * 6;
-
-            //Stud column style
-            var gradient = ctx.createLinearGradient(6 + xoff, 0, 17 + xoff, 0);
-            gradient.addColorStop(0, this.color);
-            gradient.addColorStop(1, this.colorDark);
-            ctx.fillStyle = gradient;
-
-            //Stud column
-            ctx.beginPath();
-            ctx.ellipse(11.5 + xoff, -3 - yoff, 5.5, 2, 0, 0, Math.PI);
-            ctx.ellipse(11.5 + xoff, -6 - yoff, 5.5, 2, 0, Math.PI, 0);
-            ctx.fill();
-
-            //Stud top style
-            ctx.fillStyle = this.colorBright;
-
-            //Stud top
-            ctx.beginPath();
-            ctx.ellipse(11.5 + xoff, -6 - yoff, 5.5, 2, 0, 0, 2 * Math.PI);
-            ctx.fill();
-
-            //Draw holes in studs if they are grey
-            if(this.isGrey) {
-
-                //Stud grey hole style
-                ctx.fillStyle = this.color;
-    
-                //Stud grey hole
-                ctx.beginPath();
-                ctx.ellipse(11.5 + xoff, -6 - yoff, 3.2, 1.6, 0, 0, 2 * Math.PI);
-                ctx.fill();
-            }
-        }
-    }
 
     //Grey holes
     if(this.isGrey) {
