@@ -69,7 +69,7 @@ Cursor.prototype.update = function(dt) {
                 this.brickHandler.deselectBricks();
         
                 //If this cursor selected a brick, set it to DRAGGING state.
-                if(this.brickHandler.selectSingle(this.spos)) {
+                if(this.brickHandler.pressBricks(this.spos)) {
                     this.state = this.states.DRAG;
                     this.ppos = this.spos;
                 }

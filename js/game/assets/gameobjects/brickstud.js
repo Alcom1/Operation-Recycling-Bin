@@ -46,7 +46,7 @@ BrickStud.prototype.draw = function(ctx) {
         1.0;
     
     //Draw the stored image for this stud
-    ctx.drawImage(this.image, 0, -engine.math.drawOffset);
+    ctx.drawImage(this.image, 0, -engine.math.zDepth - 3);
 }
 
 //Setup this stud for pressing
@@ -71,7 +71,7 @@ BrickStud.prototype.deselect = function() {
 BrickStud.prototype.drawBrickStud = function(ctx) {
 
     //Offset for baked drawing.
-    ctx.translate(0, engine.math.drawOffset + engine.math.gmulty);
+    ctx.translate(0, engine.math.gmulty + 14);
 
     //Stud
     for(i = 1; i >= 0; i--) {

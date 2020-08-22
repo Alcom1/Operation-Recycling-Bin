@@ -56,8 +56,8 @@ Brick.prototype.init = function(ctx) {
     this.image.src = engine.baker.bake(
         this, 
         this.drawBrick, 
-        this.width * engine.math.gmultx + 12,
-        32,
+        this.width * engine.math.gmultx + engine.math.zDepth + 3,
+        engine.math.gmulty + engine.math.zDepth + 3,
         "BRICK." + this.width + "." + this.color);
 }
 
@@ -91,7 +91,7 @@ Brick.prototype.draw = function(ctx) {
         1.0;
     
     //Draw the stored image for this brick
-    ctx.drawImage(this.image, 0, -engine.math.drawOffset);
+    ctx.drawImage(this.image, 0, -engine.math.zDepth - 3);
 }
 
 //Reset studs to match the position of this brick
@@ -104,8 +104,12 @@ Brick.prototype.resetStuds = function() {
 
 //Setup this brick for pressing
 Brick.prototype.press = function() {
-    this.isPressed = true;
-    this.studs.forEach(s => s.press());
+
+    //Can't press grey bricks
+    if(!this.isGrey) {
+        this.isPressed = true;
+        this.studs.forEach(s => s.press());
+    }
 }
 
 //Setup this brick for selecting
@@ -141,14 +145,14 @@ Brick.prototype.clearRecursion = function() {
 Brick.prototype.drawBrick = function(ctx) {
 
     //Offset for baked drawing.
-    ctx.translate(0, engine.math.drawOffset);
+    ctx.translate(2, engine.math.zDepth + 3);
 
     //Base rectangle color
     ctx.fillStyle = this.color;
 
     //Base rectangle
     ctx.fillRect(
-        2, 
+        0, 
         0, 
         this.width * engine.math.gmultx, 
         engine.math.gmulty);
@@ -160,9 +164,9 @@ Brick.prototype.drawBrick = function(ctx) {
 
     //Border
     ctx.beginPath();
-    ctx.moveTo(1.5, 0);
-    ctx.lineTo(1.5, engine.math.gmulty - 0.5);
-    ctx.lineTo(this.width * engine.math.gmultx + 2, engine.math.gmulty - 0.5);
+    ctx.moveTo(-0.5,                            0);
+    ctx.lineTo(-0.5,                            engine.math.gmulty - 0.5);
+    ctx.lineTo(this.width * engine.math.gmultx, engine.math.gmulty - 0.5);
     ctx.stroke();
 
     //Right face style
@@ -170,10 +174,10 @@ Brick.prototype.drawBrick = function(ctx) {
 
     //Right face
     ctx.beginPath();
-    ctx.moveTo(this.width * engine.math.gmultx + 2, engine.math.gmulty + 0);
-    ctx.lineTo(this.width * engine.math.gmultx + 2, 0);
-    ctx.lineTo(this.width * engine.math.gmultx + 13, -11);
-    ctx.lineTo(this.width * engine.math.gmultx + 13, engine.math.gmulty - 11);
+    ctx.moveTo(this.width * engine.math.gmultx,                         engine.math.gmulty);
+    ctx.lineTo(this.width * engine.math.gmultx,                         0);
+    ctx.lineTo(this.width * engine.math.gmultx + engine.math.zDepth,                       - engine.math.zDepth);
+    ctx.lineTo(this.width * engine.math.gmultx + engine.math.zDepth,    engine.math.gmulty - engine.math.zDepth);
     ctx.fill();
 
     //Top face style
@@ -181,10 +185,10 @@ Brick.prototype.drawBrick = function(ctx) {
 
     //Top face
     ctx.beginPath();
-    ctx.moveTo(2, 0);
-    ctx.lineTo(13, -11);
-    ctx.lineTo(this.width * engine.math.gmultx + 13, -11);
-    ctx.lineTo(this.width * engine.math.gmultx + 2, 0);
+    ctx.moveTo(0,                                                       0);
+    ctx.lineTo(                                  engine.math.zDepth,    -engine.math.zDepth);
+    ctx.lineTo(this.width * engine.math.gmultx + engine.math.zDepth,    -engine.math.zDepth);
+    ctx.lineTo(this.width * engine.math.gmultx,                         0);
     ctx.fill();
 
     //Grey holes
@@ -195,7 +199,7 @@ Brick.prototype.drawBrick = function(ctx) {
 
             //Hole border
             ctx.beginPath();
-            ctx.arc(2 + xoff, 8, 5.5, 0, 2 * Math.PI);
+            ctx.arc(xoff, 8, 5.5, 0, 2 * Math.PI);
             ctx.stroke();
 
             //Hole center style
@@ -203,7 +207,7 @@ Brick.prototype.drawBrick = function(ctx) {
 
             //Hole center
             ctx.beginPath();
-            ctx.arc(2 + xoff, 8, 3.5, 0, 2 * Math.PI);
+            ctx.arc(xoff, 8, 3.5, 0, 2 * Math.PI);
             ctx.fill();
         }
     }

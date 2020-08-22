@@ -121,27 +121,52 @@ BrickHandler.prototype.sortRows = function() {
         }));
 }
 
-//Select a single brick
-BrickHandler.prototype.selectSingle = function(pos) {
+//Press bricks and return the first brick pressed
+BrickHandler.prototype.pressBricks = function(pos) {
 
-    //For each brick
+    //Front face check
     for (var brick of this.bricks) {
 
-        if(engine.math.colPointRectGrid(            //If cursor is over a brick
+        if (engine.math.colPointRectGrid(   //Front face
             pos.x,
             pos.y,
             brick.gpos.x,
             brick.gpos.y,
-            brick.width,
-            1)) {
+            brick.width)) {
 
-            this.selectedBrick = brick;             //Establish current selected brick
-            this.selectedBrick.press();             //Set brick to selected
-            return this.selectedBrick;              //Return selected brick
+            return this.pressBrick(brick);
+        }
+    }
+
+    //Top and side face check
+    for (var brick of this.bricks) {
+
+        if (engine.math.colPointParHGrid(   //Top Face
+            pos.x,
+            pos.y,
+            brick.gpos.x,
+            brick.gpos.y,
+            brick.width) ||
+            engine.math.colPointParVGrid(   //Side Face
+            pos.x,
+            pos.y,
+            brick.gpos.x,
+            brick.gpos.y,
+            brick.width)) {
+
+            return this.pressBrick(brick);
         }
     }
 
     return null;    //No selected bricks
+}
+
+//Press a single brick
+BrickHandler.prototype.pressBrick = function(brick) {
+
+    this.selectedBrick = brick; //Establish current selected brick
+    this.selectedBrick.press(); //Set brick to selected
+    return this.selectedBrick;  //Return selected brick
 }
 
 //Set bricks to selected based on a provided cursor position
