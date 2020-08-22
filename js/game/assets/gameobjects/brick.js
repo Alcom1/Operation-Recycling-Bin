@@ -22,14 +22,19 @@ var Brick = function(args) { GameObject.call(this, args);
 
     this.studs = [];
 
+    //Generate studs across the width of this brick
     for(var i = 0; i < this.width; i++) {
+
+        //Create new stud
         this.studs.push(new BrickStud({ 
             ...args, 
-            position : {
-                x : args.position.x + i, 
-                y : args.position.y - 1
+            position : {                 //Unique stud position
+                x : args.position.x + i, //Studs go across the brick
+                y : args.position.y - 1  //Studs are above the brick
             }
         }));
+
+        //Add stud to game objects.
         this.parent.pushGO(this.studs[i]);
     }
 
@@ -37,6 +42,7 @@ var Brick = function(args) { GameObject.call(this, args);
 
 Brick.prototype = Object.create(GameObject.prototype);
 
+//Initialize a game object after its scene is loaded.
 Brick.prototype.init = function(ctx) {
     
     //Initialize colors
@@ -55,7 +61,10 @@ Brick.prototype.init = function(ctx) {
         "BRICK." + this.width + "." + this.color);
 }
 
+//Game object update
 Brick.prototype.update = function(dt) {
+
+    //Follow mouse if selected
     if(this.isSelected) {
 
         //Poisition based difference between stored selected position and new cursor position
@@ -103,7 +112,7 @@ Brick.prototype.press = function() {
 Brick.prototype.select = function(pos) {
     this.isSelected = true; 
     this.selectedPos.set(pos);
-    this.zIndex = engine.math.subCursorZIndex;
+    this.zIndex = engine.math.underCursorZIndex;
     this.studs.forEach(s => s.select());
 }
 

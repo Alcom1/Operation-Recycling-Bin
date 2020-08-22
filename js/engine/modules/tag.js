@@ -7,8 +7,8 @@ engine.tag = (function() {
     var masterGroup = [];   //Master group containing scene groups.
     var TAGLESS_TAG = "tagless"
 
-	//Init
-	function init() {
+    //Init
+    function init() {
 
         var masterGroup = [];
     }
@@ -71,14 +71,14 @@ engine.tag = (function() {
         }).gameObjects;
     }
 
-	//Init
-	function clear(sceneName) {
+    //Init
+    function clear(sceneName) {
 
         masterGroup = masterGroup.filter(sg => sg != sceneName);
     }
     
-	//Return
-	return {
+    //Return
+    return {
         init,
         pushGO : pushGOToScene,
         get,

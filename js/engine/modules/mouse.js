@@ -15,8 +15,8 @@ engine.mouse = (function() {
         WASRELEASED : 3,
     })
 
-	//Init
-	function init(element) {
+    //Init
+    function init(element) {
 
         mousePos = new Vect(0, 0);
         element.addEventListener("mousedown", function() {
@@ -72,8 +72,8 @@ engine.mouse = (function() {
         }
     }
     
-	//Return
-	return {
+    //Return
+    return {
         init,
         update,
         updatePos,

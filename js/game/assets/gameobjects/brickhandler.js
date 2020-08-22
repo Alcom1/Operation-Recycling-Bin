@@ -19,7 +19,7 @@ BrickHandler.prototype.init = function(ctx) {
     this.bricks.forEach(b => this.addBrick(b));
 
     //Sort
-    this.sort();
+    this.sortRows();
 }
 
 //Check selection collision
@@ -81,7 +81,7 @@ BrickHandler.prototype.deselectBricks = function() {
     });
 
     //Sort
-    this.sort();
+    this.sortRows();
 }
 
 //Add a brick to the brickhandler
@@ -104,21 +104,21 @@ BrickHandler.prototype.addBrick = function(brick) {
 }
 
 //Sort bricks
-BrickHandler.prototype.sort = function() {
+BrickHandler.prototype.sortRows = function() {
 
     //Sort rows
     this.rows.sort(
-		function(a, b) {
+        function(a, b) {
             
-			return a.row > b.row;
-		});
+            return a.row > b.row;
+        });
 
     //Sort bricks in rows
     this.rows.forEach(r => r.bricks.sort(
-		function(a, b) {
+        function(a, b) {
 
-			return a.gpos.x > b.gpos.x;
-		}));
+            return a.gpos.x > b.gpos.x;
+        }));
 }
 
 //Select a single brick

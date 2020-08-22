@@ -8,10 +8,10 @@ engine.baker = (function() {
         ctx = undefined,       // Canvas context
         images = new Map()     // Map for previously drawn images
 
-	//Init
-	function init(element) {
+    //Init
+    function init(element) {
         canvas = element;
-		ctx = canvas.getContext('2d');
+        ctx = canvas.getContext('2d');
     }
 
     //Bake an image and return its data using the canvas
@@ -46,8 +46,8 @@ engine.baker = (function() {
         return data;    //Return generated image data
     }
     
-	//Return
-	return {
+    //Return
+    return {
         init,
         bake
     }

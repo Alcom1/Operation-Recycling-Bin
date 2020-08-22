@@ -10,7 +10,7 @@
         {
             "name" : "Cursor",
             "zIndex" : 500,
-            "color" : "Red"
+            "color" : "white"
         },
         {    
             "name" : "CursorPos",

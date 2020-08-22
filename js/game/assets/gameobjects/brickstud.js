@@ -57,7 +57,7 @@ BrickStud.prototype.press = function() {
 //Setup this stud for selecting
 BrickStud.prototype.select = function() {
     this.isSelected = true;
-    this.zIndex = engine.math.subCursorZIndex;
+    this.zIndex = engine.math.underCursorZIndex;
 }
 
 //Reset this stud's z-index

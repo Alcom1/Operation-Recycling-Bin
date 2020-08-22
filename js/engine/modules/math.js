@@ -4,10 +4,12 @@ var engine = engine || {}
 //Main object literal
 engine.math = (function() {
 
-    var gmultx = 15;
-    var gmulty = 18;
-    var drawOffset = 14;
-    var subCursorZIndex = 49000;
+    var constant = Object.freeze({
+        gmultx :            15,
+        gmulty :            18,
+        drawOffset :        14,
+        underCursorZIndex : 49000
+    });
 
     //constrain value between min and max (inclusive)
     function clamp(val, min, max) {
@@ -28,10 +30,10 @@ engine.math = (function() {
         return colPointRect(
             px,
             py,
-            rx * gmultx,
-            ry * gmulty,
-            rw * gmultx,
-            rh * gmulty);
+            rx * constant.gmultx,
+            ry * constant.gmulty,
+            rw * constant.gmultx,
+            rh * constant.gmulty);
     }
 
     function col1D(a1, a2, b1, b2) {
@@ -73,12 +75,12 @@ engine.math = (function() {
         return "#" + channels.join('');
     }
     
-	//Return
-	return {
-        gmultx,
-        gmulty,
-        drawOffset,
-        subCursorZIndex,
+    //Return
+    return {
+        gmultx :            constant.gmultx,
+        gmulty :            constant.gmulty,
+        drawOffset :        constant.drawOffset,
+        underCursorZIndex : constant.underCursorZIndex,
         colPointRect,
         colPointRectGrid,
         col1D,
