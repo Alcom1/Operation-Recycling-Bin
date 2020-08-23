@@ -31,8 +31,8 @@ BrickStud.prototype.init = function(ctx) {
     this.image.src = engine.baker.bake(
         this, 
         this.drawBrickStud, 
-        engine.math.gmultx + 12,
-        32,
+        engine.math.gmultx * 2,
+        engine.math.zDepth * 2,
         "STUD." + this.color);
 }
 
@@ -46,7 +46,7 @@ BrickStud.prototype.draw = function(ctx) {
         1.0;
     
     //Draw the stored image for this stud
-    ctx.drawImage(this.image, 0, -engine.math.zDepth - 3);
+    ctx.drawImage(this.image, engine.math.zDepth - 11.5, 0);
 }
 
 //Setup this stud for pressing
@@ -71,23 +71,23 @@ BrickStud.prototype.deselect = function() {
 BrickStud.prototype.drawBrickStud = function(ctx) {
 
     //Offset for baked drawing.
-    ctx.translate(0, engine.math.gmulty + 14);
+    ctx.translate(12.5, engine.math.gmulty);
 
     //Stud
     for(i = 1; i >= 0; i--) {
 
-        var off = i * 6;
+        var off = i * engine.math.studHeight * 2;
 
         //Stud column style
-        var gradient = ctx.createLinearGradient(6 + off, 0, 17 + off, 0);
+        var gradient = ctx.createLinearGradient(off - engine.math.studRadius, 0, off + engine.math.studRadius, 0);
         gradient.addColorStop(0, this.color);
         gradient.addColorStop(1, this.colorDark);
         ctx.fillStyle = gradient;
 
         //Stud column
         ctx.beginPath();
-        ctx.ellipse(11.5 + off, -3 - off, 5.5, 2, 0, 0, Math.PI);
-        ctx.ellipse(11.5 + off, -6 - off, 5.5, 2, 0, Math.PI, 0);
+        ctx.ellipse(off, -engine.math.studHeight     - off, engine.math.studRadius, engine.math.studRadius * 0.36, 0, 0, Math.PI);
+        ctx.ellipse(off, -engine.math.studHeight * 2 - off, engine.math.studRadius, engine.math.studRadius * 0.36, 0, Math.PI, 0);
         ctx.fill();
 
         //Stud top style
@@ -95,7 +95,7 @@ BrickStud.prototype.drawBrickStud = function(ctx) {
 
         //Stud top
         ctx.beginPath();
-        ctx.ellipse(11.5 + off, -6 - off, 5.5, 2, 0, 0, 2 * Math.PI);
+        ctx.ellipse(off, -engine.math.studHeight * 2 - off, engine.math.studRadius, engine.math.studRadius * 0.36, 0, 0, 2 * Math.PI);
         ctx.fill();
 
         //Draw holes in studs if they are grey
@@ -106,7 +106,7 @@ BrickStud.prototype.drawBrickStud = function(ctx) {
 
             //Stud grey hole
             ctx.beginPath();
-            ctx.ellipse(11.5 + off, -6 - off, 3.2, 1.6, 0, 0, 2 * Math.PI);
+            ctx.ellipse(off, -engine.math.studHeight * 2 - off, engine.math.studRadius * 0.6, engine.math.studRadius * 0.216, 0, 0, 2 * Math.PI);
             ctx.fill();
         }
     }

@@ -6,10 +6,13 @@ engine.math = (function() {
 
     //Constants, grouped into a single object because I want to.
     var constant = Object.freeze({
-        gmultx :            15,     //Horizontal multiplier for grid positions
-        gmulty :            18,     //Vertical multiplier for grid positions
+        gmultx :            30,     //Horizontal multiplier for grid positions
+        gmulty :            36,     //Vertical multiplier for grid positions
         underCursorZIndex : 49000,  //Z-index to place objects beneath the cursor
-        zDepth :            11      //Distance to draw depth
+        lineWidth :         2,      //Thickness of lines
+        studRadius :        11,     //Radius of studs
+        studHeight :        6,      //Height of studs
+        zDepth :            22      //Distance to draw depth
     });
 
     //constrain value between min and max (inclusive)
@@ -128,9 +131,13 @@ engine.math = (function() {
     
     //Return
     return {
+        scale :             constant.scale,
         gmultx :            constant.gmultx,
         gmulty :            constant.gmulty,
         underCursorZIndex : constant.underCursorZIndex,
+        lineWidth :         constant.lineWidth,
+        studRadius :        constant.studRadius,
+        studHeight :        constant.studHeight,
         zDepth :            constant.zDepth,
         colPointRectGrid,
         colPointParHGrid,

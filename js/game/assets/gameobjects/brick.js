@@ -12,6 +12,8 @@ var Brick = function(args) { GameObject.call(this, args);
 
     this.zIndex = this.gpos.x - this.gpos.y * 100 + this.width; //Z-sort vertically and then horizontally.
 
+    console.log(this.zIndex);
+
     this.isPressed = false;             //If we are pressing on this brick
     this.isSelected = false;            //If this brick is selected
 
@@ -159,14 +161,14 @@ Brick.prototype.drawBrick = function(ctx) {
 
     //Border style
     ctx.strokeStyle = this.colorDark;
-    ctx.lineWidth = 1;
+    ctx.lineWidth = engine.math.lineWidth;
     ctx.lineCap = "square";
 
     //Border
     ctx.beginPath();
-    ctx.moveTo(-0.5,                            0);
-    ctx.lineTo(-0.5,                            engine.math.gmulty - 0.5);
-    ctx.lineTo(this.width * engine.math.gmultx, engine.math.gmulty - 0.5);
+    ctx.moveTo(engine.math.lineWidth / 2,       0);
+    ctx.lineTo(engine.math.lineWidth / 2,       engine.math.gmulty - engine.math.lineWidth / 2);
+    ctx.lineTo(this.width * engine.math.gmultx, engine.math.gmulty - engine.math.lineWidth / 2);
     ctx.stroke();
 
     //Right face style
@@ -193,13 +195,15 @@ Brick.prototype.drawBrick = function(ctx) {
 
     //Grey holes
     if(this.isGrey) {
+
         for(j = 1; j < this.width; j++) {
             
             var xoff = engine.math.gmultx * j
+            var yoff = Math.ceil(engine.math.gmulty * 0.4);
 
             //Hole border
             ctx.beginPath();
-            ctx.arc(xoff, 8, 5.5, 0, 2 * Math.PI);
+            ctx.arc(xoff, yoff, engine.math.studRadius, 0, 2 * Math.PI);
             ctx.stroke();
 
             //Hole center style
@@ -207,7 +211,7 @@ Brick.prototype.drawBrick = function(ctx) {
 
             //Hole center
             ctx.beginPath();
-            ctx.arc(xoff, 8, 3.5, 0, 2 * Math.PI);
+            ctx.arc(xoff, yoff, engine.math.studRadius * 0.64, 0, 2 * Math.PI);
             ctx.fill();
         }
     }
