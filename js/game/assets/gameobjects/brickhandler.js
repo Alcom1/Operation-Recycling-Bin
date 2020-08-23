@@ -166,7 +166,21 @@ BrickHandler.prototype.pressBrick = function(brick) {
 
     this.selectedBrick = brick; //Establish current selected brick
     this.selectedBrick.press(); //Set brick to selected
-    return this.selectedBrick;  //Return selected brick
+
+    var openDirs = [];          //Open directions, contains a direction if there's no grey bricks in that direction.
+
+    //Check if there's grey bricks in a direction
+    for(var dir of [-1, 1]) {
+        
+        //Add direction if there's no grey brick in that direction and clear recursion
+        if(this.recurseBrick(brick, [dir], true)) {
+            openDirs.push(dir);
+        };
+        this.bricks.forEach(b => b.clearRecursion()); 
+    }
+
+    //Return -1 for upwards selection, 1 for downwards, and 0 for indeterminate
+    return openDirs.reduce((a, c) => a + c, 0);
 }
 
 //Set bricks to selected based on a provided cursor position

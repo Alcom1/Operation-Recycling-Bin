@@ -3,7 +3,6 @@ var Cursor = function(args) { GameObject.call(this, args);
 
     this.ppos = new Vect(0, 0);                 //Previous pressed position
     this.pLength = 10;                          //Distance to enter carry state
-    this.pDir = 0;                              //Direction the cursor was dragged in.
 
     this.originalRadius = args.radius || 4      //Starting radius of the cursor
     this.radius = this.originalRadius;          //Current radius of the cursor
@@ -42,13 +41,9 @@ Cursor.prototype.update = function(dt) {
 
         //DRAGGING
         case this.states.DRAG :
-            if(Math.abs(diff) > this.pLength) {                             //If we've dragged a sufficient distance
-                                                                        
-                this.pDir = Math.sign(diff);                                //Get the direction we're selecting bricks in
-                if(this.brickHandler.selectBricks(this.ppos, this.pDir)){   //Select bricks
-                    this.parent.sortGO();                                   //Sort for new brick z-indices
-                    this.state = this.states.CARRY;                         //Start carrying if we selected some bricks
-                }   
+            if(Math.abs(diff) > this.pLength) {     //If we've dragged a sufficient distance
+
+                this.selectBricks(Math.sign(diff)); 
             }
             break;
 
@@ -69,9 +64,25 @@ Cursor.prototype.update = function(dt) {
                 this.brickHandler.deselectBricks();
         
                 //If this cursor selected a brick, set it to DRAGGING state.
-                if(this.brickHandler.pressBricks(this.spos)) {
-                    this.state = this.states.DRAG;
-                    this.ppos = this.spos;
+                switch(this.brickHandler.pressBricks(this.spos)) {
+
+                    //Select upwards
+                    case -1 :
+                        this.ppos = this.spos;
+                        this.selectBricks(Math.sign(-1)); 
+                        break;
+                    
+                    //Indeterminate selection, go to drag state
+                    case 0 :
+                        this.state = this.states.DRAG;
+                        this.ppos = this.spos;
+                        break;
+                
+                    //Select downwards
+                    case 1 :
+                        this.ppos = this.spos;
+                        this.selectBricks(Math.sign(1)); 
+                        break;
                 }
             }
             break;
@@ -100,4 +111,13 @@ Cursor.prototype.draw = function(ctx) {
     ctx.beginPath();
     ctx.arc(0, 0, this.radius, 0, 2 * Math.PI);
     ctx.fill();
+}
+
+//Select bricks
+Cursor.prototype.selectBricks = function(dir) {
+
+    if(this.brickHandler.selectBricks(this.ppos, dir)) {    //Select bricks
+        this.parent.sortGO();                               //Sort for new brick z-indices
+        this.state = this.states.CARRY;                     //Start carrying if we selected some bricks
+    }  
 }

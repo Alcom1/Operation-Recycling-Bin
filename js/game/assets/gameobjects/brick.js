@@ -12,8 +12,6 @@ var Brick = function(args) { GameObject.call(this, args);
 
     this.zIndex = this.gpos.x * 2 - this.gpos.y * 100 + this.width * 2; //Z-sort vertically and then horizontally.
 
-    console.log(this.zIndex);
-
     this.isPressed = false;             //If we are pressing on this brick
     this.isSelected = false;            //If this brick is selected
 
