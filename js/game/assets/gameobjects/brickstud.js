@@ -9,7 +9,7 @@ var BrickStud = function(args) { GameObject.call(this, args);
 
     this.isGrey = !args.color;          //If this is a static grey stud
 
-    this.zIndex = this.gpos.x - this.gpos.y * 100;          //Z-sort vertically and then horizontally.
+    this.zIndex = this.gpos.x * 2 - this.gpos.y * 100 + 1;  //Z-sort vertically and then horizontally.
 
     this.isPressed = false;             //If we are pressing on this stud
     this.isSelected = false;            //If this stud is selected
@@ -62,7 +62,7 @@ BrickStud.prototype.select = function() {
 
 //Reset this stud's z-index
 BrickStud.prototype.deselect = function() {
-    this.zIndex = this.gpos.x - this.gpos.y * 100; //Set z-index
+    this.zIndex = this.gpos.x * 2 - this.gpos.y * 100 + 1;  //Set z-index
     this.isPressed = false; 
     this.isSelected = false;
 }

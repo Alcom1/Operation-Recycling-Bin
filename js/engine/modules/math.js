@@ -131,7 +131,6 @@ engine.math = (function() {
     
     //Return
     return {
-        scale :             constant.scale,
         gmultx :            constant.gmultx,
         gmulty :            constant.gmulty,
         underCursorZIndex : constant.underCursorZIndex,

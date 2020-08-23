@@ -10,7 +10,7 @@ var Brick = function(args) { GameObject.call(this, args);
     this.isGrey = !args.color;          //If this is a static grey brick
     this.width = args.width || 1;       //Width of this brick
 
-    this.zIndex = this.gpos.x - this.gpos.y * 100 + this.width; //Z-sort vertically and then horizontally.
+    this.zIndex = this.gpos.x * 2 - this.gpos.y * 100 + this.width * 2; //Z-sort vertically and then horizontally.
 
     console.log(this.zIndex);
 
@@ -131,11 +131,11 @@ Brick.prototype.deselect = function() {
     }
     this.isPressed = false; 
     this.isSelected = false;
-    this.spos.set(0, 0);                                        //Reset position
+    this.spos.set(0, 0);                                                //Reset position
     this.selectedPos.set(0, 0);
-    this.zIndex = this.gpos.x - this.gpos.y * 100 + this.width; //Set z-index
-    this.resetStuds();                                          //Reset studs to match the final brick position
-    this.studs.forEach(s => s.deselect());                //Clear stud selection states.
+    this.zIndex = this.gpos.x * 2 - this.gpos.y * 100 + this.width * 2; //Set z-index
+    this.resetStuds();                                                  //Reset studs to match the final brick position
+    this.studs.forEach(s => s.deselect());                              //Clear stud selection states.
 }
 
 //Clear this brick's recursion states
