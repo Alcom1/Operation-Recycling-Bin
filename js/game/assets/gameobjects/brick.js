@@ -7,7 +7,8 @@ var Brick = function(args) { GameObject.call(this, args);
 
     this.image = null;                                          //Baked image data for this brick
 
-    this.isGrey = !args.color;          //If this is a static grey brick
+    this.isGrey = !args.color;          //If this is a grey brick
+    this.isStatic = false;              //If this is a static brick that will never move (grey or blocked by grey bricks), calculated later
     this.width = args.width || 1;       //Width of this brick
 
     this.zIndex = this.gpos.x * 2 - this.gpos.y * 100 + this.width * 2; //Z-sort vertically and then horizontally.
@@ -106,7 +107,7 @@ Brick.prototype.resetStuds = function() {
 Brick.prototype.press = function() {
 
     //Can't press grey bricks
-    if(!this.isGrey) {
+    if(!this.isStatic) {
         this.isPressed = true;
         this.studs.forEach(s => s.press());
     }

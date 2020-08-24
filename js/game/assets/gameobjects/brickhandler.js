@@ -20,6 +20,11 @@ BrickHandler.prototype.init = function(ctx) {
 
     //Sort
     this.sortRows();
+
+    //Calculate static bricks
+    this.bricks.forEach(b => {
+        b.isStatic = [-1, 1].reduce((a, c) => a && !this.recurseBrick(b, [c], true), true)
+    });
 }
 
 //Check selection collision
@@ -121,8 +126,18 @@ BrickHandler.prototype.sortRows = function() {
         }));
 }
 
-//Press bricks and return the first brick pressed
+//Check all bricks for hover, return hover state
+BrickHandler.prototype.hoverBricks = function(pos) {
+    return this.checkBricks(pos, (b) => !b.isStatic);  //Check all bricks and press the first sucessful check
+}
+
+//Check all bricks for press, return press state (none, processed, indeterminate)
 BrickHandler.prototype.pressBricks = function(pos) {
+    return this.checkBricks(pos, (b, p) => this.pressBrick(b, p));  //Check all bricks and press the first sucessful check
+}
+
+//Check all bricks and return the result of a function for that brick
+BrickHandler.prototype.checkBricks = function(pos, func) {
 
     //Front face check
     for (var brick of this.bricks) {
@@ -134,7 +149,7 @@ BrickHandler.prototype.pressBricks = function(pos) {
             brick.gpos.y,
             brick.width)) {
 
-            return this.pressBrick(brick, pos);
+            return func(brick, pos);
         }
     }
 
@@ -154,7 +169,7 @@ BrickHandler.prototype.pressBricks = function(pos) {
             brick.gpos.y,
             brick.width)) {
 
-            return this.pressBrick(brick, pos);
+            return func(brick, pos);
         }
     }
 
@@ -181,14 +196,14 @@ BrickHandler.prototype.pressBrick = function(brick, pos) {
         return false;
     }
 
-    for(var s of validDirs) {       //If a single direction is valid, process it.
+    for(var s of validDirs) {       //If a single direction is valid, process it. Return processed state.
         if(s) {
             this.processSelection(s, pos);
             return true;
         }
     }
 
-    return null;                    //No direction is valid.
+    return null;                    //No direction is valid. Return no state
 }
 
 //Set bricks to selected based on a provided cursor position

@@ -12,8 +12,9 @@ var Cursor = function(args) { GameObject.call(this, args);
 
     this.states = Object.freeze({               //Cursor states
         NONE : 0,
-        DRAG : 1,
-        CARRY : 2
+        HOVER : 1,
+        DRAG : 2,
+        CARRY : 3
     });
 
     this.state = this.states.NONE;              //Current cursor state
@@ -28,9 +29,23 @@ Cursor.prototype.init = function(ctx) {
 
 //Game object update
 Cursor.prototype.update = function(dt) {
-    this.spos = engine.mouse.getPos();
 
-    this.color = this.originalColor;
+    var tempSpos = engine.mouse.getPos();
+
+    if(
+        this.state == this.states.NONE ||
+        this.state == this.states.HOVER &&
+        tempSpos.getDiff(this.spos)) {
+
+        this.state =
+            this.brickHandler.hoverBricks(tempSpos) ?
+            this.states.HOVER :
+            this.states.NONE;
+    }
+
+    this.spos = tempSpos;
+
+    this.color = this.state == this.states.HOVER ? "#111" : this.originalColor;
     this.radius = this.originalRadius;
 
     //Get difference between current and pressed positions
@@ -59,7 +74,7 @@ Cursor.prototype.update = function(dt) {
         //WASPRESSED
         case engine.mouse.mouseStates.WASPRESSED : this.radius = 15;
 
-            if(this.state == this.states.NONE) {
+            if(this.state == this.states.HOVER) {
                 //Deselect bricks for a new selection
                 this.brickHandler.deselectBricks();
         
@@ -101,9 +116,12 @@ Cursor.prototype.update = function(dt) {
 //Game object draw
 Cursor.prototype.draw = function(ctx) {
     ctx.fillStyle = this.color;
+    ctx.globalAlpha = 0.5;
     ctx.beginPath();
-    ctx.arc(0, 0, this.radius, 0, 2 * Math.PI);
+    ctx.arc(8, 8, this.radius, 0, 2 * Math.PI);
     ctx.fill();
+
+    ctx.globalAlpha = 1;
 }
 
 //Select bricks

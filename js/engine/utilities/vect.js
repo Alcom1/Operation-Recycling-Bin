@@ -26,6 +26,12 @@ Vect.prototype.set = function(a, b) {
     }
 }
 
+//Get if two vectors have different values
+Vect.prototype.getDiff = function(vect) {
+    
+    return vect.x != this.x || vect.y != this.y;
+}
+
 //Vector addition
 Vect.prototype.add = function(vect) {
 
