@@ -63,25 +63,18 @@ Cursor.prototype.update = function(dt) {
                 //Deselect bricks for a new selection
                 this.brickHandler.deselectBricks();
         
-                //If this cursor selected a brick, set it to DRAGGING state.
-                switch(this.brickHandler.pressBricks(this.spos)) {
+                //If pressing the brick returns true (Indeterminate state)
+                switch(this.brickHandler.pressBricks(this.spos)) 
+                {
+                    //Auto-selection occured. Set cursor to its carrying state
+                    case true :
+                        this.carry();
+                        break;
 
-                    //Select upwards
-                    case -1 :
+                    //Selection is indeterminate. Go to drag state
+                    case false :    
                         this.ppos = this.spos;
-                        this.selectBricks(Math.sign(-1)); 
-                        break;
-                    
-                    //Indeterminate selection, go to drag state
-                    case 0 :
                         this.state = this.states.DRAG;
-                        this.ppos = this.spos;
-                        break;
-                
-                    //Select downwards
-                    case 1 :
-                        this.ppos = this.spos;
-                        this.selectBricks(Math.sign(1)); 
                         break;
                 }
             }
@@ -116,8 +109,13 @@ Cursor.prototype.draw = function(ctx) {
 //Select bricks
 Cursor.prototype.selectBricks = function(dir) {
 
-    if(this.brickHandler.selectBricks(this.ppos, dir)) {    //Select bricks
-        this.parent.sortGO();                               //Sort for new brick z-indices
-        this.state = this.states.CARRY;                     //Start carrying if we selected some bricks
+    if(this.brickHandler.initSelection(this.ppos, dir)) {    //Select bricks in the given direction
+        this.carry();                                        //Enter carry state if we selected bricks
     }  
+}
+
+//Set the cursor to its carry state
+Cursor.prototype.carry = function() {
+    this.parent.sortGO();               //Sort for new brick z-indices
+    this.state = this.states.CARRY;     //Start carrying if we selected some bricks
 }

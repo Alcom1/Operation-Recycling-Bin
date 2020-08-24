@@ -134,7 +134,7 @@ BrickHandler.prototype.pressBricks = function(pos) {
             brick.gpos.y,
             brick.width)) {
 
-            return this.pressBrick(brick);
+            return this.pressBrick(brick, pos);
         }
     }
 
@@ -154,7 +154,7 @@ BrickHandler.prototype.pressBricks = function(pos) {
             brick.gpos.y,
             brick.width)) {
 
-            return this.pressBrick(brick);
+            return this.pressBrick(brick, pos);
         }
     }
 
@@ -162,65 +162,82 @@ BrickHandler.prototype.pressBricks = function(pos) {
 }
 
 //Press a single brick
-BrickHandler.prototype.pressBrick = function(brick) {
+BrickHandler.prototype.pressBrick = function(brick, pos) {
 
-    this.selectedBrick = brick; //Establish current selected brick
-    this.selectedBrick.press(); //Set brick to selected
+    this.selectedBrick = brick;     //Establish current selected brick
 
-    var openDirs = [];          //Open directions, contains a direction if there's no grey bricks in that direction.
+    var validDirs = [];             //Stored directions
 
-    //Check if there's grey bricks in a direction
-    for(var dir of [-1, 1]) {
-        
-        //Add direction if there's no grey brick in that direction and clear recursion
-        if(this.recurseBrick(brick, [dir], true)) {
-            openDirs.push(dir);
-        };
-        this.bricks.forEach(b => b.clearRecursion()); 
+    for(var dir of [-1, 1]) {       //Check both directions if they're valid (valid == not null)
+        validDirs.push(this.recurseBrick(brick, [dir], true));
+    }
+    this.bricks.forEach(b => b.clearRecursion());
+
+    if(validDirs.some(b => b)) {    //Set brick to selected if any direction is valid.
+        this.selectedBrick.press();
     }
 
-    //Return -1 for upwards selection, 1 for downwards, and 0 for indeterminate
-    return openDirs.reduce((a, c) => a + c, 0);
+    if(validDirs.every(b => b)) {   //Both directions are valid. Return indeterminate state.
+        return false;
+    }
+
+    for(var s of validDirs) {       //If a single direction is valid, process it.
+        if(s) {
+            this.processSelection(s, pos);
+            return true;
+        }
+    }
+
+    return null;                    //No direction is valid.
 }
 
 //Set bricks to selected based on a provided cursor position
-BrickHandler.prototype.selectBricks = function(pos, dir) {
+BrickHandler.prototype.initSelection = function(pos, dir) {
 
     //if there is currently a selected brick
     if (this.selectedBrick != null) {
 
         var selection = this.recurseBrick(this.selectedBrick, [dir], true); //Recursively get the initial selection of bricks.
-        selection?.forEach(b => b.select(pos));                       //
-
-        //Mark all bricks that lead to a grey brick as grounded (not floating).
-        if(selection != null) {
-            this.bricksGrey.forEach(b => {  //For each grey brick
-                if(!b.isChecked) {          //Don't check checked grey bricks. (Reduces redundancy)
-                    this.recurseBrick(b, [-1, 1], false).forEach(c => {
-                        c.isGrounded = true
-                    })  //Recursively check for grounded bricks.
-                }
-            });
-        }
-
-        //Select floating bricks and clear recursion states
-        this.bricks.forEach(b => {
-            if(!b.isGrounded && selection != null) {    //If we have a selection and this brick is floating
-                b.select(pos);                          //Select the floating brick
-            }
-            b.clearRecursion();
-        });
-
-        return selection != null;   //Return true if we are selecting bricks
+        return this.processSelection(selection, pos);                       //Process this selection
     }
     else {
-        return false;               //There is no selected brick, return false;
+        return false;   //There is no selected brick, return false;
     }
+}
+
+//Process a selection, set all its bricks to a selected state, search for floating bricks, return if bricks were selected
+BrickHandler.prototype.processSelection = function(selection, pos) {
+
+    //Select bricks
+    selection?.forEach(b => b.select(pos));
+
+    //Mark all bricks that lead to a grey brick as grounded (not floating).
+    if(selection != null) {
+        this.bricksGrey.forEach(b => {  //For each grey brick
+            if(!b.isChecked) {          //Don't check checked grey bricks. (Reduces redundancy)
+                this.recurseBrick(b, [-1, 1], false).forEach(c => {
+                    c.isGrounded = true
+                })  //Recursively check for grounded bricks.
+            }
+        });
+    }
+
+    //Select floating bricks and clear recursion states
+    this.bricks.forEach(b => {
+        if(!b.isGrounded && selection != null) {    //If we have a selection and this brick is floating
+            b.select(pos);                          //Select the floating brick
+        }
+        b.clearRecursion();
+    });
+
+    return selection != null;   //Return true if we are selecting bricks
 }
 
 //Recursively select bricks.
 BrickHandler.prototype.recurseBrick = function(brick1, dirs, checkGrey) {
-    if (checkGrey &&            //Return nothing for greybricks  
+
+    //Return nothing for greybricks  
+    if (checkGrey &&           
         brick1.isGrey) {                   
         return null; 
     }
