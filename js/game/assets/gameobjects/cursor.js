@@ -32,6 +32,7 @@ Cursor.prototype.update = function(dt) {
 
     var tempSpos = engine.mouse.getPos();
 
+    //NONE-HOVER check, switch to hover state if we're hovering over a non-static brick.
     if(
         this.state == this.states.NONE ||
         this.state == this.states.HOVER &&

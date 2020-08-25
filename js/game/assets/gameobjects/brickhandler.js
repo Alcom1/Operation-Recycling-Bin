@@ -3,7 +3,6 @@ var BrickHandler = function(args) { GameObject.call(this, args);
     this.rows = [];             //Rows of bricks
     this.bricks = [];           //All bricks
     this.brcickSelected = null; //Current selected brick
-    this.count = 0;             //Counter for ordering selected bricks
 }
 
 BrickHandler.prototype = Object.create(GameObject.prototype);
@@ -12,99 +11,101 @@ BrickHandler.prototype = Object.create(GameObject.prototype);
 BrickHandler.prototype.init = function(ctx) {
 
     //Establish bricks
-    this.bricks = engine.tag.get("Brick", "GameScene")
-    this.bricksGrey = this.bricks.filter(b => b.isGrey == true);
+    this.bricks = engine.tag.get("Brick", "GameScene");             //Get bricks from scene
+    this.bricksGrey = this.bricks.filter(b => b.isGrey == true);    //Grey bricks
 
-    //Divide bricks into rows
-    this.bricks.forEach(b => this.addBrick(b));
+    //Add bricks into rows
+    this.bricks.forEach(b => this.addBrickToRows(b));               //For each brick, add it into the rows
 
     //Sort
-    this.sortRows();
+    this.sortRows();                                                //Sort each row and bricks within rows
 
-    //Calculate static bricks
-    this.bricks.forEach(b => {
-        b.isStatic = [-1, 1].reduce((a, c) => a && !this.recurseBrick(b, [c], true), true)
+    //For each brick, do a recursive check in each direction. If both directions are blocked, it's static.
+    this.bricks.forEach(b => {                                                              //For each brick
+        b.isStatic = [-1, 1].reduce((a, c) => a && !this.recurseBrick(b, [c], true), true); //Recurse in both directions. If both results are null, set brick to static
+        this.bricks.forEach(b => b.clearRecursion());                                       //Clear recursion states after each recursive static check
     });
 }
 
-//Check selection collision
+//Check selection collision, return true if this is a valid position
 BrickHandler.prototype.checkSelectionCollision = function() {
 
-    var adjacents = [];  //Adjacency states, contains if there's a brick in the indexed direction.
+    var adjacents = [];  //Adjacency states, contains if we're attatching in the indexed direction.
 
     //For each selected brick
     for(var brick1 of this.bricks.filter(b => b.isSelected == true)) {
 
         //Combine grid positions and sub positions for true positions
-        var tposx = brick1.gpos.x + Math.round(brick1.spos.x / engine.math.gmultx);
-        var tposy = brick1.gpos.y + Math.round(brick1.spos.y / engine.math.gmulty);
+        var tposx = brick1.gpos.x + Math.round(brick1.spos.x / engine.math.gmultx);         //True x-position
+        var tposy = brick1.gpos.y + Math.round(brick1.spos.y / engine.math.gmulty);         //True y-position
 
         //Check collision between current selected brick and every brick in its potential new row.
-        //If the new row has bricks, check each brick
-        for(var brick2 of this.rows.find(r => r.row == tposy)?.bricks ?? []) {
-            if (!brick2.isSelected && 
+        for(var brick2 of this.rows.find(r => r.row == tposy)?.bricks ?? []) {              //For each brick in the current row
+            if (!brick2.isSelected &&                                                       //If the brick-in-row is colliding with this brick
                 engine.math.col1D(
                 tposx, tposx + brick1.width,
                 brick2.gpos.x, brick2.gpos.x + brick2.width)) {
 
-                return false;   //If there is a collision, stop and return false.
+                return false;                                                               //Return false for any collision
             }
         }
 
         //Check collision between current selected brick and every brick in its potential adjacent rows.
-        //For each direction
-        for (var dir of [-1, 1]) {
+        for (var dir of [-1, 1]) {                                                          //For each direction
 
             //If row in the direction (above/below) has bricks, check each brick
-            for (var brick2 of this.rows.find(r => r.row == tposy + dir)?.bricks ?? []) {
-                if (!brick2.isSelected && 
+            for (var brick2 of this.rows.find(r => r.row == tposy + dir)?.bricks ?? []) {   //For each brick in the row in that direction
+                if (!brick2.isSelected &&                                                   //If the brick-in-row is colliding with this brick
                     engine.math.col1D(
                     tposx, tposx + brick1.width,
                     brick2.gpos.x, brick2.gpos.x + brick2.width)) {
     
-                    adjacents[dir] = true;  //Set adjacency state for this direction.
-                    break;
+                    adjacents[dir] = true;                                                  //Set adjacency state for this direction.
+                    break;                                                                  //Break to check other direction.
                 }
             }
         }
     }
 
+    //We need to attatch in one direction but not both. Return true if we are attatching in a single direction.
     return adjacents[-1] != adjacents[1];   //If adjacency states are different, return true
 }
 
 //Deselect all bricks
 BrickHandler.prototype.deselectBricks = function() {
 
-    this.selectedBrick = null;                      //Clear selected brick
-    this.bricks.forEach(b => b.deselect());   //Clear selected status
+    this.selectedBrick = null;                              //Clear selected brick
+    this.bricks.forEach(b => b.deselect());                 //Clear selected status for each brick
 
     //Move bricks to the new row
-    this.rows.forEach(r => {
-        var move = r.bricks.filter(b => b.gpos.y != r.row);
-        r.bricks = r.bricks.filter(b => b.gpos.y == r.row);
-        move.forEach(b => this.addBrick(b));
+    this.rows.forEach(r => {                                //For each row
+        var move = r.bricks.filter(b => b.gpos.y != r.row); //Get move-bricks that are no longer in this row
+        r.bricks = r.bricks.filter(b => b.gpos.y == r.row); //Remove bricks that are no longer in this row
+        move.forEach(b => this.addBrickToRows(b));          //For each move-brick, add it to its new row
     });
 
     //Sort
     this.sortRows();
 }
 
-//Add a brick to the brickhandler
-BrickHandler.prototype.addBrick = function(brick) {
+//Add a brick to a row, and create that row if it doesn't exist.
+BrickHandler.prototype.addBrickToRows = function(brick) {
 
     var curr = this.rows.find(r => r.row == brick.gpos.y)   //Get current row
 
-    if(curr == null) {          //If row does not exist, create a new one.
+    //Create a new row or add a brick to the existing row
+    if(curr == null) {                                      //If current row does not exist, create a new one.
 
-        this.rows.push({
-
-            row : brick.gpos.y,
-            bricks : [brick]
+        //Create a new row
+        this.rows.push({                                    //Push the new row
+            row : brick.gpos.y,                             //Set new row position to its first brick's position
+            bricks : [brick]                                //Assign brick to row
         })
     }
-    else {                      //If row exists, add bricks to it.
+    else {                                                  //If row exists, add bricks to it.
 
-        curr.bricks.push(brick);
+        //Add a brick to the existing row 
+        curr.bricks.push(brick);                            //Add brick to current row
     }
 }
 
@@ -112,23 +113,15 @@ BrickHandler.prototype.addBrick = function(brick) {
 BrickHandler.prototype.sortRows = function() {
 
     //Sort rows
-    this.rows.sort(
-        function(a, b) {
-            
-            return a.row > b.row;
-        });
+    this.rows.sort((a, b) => a.row > b.row);                                //Sort rows by row value
 
-    //Sort bricks in rows
-    this.rows.forEach(r => r.bricks.sort(
-        function(a, b) {
-
-            return a.gpos.x > b.gpos.x;
-        }));
+    //Sort bricks in each row
+    this.rows.forEach(r => r.bricks.sort((a, b) => a.gpos.x > b.gpos.x));   //Sort bricks by x-position
 }
 
 //Check all bricks for hover, return hover state
 BrickHandler.prototype.hoverBricks = function(pos) {
-    return this.checkBricks(pos, (b) => !b.isStatic);  //Check all bricks and press the first sucessful check
+    return this.checkBricks(pos, (b) => !b.isStatic);               //Check all bricks and return if the first sucessful check is not static
 }
 
 //Check all bricks for press, return press state (none, processed, indeterminate)
@@ -136,87 +129,94 @@ BrickHandler.prototype.pressBricks = function(pos) {
     return this.checkBricks(pos, (b, p) => this.pressBrick(b, p));  //Check all bricks and press the first sucessful check
 }
 
-//Check all bricks and return the result of a function for that brick
+//Check all bricks for a mouse position and return the result of a function against that brick and position
 BrickHandler.prototype.checkBricks = function(pos, func) {
 
     //Front face check
-    for (var brick of this.bricks) {
+    for (var brick of this.bricks) {        //For each brick
 
-        if (engine.math.colPointRectGrid(   //Front face
+        if (engine.math.colPointRectGrid(   //Front face - if position is over this face
             pos.x,
             pos.y,
             brick.gpos.x,
             brick.gpos.y,
             brick.width)) {
 
-            return func(brick, pos);
+            return func(brick, pos);        //Run function against this brick and return the result.
         }
     }
 
     //Top and side face check
     for (var brick of this.bricks) {
 
-        if (engine.math.colPointParHGrid(   //Top Face
+        if (engine.math.colPointParHGrid(   //Top Face - if position is over this face
             pos.x,
             pos.y,
             brick.gpos.x,
             brick.gpos.y,
-            brick.width) ||
-            engine.math.colPointParVGrid(   //Side Face
+            brick.width) ||                 //OR
+            engine.math.colPointParVGrid(   //Side Face - if position is over this face
             pos.x,
             pos.y,
             brick.gpos.x,
             brick.gpos.y,
             brick.width)) {
 
-            return func(brick, pos);
+            return func(brick, pos);        //Run function against this brick and return the result.
         }
     }
 
-    return null;    //No selected bricks
+    //Return null, there is no brick under this position.
+    return null;    
 }
 
 //Press a single brick
 BrickHandler.prototype.pressBrick = function(brick, pos) {
 
-    this.selectedBrick = brick;     //Establish current selected brick
+    this.selectedBrick = brick;                                 //Set current selected brick for later use
 
-    var validDirs = [];             //Stored directions
+    var directions = [];                                        //Stored directions
 
-    for(var dir of [-1, 1]) {       //Check both directions if they're valid (valid == not null)
-        validDirs.push(this.recurseBrick(brick, [dir], true));
+    //Check both directions if they're valid (valid == not null)
+    for(var dir of [-1, 1]) {                                   //For each direction
+        directions.push(this.recurseBrick(brick, [dir], true)); //Recurse in that direction. Assign result to valid directions.
     }
-    this.bricks.forEach(b => b.clearRecursion());
+    this.bricks.forEach(b => b.clearRecursion());               //Clear recursion states after both recursive direction checks
 
-    if(validDirs.some(b => b)) {    //Set brick to selected if any direction is valid.
-        this.selectedBrick.press();
-    }
-
-    if(validDirs.every(b => b)) {   //Both directions are valid. Return indeterminate state.
-        return false;
+    //If there is at least one valid direction
+    if(directions.some(b => b)) {                               //If some directions are truthy
+        this.selectedBrick.press();                             //Set brick to selected if any direction is valid.
     }
 
-    for(var s of validDirs) {       //If a single direction is valid, process it. Return processed state.
-        if(s) {
-            this.processSelection(s, pos);
-            return true;
+    //If both directions are valid, return indeterminate state.
+    if(directions.every(b => b)) {                              //If all directions are truthy
+        return false;                                           //Return indeterminate state (false).
+    }
+
+    //If a single direction is valid, process it. Return processed state.
+    for(var d of directions) {                                  //For each direction
+        if(d) {                                                 //If direction is truthy
+            d.forEach(b => b.isChecked = true);                 //Restore checked state to simulate initial selection. (Clunkiest part of the code so far!)
+            this.processSelection(d, pos);                      //Process this selection using bricks in truthy direction, and the position.
+            return true;                                        //Return processed state (true).
         }
     }
 
-    return null;                    //No direction is valid. Return no state
+    return null;                                                //No direction is valid. Return no state
 }
 
 //Set bricks to selected based on a provided cursor position
 BrickHandler.prototype.initSelection = function(pos, dir) {
 
-    //if there is currently a selected brick
-    if (this.selectedBrick != null) {
+    //if there is currently a selected brick, recurse from it and process the result.
+    if (this.selectedBrick != null) {                                       //If the currently selected brick is not null
 
-        var selection = this.recurseBrick(this.selectedBrick, [dir], true); //Recursively get the initial selection of bricks.
-        return this.processSelection(selection, pos);                       //Process this selection
+        var selection = this.recurseBrick(this.selectedBrick, [dir], true); //Recurse in the given direction for the initial selection of bricks
+        return this.processSelection(selection, pos);                       //Process the selection
     }
     else {
-        return false;   //There is no selected brick, return false;
+
+        return false;                                                       //There is no selected brick, return false;
     }
 }
 
@@ -224,62 +224,62 @@ BrickHandler.prototype.initSelection = function(pos, dir) {
 BrickHandler.prototype.processSelection = function(selection, pos) {
 
     //Select bricks
-    selection?.forEach(b => b.select(pos));
+    selection?.forEach(b => b.select(pos));                         //For each brick, set it to selected.
 
     //Mark all bricks that lead to a grey brick as grounded (not floating).
-    if(selection != null) {
-        this.bricksGrey.forEach(b => {  //For each grey brick
-            if(!b.isChecked) {          //Don't check checked grey bricks. (Reduces redundancy)
-                this.recurseBrick(b, [-1, 1], false).forEach(c => {
-                    c.isGrounded = true
-                })  //Recursively check for grounded bricks.
+    if(selection != null) {                                         //If there are selected bricks
+        this.bricksGrey.forEach(b => {                              //For each grey brick
+            if(!b.isChecked) {                                      //If the grey brick isn't checked (Reduces redundancy)
+                this.recurseBrick(b, [-1, 1], false).forEach(c => { //Recurse in both directions
+                    c.isGrounded = true                             //Set each brick in recursion result to grounded
+                })  
             }
+        });
+
+        //Select floating bricks and clear recursion states
+        this.bricks.forEach(b => {                                  //For each brick
+            if(!b.isGrounded) {                                     //If the brick is floating (not grounded)
+                b.select(pos);                                      //Select the floating brick
+            }
+            b.clearRecursion();                                     //Clear recursion for this brick
         });
     }
 
-    //Select floating bricks and clear recursion states
-    this.bricks.forEach(b => {
-        if(!b.isGrounded && selection != null) {    //If we have a selection and this brick is floating
-            b.select(pos);                          //Select the floating brick
-        }
-        b.clearRecursion();
-    });
-
-    return selection != null;   //Return true if we are selecting bricks
+    return !!selection;                                             //Return true if there are selected bricks
 }
 
 //Recursively select bricks.
 BrickHandler.prototype.recurseBrick = function(brick1, dirs, checkGrey) {
 
     //Return nothing for greybricks  
-    if (checkGrey &&           
-        brick1.isGrey) {                   
-        return null; 
+    if (checkGrey &&            //If we are checking for grey bricks
+        brick1.isGrey) {        //If this brick is grey
+        return null;            //Return null
     }
 
     brick1.isChecked = true;    //This brick has been checked
 
     var selection = [brick1];   //Current brick is a new brick in the selection
 
-    //For directions
-    for (var dir of dirs) {
+    //For all directions, check adjacent bricks in that direction and recurse for each brick
+    for (var dir of dirs) {                                                                     //For direction
 
-        //If row in the direction (above/below) has bricks, check each brick
-        for (var brick2 of this.rows.find(r => r.row == brick1.gpos.y + dir)?.bricks ?? []) {
+        //If row in the direction (above/below) has bricks, check and recurse for each brick
+        for (var brick2 of this.rows.find(r => r.row == brick1.gpos.y + dir)?.bricks ?? []) {   //For each brick in the adjacent row for that direction    
 
-            if (!brick2.isChecked &&        //If brick hasn't been checked
-                engine.math.col1D(          //If brick is in contact with the previous brick
-                brick1.gpos.x, brick1.gpos.x + brick1.width, 
-                brick2.gpos.x, brick2.gpos.x + brick2.width)) {
+            if (!brick2.isChecked &&                                                            //If brick hasn't been checked
+                engine.math.col1D(                                                              //If brick is in contact with the previous brick
+                    brick1.gpos.x, brick1.gpos.x + brick1.width, 
+                    brick2.gpos.x, brick2.gpos.x + brick2.width)) {
 
                 //Recursively check the new brick and add the results to the current selection
-                var rr = this.recurseBrick(brick2, dirs, checkGrey)
+                var result = this.recurseBrick(brick2, dirs, checkGrey)                         //Recurse new brick with current directions and checkGrey status
 
-                if(rr) {
-                    selection = selection.concat(rr);
+                if(result) {                                                                    //If the recursion result wasn't null
+                    selection = selection.concat(result);                                       //Add recursion result to selection
                 }
-                else {
-                    return null;
+                else {                                                                          //If the recursion result was null
+                    return null;                                                                //Return null
                 }
             }
         }
