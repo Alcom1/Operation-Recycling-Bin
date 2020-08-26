@@ -12,22 +12,26 @@ var GameObject = function(args) {
     this.parent = args.scene;                                //Parent scene
 }
 
-//Initialize a game object after its scene is loaded.
-GameObject.prototype.init = function(ctx) {
+//GameObject prototype
+GameObject.prototype = {
 
-}
+    //Initialize a game object after its scene is loaded.
+    init : function(ctx) {
 
-//Set a New Scene to load it
-GameObject.prototype.loadScene = function(newSceneName) {
-    engine.main.pushScene(newSceneName);
-}
+    },
 
-//Game object update
-GameObject.prototype.update = function(dt) {
-    
-}
+    //Set a New Scene to load it
+    loadScene : function(newSceneName) {
+        engine.main.pushScene(newSceneName);
+    },
 
-//Game object draw
-GameObject.prototype.draw = function(ctx) {
-    
+    //Game object update
+    update : function(dt) {
+        
+    },
+
+    //Game object draw
+    draw : function(ctx) {
+        
+    }
 }

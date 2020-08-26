@@ -41,177 +41,180 @@ var Brick = function(args) { GameObject.call(this, args);
 
 }
 
-Brick.prototype = Object.create(GameObject.prototype);
+Brick.prototype = 
+Object.create(GameObject.prototype);
+Object.assign(Brick.prototype, {
 
-//Initialize a game object after its scene is loaded.
-Brick.prototype.init = function(ctx) {
-    
-    //Initialize colors
-    ctx.fillStyle = this.color;
+    //Initialize a game object after its scene is loaded.
+    init : function(ctx) {
+        
+        //Initialize colors
+        ctx.fillStyle = this.color;
 
-    this.colorDark = engine.math.colorMult(ctx.fillStyle, 0.625);
-    this.colorBright = engine.math.colorAdd(ctx.fillStyle, 48);
+        this.colorDark = engine.math.colorMult(ctx.fillStyle, 0.625);
+        this.colorBright = engine.math.colorAdd(ctx.fillStyle, 48);
 
-    //Bake image of brick
-    this.image = new Image;
-    this.image.src = engine.baker.bake(
-        this, 
-        this.drawBrick, 
-        this.width * engine.math.gmultx + engine.math.zDepth + 3,
-        engine.math.gmulty + engine.math.zDepth + 3,
-        "BRICK." + this.width + "." + this.color);
-}
+        //Bake image of brick
+        this.image = new Image;
+        this.image.src = engine.baker.bake(
+            this, 
+            this.drawBrick, 
+            this.width * engine.math.gmultx + engine.math.zDepth + 3,
+            engine.math.gmulty + engine.math.zDepth + 3,
+            "BRICK." + this.width + "." + this.color);
+    },
 
-//Game object update
-Brick.prototype.update = function(dt) {
+    //Game object update
+    update : function(dt) {
 
-    //Follow mouse if selected
-    if(this.isSelected) {
+        //Follow mouse if selected
+        if(this.isSelected) {
 
-        //Poisition based difference between stored selected position and new cursor position
-        this.spos = engine.mouse.getPos().getSub(this.selectedPos);
+            //Poisition based difference between stored selected position and new cursor position
+            this.spos = engine.mouse.getPos().getSub(this.selectedPos);
 
-        //Grid positioning
-        this.spos.sub({
-            x : this.spos.x % engine.math.gmultx,
-            y : this.spos.y % engine.math.gmulty
+            //Grid positioning
+            this.spos.sub({
+                x : this.spos.x % engine.math.gmultx,
+                y : this.spos.y % engine.math.gmulty
+            });
+
+            //Set studs to match the position of this brick while selected.
+            this.resetStuds();
+        }
+    },
+
+    //Game object draw
+    draw : function(ctx) {
+        
+        //Global transparency for selection states
+        ctx.globalAlpha =
+            this.isPressed ? 0.8 :
+            this.isSelected ? 0.5 :
+            1.0;
+        
+        //Draw the stored image for this brick
+        ctx.drawImage(this.image, 0, -engine.math.zDepth - 3);
+    },
+
+    //Reset studs to match the position of this brick
+    resetStuds : function() {
+        this.studs.forEach((s, i) => {
+            s.gpos.set(this.gpos.x + i, this.gpos.y - 1);
+            s.spos.set(this.spos);
         });
+    },
 
-        //Set studs to match the position of this brick while selected.
-        this.resetStuds();
-    }
-}
+    //Setup this brick for pressing
+    press : function() {
 
-//Game object draw
-Brick.prototype.draw = function(ctx) {
-    
-    //Global transparency for selection states
-    ctx.globalAlpha =
-        this.isPressed ? 0.8 :
-        this.isSelected ? 0.5 :
-        1.0;
-    
-    //Draw the stored image for this brick
-    ctx.drawImage(this.image, 0, -engine.math.zDepth - 3);
-}
+        //Can't press grey bricks
+        if(!this.isStatic) {
+            this.isPressed = true;
+            this.studs.forEach(s => s.press());
+        }
+    },
 
-//Reset studs to match the position of this brick
-Brick.prototype.resetStuds = function() {
-    this.studs.forEach((s, i) => {
-        s.gpos.set(this.gpos.x + i, this.gpos.y - 1);
-        s.spos.set(this.spos);
-    });
-}
+    //Setup this brick for selecting
+    select : function(pos) {
+        this.isSelected = true; 
+        this.selectedPos.set(pos);
+        this.zIndex = engine.math.underCursorZIndex;
+        this.studs.forEach(s => s.select());
+    },
 
-//Setup this brick for pressing
-Brick.prototype.press = function() {
+    //Clear this brick's selection states
+    deselect : function() {
+        if(this.isSelected) {
+            this.gpos.set(
+                this.gpos.x + Math.round(this.spos.x / engine.math.gmultx),
+                this.gpos.y + Math.round(this.spos.y / engine.math.gmulty))
+        }
+        this.isPressed = false; 
+        this.isSelected = false;
+        this.spos.set(0, 0);                                                //Reset position
+        this.selectedPos.set(0, 0);
+        this.zIndex = this.gpos.x * 2 - this.gpos.y * 100 + this.width * 2; //Set z-index
+        this.resetStuds();                                                  //Reset studs to match the final brick position
+        this.studs.forEach(s => s.deselect());                              //Clear stud selection states.
+    },
 
-    //Can't press grey bricks
-    if(!this.isStatic) {
-        this.isPressed = true;
-        this.studs.forEach(s => s.press());
-    }
-}
+    //Clear this brick's recursion states
+    clearRecursion : function() {
+        this.isGrounded = false;
+        this.isChecked = false;
+    },
 
-//Setup this brick for selecting
-Brick.prototype.select = function(pos) {
-    this.isSelected = true; 
-    this.selectedPos.set(pos);
-    this.zIndex = engine.math.underCursorZIndex;
-    this.studs.forEach(s => s.select());
-}
+    drawBrick : function(ctx) {
 
-//Clear this brick's selection states
-Brick.prototype.deselect = function() {
-    if(this.isSelected) {
-        this.gpos.set(
-            this.gpos.x + Math.round(this.spos.x / engine.math.gmultx),
-            this.gpos.y + Math.round(this.spos.y / engine.math.gmulty))
-    }
-    this.isPressed = false; 
-    this.isSelected = false;
-    this.spos.set(0, 0);                                                //Reset position
-    this.selectedPos.set(0, 0);
-    this.zIndex = this.gpos.x * 2 - this.gpos.y * 100 + this.width * 2; //Set z-index
-    this.resetStuds();                                                  //Reset studs to match the final brick position
-    this.studs.forEach(s => s.deselect());                              //Clear stud selection states.
-}
+        //Offset for baked drawing.
+        ctx.translate(2, engine.math.zDepth + 3);
 
-//Clear this brick's recursion states
-Brick.prototype.clearRecursion = function() {
-    this.isGrounded = false;
-    this.isChecked = false;
-}
+        //Base rectangle color
+        ctx.fillStyle = this.color;
 
-Brick.prototype.drawBrick = function(ctx) {
+        //Base rectangle
+        ctx.fillRect(
+            0, 
+            0, 
+            this.width * engine.math.gmultx, 
+            engine.math.gmulty);
 
-    //Offset for baked drawing.
-    ctx.translate(2, engine.math.zDepth + 3);
+        //Border style
+        ctx.strokeStyle = this.colorDark;
+        ctx.lineWidth = engine.math.lineWidth;
+        ctx.lineCap = "square";
 
-    //Base rectangle color
-    ctx.fillStyle = this.color;
+        //Border
+        ctx.beginPath();
+        ctx.moveTo(engine.math.lineWidth / 2,       0);
+        ctx.lineTo(engine.math.lineWidth / 2,       engine.math.gmulty - engine.math.lineWidth / 2);
+        ctx.lineTo(this.width * engine.math.gmultx, engine.math.gmulty - engine.math.lineWidth / 2);
+        ctx.stroke();
 
-    //Base rectangle
-    ctx.fillRect(
-        0, 
-        0, 
-        this.width * engine.math.gmultx, 
-        engine.math.gmulty);
+        //Right face style
+        ctx.fillStyle = this.colorDark;
 
-    //Border style
-    ctx.strokeStyle = this.colorDark;
-    ctx.lineWidth = engine.math.lineWidth;
-    ctx.lineCap = "square";
+        //Right face
+        ctx.beginPath();
+        ctx.moveTo(this.width * engine.math.gmultx,                         engine.math.gmulty);
+        ctx.lineTo(this.width * engine.math.gmultx,                         0);
+        ctx.lineTo(this.width * engine.math.gmultx + engine.math.zDepth,                       - engine.math.zDepth);
+        ctx.lineTo(this.width * engine.math.gmultx + engine.math.zDepth,    engine.math.gmulty - engine.math.zDepth);
+        ctx.fill();
 
-    //Border
-    ctx.beginPath();
-    ctx.moveTo(engine.math.lineWidth / 2,       0);
-    ctx.lineTo(engine.math.lineWidth / 2,       engine.math.gmulty - engine.math.lineWidth / 2);
-    ctx.lineTo(this.width * engine.math.gmultx, engine.math.gmulty - engine.math.lineWidth / 2);
-    ctx.stroke();
+        //Top face style
+        ctx.fillStyle = this.colorBright;
 
-    //Right face style
-    ctx.fillStyle = this.colorDark;
+        //Top face
+        ctx.beginPath();
+        ctx.moveTo(0,                                                       0);
+        ctx.lineTo(                                  engine.math.zDepth,    -engine.math.zDepth);
+        ctx.lineTo(this.width * engine.math.gmultx + engine.math.zDepth,    -engine.math.zDepth);
+        ctx.lineTo(this.width * engine.math.gmultx,                         0);
+        ctx.fill();
 
-    //Right face
-    ctx.beginPath();
-    ctx.moveTo(this.width * engine.math.gmultx,                         engine.math.gmulty);
-    ctx.lineTo(this.width * engine.math.gmultx,                         0);
-    ctx.lineTo(this.width * engine.math.gmultx + engine.math.zDepth,                       - engine.math.zDepth);
-    ctx.lineTo(this.width * engine.math.gmultx + engine.math.zDepth,    engine.math.gmulty - engine.math.zDepth);
-    ctx.fill();
+        //Grey holes
+        if(this.isGrey) {
 
-    //Top face style
-    ctx.fillStyle = this.colorBright;
+            for(j = 1; j < this.width; j++) {
+                
+                var xoff = engine.math.gmultx * j
+                var yoff = Math.ceil(engine.math.gmulty * 0.4);
 
-    //Top face
-    ctx.beginPath();
-    ctx.moveTo(0,                                                       0);
-    ctx.lineTo(                                  engine.math.zDepth,    -engine.math.zDepth);
-    ctx.lineTo(this.width * engine.math.gmultx + engine.math.zDepth,    -engine.math.zDepth);
-    ctx.lineTo(this.width * engine.math.gmultx,                         0);
-    ctx.fill();
+                //Hole border
+                ctx.beginPath();
+                ctx.arc(xoff, yoff, engine.math.studRadius, 0, 2 * Math.PI);
+                ctx.stroke();
 
-    //Grey holes
-    if(this.isGrey) {
+                //Hole center style
+                ctx.fillStyle = this.colorDark;
 
-        for(j = 1; j < this.width; j++) {
-            
-            var xoff = engine.math.gmultx * j
-            var yoff = Math.ceil(engine.math.gmulty * 0.4);
-
-            //Hole border
-            ctx.beginPath();
-            ctx.arc(xoff, yoff, engine.math.studRadius, 0, 2 * Math.PI);
-            ctx.stroke();
-
-            //Hole center style
-            ctx.fillStyle = this.colorDark;
-
-            //Hole center
-            ctx.beginPath();
-            ctx.arc(xoff, yoff, engine.math.studRadius * 0.64, 0, 2 * Math.PI);
-            ctx.fill();
+                //Hole center
+                ctx.beginPath();
+                ctx.arc(xoff, yoff, engine.math.studRadius * 0.64, 0, 2 * Math.PI);
+                ctx.fill();
+            }
         }
     }
-}
+});

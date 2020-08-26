@@ -13,14 +13,6 @@
             "color" : "white"
         },
         {    
-            "name" : "CursorPos",
-            "zIndex" : 100,
-            "position" : {"x" : 0, "y" : 1},
-            "font" : "16pt Consolas",
-            "color" : "white",
-            "centered" : false
-        },
-        {    
             "name" : "Brick",
             "position" : {"x" : 15, "y" : 14},
             "color" : "red",
