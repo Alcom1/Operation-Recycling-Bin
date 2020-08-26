@@ -4,6 +4,7 @@ var engine = engine || {};
 //Module that manages mouse movement and states.
 engine.mouse = (function() {
 
+    var mouseElement = null;
     var mousePos; //Mouse position.
     var mousePressed = false;
     var flip = false;
@@ -17,12 +18,13 @@ engine.mouse = (function() {
 
     //Init
     function init(element) {
+        mouseElement = element;
 
         mousePos = new Vect(0, 0);
-        element.addEventListener("mousedown", function() {
+        mouseElement.addEventListener("mousedown", function() {
             mousePressed = true;
         })
-        element.addEventListener("mouseup", function() {
+        mouseElement.addEventListener("mouseup", function() {
             mousePressed = false;
         })
     }
@@ -71,6 +73,11 @@ engine.mouse = (function() {
             return mouseStates.ISRELEASED
         }
     }
+
+    //Sets the mouse cursor to a URL
+    function setCursorURL(url) {
+        mouseElement.style.cursor = "url(" + url + "), auto";
+    }
     
     //Return
     return {
@@ -79,7 +86,8 @@ engine.mouse = (function() {
         updatePos,
         getPos,
         getMouseState,
-        mouseStates
+        mouseStates,
+        setCursorURL
     }
     
 }());

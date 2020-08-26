@@ -4,18 +4,14 @@ var Cursor = function(args) { GameObject.call(this, args);
     this.ppos = new Vect(0, 0);                 //Previous pressed position
     this.pLength = 10;                          //Distance to enter carry state
 
-    this.originalRadius = args.radius || 4      //Starting radius of the cursor
-    this.radius = this.originalRadius;          //Current radius of the cursor
-
-    this.originalColor = args.color || "white"  //Starting color of the cursor
-    this.color = this.originalColor;            //Current color of the cursor
-
     this.states = Object.freeze({               //Cursor states
         NONE : 0,
         HOVER : 1,
         DRAG : 2,
         CARRY : 3
     });
+
+    this.cursorURLs = [];
 
     this.state = this.states.NONE;              //Current cursor state
 }
@@ -25,6 +21,37 @@ Cursor.prototype = Object.create(GameObject.prototype);
 //Initialize a game object after its scene is loaded.
 Cursor.prototype.init = function(ctx) {
     this.brickHandler = engine.tag.get("BrickHandler", "GameScene")[0];
+
+    this.cursorURLs[this.states.NONE] = engine.baker.bake(
+        this,
+        function(ctx) {
+            this.drawCursorBase(ctx);
+        }, 32, 32,
+        "CURSOR.NONE");
+
+    this.cursorURLs[this.states.HOVER] = engine.baker.bake(
+        this,
+        function(ctx) {
+            this.drawCursorBase(ctx);
+            this.drawDecalHover(ctx);
+        }, 32, 32,
+        "CURSOR.HOVER");
+
+    this.cursorURLs[this.states.DRAG] = engine.baker.bake(
+        this,
+        function(ctx) {
+            this.drawCursorBase(ctx);
+            this.drawDecalDrag(ctx);
+        }, 32, 32,
+        "CURSOR.DRAG");
+
+    this.cursorURLs[this.states.CARRY] = engine.baker.bake(
+        this,
+        function(ctx) {
+            this.drawCursorBase(ctx);
+            this.drawDecalCarry(ctx);
+        }, 32, 32,
+        "CURSOR.CARRY");
 }
 
 //Game object update
@@ -33,21 +60,19 @@ Cursor.prototype.update = function(dt) {
     var tempSpos = engine.mouse.getPos();
 
     //NONE-HOVER check, switch to hover state if we're hovering over a non-static brick.
-    if(
-        this.state == this.states.NONE ||
+    if (this.state == this.states.NONE ||
         this.state == this.states.HOVER &&
         tempSpos.getDiff(this.spos)) {
 
-        this.state =
-            this.brickHandler.hoverBricks(tempSpos) ?
-            this.states.HOVER :
-            this.states.NONE;
+        if(this.brickHandler.hoverBricks(tempSpos)) {
+            this.hover();
+        }
+        else {
+            this.resetState();
+        }
     }
 
     this.spos = tempSpos;
-
-    this.color = this.state == this.states.HOVER ? "#111" : this.originalColor;
-    this.radius = this.originalRadius;
 
     //Get difference between current and pressed positions
     var diff = this.spos.y - this.ppos.y;
@@ -73,7 +98,7 @@ Cursor.prototype.update = function(dt) {
     switch(engine.mouse.getMouseState()) {
 
         //WASPRESSED
-        case engine.mouse.mouseStates.WASPRESSED : this.radius = 15;
+        case engine.mouse.mouseStates.WASPRESSED :
 
             if(this.state == this.states.HOVER) {
                 //Deselect bricks for a new selection
@@ -90,14 +115,14 @@ Cursor.prototype.update = function(dt) {
                     //Selection is indeterminate. Go to drag state
                     case false :    
                         this.ppos = this.spos;
-                        this.state = this.states.DRAG;
+                        this.drag();
                         break;
                 }
             }
             break;
 
         //WASRELEASED
-        case engine.mouse.mouseStates.WASRELEASED : this.radius = 15;
+        case engine.mouse.mouseStates.WASRELEASED :
 
             //Reset state upon release
             if(this.state != this.states.CARRY || this.brickHandler.checkSelectionCollision()) {
@@ -114,15 +139,73 @@ Cursor.prototype.update = function(dt) {
     }
 }
 
-//Game object draw
-Cursor.prototype.draw = function(ctx) {
-    ctx.fillStyle = this.color;
-    ctx.globalAlpha = 0.5;
-    ctx.beginPath();
-    ctx.arc(8, 8, this.radius, 0, 2 * Math.PI);
-    ctx.fill();
+//Draw base cursor image
+Cursor.prototype.drawCursorBase = function(ctx) {
 
-    ctx.globalAlpha = 1;
+    ctx.fillStyle = "#FFF";
+    ctx.strokeStyle = "#666";
+    ctx.lineWidth = 1.5;
+    ctx.lineJoin = "round";
+
+    ctx.beginPath();
+    ctx.moveTo(2,  0);
+    ctx.lineTo(2,  28);
+    ctx.lineTo(20, 21);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+}
+
+//Draw hover decal for cursor
+Cursor.prototype.drawDecalHover = function(ctx) {
+
+    ctx.fillStyle = "#CCC";
+    ctx.lineWidth = 1.5;
+
+    ctx.beginPath();
+    ctx.arc(8.5, 17.5, 4, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.stroke();
+}
+
+//Draw hover decal for cursor
+Cursor.prototype.drawDecalDrag = function(ctx) {
+    
+    ctx.fillStyle = "#444";
+
+    ctx.translate(8, 17);
+
+    ctx.beginPath();
+
+    for(var i = 0; i < 2; i++) {
+
+        ctx.lineTo( 3.5,  2);
+        ctx.lineTo( 0,    6);
+        ctx.lineTo(-3.5,  2);
+    
+        ctx.lineTo(-1.5,  2);
+        ctx.lineTo(-1.5, -2);
+
+        ctx.rotate(Math.PI);
+    }
+
+    ctx.closePath();
+    ctx.fill();
+}
+
+//Draw hover decal for cursor
+Cursor.prototype.drawDecalCarry = function(ctx) {
+    
+
+    ctx.translate(9, 17.5);
+
+    ctx.rotate(Math.PI / 4);
+    ctx.fillStyle = "#333";
+    ctx.fillRect(-4, -4, 8, 8);
+
+    ctx.rotate(Math.PI / 4);
+    ctx.fillStyle = "#FFF";
+    ctx.fillRect(-3, -3, 6, 6);
 }
 
 //Select bricks
@@ -133,8 +216,27 @@ Cursor.prototype.selectBricks = function(dir) {
     }  
 }
 
+//Set cursor to no state
+Cursor.prototype.resetState = function() {
+    engine.mouse.setCursorURL(this.cursorURLs[this.states.NONE]);
+    this.state = this.states.NONE;
+}
+
+//Set cursor to its over state
+Cursor.prototype.hover = function() {
+    engine.mouse.setCursorURL(this.cursorURLs[this.states.HOVER]);
+    this.state = this.states.HOVER;
+}
+
+//Set the cursor to its drag state
+Cursor.prototype.drag = function() {
+    engine.mouse.setCursorURL(this.cursorURLs[this.states.DRAG]);
+    this.state = this.states.DRAG;
+}
+
 //Set the cursor to its carry state
 Cursor.prototype.carry = function() {
+    engine.mouse.setCursorURL(this.cursorURLs[this.states.CARRY]);
     this.parent.sortGO();               //Sort for new brick z-indices
     this.state = this.states.CARRY;     //Start carrying if we selected some bricks
 }
