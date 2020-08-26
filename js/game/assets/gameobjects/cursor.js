@@ -159,7 +159,7 @@ Cursor.prototype.drawCursorBase = function(ctx) {
 //Draw hover decal for cursor
 Cursor.prototype.drawDecalHover = function(ctx) {
 
-    ctx.fillStyle = "#CCC";
+    ctx.fillStyle = "#555";
     ctx.lineWidth = 1.5;
 
     ctx.beginPath();
