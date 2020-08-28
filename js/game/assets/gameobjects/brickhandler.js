@@ -2,7 +2,16 @@
 var BrickHandler = function(args) { GameObject.call(this, args);
     this.rows = [];             //Rows of bricks
     this.bricks = [];           //All bricks
-    this.brcickSelected = null; //Current selected brick
+    this.selectedBrick = null;  //Current selected brick
+    this.selections = []; //All selected bricks
+
+    this.states = Object.freeze({
+
+        NONE : 0,
+        INDY : 1,
+        DOWN : 2,
+        UP   : 3
+    });
 }
 
 BrickHandler.prototype = 
@@ -77,6 +86,7 @@ Object.assign(BrickHandler.prototype, {
     deselectBricks : function() {
 
         this.selectedBrick = null;                              //Clear selected brick
+        this.selections = [];                                   //Clear selected bricks
         this.bricks.forEach(b => b.deselect());                 //Clear selected status for each brick
 
         //Move bricks to the new row
@@ -123,12 +133,23 @@ Object.assign(BrickHandler.prototype, {
 
     //Check all bricks for hover, return hover state
     hoverBricks : function(pos) {
-        return this.checkBricks(pos, (b) => !b.isStatic);               //Check all bricks and return if the first sucessful check is not static
+        return this.checkBricks(pos, (b, p) => this.hoverBrick(b, p));  //Check all bricks and return if the first sucessful check is not static
     },
 
-    //Check all bricks for press, return press state (none, processed, indeterminate)
+    //Check all bricks for press, return press state (none, processed, indeterminate) This entire function is bananas.
     pressBricks : function(pos) {
-        return this.checkBricks(pos, (b, p) => this.pressBrick(b, p));  //Check all bricks and press the first sucessful check
+
+        var validSelections = [                                     //Build an normal array of selections that are not null
+            this.selections[-1], 
+            this.selections[1]].filter(s => s);
+
+        if(validSelections.length == 1) {                           //If there is a single valid selection, use and auto-process it
+
+            validSelections[0].forEach(b => b.isChecked = true);    //Restore checked state to simulate initial selection.
+            return this.processSelection(validSelections[0], pos);  //Process this selection using bricks in truthy direction, and the position.
+        }
+
+        return false;
     },
 
     //Check all bricks for a mouse position and return the result of a function against that brick and position
@@ -173,53 +194,29 @@ Object.assign(BrickHandler.prototype, {
     },
 
     //Press a single brick
-    pressBrick : function(brick, pos) {
+    hoverBrick : function(brick, pos) {
 
-        this.selectedBrick = brick;                                 //Set current selected brick for later use
+        this.selectedBrick = brick;                                         //Set current selected brick for later use
 
-        var directions = [];                                        //Stored directions
+        this.selections = [];
 
         //Check both directions if they're valid (valid == not null)
-        for(var dir of [-1, 1]) {                                   //For each direction
-            directions.push(this.recurseBrick(brick, [dir], true)); //Recurse in that direction. Assign result to valid directions.
+        for(var dir of [-1, 1]) {                                           //For each direction
+            this.selections[dir] = this.recurseBrick(brick, [dir], true);   //Recurse in that direction. Assign result to valid directions.
         }
-        this.bricks.forEach(b => b.clearRecursion());               //Clear recursion states after both recursive direction checks
+        this.bricks.forEach(b => b.clearRecursion());                       //Clear recursion states after both recursive direction checks
 
-        //If there is at least one valid direction
-        if(directions.some(b => b)) {                               //If some directions are truthy
-            this.selectedBrick.press();                             //Set brick to selected if any direction is valid.
-        }
-
-        //If both directions are valid, return indeterminate state.
-        if(directions.every(b => b)) {                              //If all directions are truthy
-            return false;                                           //Return indeterminate state (false).
-        }
-
-        //If a single direction is valid, process it. Return processed state.
-        for(var d of directions) {                                  //For each direction
-            if(d) {                                                 //If direction is truthy
-                d.forEach(b => b.isChecked = true);                 //Restore checked state to simulate initial selection. (Clunkiest part of the code so far!)
-                this.processSelection(d, pos);                      //Process this selection using bricks in truthy direction, and the position.
-                return true;                                        //Return processed state (true).
-            }
-        }
-
-        return null;                                                //No direction is valid. Return no state
+        return this.selections[-1] && 
+            this.selections[1]  ? this.states.INDY :                        //If both selections are valid, return indeterminate state
+            this.selections[-1] ? this.states.UP :                          //If upward selection is valid, return up state
+            this.selections[1]  ? this.states.down :                        //If dnward selection is valid, return dn state
+            this.states.NONE;                                               //No direction is valid. Return no state                              
     },
 
     //Set bricks to selected based on a provided cursor position
     initSelection : function(pos, dir) {
 
-        //if there is currently a selected brick, recurse from it and process the result.
-        if (this.selectedBrick != null) {                                       //If the currently selected brick is not null
-
-            var selection = this.recurseBrick(this.selectedBrick, [dir], true); //Recurse in the given direction for the initial selection of bricks
-            return this.processSelection(selection, pos);                       //Process the selection
-        }
-        else {
-
-            return false;                                                       //There is no selected brick, return false;
-        }
+        return this.processSelection(this.selections[dir], pos);    //Process the selection
     },
 
     //Process a selection, set all its bricks to a selected state, search for floating bricks, return if bricks were selected

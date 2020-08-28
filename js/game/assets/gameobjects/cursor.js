@@ -6,9 +6,9 @@ var Cursor = function(args) { GameObject.call(this, args);
 
     this.states = Object.freeze({               //Cursor states
         NONE : 0,                               //None state
-        HOVER : 1,                              //Hover state
-        DRAG : 2,                               //Drag state
-        CARRY : 3                               //Carry state
+        DRAG : 1,                               //Drag state
+        CARRY : 2,                              //Carry state
+        HOVER : 3                               //Hover state
     });
 
     this.state = this.states.NONE;              //Current cursor state
@@ -31,14 +31,6 @@ Object.assign(Cursor.prototype, {
             }, 32, 32,                                          //Set width and height to contain 
             "CURSOR.NONE");                                     //Tag this cursor image
 
-        this.cursorURLs[this.states.HOVER] = engine.baker.bake( //Bake cursor image for HOVER state
-            this,                                               //Pass self
-            function(ctx) {                                     //Function to draw the default cursor
-                this.drawCursorBase(ctx);                       //Draw base cursor
-                this.drawDecalHover(ctx);                       //Draw HOVER decal
-            }, 32, 32,                                          //Set width and height to contain 
-            "CURSOR.HOVER");                                    //Tag this cursor image        
-
         this.cursorURLs[this.states.DRAG] = engine.baker.bake(  //Bake cursor image for DRAG state
             this,                                               //Pass self
             function(ctx) {                                     //Function to draw the default cursor
@@ -53,7 +45,37 @@ Object.assign(Cursor.prototype, {
                 this.drawCursorBase(ctx);                       //Draw base cursor
                 this.drawDecalCarry(ctx);                       //Draw CARRY decal
             }, 32, 32,                                          //Set width and height to contain 
-            "CURSOR.CARRY");                                    //Tag this cursor image        
+            "CURSOR.CARRY");                                    //Tag this cursor image     
+            
+        this.cursorURLs[                                        //Bake cursor image for HOVER BOTH state
+            this.states.HOVER +
+            this.brickHandler.states.INDY] = engine.baker.bake( 
+            this,                                               //Pass self
+            function(ctx) {                                     //Function to draw the default cursor
+                this.drawCursorBase(ctx);                       //Draw base cursor
+                this.drawDecalHover(ctx);                       //Draw HOVER decal
+            }, 32, 32,                                          //Set width and height to contain 
+            "CURSOR.HOVER.INDY");                               //Tag this cursor image
+            
+        this.cursorURLs[                                        //Bake cursor image for HOVER DOWN state
+            this.states.HOVER +
+            this.brickHandler.states.DOWN] = engine.baker.bake( 
+            this,                                               //Pass self
+            function(ctx) {                                     //Function to draw the default cursor
+                this.drawCursorBase(ctx);                       //Draw base cursor
+                this.drawDecalHover(ctx);                       //Draw HOVER decal
+            }, 32, 32,                                          //Set width and height to contain 
+            "CURSOR.HOVER.DOWN");                               //Tag this cursor image
+            
+        this.cursorURLs[                                        //Bake cursor image for HOVER UP state
+            this.states.HOVER +
+            this.brickHandler.states.UP] = engine.baker.bake(   
+            this,                                               //Pass self
+            function(ctx) {                                     //Function to draw the default cursor
+                this.drawCursorBase(ctx);                       //Draw base cursor
+                this.drawDecalHover(ctx);                       //Draw HOVER decal
+            }, 32, 32,                                          //Set width and height to contain 
+            "CURSOR.HOVER.UP");                                 //Tag this cursor image
     },
 
     //Game object update
@@ -66,11 +88,15 @@ Object.assign(Cursor.prototype, {
             this.state == this.states.HOVER &&                          //If the current state is NONE Or HOVER
             tempSpos.getDiff(this.spos)) {                              //If the cursor has moved (temp and current positions are different)
 
-            if(this.brickHandler.hoverBricks(tempSpos)) {               //If the cursor is hovering over a brick
-                this.hover();                                           //Enter HOVER state
-            }
-            else {                                                      //If the cursor is not hovering over a brick
+            var hoverState = this.brickHandler.hoverBricks(tempSpos);
+
+            if(hoverState == this.brickHandler.states.NONE) {
+
                 this.resetState();                                      //Enter NONE state
+            }
+            else {
+
+                this.hover(hoverState);
             }
         }
 
@@ -97,8 +123,6 @@ Object.assign(Cursor.prototype, {
             case engine.mouse.mouseStates.WASPRESSED :                  //If the mouse was pressed this frame
 
                 if(this.state == this.states.HOVER) {                   
-                    
-                    this.brickHandler.deselectBricks();                 //Deselect bricks for a new selection
             
                     //If pressing the brick returns true (Indeterminate state)
                     switch(this.brickHandler.pressBricks(this.spos)) 
@@ -219,12 +243,12 @@ Object.assign(Cursor.prototype, {
     },
 
     //Set cursor to its over state
-    hover : function() {
+    hover : function(hoverState) {
 
-        if(this.state != this.states.HOVER) {                               //If the current state is not already HOVER
+        if(this.state != this.states.HOVER) {                                               //If the current state is not already HOVER
 
-            engine.mouse.setCursorURL(this.cursorURLs[this.states.HOVER]);  //Set cursor to HOVER cursor
-            this.state = this.states.HOVER;                                 //Set state to NONE state
+            engine.mouse.setCursorURL(this.cursorURLs[ this.states.HOVER + hoverState]);    //Set cursor to HOVER cursor
+            this.state = this.states.HOVER;                                                 //Set state to NONE state
         }
     },
 
