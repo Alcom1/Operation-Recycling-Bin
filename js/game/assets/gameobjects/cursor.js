@@ -11,7 +11,7 @@ var Cursor = function(args) { GameObject.call(this, args);
         HOVER : 3                               //Hover state
     });
 
-    this.state = this.states.NONE;              //Current cursor state
+    this.state = null;                          //Current cursor state
 
     this.cursorURLs = [];                       //Image urls for each type of cursor
 }
@@ -76,6 +76,8 @@ Object.assign(Cursor.prototype, {
                 this.drawDecalHover(ctx);                       //Draw HOVER decal
             }, 32, 32,                                          //Set width and height to contain 
             "CURSOR.HOVER.UP");                                 //Tag this cursor image
+
+        this.resetState();                                      //Start state and cursor
     },
 
     //Game object update
@@ -160,18 +162,24 @@ Object.assign(Cursor.prototype, {
     //Draw base cursor image
     drawCursorBase : function(ctx) {
 
-        ctx.fillStyle = "#FFF";     //Base cursor fill color
-        ctx.strokeStyle = "#666";   //Base cursor border color
-        ctx.lineWidth = 1.5;        //Base cursor border width
-        ctx.lineJoin = "round";     //Base cursor line style
+        ctx.fillStyle = "#FFF";                 //Base cursor fill color
+        ctx.strokeStyle = "#666";               //Base cursor border color
+        ctx.lineWidth = 1.5;                    //Base cursor border width
+        ctx.lineJoin = "round";                 //Base cursor line style
 
-        ctx.beginPath();            //Start path
-        ctx.moveTo(2,  0);          //Top vertex
-        ctx.lineTo(2,  28);         //Lower left vertex
-        ctx.lineTo(20, 21);         //Lower right vertex
-        ctx.closePath();            //Close path
-        ctx.fill();                 //Fill cursor
-        ctx.stroke();               //Draw cursor border
+        ctx.beginPath();                        //Start path
+        ctx.moveTo(1,  1);                      //Top vertex
+        ctx.lineTo(1, 11);                      //Lower left vertex
+        ctx.lineTo(11, 1);                      //Lower right vertex
+        ctx.closePath();                        //Close path
+        ctx.fill();                             //Fill cursor
+        ctx.stroke();                           //Draw cursor border
+
+        ctx.beginPath();                        //Start path
+        ctx.arc(16, 16, 12, 0, 2 * Math.PI);    //Circle for icons
+        ctx.closePath();                        //Close path
+        ctx.fill();                             //Fill cursor
+        ctx.stroke();                           //Draw cursor border
     },
 
     //Draw hover decal for cursor
@@ -181,7 +189,7 @@ Object.assign(Cursor.prototype, {
         ctx.lineWidth = 1.5;                    //Hover decal border
 
         ctx.beginPath();                        //Start path
-        ctx.arc(8.5, 17.5, 4, 0, 2 * Math.PI);  //Hover circle
+        ctx.arc(16, 16, 6, 0, 2 * Math.PI);     //Hover circle
         ctx.fill();                             //Fill circle
         ctx.stroke();                           //Outline circle
     },
@@ -190,17 +198,17 @@ Object.assign(Cursor.prototype, {
     drawDecalDrag : function(ctx) {
         
         ctx.fillStyle = "#444";                 //Hover decal color
-        ctx.translate(8, 17);                   //Translate. Drag decal is drawn around this center.
+        ctx.translate(16, 16);                  //Translate. Drag decal is drawn around this center.
         ctx.beginPath();                        //Start path
 
         for(var i = 0; i < 2; i++) {            //Draw two opposing arrows
 
-            ctx.lineTo( 3.5,  2);               //Right arrow vertex
-            ctx.lineTo( 0,    6);               //Peak arrow vertex
-            ctx.lineTo(-3.5,  2);               //Left arrow vertex
+            ctx.lineTo( 5,  3);                 //Right arrow vertex
+            ctx.lineTo( 0,  9);                 //Peak arrow vertex
+            ctx.lineTo(-5,  3);                 //Left arrow vertex
         
-            ctx.lineTo(-1.5,  2);               //Stalk base
-            ctx.lineTo(-1.5, -2);               //Stalk extended to other side
+            ctx.lineTo(-2,  3);                 //Stalk base
+            ctx.lineTo(-2, -3);                 //Stalk extended to other side
 
             ctx.rotate(Math.PI);                //Rotate for second arrow
         }
@@ -212,15 +220,15 @@ Object.assign(Cursor.prototype, {
     //Draw hover decal for cursor
     drawDecalCarry : function(ctx) {
         
-        ctx.translate(9, 17.5);         //Translate. Carry decal is drawn around this center.
+        ctx.translate(16, 16);          //Translate. Carry decal is drawn around this center.
 
         ctx.rotate(Math.PI / 4);        //Rotate 8th circle
         ctx.fillStyle = "#333";         //Outer diamond color
-        ctx.fillRect(-4, -4, 8, 8);     //Draw diamond
+        ctx.fillRect(-6, -6, 12, 12);   //Draw diamond
 
         ctx.rotate(Math.PI / 4);        //Rotate 8th circle
         ctx.fillStyle = "#FFF";         //Inner square color
-        ctx.fillRect(-3, -3, 6, 6);     //Draw square
+        ctx.fillRect(-4.5, -4.5, 9, 9); //Draw square
     },
 
     //Select bricks
@@ -247,7 +255,7 @@ Object.assign(Cursor.prototype, {
 
         if(this.state != this.states.HOVER) {                                               //If the current state is not already HOVER
 
-            engine.mouse.setCursorURL(this.cursorURLs[ this.states.HOVER + hoverState]);    //Set cursor to HOVER cursor
+            engine.mouse.setCursorURL(this.cursorURLs[this.states.HOVER + hoverState]);     //Set cursor to HOVER cursor
             this.state = this.states.HOVER;                                                 //Set state to NONE state
         }
     },

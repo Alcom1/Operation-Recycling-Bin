@@ -133,7 +133,7 @@ Object.assign(BrickHandler.prototype, {
 
     //Check all bricks for hover, return hover state
     hoverBricks : function(pos) {
-        return this.checkBricks(pos, (b, p) => this.hoverBrick(b, p));  //Check all bricks and return if the first sucessful check is not static
+        return this.checkBricks(pos, (b, p) => this.hoverBrick(b, p)) ?? this.states.NONE;  //Check all bricks and return if the first sucessful check is not static
     },
 
     //Check all bricks for press, return press state (none, processed, indeterminate) This entire function is bananas.
@@ -209,7 +209,7 @@ Object.assign(BrickHandler.prototype, {
         return this.selections[-1] && 
             this.selections[1]  ? this.states.INDY :                        //If both selections are valid, return indeterminate state
             this.selections[-1] ? this.states.UP :                          //If upward selection is valid, return up state
-            this.selections[1]  ? this.states.down :                        //If dnward selection is valid, return dn state
+            this.selections[1]  ? this.states.DOWN :                        //If dnward selection is valid, return dn state
             this.states.NONE;                                               //No direction is valid. Return no state                              
     },
 
