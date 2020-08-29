@@ -20,10 +20,10 @@ Object.create(GameObject.prototype);
 Object.assign(BrickHandler.prototype, {
 
     //Initialize a game object after its scene is loaded.
-    init : function(ctx) {
+    init : function(ctx, scenes) {
 
         //Establish bricks
-        this.bricks = engine.tag.get("Brick", "GameScene");             //Get bricks from scene
+        this.bricks = engine.tag.get("Brick", "Level");                 //Get bricks from scene
         this.bricksGrey = this.bricks.filter(b => b.isGrey == true);    //Grey bricks
 
         //Add bricks into rows

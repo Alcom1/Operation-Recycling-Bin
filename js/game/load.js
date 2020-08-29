@@ -10,5 +10,5 @@ window.onload = function() {
     engine.core.init(
         document.querySelector('canvas'), 
         "js/game/assets/scenes/",
-        "scene_0");
+        ["level_interface", "level_1"]);
 }

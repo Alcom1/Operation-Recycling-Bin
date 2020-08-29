@@ -12,6 +12,12 @@ engine.tag = (function() {
 
         var masterGroup = [];
     }
+
+    //Return true if a scene by name exists in the master group.
+    function exists(sceneName) {
+
+        return masterGroup.some(s => s.name == sceneName);
+    }
     
     //Push a game object to the master group
     function pushGOToScene(gameObject, sceneName) {
@@ -80,6 +86,7 @@ engine.tag = (function() {
     //Return
     return {
         init,
+        exists,
         pushGO : pushGOToScene,
         get,
         clear,

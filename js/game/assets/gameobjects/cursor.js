@@ -15,6 +15,7 @@ var Cursor = function(args) { GameObject.call(this, args);
     this.hoverState = null;                     //Current hover state
 
     this.cursorURLs = [];                       //Image urls for each type of cursor
+    this.level = null;                          //Level containing bricks
 }
 
 Cursor.prototype = 
@@ -22,8 +23,12 @@ Object.create(GameObject.prototype);
 Object.assign(Cursor.prototype, {
 
     //Initialize a game object after its scene is loaded.
-    init : function(ctx) {
-        this.brickHandler = engine.tag.get("BrickHandler", "GameScene")[0]; //Get BrickHandler game object.
+    init : function(ctx, scenes) {
+        this.level = scenes.find(s => s.name == "Level");       //Get level containing bricks.
+
+        this.brickHandler = engine.tag.get(                     //Get BrickHandler game object.
+            "BrickHandler", 
+            "LevelInterface")[0]; 
 
         this.cursorURLs[this.states.NONE] = engine.baker.bake(  //Bake cursor image for NONE state
             this,                                               //Pass self
@@ -158,7 +163,7 @@ Object.assign(Cursor.prototype, {
                     this.brickHandler.checkSelectionCollision()) {      //Or if the selection collision is valid for placement
 
                     this.brickHandler.deselectBricks();                 //Deselect bricks
-                    this.parent.sortGO();                               //Sort for new brick z-indices
+                    this.level.sortGO();                               //Sort for new brick z-indices
 
                     this.state = this.states.NONE;                      //Return to NONE state
                 }
@@ -335,7 +340,7 @@ Object.assign(Cursor.prototype, {
         if(this.state != this.states.CARRY) {                               //If the current state is not already CARRY
             
             engine.mouse.setCursorURL(this.cursorURLs[this.states.CARRY]);  //Set cursor to CARRY cursor
-            this.parent.sortGO();                                           //Sort for new brick z-indices
+            this.level.sortGO();                                           //Sort for new brick z-indices
             this.state = this.states.CARRY;                                 //Set state to NONE stateStart carrying if we selected some bricks
         }
     }

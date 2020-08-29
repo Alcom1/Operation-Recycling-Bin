@@ -16,7 +16,7 @@ var GameObject = function(args) {
 GameObject.prototype = {
 
     //Initialize a game object after its scene is loaded.
-    init : function(ctx) {
+    init : function(ctx, scenes) {
 
     },
 

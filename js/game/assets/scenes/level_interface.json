@@ -1,0 +1,17 @@
+{
+    "scene" : {
+        "name" : "LevelInterface",
+        "need" : ["Level"],
+        "zIndex" : 0
+    },
+    "gameObjects" : [
+        {
+            "name" : "BrickHandler"
+        },
+        {
+            "name" : "Cursor",
+            "zIndex" : 50000,
+            "color" : "white"
+        }
+    ]
+}

@@ -17,7 +17,7 @@ engine.core = (function() {
         killSceneNames =	[]
 
     //Initialization
-    function init(element, scenePathName, startScene, width, height) {
+    function init(element, scenePathName, startScenes, width, height) {
 
         //Scene path
         scenePath = scenePathName
@@ -31,8 +31,8 @@ engine.core = (function() {
         // canvas actions
         canvas.onmousemove = engine.mouse.updatePos.bind(this);
 
-        // load the first scene
-        loadScene(startScene);
+        // load the initial scenes
+        startScenes.forEach(s => loadScene(s));
         
         // start the game loop
         frame();
@@ -55,13 +55,16 @@ engine.core = (function() {
         pushSceneNames = [];
 
         //Check for and clear cut scenes
-        unLoadScenes(killSceneNames);
+        unloadScenes(killSceneNames);
+
+        //Init
+        initScenes();
         
         //Update
-        update(dt);
+        updateScenes(dt);
         
         //Draw
-        draw(ctx);
+        drawScenes();
 
         //Module updates
         engine.mouse.update(dt);
@@ -79,15 +82,20 @@ engine.core = (function() {
                 false);
         }
     }
+
+    function initScenes() {
+        //Initialize scenes
+        scenes.forEach(s => s.init(ctx, scenes));
+    }
         
     //Update logic
-    function update(dt) {
+    function updateScenes(dt) {
 
         scenes.forEach(s => s.update(dt));
     }
         
     //Draw the main scene
-    function draw(ctx) {
+    function drawScenes() {
 
         scenes.forEach(s => s.draw(ctx));
     }
@@ -123,16 +131,16 @@ engine.core = (function() {
         });
 
         scene.sortGO();     //Sort all new game objects.
-        scene.init(ctx);    //Initialize all new objects in scene.
         scenes.push(scene);
         sortSC();
     }
 
     //unload a scene
-    function unLoadScenes() {
+    function unloadScenes() {
 
-        scenes = scenes.filter(s => !killSceneNames.includes(s.name));
-        killSceneNames = [];
+        scenes = scenes.filter(s => !killSceneNames.includes(s.name));  //Clear scene names from core
+        killSceneNames.forEach(n => engine.tag.clear(n));               //Clear scene names from tags
+        killSceneNames = [];                                            //Scenes have been cleared, reset kill list
     }
     
     //set scene fileNames to be loaded

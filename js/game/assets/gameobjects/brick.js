@@ -46,7 +46,7 @@ Object.create(GameObject.prototype);
 Object.assign(Brick.prototype, {
 
     //Initialize a game object after its scene is loaded.
-    init : function(ctx) {
+    init : function(ctx, scenes) {
         
         //Initialize colors
         ctx.fillStyle = this.color;
