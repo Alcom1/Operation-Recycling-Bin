@@ -10,7 +10,8 @@ var BrickHandler = function(args) { GameObject.call(this, args);
         NONE : 0,
         INDY : 1,
         DOWN : 2,
-        UP   : 3
+        UP   : 3,
+        SAME : 4
     });
 }
 
@@ -149,7 +150,8 @@ Object.assign(BrickHandler.prototype, {
             return this.processSelection(validSelections[0], pos);  //Process this selection using bricks in truthy direction, and the position.
         }
 
-        return false;
+        this.selectedBrick.isPressed = true;                        //For the indeterminate state, just press this brick
+        return false;                                               //Return falsy for indeterimate state
     },
 
     //Check all bricks for a mouse position and return the result of a function against that brick and position
@@ -196,9 +198,15 @@ Object.assign(BrickHandler.prototype, {
     //Press a single brick
     hoverBrick : function(brick, pos) {
 
-        this.selectedBrick = brick;                                         //Set current selected brick for later use
+        //Do nothing if the two bricks are the same
+        if (this.selectedBrick != null &&                                   //If there is a selected brick
+            this.selectedBrick.compare(brick)) {                            //If the two bricks are the same
 
-        this.selections = [];
+            return this.states.SAME;                                        //Do nothing, return same state.
+        }
+
+        this.selectedBrick = brick;                                         //Set current selected brick for later use
+        this.selections = [];                                               //Reset selections
 
         //Check both directions if they're valid (valid == not null)
         for(var dir of [-1, 1]) {                                           //For each direction

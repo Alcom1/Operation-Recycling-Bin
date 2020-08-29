@@ -22,7 +22,14 @@ GameObject.prototype = {
 
     //Set a New Scene to load it
     loadScene : function(newSceneName) {
+
         engine.main.pushScene(newSceneName);
+    },
+
+    //Compare two objects, return true if they are the same
+    compare : function(gameObject) {
+
+        return gameObject.gpos.x == this.gpos.x && gameObject.gpos.y == this.gpos.y;    //Default compare uses grid positions
     },
 
     //Game object update
