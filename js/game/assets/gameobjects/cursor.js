@@ -24,6 +24,7 @@ Object.assign(Cursor.prototype, {
 
     //Initialize a game object after its scene is loaded.
     init : function(ctx, scenes) {
+
         this.level = scenes.find(s => s.name == "Level");       //Get level containing bricks.
 
         this.brickHandler = engine.tag.get(                     //Get BrickHandler game object.
@@ -96,22 +97,7 @@ Object.assign(Cursor.prototype, {
             this.state == this.states.HOVER &&                          //If the current state is NONE Or HOVER
             tempSpos.getDiff(this.spos)) {                              //If the cursor has moved (temp and current positions are different)
 
-            var hoverState = this.brickHandler.hoverBricks(tempSpos);   //Hoverstate, pass it to hover function
-
-            //Handle hover states
-            switch(hoverState) {
-
-                case this.brickHandler.states.NONE :                    //Reset state for none state
-                    this.resetState();                                  //Reset state to none
-                    break;
-
-                case this.brickHandler.states.SAME :                    //Do nothing for same state
-                    break;
-
-                default :                                               //All other states are hover
-                    this.hover(hoverState);                             //Hover with hover state
-                    break;
-            }
+            this.hoverBricks(tempSpos);
         }
 
         this.spos = tempSpos;                                           //Set current position
@@ -136,7 +122,11 @@ Object.assign(Cursor.prototype, {
             //WASPRESSED
             case engine.mouse.mouseStates.WASPRESSED :                  //If the mouse was pressed this frame
 
-                if(this.state == this.states.HOVER) {                   
+                if(this.state == this.states.NONE) {                    //MOBILE - If a press event occurs in a NONE state (Only occurs on Mobile)
+
+                    this.hoverBricks(this.spos);                        //MOBILE - Hover states don't occur without a press on mobile
+                }
+                if(this.state == this.states.HOVER) {                   //If a press event occurs in a HOVER state
             
                     //If pressing the brick returns true (Indeterminate state)
                     switch(this.brickHandler.pressBricks(this.spos)) 
@@ -290,6 +280,27 @@ Object.assign(Cursor.prototype, {
         ctx.rotate(Math.PI / 4);        //Rotate 8th circle
         ctx.fillStyle = "#FFF";         //Inner square color
         ctx.fillRect(-4.5, -4.5, 9, 9); //Draw square
+    },
+
+    //Hover over bricks, change state based on hover state
+    hoverBricks : function(pos) {
+
+        var hoverState = this.brickHandler.hoverBricks(pos);    //Hoverstate, pass it to hover function
+
+        //Handle hover states
+        switch(hoverState) {
+
+            case this.brickHandler.states.NONE :                //Reset state for none state
+                this.resetState();                              //Reset state to none
+                break;
+
+            case this.brickHandler.states.SAME :                //Do nothing for same state
+                break;
+
+            default :                                           //All other states are hover
+                this.hover(hoverState);                         //Hover with hover state
+                break;
+        }
     },
 
     //Select bricks

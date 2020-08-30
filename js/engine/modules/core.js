@@ -27,9 +27,6 @@ engine.core = (function() {
         canvas.width = width || WIDTH;
         canvas.height = height || HEIGHT;
         ctx = canvas.getContext('2d');
-        
-        // canvas actions
-        canvas.onmousemove = engine.mouse.updatePos.bind(this);
 
         // load the initial scenes
         startScenes.forEach(s => loadScene(s));
