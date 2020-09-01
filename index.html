@@ -1,22 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8" />
+        <meta charset="utf-8" /> 
         <title>ORB</title>
         <style>
-            body
-            {
-                background-color: #000;
+            * {
+                margin : 0;
             }
-            canvas
-            {
-                display: block;
-                margin-left: auto;
-                margin-right: auto;
-                margin-top: 50px;
-                margin-bottom: 50px;
+            html {
+                height: 100%;
+            }
+            body {
+                background-color: #000;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            canvas {
                 background: #76C9EB; /* #7F8887; */
                 border: 1px solid #FFF;
+            }
+            @media (max-aspect-ratio: 16/9) {
+                canvas {
+                    width: 100%;
+                }
+            }
+            @media (min-aspect-ratio: 16/9) {
+                canvas {
+                    height: 100%;
+                }
             }
         </style>
     </head>

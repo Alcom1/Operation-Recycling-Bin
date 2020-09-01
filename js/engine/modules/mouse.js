@@ -8,6 +8,7 @@ engine.mouse = (function() {
     var mousePos = null;        //Mouse position.
     var mousePressed = false;   //If the mouse is pressed
     var afterPressed = false;   //Is different from mousePressed on frames where the mouse state has changed
+    var resolution = null;      //Resolution of the mouse space
     var isMobile = false;       //If the enviornment is mobile
 
     //Mouse press states
@@ -23,11 +24,13 @@ engine.mouse = (function() {
 
         mouseElement = element;                                         //Set mouse element
         mousePos = new Vect(0, 0);                                      //Set mouse position to default position
+        resolution = new Vect(1, 1);                                    //Set default resolution space
         isMobile =                                                      //Set mobile environment status
             navigator.maxTouchPoints ||                                 //True for mobile environment
             'ontouchstart' in document.documentElement;                 //True for mobile environment (Desktop debug)
 
-        if(isMobile) {
+        //Separate mobile and desktop events so they do not overlap
+        if(isMobile) {                                                  //If the environment is mobile
 
             mouseElement.ontouchmove =          updatePos.bind(this);   //Touch movement, move the mouse position
             mouseElement.ontouchstart =         updateTouch.bind(this); //Touch start, move and press the mouse
@@ -58,8 +61,10 @@ engine.mouse = (function() {
     function updatePos(e) {
 
         mousePos = new Vect(                                            //Set mouse position from event.
-            e.offsetX ?? (e.touches[0].pageX - e.target.offsetLeft),    //OffsetX for desktop. Touches for mobile.
-            e.offsetY ?? (e.touches[0].pageY - e.target.offsetTop));    //OffsetY for desktop. Touches for mobile.
+            (e.offsetX ?? (e.touches[0].pageX - e.target.offsetLeft)) * //OffsetX for desktop. Touches for mobile.
+            (resolution.x / e.target.clientWidth),                      //Multiply by resolution-target ratio incase element is scaled
+            (e.offsetY ?? (e.touches[0].pageY - e.target.offsetTop)) *  //OffsetY for desktop. Touches for mobile.
+            (resolution.y / e.target.clientHeight));                    //Multiply by resolution-target ratio incase element is scaled
     }
     
     //Expose the mouse position
@@ -96,6 +101,11 @@ engine.mouse = (function() {
 
         mouseElement.style.cursor = "url(" + url + "), auto";   //Apply URL CSS to the mouse element.
     }
+
+    //Sets the resolution off the mouse space
+    function setResolution(resx, resy) {
+        resolution = new Vect(resx, resy);  //Set the resolution based on the provided x and y dimensions
+    }
     
     //Return
     return {
@@ -105,6 +115,7 @@ engine.mouse = (function() {
         getMouseState,
         getMobile,
         setCursorURL,
+        setResolution,
         mouseStates
     }
     

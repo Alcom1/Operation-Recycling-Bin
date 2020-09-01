@@ -4,14 +4,14 @@ var engine = engine || {}
 //Engine core
 engine.core = (function() {
     
-    var WIDTH =             1280,       // Canvas width (set to default)
-        HEIGHT =            720,        // Canvas height (set to default)
-        scenePath =         "",         // Path scenes are located in
-        canvas =            undefined,  // Canvas
-        ctx =               undefined,	// Canvas context
-        lastTime =          0,          // used by calculateDeltaTime() 
-        debug =             true,       // debug
-        animationID =       0,          // ID index of the current frame
+    var WIDTH =             1280,       //Canvas width (set to default)
+        HEIGHT =            720,        //Canvas height (set to default)
+        scenePath =         "",         //Path scenes are located in
+        canvas =            undefined,  //Canvas
+        ctx =               undefined,	//Canvas context
+        lastTime =          0,          //used by calculateDeltaTime() 
+        debug =             true,       //debug
+        animationID =       0,          //ID index of the current frame
         scenes =            [],
         pushSceneNames =    [],
         killSceneNames =	[]
@@ -22,16 +22,21 @@ engine.core = (function() {
         //Scene path
         scenePath = scenePathName
 
-        // init canvas
+        //init canvas
         canvas = element;
-        canvas.width = width || WIDTH;
-        canvas.height = height || HEIGHT;
+        canvas.width = (width || WIDTH);                //Canvas width
+        canvas.height = (height || HEIGHT);             //Canvas height
+        canvas.style.maxWidth = canvas.width + "px";    //Canvas width max
+        canvas.style.maxHeight = canvas.height + "px";  //Canvas height max
         ctx = canvas.getContext('2d');
 
-        // load the initial scenes
+        //Set the resolution for the mouse space
+        engine.mouse.setResolution(canvas.width, canvas.height);
+
+        //Load the initial scenes
         startScenes.forEach(s => loadScene(s));
         
-        // start the game loop
+        //Start the game loop
         frame();
     }
         
@@ -69,7 +74,7 @@ engine.core = (function() {
         //Draw debug info
         if (debug)
         {
-            // draw dt in bottom right corner
+            //draw dt in bottom right corner
             fillText(
                 "fps: " + (1 / dt).toFixed(1),
                 2,
