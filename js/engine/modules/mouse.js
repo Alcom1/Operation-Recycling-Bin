@@ -45,7 +45,7 @@ engine.mouse = (function() {
     }
     
     //Update the mouse for a frame (Should be the last action of a frame)
-    function update(dt) {
+    function update() {
 
         afterPressed = mousePressed;    //After a press or release, switch from WAS-state to IS-state
     }

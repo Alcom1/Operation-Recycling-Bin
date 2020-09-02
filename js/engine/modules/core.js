@@ -12,29 +12,29 @@ engine.core = (function() {
         lastTime =          0,          //used by calculateDeltaTime() 
         debug =             true,       //debug
         animationID =       0,          //ID index of the current frame
-        scenes =            [],
-        pushSceneNames =    [],
-        killSceneNames =	[]
+        scenes =            [],         //Array of current scenes
+        pushSceneNames =    [],         //Array of names of scenes to be added
+        killSceneNames =	[]          //Array of names of scenes to be removed
 
     //Initialization
     function init(element, scenePathName, startScenes, width, height) {
 
         //Scene path
-        scenePath = scenePathName
+        scenePath = scenePathName                                   //Store path for scenes
 
         //init canvas
-        canvas = element;
-        canvas.width = (width || WIDTH);                //Canvas width
-        canvas.height = (height || HEIGHT);             //Canvas height
-        canvas.style.maxWidth = canvas.width + "px";    //Canvas width max
-        canvas.style.maxHeight = canvas.height + "px";  //Canvas height max
-        ctx = canvas.getContext('2d');
+        canvas = element;                                           //Canvas element
+        canvas.width = (width || WIDTH);                            //Canvas width
+        canvas.height = (height || HEIGHT);                         //Canvas height
+        canvas.style.maxWidth = canvas.width + "px";                //Canvas width max
+        canvas.style.maxHeight = canvas.height + "px";              //Canvas height max
+        ctx = canvas.getContext('2d');                              //Canvas 2D context
 
         //Set the resolution for the mouse space
-        engine.mouse.setResolution(canvas.width, canvas.height);
+        engine.mouse.setResolution(canvas.width, canvas.height);    //Mouse space is the height and width of the canvas
 
-        //Load the initial scenes
-        startScenes.forEach(s => loadScene(s));
+        //Load the starting scenes
+        startScenes.forEach(s => loadScene(s));                     //For each starting scene, load it
         
         //Start the game loop
         frame();
@@ -44,38 +44,30 @@ engine.core = (function() {
     function frame() {
         
         //LOOP
-        animationID = requestAnimationFrame(frame.bind(this));
+        animationID = requestAnimationFrame(frame.bind(this));  //Magic
             
-        //Calculate Delta Time of frame
-        var dt = calculateDeltaTime();
-        
-        //Clear
-        ctx.clearRect(0, 0, WIDTH, HEIGHT);
+        //Setup frame
+        var dt = calculateDeltaTime();                          //Calculate delta time, time since last frame
+        ctx.clearRect(0, 0, WIDTH, HEIGHT);                     //Clear the canvas
 
-        //Check for and load new scenes
-        pushSceneNames.forEach(sn => loadScene(sn));
-        pushSceneNames = [];
-
-        //Check for and clear cut scenes
+        //Load and Unload scenes
+        pushSceneNames.forEach(sn => loadScene(sn));            //Load each scene name in the push list
+        pushSceneNames = [];                                    //Reset push list
         unloadScenes(killSceneNames);
 
-        //Init
-        initScenes();
-        
-        //Update
-        updateScenes(dt);
-        
-        //Draw
-        drawScenes();
+        //Scene actions
+        initScenes();                                           //Initialize scenes that haven't been initialized yet.
+        updateScenes(dt);                                       //Update scenes with current deltatime.
+        drawScenes();                                           //Draw scenes.
 
         //Module updates
-        engine.mouse.update(dt);
+        engine.mouse.update();                                  //Update mouse status for per-frame events
         
         //Draw debug info
         if (debug)
         {
-            //draw dt in bottom right corner
-            fillText(
+            //draw FPS in top left corner
+            debugText(
                 "fps: " + (1 / dt).toFixed(1),
                 2,
                 16,
@@ -85,134 +77,140 @@ engine.core = (function() {
         }
     }
 
+    //Scenes - Initialize
     function initScenes() {
+        
         //Initialize scenes
-        scenes.forEach(s => s.init(ctx, scenes));
+        scenes.forEach(s => s.init(ctx, scenes));   //For each scene, initialize it
     }
         
-    //Update logic
+    //Scenes - Updates
     function updateScenes(dt) {
 
-        scenes.forEach(s => s.update(dt));
+        //Update scenes
+        scenes.forEach(s => s.update(dt));          //For each scene, update it
     }
         
-    //Draw the main scene
+    //Scenes - Draw
     function drawScenes() {
 
-        scenes.forEach(s => s.draw(ctx));
+        //Draw scenes
+        scenes.forEach(s => s.draw(ctx));           //For each scene, draw it
     }
 
-    //Sort Scenes Objects
-    function sortSC() {
+    //Scenes - Sort
+    function sortScenes() {
 
         //Sort scenes by z-index.
-        scenes.sort((a, b) => a.zIndex - b.zIndex);
+        scenes.sort((a, b) => a.zIndex - b.zIndex); //Scenes are ordered by their z-index
     }
         
     //start loading a scene
     function loadScene(sceneName) {
-        
-        if(!sceneName) { return; }
 
-        var xhr = new XMLHttpRequest();
-        xhr.overrideMimeType("application/json");
-        xhr.open('GET', scenePath + sceneName + ".json", true);
-        xhr.onload = loadSceneCallback;
+        var xhr = new XMLHttpRequest();                         //HTTP Request
+        xhr.overrideMimeType("application/json");               //Request JSON
+        xhr.open('GET', scenePath + sceneName + ".json", true); //Build scene path and request
+        xhr.onload = loadSceneCallback;                         //Callback function to build scene from JSON
         xhr.send();
     }
 
     //callback function for when scene data is loaded.
     function loadSceneCallback(e) {
-        var sceneData = JSON.parse(e.currentTarget.responseText);
-        var scene = new Scene(sceneData.scene);
+        var sceneData = JSON.parse(e.currentTarget.responseText);   //Parse scene data from response text
+        var scene = new Scene(sceneData.scene);                     //Build scene from data
 
-        sceneData.gameObjects.forEach(o => {
-            var go = new window[o.name]({...o, scene});
-            scene.pushGO(go);
-            engine.tag.pushGO(go, scene.name);
+        sceneData.gameObjects.forEach(o => {                        //For each game object
+            var go = new window[o.name]({...o, scene});             //Construct the object from its name. Pass parameters and scene to constructor
+            scene.pushGO(go);                                       //Add object to scene
+            engine.tag.pushGO(go, scene.name);                      //Add object to tags
         });
 
-        scene.sortGO();     //Sort all new game objects.
-        scenes.push(scene);
-        sortSC();
+        scene.sortGO();                                             //Sort all new game objects
+        scenes.push(scene);                                         //Add scene to scenes
+        sortScenes();                                               //Sort scenes with new scene
     }
 
     //unload a scene
     function unloadScenes() {
 
-        scenes = scenes.filter(s => !killSceneNames.includes(s.name));  //Clear scene names from core
-        killSceneNames.forEach(n => engine.tag.clear(n));               //Clear scene names from tags
-        killSceneNames = [];                                            //Scenes have been cleared, reset kill list
+        //If there are scenes in the kill list, unload them and reset kill list
+        if(killSceneNames.length > 1) {                                     //If there are scenes in the kill list
+
+            scenes = scenes.filter(s => !killSceneNames.includes(s.name));  //Clear scene names from core
+            killSceneNames.forEach(n => engine.tag.clear(n));               //Clear scene names from tags
+            killSceneNames = [];                                            //Scenes have been cleared, reset kill list
+        }
     }
     
     //set scene fileNames to be loaded
     function pushScenes(fileNames) {
 
-        if(Array.isArray(fileNames))
+        //Push singular or multiple file names
+        if(Array.isArray(fileNames))                //If there are multiple file names
         {
-            fileNames.forEach(s => pushScene(s))
+            fileNames.forEach(s => pushScene(s))    //Push each file name
         }
         else
         {
-            pushScene(fileNames)
+            pushScene(fileNames)                    //Push singular file name
         }
     }
     
     //set scenes to be unloaded
     function killScenes(sceneNames) {
 
-        if(Array.isArray(sceneNames))
+        //Kil singular or multiple scene names
+        if(Array.isArray(sceneNames))               //If there are multiple scene names
         {
-            sceneNames.forEach(s => killScene(s))
+            sceneNames.forEach(s => killScene(s))   //Push each scene name
         }
         else
         {
-            killScene(sceneNames)
+            killScene(sceneNames)                   //Push singular scene name
         }
     }
     
     //set a scene file name to be loaded
     function pushScene(fileName) {
 
-        if(!pushSceneNames.includes(fileName))
+        if(!pushSceneNames.includes(fileName))  //Prevent duplicates on the push list 
         {
-            pushSceneNames.push(fileName);
+            pushSceneNames.push(fileName);      //Add file name to list of scene names to be loaded
         }
     }
     
     //set a scene to be unloaded
     function killScene(sceneName) {
 
-        if(!killSceneNames.includes(sceneName))
+        if(!killSceneNames.includes(sceneName)) //Prevent duplicates on the kill list 
         {
-            killSceneNames.push(sceneName);
+            killSceneNames.push(sceneName);     //Add file name to list of scene names to be unloaded
         }
     }
         
     //Draw filled text
-    function fillText(string, x, y, css, color, centered) {
+    function debugText(string, x, y, font, color, centered) {
         
-        ctx.save();
-        if(centered)
+        ctx.save();                         //Save context
+        if(centered)                        //If text will be centered
         {
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle"; 
+            ctx.textAlign = "center";       //Center text horizontally
+            ctx.textBaseline = "middle";    //Center text vertically
         }
-        ctx.font = css;
-        ctx.fillStyle = color; 
-        ctx.fillText(string, x, y);
-        ctx.restore();
+        ctx.font = font;                    //Debug text font
+        ctx.fillStyle = color;              //Debug text color
+        ctx.fillText(string, x, y);         //Fill debug text string
+        ctx.restore();                      //Restore context
     }
         
     //Calculate delta-time
     function calculateDeltaTime() {
         
-        var now, fps;
-        now = (+new Date); 
-        fps = 1000 / (now - lastTime);
-        fps = engine.math.clamp(fps, 12, 240);
-        lastTime = now; 
-        return 1/fps;
+        var now = (+new Date);                                          //Date as milliseconds
+        var fps = engine.math.clamp(1000 / (now - lastTime), 12, 240);  //Frames per second, limited between 12 and 240
+        lastTime = now;                                                 //Record timestamp for next frame
+        return 1/fps;       //Return delta time, the milliseconds between this frame and the previous frame
     }
 
     return {
