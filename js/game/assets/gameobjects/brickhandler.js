@@ -146,7 +146,6 @@ Object.assign(BrickHandler.prototype, {
 
         if(validSelections.length == 1) {                           //If there is a single valid selection, use and auto-process it
 
-            validSelections[0].forEach(b => b.isChecked = true);    //Restore checked state to simulate initial selection.
             return this.processSelection(validSelections[0], pos);  //Process this selection using bricks in truthy direction, and the position.
         }
 

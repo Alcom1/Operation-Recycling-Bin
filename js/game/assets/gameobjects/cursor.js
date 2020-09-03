@@ -153,7 +153,7 @@ Object.assign(Cursor.prototype, {
                     this.brickHandler.checkSelectionCollision()) {      //Or if the selection collision is valid for placement
 
                     this.brickHandler.deselectBricks();                 //Deselect bricks
-                    this.level.sortGO();                               //Sort for new brick z-indices
+                    this.level.sortGO();                                //Sort for new brick z-indices
 
                     this.state = this.states.NONE;                      //Return to NONE state
                 }

@@ -117,7 +117,8 @@ Object.assign(Brick.prototype, {
 
     //Setup this brick for selecting
     select : function(pos) {
-        this.isSelected = true; 
+        this.isSelected = true;
+        this.isChecked = true;      //For float checks
         this.selectedPos.set(pos);
         this.zIndex = engine.math.underCursorZIndex;
         this.studs.forEach(s => s.select());
