@@ -18,6 +18,7 @@ var Cursor = function(args) { GameObject.call(this, args);
     this.level = null;                          //Level containing bricks
 }
 
+//Cursor prototype
 Cursor.prototype = 
 Object.create(GameObject.prototype);
 Object.assign(Cursor.prototype, {

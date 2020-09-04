@@ -15,6 +15,7 @@ var BrickHandler = function(args) { GameObject.call(this, args);
     });
 }
 
+//Brickhandler prototype
 BrickHandler.prototype = 
 Object.create(GameObject.prototype);
 Object.assign(BrickHandler.prototype, {
