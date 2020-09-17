@@ -84,6 +84,11 @@ Object.assign(BrickHandler.prototype, {
         return adjacents[-1] != adjacents[1];   //If adjacency states are different, return true
     },
 
+    //Set snapped state of selected bricks
+    setSnappedBricks : function(state) {
+        this.bricks.filter(b => b.isSelected == true).forEach(b => b.isSnapped = state);
+    },
+
     //Deselect all bricks
     deselectBricks : function() {
 
@@ -136,22 +141,6 @@ Object.assign(BrickHandler.prototype, {
     //Check all bricks for hover, return hover state
     hoverBricks : function(pos) {
         return this.checkBricks(pos, (b, p) => this.hoverBrick(b, p)) ?? this.states.NONE;  //Check all bricks and return if the first sucessful check is not static
-    },
-
-    //Check all bricks for press, return press state (none, processed, indeterminate) This entire function is bananas.
-    pressBricks : function(pos) {
-
-        var validSelections = [                                     //Build an normal array of selections that are not null
-            this.selections[-1], 
-            this.selections[1]].filter(s => s);
-
-        if(validSelections.length == 1) {                           //If there is a single valid selection, use and auto-process it
-
-            return this.processSelection(validSelections[0], pos);  //Process this selection using bricks in truthy direction, and the position.
-        }
-
-        this.selectedBrick.isPressed = true;                        //For the indeterminate state, just press this brick
-        return false;                                               //Return falsy for indeterimate state
     },
 
     //Check all bricks for a mouse position and return the result of a function against that brick and position
@@ -219,6 +208,22 @@ Object.assign(BrickHandler.prototype, {
             this.selections[-1] ? this.states.UP :                          //If upward selection is valid, return up state
             this.selections[1]  ? this.states.DOWN :                        //If dnward selection is valid, return dn state
             this.states.NONE;                                               //No direction is valid. Return no state                              
+    },
+
+    //Check all bricks for press, return press state (none, processed, indeterminate) This entire function is bananas.
+    pressBricks : function(pos) {
+
+        var validSelections = [                                     //Build an normal array of selections that are not null
+            this.selections[-1], 
+            this.selections[1]].filter(s => s);
+
+        if(validSelections.length == 1) {                           //If there is a single valid selection, use and auto-process it
+
+            return this.processSelection(validSelections[0], pos);  //Process this selection using bricks in truthy direction, and the position.
+        }
+
+        this.selectedBrick.isPressed = true;                        //For the indeterminate state, just press this brick
+        return false;                                               //Return falsy for indeterimate state
     },
 
     //Set bricks to selected based on a provided cursor position

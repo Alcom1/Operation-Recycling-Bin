@@ -21,6 +21,11 @@ engine.math = (function() {
         return Math.max(min, Math.min(max, val));
     }
 
+    //Round a value to the nearest target
+    function round(val, target) {
+        return Math.round(val / target) * target;
+    }
+
     //Point-rectangle collison
     function colPointRect(px, py, rx, ry, rw, rh) {
         
@@ -143,6 +148,7 @@ engine.math = (function() {
         colPointParVGrid,
         col1D,
         clamp,
+        round,
         colorTranslate,
         colorMult,
         colorAdd

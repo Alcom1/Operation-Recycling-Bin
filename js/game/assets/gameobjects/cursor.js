@@ -13,6 +13,7 @@ var Cursor = function(args) { GameObject.call(this, args);
 
     this.state = null;                          //Current cursor state
     this.hoverState = null;                     //Current hover state
+    this.snapState = false;                     //Current snap state
 
     this.cursorURLs = [];                       //Image urls for each type of cursor
     this.level = null;                          //Level containing bricks
@@ -93,17 +94,25 @@ Object.assign(Cursor.prototype, {
 
         var tempSpos = engine.mouse.getPos();                           //Get mouse position and assign it to a temporary value
 
-        //NONE-HOVER check, switch to hover state if we're hovering over a non-static brick.
-        if (this.state == this.states.NONE || 
-            this.state == this.states.HOVER &&                          //If the current state is NONE Or HOVER
-            tempSpos.getDiff(this.spos)) {                              //If the cursor has moved (temp and current positions are different)
+        if(tempSpos.getDiff(this.spos)) {                               //If the cursor has moved (temp and current positions are different)
+            
+            switch(this.state) {
 
-            this.hoverBricks(tempSpos);
+                case this.states.NONE :                                 //If the current state is NONE
+
+                case this.states.HOVER :                                //If the current state is HOVER
+                    this.hoverBricks(tempSpos);                         //Handle hover state
+                    break;
+
+                case this.states.CARRY :                                //If the current state is CARRY
+                    this.snapState = this.brickHandler.checkSelectionCollision();
+                    this.brickHandler.setSnappedBricks(this.snapState); //Snap bricks if they are currently in a valid deselect location
+                    break;
+            }
         }
 
         this.spos = tempSpos;                                           //Set current position
 
-        
         //Cursor states
         switch(this.state) {                                            //Handle cursor states
 
@@ -151,7 +160,7 @@ Object.assign(Cursor.prototype, {
 
                 //Reset state upon release
                 if (this.state != this.states.CARRY ||                  //If the current state is not carrying
-                    this.brickHandler.checkSelectionCollision()) {      //Or if the selection collision is valid for placement
+                    this.snapState) {                                   //Or if the bricks are snapped to a valid location
 
                     this.brickHandler.deselectBricks();                 //Deselect bricks
                     this.level.sortGO();                                //Sort for new brick z-indices

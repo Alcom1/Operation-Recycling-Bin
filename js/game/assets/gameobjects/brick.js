@@ -18,6 +18,7 @@ var Brick = function(args) { GameObject.call(this, args);
 
     this.isPressed = false;                                 //If we are pressing on this brick
     this.isSelected = false;                                //If this brick is selected
+    this.isSnapped = false;                                 //If this brick is snapped to a position
 
     this.selectedPos = new Vect(0, 0)                       //Relative selected position
 
@@ -71,19 +72,22 @@ Object.assign(Brick.prototype, {
     update : function(dt) {
 
         //Follow mouse if selected
-        if(this.isSelected) {                                           //If this brick is selected
+        if(this.isSelected) {                                               //If this brick is selected
 
             //Poisition based difference between stored selected position and new cursor position
-            this.spos = engine.mouse.getPos().getSub(this.selectedPos); //Brick position is its position relative to the cursor
+            this.spos = engine.mouse.getPos().getSub(this.selectedPos);     //Brick position is its position relative to the cursor
 
             //Grid positioning
-            this.spos.sub({                                             //Subtract modulos to snap this brick to the grid
-                x : this.spos.x % engine.math.gmultx,                   //Subtracted x distance
-                y : this.spos.y % engine.math.gmulty                    //Subtracted y distance
-            });
+            if(this.isSnapped) {                                            //If this brick should be snapped to position
+
+                this.spos.set({                                             //Snap position
+                    x : engine.math.round(this.spos.x, engine.math.gmultx), //Snapped x distance
+                    y : engine.math.round(this.spos.y, engine.math.gmulty)  //Snapped y distance
+                });
+            }
 
             //Reset studs
-            this.resetStuds();                                          //Set studs to match the position of this brick while selected. 
+            this.resetStuds();                                              //Set studs to match the position of this brick while selected. 
         }
     },
 
@@ -92,8 +96,9 @@ Object.assign(Brick.prototype, {
         
         //Global transparency for selection states
         ctx.globalAlpha =
-            this.isPressed ? 0.8 :                              //Pressed brick is less transparent
-            this.isSelected ? 0.5 :                             //Selected bricks are transparent
+            this.isPressed ? 0.8 :                              //Pressed brick is even less transparent
+            this.isSnapped ? 0.7 :                              //Snapped brick is less transparent
+            this.isSelected ? 0.3 :                             //Selected bricks are transparent
             1.0;                                                //Otherwise opaque if not selected or pressed
         
         //Draw the stored image for this brick
@@ -141,6 +146,7 @@ Object.assign(Brick.prototype, {
         //Restore states & values
         this.isPressed = false;                                             //Depress brick :(
         this.isSelected = false;                                            //Deselect brick
+        this.isSnapped = false;                                             //Unsnap brick
         this.spos.set(0, 0);                                                //Zero sub position
         this.selectedPos.set(0, 0);                                         //Zero selected position
         this.zIndex = this.gpos.x * 2 - this.gpos.y * 100 + this.width * 2; //Set z-index
