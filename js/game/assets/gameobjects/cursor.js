@@ -94,37 +94,44 @@ Object.assign(Cursor.prototype, {
 
         var tempSpos = engine.mouse.getPos();                           //Get mouse position and assign it to a temporary value
 
+        //Handle cursor state when the mouse moves
         if(tempSpos.getDiff(this.spos)) {                               //If the cursor has moved (temp and current positions are different)
             
+            //Cursor states
             switch(this.state) {
 
+                //NOTHING
                 case this.states.NONE :                                 //If the current state is NONE
 
+                //HOVERING
                 case this.states.HOVER :                                //If the current state is HOVER
                     this.hoverBricks(tempSpos);                         //Handle hover state
                     break;
 
+                //DRAGGING
+                case this.states.DRAG :                                 //If the cursor is in the DRAG state
+                    var diff = this.spos.y - this.ppos.y;               //Get difference between current and previously pressed positions
+                    if(Math.abs(diff) > this.pLength) {                 //If we've dragged a sufficient distance
+
+                        this.selectBricks(Math.sign(diff));             //Select bricks in the direction of the difference
+                    }
+                    break;
+
+                //CARRYING
                 case this.states.CARRY :                                //If the current state is CARRY
-                    this.snapState = this.brickHandler.checkSelectionCollision();
-                    this.brickHandler.setSnappedBricks(this.snapState); //Snap bricks if they are currently in a valid deselect location
+
+                    //If the snap state does not match the collision state
+                    if(this.snapState != this.brickHandler.checkSelectionCollision()) { //If snap state does not match the collision state
+
+                        this.snapState = !this.snapState                                //Set snapped state
+                        this.brickHandler.setSnappedBricks(this.snapState);             //Snap bricks if they are currently in a valid deselect location
+                        this.level.sortGO();                                            //Sort bricks
+                    }
                     break;
             }
         }
 
         this.spos = tempSpos;                                           //Set current position
-
-        //Cursor states
-        switch(this.state) {                                            //Handle cursor states
-
-            //DRAGGING
-            case this.states.DRAG :                                     //If the cursor is in the DRAG state
-                var diff = this.spos.y - this.ppos.y;                   //Get difference between current and previously pressed positions
-                if(Math.abs(diff) > this.pLength) {                     //If we've dragged a sufficient distance
-
-                    this.selectBricks(Math.sign(diff));                 //Select bricks in the direction of the difference
-                }
-                break;
-        }
 
         //Mouse states
         switch(engine.mouse.getMouseState()) {                          //Handle mouse states
@@ -228,7 +235,7 @@ Object.assign(Cursor.prototype, {
     //Draw hover decal for cursor
     drawDecalHoverUp : function(ctx) {
 
-        ctx.translate(16, 17);  //Translate. Drag decal is drawn around this center.
+        ctx.translate(16, 15);  //Translate. Drag decal is drawn around this center.
         ctx.rotate(Math.PI);    //Rotate for second arrow
 
         this.drawDecalArrow(ctx);
@@ -241,15 +248,15 @@ Object.assign(Cursor.prototype, {
 
         ctx.beginPath();        //Start path
 
-        ctx.lineTo( 5,  3);     //Right arrow vertex
-        ctx.lineTo( 0,  9);     //Peak arrow vertex
-        ctx.lineTo(-5,  3);     //Left arrow vertex
+        ctx.lineTo( 5,  0);     //Right arrow vertex
+        ctx.lineTo( 0,  7);     //Peak arrow vertex
+        ctx.lineTo(-5,  0);     //Left arrow vertex
     
-        ctx.lineTo(-2,  3);     //Stalk base
-        ctx.lineTo(-2, -5);     //Stalk extended to other side
+        ctx.lineTo(-2,  0);     //Stalk base
+        ctx.lineTo(-2, -8);     //Stalk extended to other side
         
-        ctx.lineTo( 2, -5);     //Stalk extended to other side
-        ctx.lineTo( 2,  3);     //Stalk base
+        ctx.lineTo( 2, -8);     //Stalk extended to other side
+        ctx.lineTo( 2,  0);     //Stalk base
 
         ctx.closePath();
         ctx.fill();
@@ -361,6 +368,7 @@ Object.assign(Cursor.prototype, {
         if(this.state != this.states.CARRY) {                               //If the current state is not already CARRY
             
             engine.mouse.setCursorURL(this.cursorURLs[this.states.CARRY]);  //Set cursor to CARRY cursor
+            this.brickHandler.setSnappedBricks(true);                       //Carried bricks should start as snapped
             this.level.sortGO();                                            //Sort for new brick z-indices
             this.state = this.states.CARRY;                                 //Set state to NONE stateStart carrying if we selected some bricks
         }

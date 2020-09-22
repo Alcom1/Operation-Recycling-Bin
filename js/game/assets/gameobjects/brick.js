@@ -96,8 +96,8 @@ Object.assign(Brick.prototype, {
         
         //Global transparency for selection states
         ctx.globalAlpha =
-            this.isPressed ? 0.8 :                              //Pressed brick is even less transparent
-            this.isSnapped ? 0.7 :                              //Snapped brick is less transparent
+            this.isPressed ? 0.8 :                              //Pressed bricks are even less transparent
+            this.isSnapped ? 0.7 :                              //Snapped bricks are less transparent
             this.isSelected ? 0.3 :                             //Selected bricks are transparent
             1.0;                                                //Otherwise opaque if not selected or pressed
         
@@ -120,6 +120,26 @@ Object.assign(Brick.prototype, {
         if(!this.isStatic) {                    //If this brick is not static
             this.isPressed = true;              //Press this brick
             this.studs.forEach(s => s.press()); //Press studs for transparency
+        }
+    },
+
+    //Set this brick's snap state
+    snap : function(state) {
+
+        this.studs.forEach(s => s.snap(state));                                     //Snap studs
+
+        if(state) {                                                                 //If snap state
+
+            this.isSnapped = true;                                                  //Set as snapped
+            this.zIndex =                                                           //Set z-index
+               (this.gpos.x + Math.round(this.spos.x / engine.math.gmultx)) * 2 -   //2x multiplier for stud overlap
+               (this.gpos.y + Math.round(this.spos.y / engine.math.gmulty)) * 100 + //Y-pos has priority over X-pos.
+                this.width * 2                                                      //2x width added for stud overlap
+        }
+        else {                                                                      //If unsnap state
+
+            this.isSnapped = false;                                                 //Set as unsnapped
+            this.zIndex = engine.math.underCursorZIndex;                            //Set Z-index for dragging
         }
     },
 

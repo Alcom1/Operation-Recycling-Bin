@@ -86,7 +86,7 @@ Object.assign(BrickHandler.prototype, {
 
     //Set snapped state of selected bricks
     setSnappedBricks : function(state) {
-        this.bricks.filter(b => b.isSelected == true).forEach(b => b.isSnapped = state);
+        this.bricks.filter(b => b.isSelected == true).forEach(b => b.snap(state));  //For each selected brick, set its snap to the given state
     },
 
     //Deselect all bricks

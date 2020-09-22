@@ -7,12 +7,16 @@ var BrickStud = function(args) { GameObject.call(this, args);
 
     this.image = null;                                      //Baked image data for this stud
 
-    this.isGrey = !args.color;          //If this is a static grey stud
+    this.isGrey = !args.color;                              //If this is a static grey stud
 
-    this.zIndex = this.gpos.x * 2 - this.gpos.y * 100 + 1;  //Z-sort vertically and then horizontally.
+    this.zIndex =                                           //Z-sort vertically and then horizontally.
+        this.gpos.x * 2 -                                   //2x multiplier for stud overlap
+        this.gpos.y * 100                                   //Y-pos has priority over X-pos.
+        + 1;                                                //Plus one for stud overlap
 
-    this.isPressed = false;             //If we are pressing on this stud
-    this.isSelected = false;            //If this stud is selected
+    this.isPressed = false;                                 //If we are pressing on this stud
+    this.isSelected = false;                                //If this stud is selected
+    this.isSnapped = false;                                 //If this stud is snapped to a position
 }
 
 BrickStud.prototype = 
@@ -43,12 +47,31 @@ Object.assign(BrickStud.prototype, {
         
         //Global transparency for selection states
         ctx.globalAlpha =
-            this.isPressed ? 0.8 :
-            this.isSelected ? 0.3 :
-            1.0;
+        this.isPressed ? 0.8 :                                      //Pressed studs are even less transparent
+        this.isSnapped ? 0.7 :                                      //Snapped studs are less transparent
+        this.isSelected ? 0.3 :                                     //Selected studs are transparent
+        1.0;                                                        //Otherwise opaque if not selected or pressed
         
         //Draw the stored image for this stud
         ctx.drawImage(this.image, engine.math.zDepth - 11.5, 0);
+    },
+
+    //Set this stud's snap state
+    snap : function(state) {
+
+        if(state) {                                                                 //If snap state
+
+            this.isSnapped = true;                                                  //Set as snap
+            this.zIndex =                                                           //Set z-index
+               (this.gpos.x + Math.round(this.spos.x / engine.math.gmultx)) * 2 -   //2x multiplier for stud overlap
+               (this.gpos.y + Math.round(this.spos.y / engine.math.gmulty)) * 100 + //Y-pos has priority over X-pos.
+               1;                                                                   //Plus one for stud overlap
+        }
+        else {                                                                      //If unsnap state
+
+            this.isSnapped = false;                                                 //Set as unsnapped
+            this.zIndex = engine.math.underCursorZIndex;                            //Set Z-index for dragging
+        }
     },
 
     //Setup this stud for pressing
@@ -64,9 +87,13 @@ Object.assign(BrickStud.prototype, {
 
     //Reset this stud's z-index
     deselect : function() {
-        this.zIndex = this.gpos.x * 2 - this.gpos.y * 100 + 1;  //Set z-index
-        this.isPressed = false; 
-        this.isSelected = false;
+        this.zIndex =               //Z-sort vertically and then horizontally.
+            this.gpos.x * 2 -       //2x multiplier for stud overlap
+            this.gpos.y * 100 +     //Y-pos has priority over X-pos.
+            1;                      //Plus one for stud overlap
+        this.isPressed = false;     //Depress brick :(
+        this.isSelected = false;    //Deselect brick
+        this.isSnapped = false;     //Unsnap brick
     },
 
     //Draw sequence for this stud.
