@@ -9,9 +9,7 @@
             "name" : "BrickHandler"
         },
         {
-            "name" : "Cursor",
-            "zIndex" : 50000,
-            "color" : "white"
+            "name" : "Cursor"
         }
     ]
 }
