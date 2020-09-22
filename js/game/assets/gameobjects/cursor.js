@@ -120,13 +120,10 @@ Object.assign(Cursor.prototype, {
                 //CARRYING
                 case this.states.CARRY :                                //If the current state is CARRY
 
-                    //If the snap state does not match the collision state
-                    if(this.snapState != this.brickHandler.checkSelectionCollision()) { //If snap state does not match the collision state
+                    this.snapState = this.brickHandler.checkSelectionCollision();   //Set snapped state
+                    this.brickHandler.setSnappedBricks(this.snapState);             //Snap or unsnapp bricks based on collision result
 
-                        this.snapState = !this.snapState                                //Set snapped state
-                        this.brickHandler.setSnappedBricks(this.snapState);             //Snap bricks if they are currently in a valid deselect location
-                        this.level.sortGO();                                            //Sort bricks
-                    }
+                    this.level.sortGO();                                            //Sort bricks
                     break;
             }
         }
