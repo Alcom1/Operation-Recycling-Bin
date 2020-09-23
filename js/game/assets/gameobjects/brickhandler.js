@@ -48,6 +48,8 @@ Object.assign(BrickHandler.prototype, {
         //For each selected brick
         for(var brick1 of this.bricks.filter(b => b.isSelected == true)) {
 
+            brick1.setToCursor();   //Force update so the brick position matches this frame and not the previous
+
             //Combine grid positions and sub positions for true positions
             var tposx = brick1.gpos.x + Math.round(brick1.spos.x / engine.math.gmultx);         //True x-position
             var tposy = brick1.gpos.y + Math.round(brick1.spos.y / engine.math.gmulty);         //True y-position

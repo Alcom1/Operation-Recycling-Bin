@@ -2,7 +2,7 @@
     "scene" : {
         "name" : "LevelInterface",
         "need" : ["Level"],
-        "zIndex" : 0
+        "zIndex" : -10
     },
     "gameObjects" : [
         {

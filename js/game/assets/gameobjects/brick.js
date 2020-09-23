@@ -72,22 +72,9 @@ Object.assign(Brick.prototype, {
     update : function(dt) {
 
         //Follow mouse if selected
-        if(this.isSelected) {                                               //If this brick is selected
+        if(this.isSelected) {   //If this brick is selected
 
-            //Poisition based difference between stored selected position and new cursor position
-            this.spos = engine.mouse.getPos().getSub(this.selectedPos);     //Brick position is its position relative to the cursor
-
-            //Grid positioning
-            if(this.isSnapped) {                                            //If this brick should be snapped to position
-
-                this.spos.set({                                             //Snap position
-                    x : engine.math.round(this.spos.x, engine.math.gmultx), //Snapped x distance
-                    y : engine.math.round(this.spos.y, engine.math.gmulty)  //Snapped y distance
-                });
-            }
-
-            //Reset studs
-            this.resetStuds();                                              //Set studs to match the position of this brick while selected. 
+            this.setToCursor(); //Follow the cursor
         }
     },
 
@@ -103,6 +90,25 @@ Object.assign(Brick.prototype, {
         
         //Draw the stored image for this brick
         ctx.drawImage(this.image, 0, -engine.math.zDepth - 3);  //Draw with vertical offset for top face
+    },
+
+    //Set the brick to match the cursor position, based on its stored selected position
+    setToCursor : function() {
+
+        //Poisition based difference between stored selected position and new cursor position
+        this.spos = engine.mouse.getPos().getSub(this.selectedPos);     //Brick position is its position relative to the cursor
+
+        //Grid positioning
+        if(this.isSnapped) {                                            //If this brick should be snapped to position
+
+            this.spos.set({                                             //Snap position
+                x : engine.math.round(this.spos.x, engine.math.gmultx), //Snapped x distance
+                y : engine.math.round(this.spos.y, engine.math.gmulty)  //Snapped y distance
+            });
+        }
+
+        //Reset studs
+        this.resetStuds();                                              //Set studs to match the position of this brick while selected.
     },
 
     //Reset studs to match the position of this brick
