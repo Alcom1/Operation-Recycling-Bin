@@ -17,6 +17,7 @@ var BrickStud = function(args) { GameObject.call(this, args);
     this.isPressed = false;                                 //If we are pressing on this stud
     this.isSelected = false;                                //If this stud is selected
     this.isSnapped = false;                                 //If this stud is snapped to a position
+    this.isVisible = true;                                  //If this stud is visible
 }
 
 BrickStud.prototype = 
@@ -45,15 +46,18 @@ Object.assign(BrickStud.prototype, {
     //Game object draw
     draw : function(ctx) {
         
-        //Global transparency for selection states
-        ctx.globalAlpha =
-        this.isPressed ? 0.8 :                                      //Pressed studs are even less transparent
-        this.isSnapped ? 0.7 :                                      //Snapped studs are less transparent
-        this.isSelected ? 0.3 :                                     //Selected studs are transparent
-        1.0;                                                        //Otherwise opaque if not selected or pressed
-        
-        //Draw the stored image for this stud
-        ctx.drawImage(this.image, engine.math.zDepth - 11.5, 0);
+        if(this.isVisible) {                                            //If this stud is visible
+
+            //Global transparency for selection states
+            ctx.globalAlpha =
+            this.isPressed ? 0.8 :                                      //Pressed studs are even less transparent
+            this.isSnapped ? 0.7 :                                      //Snapped studs are less transparent
+            this.isSelected ? 0.3 :                                     //Selected studs are transparent
+            1.0;                                                        //Otherwise opaque if not selected or pressed
+            
+            //Draw the stored image for this stud
+            ctx.drawImage(this.image, engine.math.zDepth - 11.5, 0);    //Draw stud from image
+        }
     },
 
     //Set this stud's snap state

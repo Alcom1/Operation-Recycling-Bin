@@ -17,6 +17,8 @@ var Cursor = function(args) { GameObject.call(this, args);
 
     this.cursorURLs = [];                       //Image urls for each type of cursor
     this.level = null;                          //Level containing bricks
+
+    this.isUpdateForced = false;                //If updating is forced
 }
 
 //Cursor prototype
@@ -92,10 +94,16 @@ Object.assign(Cursor.prototype, {
     //Game object update
     update : function(dt) {
 
+        if(this.spos.x == -1) {
+        }
+
         var tempSpos = engine.mouse.getPos();                           //Get mouse position and assign it to a temporary value
 
         //Handle cursor state when the mouse moves
-        if(tempSpos.getDiff(this.spos)) {                               //If the cursor has moved (temp and current positions are different)
+        if (this.isUpdateForced ||                                      //If we are forcing an update
+            tempSpos.getDiff(this.spos)) {                              //If the cursor has moved (temp and current positions are different)
+
+            this.isUpdateForced = false;                                //Reset update forcing
             
             //Cursor states
             switch(this.state) {
@@ -167,8 +175,12 @@ Object.assign(Cursor.prototype, {
                     this.snapState) {                                   //Or if the bricks are snapped to a valid location
 
                     this.brickHandler.deselectBricks();                 //Deselect bricks
+                    if(this.snapState) {                                //If we are deselecting bricks
+                        this.brickHandler.cullBrickStuds();             //Reset culled studs
+                    }
                     this.level.sortGO();                                //Sort for new brick z-indices
 
+                    this.isUpdateForced = true;                         //Force updating
                     this.state = this.states.NONE;                      //Return to NONE state
                 }
                 break;
@@ -355,6 +367,7 @@ Object.assign(Cursor.prototype, {
         if(this.state != this.states.DRAG) {                                //If the current state is not already DRAG
 
             engine.mouse.setCursorURL(this.cursorURLs[this.states.DRAG]);   //Set cursor to DRAG cursor
+            this.brickHandler.cullBrickStuds();                             //Reset culled studs
             this.state = this.states.DRAG;                                  //Set state to NONE state
         }
     },
@@ -365,6 +378,7 @@ Object.assign(Cursor.prototype, {
         if(this.state != this.states.CARRY) {                               //If the current state is not already CARRY
             
             engine.mouse.setCursorURL(this.cursorURLs[this.states.CARRY]);  //Set cursor to CARRY cursor
+            this.brickHandler.cullBrickStuds();                             //Reset culled studs
             this.brickHandler.setSnappedBricks(true);                       //Carried bricks should start as snapped
             this.level.sortGO();                                            //Sort for new brick z-indices
             this.state = this.states.CARRY;                                 //Set state to NONE stateStart carrying if we selected some bricks

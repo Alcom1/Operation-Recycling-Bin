@@ -38,6 +38,8 @@ Object.assign(BrickHandler.prototype, {
             b.isStatic = [-1, 1].reduce((a, c) => a && !this.recurseBrick(b, [c], true), true); //Recurse in both directions. If both results are null, set brick to static
             this.bricks.forEach(b => b.clearRecursion());                                       //Clear recursion states after each recursive static check
         });
+
+        this.cullBrickStuds();                                          //Initial stud culling
     },
 
     //Check selection collision, return true if this is a valid position
@@ -84,6 +86,32 @@ Object.assign(BrickHandler.prototype, {
 
         //We need to attatch in one direction but not both. Return true if we are attatching in a single direction.
         return adjacents[-1] != adjacents[1];   //If adjacency states are different, return true
+    },
+
+    //Disable studs that are covered
+    cullBrickStuds : function() {
+        this.bricks.filter(b => b.isSelected == false).forEach(b => b.studs.forEach(s => {  //For each stud in unselected bricks
+
+            s.isVisible = true;                                                             //Unhide this stud
+
+            for(var brick of this.rows.find(r => r.row == s.gpos.y)?.bricks ?? []) {        //For each brick in this stud's row
+
+                if (!brick.isSelected &&                                                    //Do not cull for selected bricks
+                    !brick.isPressed &&                                                     //Do not cull for pressed bricks
+                    engine.math.col1D(                                                      //If a brick is overlapping with this stud
+                        brick.gpos.x - 1, 
+                        brick.gpos.x + brick.width, 
+                        s.gpos.x, 
+                        s.gpos.x)) {
+
+                    s.isVisible = false;                                                    //Hide this stud
+                    break;                                                                  //Stop all checks once the stud is hidden
+                }
+            }
+        }))
+
+        //Always show studs for selected bricks
+        this.bricks.filter(b => b.isSelected == true).forEach(b => b.studs.forEach(s => s.isVisible = true));   //For each selected brick, show its studs
     },
 
     //Set snapped state of selected bricks
@@ -217,7 +245,7 @@ Object.assign(BrickHandler.prototype, {
 
         var validSelections = [                                     //Build an normal array of selections that are not null
             this.selections[-1], 
-            this.selections[1]].filter(s => s);
+            this.selections[1]];
 
         if(validSelections.length == 1) {                           //If there is a single valid selection, use and auto-process it
 
