@@ -83,9 +83,9 @@ Object.assign(Brick.prototype, {
         
         //Global transparency for selection states
         ctx.globalAlpha =
-            this.isPressed ? 0.8 :                              //Pressed bricks are even less transparent
-            this.isSnapped ? 0.7 :                              //Snapped bricks are less transparent
-            this.isSelected ? 0.3 :                             //Selected bricks are transparent
+            this.isSnapped ? 0.75 :                             //Snapped bricks are transparent
+            this.isSelected ? 0.5 :                             //Selected bricks are more transparent
+            this.isPressed ? 0.75 :                             //Pressed bricks are less transparent again
             1.0;                                                //Otherwise opaque if not selected or pressed
         
         //Draw the stored image for this brick

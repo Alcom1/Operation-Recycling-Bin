@@ -49,9 +49,9 @@ Object.assign(BrickStud.prototype, {
 
             //Global transparency for selection states
             ctx.globalAlpha =
-            this.isPressed ? 0.8 :                                      //Pressed studs are even less transparent
-            this.isSnapped ? 0.7 :                                      //Snapped studs are less transparent
-            this.isSelected ? 0.3 :                                     //Selected studs are transparent
+            this.isSnapped ? 0.75 :                                     //Snapped studs are transparent
+            this.isSelected ? 0.5 :                                     //Selected studs are more transparent
+            this.isPressed ? 0.75 :                                     //Pressed studs are less transparent again
             1.0;                                                        //Otherwise opaque if not selected or pressed
             
             //Draw the stored image for this stud

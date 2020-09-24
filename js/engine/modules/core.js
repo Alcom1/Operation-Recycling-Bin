@@ -10,7 +10,6 @@ engine.core = (function() {
         canvas =            undefined,  //Canvas
         ctx =               undefined,	//Canvas context
         lastTime =          0,          //used by calculateDeltaTime() 
-        debug =             true,       //debug
         animationID =       0,          //ID index of the current frame
         scenes =            [],         //Array of current scenes
         pushSceneNames =    [],         //Array of names of scenes to be added
@@ -62,19 +61,6 @@ engine.core = (function() {
 
         //Module updates
         engine.mouse.update();                                  //Update mouse status for per-frame events
-        
-        //Draw debug info
-        if (debug)
-        {
-            //draw FPS in top left corner
-            debugText(
-                "fps: " + (1 / dt).toFixed(1),
-                2,
-                16,
-                "16pt Consolas",
-                "white",
-                false);
-        }
     }
 
     //Scenes - Initialize
@@ -187,21 +173,6 @@ engine.core = (function() {
         {
             killSceneNames.push(sceneName);     //Add file name to list of scene names to be unloaded
         }
-    }
-        
-    //Draw filled text
-    function debugText(string, x, y, font, color, centered) {
-        
-        ctx.save();                         //Save context
-        if(centered)                        //If text will be centered
-        {
-            ctx.textAlign = "center";       //Center text horizontally
-            ctx.textBaseline = "middle";    //Center text vertically
-        }
-        ctx.font = font;                    //Debug text font
-        ctx.fillStyle = color;              //Debug text color
-        ctx.fillText(string, x, y);         //Fill debug text string
-        ctx.restore();                      //Restore context
     }
         
     //Calculate delta-time
