@@ -1,17 +1,17 @@
 //BrickHandler object
 var BrickHandler = function(args) { GameObject.call(this, args);
-    this.rows = [];             //Rows of bricks
-    this.bricks = [];           //All bricks
-    this.selectedBrick = null;  //Current selected brick
-    this.selections = []; //All selected bricks
+    this.rows = [];                 //Rows of bricks
+    this.bricks = [];               //All bricks
+    this.selectedBrick = null;      //Current selected brick
+    this.selections = [];           //All selected bricks
 
-    this.states = Object.freeze({
+    this.states = Object.freeze({   //Hover-selection states
 
-        NONE : 0,
-        INDY : 1,
-        DOWN : 2,
-        UP   : 3,
-        SAME : 4
+        NONE : 0,                   //Empty
+        INDY : 1,                   //Indeterminate
+        DOWN : 2,                   //Downward
+        UP   : 3,                   //Upward
+        SAME : 4                    //Unchanged
     });
 }
 

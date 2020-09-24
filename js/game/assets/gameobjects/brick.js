@@ -57,7 +57,7 @@ Object.assign(Brick.prototype, {
         ctx.fillStyle = this.color;                                     //ctx fill style will be a hex color for good math
 
         this.colorDark = engine.math.colorMult(ctx.fillStyle, 0.625);   //Calculate dark color
-        this.colorBright = engine.math.colorAdd(ctx.fillStyle, 48);     //calculate bright color
+        this.colorBright = engine.math.colorAdd(ctx.fillStyle, 48);     //Calculate bright color
 
         //Bake image of brick
         this.image.src = engine.baker.bake(                             //Set image src from baking results

@@ -2,10 +2,10 @@
 var BrickStud = function(args) { GameObject.call(this, args);
 
     this.color = engine.math.colorTranslate(args.color);    //The color of this stud
-    this.colorDark = null;
-    this.colorBright = null;
+    this.colorDark = null;                                  //The shaded color of this brick
+    this.colorBright = null;                                //The bright color of this brick
 
-    this.image = null;                                      //Baked image data for this stud
+    this.image = new Image;                                 //Baked image data for this stud
 
     this.isGrey = !args.color;                              //If this is a static grey stud
 
@@ -28,19 +28,18 @@ Object.assign(BrickStud.prototype, {
     init : function(ctx, scenes) {
         
         //Initialize colors
-        ctx.fillStyle = this.color;
+        ctx.fillStyle = this.color;                                     //ctx fill style will be a hex color for good math
 
-        this.colorDark = engine.math.colorMult(ctx.fillStyle, 0.625);
-        this.colorBright = engine.math.colorAdd(ctx.fillStyle, 48);
+        this.colorDark = engine.math.colorMult(ctx.fillStyle, 0.625);   //Calculate dark color
+        this.colorBright = engine.math.colorAdd(ctx.fillStyle, 48);     //Calculate bright color
 
         //Bake image of stud
-        this.image = new Image;
-        this.image.src = engine.baker.bake(
-            this, 
-            this.drawBrickStud, 
-            engine.math.gmultx * 2,
-            engine.math.zDepth * 2,
-            "STUD." + this.color);
+        this.image.src = engine.baker.bake(                             //Set image src from baking results
+            this,                                                       //Bake for this stud
+            this.drawBrickStud,                                         //Draw stud for baked image
+            engine.math.gmultx * 2,                                     //Width to contain both stud images
+            engine.math.zDepth * 2,                                     //Height to contain both stud images
+            "STUD." + this.color);                                      //Tag image as a stud with color
     },
 
     //Game object draw
@@ -80,13 +79,13 @@ Object.assign(BrickStud.prototype, {
 
     //Setup this stud for pressing
     press : function() {
-        this.isPressed = true;
+        this.isPressed = true;                          //The brick for this stud has been pressed
     },
 
     //Setup this stud for selecting
     select : function() {
-        this.isSelected = true;
-        this.zIndex = engine.math.underCursorZIndex;
+        this.isSelected = true;                         //The brick for this stud has been selected
+        this.zIndex = engine.math.underCursorZIndex;    //Set Z-index for the selected state
     },
 
     //Reset this stud's z-index
@@ -104,43 +103,43 @@ Object.assign(BrickStud.prototype, {
     drawBrickStud : function(ctx) {
 
         //Offset for baked drawing.
-        ctx.translate(12.5, engine.math.gmulty);
+        ctx.translate(12.5, engine.math.gmulty);        //Initial offset
 
         //Stud
-        for(i = 1; i >= 0; i--) {
+        for(i = 1; i >= 0; i--) {                       //Draw 2 studs
 
-            var off = i * engine.math.studHeight * 2;
+            var off = i * engine.math.studHeight * 2;   //Individual stud offset
 
             //Stud column style
-            var gradient = ctx.createLinearGradient(off - engine.math.studRadius, 0, off + engine.math.studRadius, 0);
-            gradient.addColorStop(0, this.color);
-            gradient.addColorStop(1, this.colorDark);
-            ctx.fillStyle = gradient;
+            var gradient = ctx.createLinearGradient(off - engine.math.studRadius, 0, off + engine.math.studRadius, 0);                      //Gradient for stud column
+            gradient.addColorStop(0, this.color);                                                                                           //Gradient light shading
+            gradient.addColorStop(1, this.colorDark);                                                                                       //Gradient dark shading
+            ctx.fillStyle = gradient;                                                                                                       //Gradient fill
 
             //Stud column
-            ctx.beginPath();
-            ctx.ellipse(off, -engine.math.studHeight     - off, engine.math.studRadius, engine.math.studRadius * 0.36, 0, 0, Math.PI);
-            ctx.ellipse(off, -engine.math.studHeight * 2 - off, engine.math.studRadius, engine.math.studRadius * 0.36, 0, Math.PI, 0);
-            ctx.fill();
+            ctx.beginPath();                                                                                                                //Start column
+            ctx.ellipse(off, -engine.math.studHeight     - off, engine.math.studRadius, engine.math.studRadius * 0.36, 0, 0, Math.PI);      //Bottom of column
+            ctx.ellipse(off, -engine.math.studHeight * 2 - off, engine.math.studRadius, engine.math.studRadius * 0.36, 0, Math.PI, 0);      //Top of column
+            ctx.fill();                                                                                                                     //Fill column
 
             //Stud top style
-            ctx.fillStyle = this.colorBright;
+            ctx.fillStyle = this.colorBright;           //Bright color for top
 
             //Stud top
-            ctx.beginPath();
-            ctx.ellipse(off, -engine.math.studHeight * 2 - off, engine.math.studRadius, engine.math.studRadius * 0.36, 0, 0, 2 * Math.PI);
-            ctx.fill();
+            ctx.beginPath();                                                                                                                //Start stud top
+            ctx.ellipse(off, -engine.math.studHeight * 2 - off, engine.math.studRadius, engine.math.studRadius * 0.36, 0, 0, 2 * Math.PI);  //Stud top
+            ctx.fill();                                                                                                                     //Fill stud top
 
             //Draw holes in studs if they are grey
-            if(this.isGrey) {
+            if(this.isGrey) {                           //If this is a grey brick, it needs a hole
 
                 //Stud grey hole style
-                ctx.fillStyle = this.color;
+                ctx.fillStyle = this.color;             //Use neutral color for hole
 
                 //Stud grey hole
-                ctx.beginPath();
-                ctx.ellipse(off, -engine.math.studHeight * 2 - off, engine.math.studRadius * 0.6, engine.math.studRadius * 0.216, 0, 0, 2 * Math.PI);
-                ctx.fill();
+                ctx.beginPath();                                                                                                            //Start hole
+                ctx.ellipse(off, -engine.math.studHeight * 2 - off, engine.math.studRadius * 0.6, engine.math.studRadius * 0.216, 0, 0, 2 * Math.PI);   //Hole
+                ctx.fill();                                                                                                                 //Fill hole
             }
         }
     }
