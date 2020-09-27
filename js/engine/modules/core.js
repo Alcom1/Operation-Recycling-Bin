@@ -4,8 +4,8 @@ var engine = engine || {}
 //Engine core
 engine.core = (function() {
     
-    var WIDTH =             1280,       //Canvas width (set to default)
-        HEIGHT =            720,        //Canvas height (set to default)
+    var WIDTH =             1296,       //Canvas width (set to default)
+        HEIGHT =            864,        //Canvas height (set to default)
         scenePath =         "",         //Path scenes are located in
         canvas =            undefined,  //Canvas
         ctx =               undefined,	//Canvas context
