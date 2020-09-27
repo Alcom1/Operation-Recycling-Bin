@@ -11,11 +11,10 @@ var Cursor = function(args) { GameObject.call(this, args);
         HOVER : 3                               //Hover state
     });
 
-    this.state = null;                          //Current cursor state
+    this.state = this.states.NONE;              //Current cursor state
     this.hoverState = null;                     //Current hover state
     this.snapState = false;                     //Current snap state
 
-    this.cursorURLs = [];                       //Image urls for each type of cursor
     this.level = null;                          //Level containing bricks
 
     this.isUpdateForced = false;                //If updating is forced
@@ -29,66 +28,15 @@ Object.assign(Cursor.prototype, {
     //Initialize a game object after its scene is loaded.
     init : function(ctx, scenes) {
 
-        this.level = scenes.find(s => s.name == "Level");       //Get level containing bricks.
+        this.level = scenes.find(s => s.name == "Level");   //Get level containing bricks.
 
-        this.brickHandler = engine.tag.get(                     //Get BrickHandler game object.
+        this.brickHandler = engine.tag.get(                 //Get BrickHandler game object.
             "BrickHandler", 
             "LevelInterface")[0]; 
 
-        this.cursorURLs[this.states.NONE] = engine.baker.bake(  //Bake cursor image for NONE state
-            this,                                               //Pass self
-            function(ctx) {                                     //Function to draw the default cursor
-                this.drawCursorBase(ctx);                       //Draw base cursor
-            }, 32, 32,                                          //Set width and height to contain 
-            "CURSOR.NONE");                                     //Tag this cursor image
-
-        this.cursorURLs[this.states.DRAG] = engine.baker.bake(  //Bake cursor image for DRAG state
-            this,                                               //Pass self
-            function(ctx) {                                     //Function to draw the default cursor
-                this.drawCursorBase(ctx);                       //Draw base cursor
-                this.drawDecalDrag(ctx);                        //Draw DRAG decal
-            }, 32, 32,                                          //Set width and height to contain 
-            "CURSOR.DRAG");                                     //Tag this cursor image        
-
-        this.cursorURLs[this.states.CARRY] = engine.baker.bake( //Bake cursor image for CARRY state
-            this,                                               //Pass self
-            function(ctx) {                                     //Function to draw the default cursor
-                this.drawCursorBase(ctx);                       //Draw base cursor
-                this.drawDecalCarry(ctx);                       //Draw CARRY decal
-            }, 32, 32,                                          //Set width and height to contain 
-            "CURSOR.CARRY");                                    //Tag this cursor image     
-            
-        this.cursorURLs[                                        //Bake cursor image for HOVER BOTH state
-            this.states.HOVER +
-            this.brickHandler.states.INDY] = engine.baker.bake( 
-            this,                                               //Pass self
-            function(ctx) {                                     //Function to draw the default cursor
-                this.drawCursorBase(ctx);                       //Draw base cursor
-                this.drawDecalHover(ctx);                       //Draw HOVER decal
-            }, 32, 32,                                          //Set width and height to contain 
-            "CURSOR.HOVER.INDY");                               //Tag this cursor image
-            
-        this.cursorURLs[                                        //Bake cursor image for HOVER DOWN state
-            this.states.HOVER +
-            this.brickHandler.states.DOWN] = engine.baker.bake( 
-            this,                                               //Pass self
-            function(ctx) {                                     //Function to draw the default cursor
-                this.drawCursorBase(ctx);                       //Draw base cursor
-                this.drawDecalHoverDown(ctx);                   //Draw HOVER decal
-            }, 32, 32,                                          //Set width and height to contain 
-            "CURSOR.HOVER.DOWN");                               //Tag this cursor image
-            
-        this.cursorURLs[                                        //Bake cursor image for HOVER UP state
-            this.states.HOVER +
-            this.brickHandler.states.UP] = engine.baker.bake(   
-            this,                                               //Pass self
-            function(ctx) {                                     //Function to draw the default cursor
-                this.drawCursorBase(ctx);                       //Draw base cursor
-                this.drawDecalHoverUp(ctx);                     //Draw HOVER decal
-            }, 32, 32,                                          //Set width and height to contain 
-            "CURSOR.HOVER.UP");                                 //Tag this cursor image
-
-        this.resetState();                                      //Start state and cursor
+        this.cursorIcon = engine.tag.get(                   //Get Cursor Icon game object.
+            "CursorIcon", 
+            "LevelInterface")[0];
     },
 
     //Game object update
@@ -187,127 +135,6 @@ Object.assign(Cursor.prototype, {
         }
     },
 
-    //Draw base cursor image
-    drawCursorBase : function(ctx) {
-
-        ctx.fillStyle = "#FFF";                 //Base cursor fill color
-        ctx.strokeStyle = "#666";               //Base cursor border color
-        ctx.lineWidth = 1.5;                    //Base cursor border width
-        ctx.lineJoin = "round";                 //Base cursor line style
-
-        ctx.beginPath();                        //Start path
-        ctx.moveTo(1,  1);                      //Top vertex
-        ctx.lineTo(1, 11);                      //Lower left vertex
-        ctx.lineTo(11, 1);                      //Lower right vertex
-        ctx.closePath();                        //Close path
-        ctx.fill();                             //Fill cursor
-        ctx.stroke();                           //Draw cursor border
-
-        ctx.beginPath();                        //Start path
-        ctx.arc(16, 16, 12, 0, 2 * Math.PI);    //Circle for icons
-        ctx.closePath();                        //Close path
-        ctx.fill();                             //Fill cursor
-        ctx.stroke();                           //Draw cursor border
-    },
-
-    //Draw hover decal for cursor
-    drawDecalHover : function(ctx) {
-
-        ctx.fillStyle = "#444";                 //Hover decal color
-        ctx.translate(16, 16);                  //Translate. Drag decal is drawn around this center.
-        ctx.beginPath();                        //Start path
-
-        for(var i = 0; i < 2; i++) {            //Draw two opposing arrows
-
-            ctx.lineTo( 5,  3);                 //Right arrow vertex
-            ctx.lineTo( 0,  9);                 //Peak arrow vertex
-            ctx.lineTo(-5,  3);                 //Left arrow vertex
-        
-            ctx.lineTo(-2,  3);                 //Stalk base
-            ctx.lineTo(-2, -3);                 //Stalk extended to other side
-
-            ctx.rotate(Math.PI);                //Rotate for second arrow
-        }
-
-        ctx.closePath();
-        ctx.fill();
-    },
-
-    //Draw hover decal for cursor
-    drawDecalHoverDown : function(ctx) {
-
-        ctx.translate(16, 17);  //Translate. Drag decal is drawn around this center.
-
-        this.drawDecalArrow(ctx);
-    },
-
-    //Draw hover decal for cursor
-    drawDecalHoverUp : function(ctx) {
-
-        ctx.translate(16, 15);  //Translate. Drag decal is drawn around this center.
-        ctx.rotate(Math.PI);    //Rotate for second arrow
-
-        this.drawDecalArrow(ctx);
-    },
-
-    //Draw a cursor arrow decal
-    drawDecalArrow : function(ctx) {
-
-        ctx.fillStyle = "#444"; //Arrow decal color
-
-        ctx.beginPath();        //Start path
-
-        ctx.lineTo( 5,  0);     //Right arrow vertex
-        ctx.lineTo( 0,  7);     //Peak arrow vertex
-        ctx.lineTo(-5,  0);     //Left arrow vertex
-    
-        ctx.lineTo(-2,  0);     //Stalk base
-        ctx.lineTo(-2, -8);     //Stalk extended to other side
-        
-        ctx.lineTo( 2, -8);     //Stalk extended to other side
-        ctx.lineTo( 2,  0);     //Stalk base
-
-        ctx.closePath();
-        ctx.fill();
-    },
-
-    //Draw hover decal for cursor
-    drawDecalDrag : function(ctx) {
-        
-        ctx.fillStyle = "#444";         //Hover decal color
-        ctx.translate(16, 16);          //Translate. Drag decal is drawn around this center.
-        ctx.beginPath();                //Start path
-
-        for(var i = 0; i < 2; i++) {    //Draw two opposing arrows
-
-            ctx.lineTo( 5,  3);         //Right arrow vertex
-            ctx.lineTo( 0,  9);         //Peak arrow vertex
-            ctx.lineTo(-5,  3);         //Left arrow vertex
-        
-            ctx.lineTo(-2,  3);         //Stalk base
-            ctx.lineTo(-2, -3);         //Stalk extended to other side
-
-            ctx.rotate(Math.PI);        //Rotate for second arrow
-        }
-
-        ctx.closePath();
-        ctx.fill();
-    },
-
-    //Draw hover decal for cursor
-    drawDecalCarry : function(ctx) {
-        
-        ctx.translate(16, 16);          //Translate. Carry decal is drawn around this center.
-
-        ctx.rotate(Math.PI / 4);        //Rotate 8th circle
-        ctx.fillStyle = "#333";         //Outer diamond color
-        ctx.fillRect(-6, -6, 12, 12);   //Draw diamond
-
-        ctx.rotate(Math.PI / 4);        //Rotate 8th circle
-        ctx.fillStyle = "#FFF";         //Inner square color
-        ctx.fillRect(-4.5, -4.5, 9, 9); //Draw square
-    },
-
     //Hover over bricks, change state based on hover state
     hoverBricks : function(pos) {
 
@@ -341,47 +168,61 @@ Object.assign(Cursor.prototype, {
     //Set cursor to no state
     resetState : function() {
 
-        if(this.state != this.states.NONE) {                                //If the current state is not already NONE
+        if(this.state != this.states.NONE) {            //If the current state is not already NONE
 
-            engine.mouse.setCursorURL(this.cursorURLs[this.states.NONE]);   //Set cursor to NONE cursor
-            this.brickHandler.selectedBrick = null;                         //Ensure no brick is selected in the NONE state
-            this.state = this.states.NONE;                                  //Set state to NONE state
+            this.cursorIcon.setCursor('none');          //Set cursor to NONE cursor
+            this.brickHandler.selectedBrick = null;     //Ensure no brick is selected in the NONE state
+            this.state = this.states.NONE;              //Set state to NONE state
         }
     },
 
     //Set cursor to its over state
     hover : function(hoverState) {
 
-        if(this.state != this.states.HOVER || this.hoverState != hoverState) {          //If the current state is not already HOVER or the hover state changed
+        if(this.state != this.states.HOVER || this.hoverState != hoverState) {  //If the current state is not already HOVER or the hover state changed
 
-            engine.mouse.setCursorURL(this.cursorURLs[this.states.HOVER + hoverState]); //Set cursor to HOVER cursor
+            switch(hoverState) {                                                //Show different cursors for different hover states
 
-            this.state = this.states.HOVER;                                             //Set state to NONE state
-            this.hoverState = hoverState;                                               //Set hover state
+                case this.brickHandler.states.INDY:                             //If independant state
+                    this.cursorIcon.setCursor('hover');                         //Show hover cursor
+                    break;
+
+                case this.brickHandler.states.UP:                               //If up state
+                    this.cursorIcon.setCursor('hoverup');                       //Show hover up cursor
+                    break;
+
+                case this.brickHandler.states.DOWN:                             //If down state
+                    this.cursorIcon.setCursor('hoverdown');                     //Show hover down cursor
+                    break;
+            }
+
+            this.state = this.states.HOVER;                                     //Set state to NONE state
+            this.hoverState = hoverState;                                       //Set hover state
         }
     },
 
     //Set the cursor to its drag state
     drag : function() {
         
-        if(this.state != this.states.DRAG) {                                //If the current state is not already DRAG
+        if(this.state != this.states.DRAG) {            //If the current state is not already DRAG
 
-            engine.mouse.setCursorURL(this.cursorURLs[this.states.DRAG]);   //Set cursor to DRAG cursor
-            this.brickHandler.cullBrickStuds();                             //Reset culled studs
-            this.state = this.states.DRAG;                                  //Set state to NONE state
+            this.cursorIcon.setCursor('drag');          //Set cursor to DRAG cursor
+            this.brickHandler.cullBrickStuds();         //Reset culled studs
+            this.state = this.states.DRAG;              //Set state to NONE state
         }
     },
 
     //Set the cursor to its carry state
     carry : function() {
 
-        if(this.state != this.states.CARRY) {                               //If the current state is not already CARRY
+        if(this.state != this.states.CARRY) {           //If the current state is not already CARRY
             
-            engine.mouse.setCursorURL(this.cursorURLs[this.states.CARRY]);  //Set cursor to CARRY cursor
-            this.brickHandler.cullBrickStuds();                             //Reset culled studs
-            this.brickHandler.setSnappedBricks(true);                       //Carried bricks should start as snapped
-            this.level.sortGO();                                            //Sort for new brick z-indices
-            this.state = this.states.CARRY;                                 //Set state to NONE stateStart carrying if we selected some bricks
+        this.cursorIcon.setCursor('carry');             //Set cursor to CARRY cursor
+        
+            this.brickHandler.cullBrickStuds();         //Reset culled studs
+            this.brickHandler.setSnappedBricks(true);   //Carried bricks should start as snapped
+            this.level.sortGO();                        //Sort for new brick z-indices
+            this.state = this.states.CARRY;             //Set state to NONE stateStart carrying if we selected some bricks
         }
     }
 });

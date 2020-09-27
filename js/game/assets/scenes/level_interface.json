@@ -12,6 +12,9 @@
             "name" : "Cursor"
         },
         {
+            "name" : "CursorIcon"
+        },
+        {
             "name" : "FPSCounter",
             "position" : {"x" : 0, "y" : 0}
         }
