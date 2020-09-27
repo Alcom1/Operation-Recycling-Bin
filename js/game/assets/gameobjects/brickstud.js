@@ -55,7 +55,7 @@ Object.assign(BrickStud.prototype, {
             1.0;                                                        //Otherwise opaque if not selected or pressed
             
             //Draw the stored image for this stud
-            ctx.drawImage(this.image, engine.math.zDepth - 11.5, 0);    //Draw stud from image
+            ctx.drawImage(this.image, engine.math.zDepth - 13.5, 0);    //Draw stud from image
         }
     },
 

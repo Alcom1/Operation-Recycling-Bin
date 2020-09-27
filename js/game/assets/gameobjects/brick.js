@@ -190,7 +190,7 @@ Object.assign(Brick.prototype, {
     drawBrick : function(ctx) {
 
         //Offset for baked drawing.
-        ctx.translate(2, engine.math.zDepth + 3);   //Offset for top face and borders
+        ctx.translate(0, engine.math.zDepth + 3);   //Offset for top face and borders
 
         //Base rectangle color
         ctx.fillStyle = this.color;                 //Fill base color
@@ -201,18 +201,6 @@ Object.assign(Brick.prototype, {
             0,                                      //Origin
             this.width * engine.math.gmultx,        //Brick width
             engine.math.gmulty);                    //Brick height
-
-        //Border style
-        ctx.strokeStyle = this.colorDark;           //Stroke dark color
-        ctx.lineWidth = engine.math.lineWidth;      //Line width
-        ctx.lineCap = "square";                     //Square corners
-
-        //Border
-        ctx.beginPath();                                                                                                //Start path
-        ctx.moveTo(engine.math.lineWidth / 2,       0);                                                                 //Upper left corner
-        ctx.lineTo(engine.math.lineWidth / 2,       engine.math.gmulty - engine.math.lineWidth / 2);                    //Lower left corner
-        ctx.lineTo(this.width * engine.math.gmultx, engine.math.gmulty - engine.math.lineWidth / 2);                    //Lower right corner
-        ctx.stroke();                                                                                                   //Draw border
 
         //Right face style
         ctx.fillStyle = this.colorDark;             //Fill dark color
@@ -229,18 +217,42 @@ Object.assign(Brick.prototype, {
         ctx.fillStyle = this.colorBright;           //Fill bright color
 
         //Top face
-        ctx.beginPath();                                                                            //Start path    
-        ctx.moveTo(0,                                                       0);                     //Lower left corner
-        ctx.lineTo(                                  engine.math.zDepth,    -engine.math.zDepth);   //Upper left corner
-        ctx.lineTo(this.width * engine.math.gmultx + engine.math.zDepth,    -engine.math.zDepth);   //Upper right corner
-        ctx.lineTo(this.width * engine.math.gmultx,                         0);                     //Lower right corner
-        ctx.fill();                                                                                 //Fill top face
+        ctx.beginPath();                                                                                //Start path    
+        ctx.moveTo(0,                                                       0);                         //Lower left corner
+        ctx.lineTo(                                  engine.math.zDepth,    -engine.math.zDepth);       //Upper left corner
+        ctx.lineTo(this.width * engine.math.gmultx + engine.math.zDepth,    -engine.math.zDepth);       //Upper right corner
+        ctx.lineTo(this.width * engine.math.gmultx,                         0);                         //Lower right corner
+        ctx.fill();                                                                                     //Fill top face
+
+        //Border style
+        ctx.strokeStyle = this.color;               //Fill base color
+        ctx.lineWidth = engine.math.lineWidth;      //Line width
+        ctx.lineCap = "square";                     //Square corners
+        
+        //Depth Border
+        ctx.beginPath(); 
+        ctx.moveTo(                                  engine.math.zDepth,    -engine.math.zDepth);       //Upper left corner (back)
+        ctx.lineTo(engine.math.lineWidth / 2,       0);                                                 //Upper left corner
+        ctx.stroke();
+
+        //Border style
+        ctx.strokeStyle = this.colorDark;           //Stroke dark color
+
+        //Border
+        ctx.beginPath();                                                                                //Start path
+        ctx.lineTo(engine.math.lineWidth / 2,       engine.math.lineWidth / 2);                         //Upper left corner
+        ctx.lineTo(engine.math.lineWidth / 2,       engine.math.gmulty - engine.math.lineWidth / 2);    //Lower left corner
+        ctx.lineTo(this.width * engine.math.gmultx, engine.math.gmulty - engine.math.lineWidth / 2);    //Lower right corner
+        ctx.stroke();
 
         //Grey holes
         if(this.isGrey) {                                                               //If this brick is grey
 
             //Y-offset
             var yoff = Math.ceil(engine.math.gmulty * 0.4);                             //All holes share the same Y-offset
+
+            //Hole styles
+            ctx.fillStyle = this.colorDark;     //Fill dark color
 
             //Draw hole for each brick width, except for the last one
             for(j = 1; j < this.width; j++) {                                           //Across the width of the brick
@@ -252,9 +264,6 @@ Object.assign(Brick.prototype, {
                 ctx.beginPath();                                                        //Start path
                 ctx.arc(xoff, yoff, engine.math.studRadius, 0, 2 * Math.PI);            //Circle outer hole
                 ctx.stroke();                                                           //Stroke outer hole
-
-                //Hole center style
-                ctx.fillStyle = this.colorDark;     //Fill dark color
 
                 //Hole center
                 ctx.beginPath();                                                        //Start path

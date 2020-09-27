@@ -98,9 +98,11 @@ engine.math = (function() {
     //Translate text colors to custom values
     function colorTranslate(color) {
         switch(color){
-            case undefined: return "grey"
-            case "red":     return "#CC0000"
+            case undefined: return "#999999"
+            case "white":   return "#EEEEEE"
+            case "blue" :   return "#0033FF"
             case "yellow":  return "#FFCC00"
+            case "red":     return "#CC0000"
             default:        return color;
         }
     }
