@@ -243,9 +243,9 @@ Object.assign(BrickHandler.prototype, {
     //Check all bricks for press, return press state (none, processed, indeterminate) This entire function is bananas.
     pressBricks : function(pos) {
 
-        var validSelections = [                                     //Build an normal array of selections that are not null
+        var validSelections = [                                     //Build an normal array of selections that are not null (invalid)
             this.selections[-1], 
-            this.selections[1]];
+            this.selections[1]].filter(s => s);                     //Filter to remove null (invalid) selections
 
         if(validSelections.length == 1) {                           //If there is a single valid selection, use and auto-process it
 
