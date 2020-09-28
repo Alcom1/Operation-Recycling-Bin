@@ -18,7 +18,7 @@ engine.baker = (function() {
     function bake(target, func, width, height, tag) {
 
         //If an image with this tag has already been baked, return it.
-        if(images[tag]) {
+        if(tag && images[tag]) {
             return images[tag];
         }
 
@@ -29,14 +29,17 @@ engine.baker = (function() {
         };
 
         //Temporary canvas size for baking.
-        canvas.width = width;
-        canvas.height = height;
+        canvas.width = width ?? canvas.width;       //Default to current canvas width
+        canvas.height = height ?? canvas.height;    //Default to current canvas height
 
         ctx.save();
-            ctx.clearRect(0, 0, width, height); //Clear canvas for drawing
-            func.call(target, ctx);             //Generate image
-            var data = canvas.toDataURL();      //Get image data
-            images[tag] = data                  //Store image under this tag
+            ctx.clearRect(0, 0, width, height);     //Clear canvas for drawing
+            func.call(target, ctx);                 //Generate image
+            var data = canvas.toDataURL();          //Get image data
+            
+            if(tag) {                               //Only store image if tag exists
+                images[tag] = data                  //Store image under this tag
+            }
         ctx.restore();
 
         //Reset canvas size.
