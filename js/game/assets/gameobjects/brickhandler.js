@@ -56,6 +56,15 @@ Object.assign(BrickHandler.prototype, {
             var tposx = brick1.gpos.x + Math.round(brick1.spos.x / engine.math.gmultx);         //True x-position
             var tposy = brick1.gpos.y + Math.round(brick1.spos.y / engine.math.gmulty);         //True y-position
 
+            //Check if this brick is inside the boundary
+            if (engine.math.colBorderBoxGrid(
+                tposx,                                                                          //True x-position comparison
+                tposy,                                                                          //True y-position comparison
+                brick1.width)) {                                                                //Brick width for x-Max comparison
+                
+                return false;                                                                   //Return false (fail) if outside boundary
+            }
+
             //Check collision between current selected brick and every brick in its potential new row.
             for(var brick2 of this.rows.find(r => r.row == tposy)?.bricks ?? []) {              //For each brick in the current row
                 if (!brick2.isSelected &&                                                       //If the brick-in-row is colliding with this brick
@@ -63,7 +72,7 @@ Object.assign(BrickHandler.prototype, {
                     tposx, tposx + brick1.width,
                     brick2.gpos.x, brick2.gpos.x + brick2.width)) {
 
-                    return false;                                                               //Return false for any collision
+                    return false;                                                               //Return false (fail) for any collision
                 }
             }
 
