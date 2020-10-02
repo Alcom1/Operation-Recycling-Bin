@@ -146,6 +146,7 @@ Object.assign(Brick.prototype, {
 
             this.isSnapped = false;                                                 //Set as unsnapped
             this.zIndex = engine.math.underCursorZIndex;                            //Set Z-index for dragging
+            this.setToCursor();                                                     //Reposition for unsnapped state to fix 1-frame jump on pickup
         }
     },
 
@@ -246,29 +247,29 @@ Object.assign(Brick.prototype, {
         ctx.stroke();
 
         //Grey holes
-        if(this.isGrey) {                                                               //If this brick is grey
+        if(this.isGrey) {                                                           //If this brick is grey
 
-            //Y-offset
-            var yoff = Math.ceil(engine.math.gmulty * 0.4);                             //All holes share the same Y-offset
+            //Y-offset                      
+            var yoff = Math.ceil(engine.math.gmulty * 0.4);                         //All holes share the same Y-offset
 
-            //Hole styles
-            ctx.fillStyle = this.colorDark;     //Fill dark color
+            //Hole styles                       
+            ctx.fillStyle = this.colorDark;                                         //Fill dark color
 
             //Draw hole for each brick width, except for the last one
-            for(j = 1; j < this.width; j++) {                                           //Across the width of the brick
-                
-                //X-offset
-                var xoff = engine.math.gmultx * j;                                      //X-offset increases for each hole
+            for(j = 1; j < this.width; j++) {                                       //Across the width of the brick
+
+                //X-offset                      
+                var xoff = engine.math.gmultx * j;                                  //X-offset increases for each hole
 
                 //Hole border
-                ctx.beginPath();                                                        //Start path
-                ctx.arc(xoff, yoff, engine.math.studRadius, 0, 2 * Math.PI);            //Circle outer hole
-                ctx.stroke();                                                           //Stroke outer hole
+                ctx.beginPath();                                                    //Start path
+                ctx.arc(xoff, yoff, engine.math.studRadius, 0, 2 * Math.PI);        //Circle outer hole
+                ctx.stroke();                                                       //Stroke outer hole
 
                 //Hole center
-                ctx.beginPath();                                                        //Start path
-                ctx.arc(xoff, yoff, engine.math.studRadius * 0.64, 0, 2 * Math.PI);     //Circle inner hole
-                ctx.fill();                                                             //Fill inner hole
+                ctx.beginPath();                                                    //Start path
+                ctx.arc(xoff, yoff, engine.math.studRadius * 0.64, 0, 2 * Math.PI); //Circle inner hole
+                ctx.fill();                                                         //Fill inner hole
             }
         }
     }

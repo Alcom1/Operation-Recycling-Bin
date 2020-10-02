@@ -1,4 +1,4 @@
-//Test point object
+//FPS counter game object
 var FPSCounter = function(args) { GameObject.call(this, args);
 
     this.font = args.font || "16pt Consolas";   //Font and default font
@@ -7,6 +7,7 @@ var FPSCounter = function(args) { GameObject.call(this, args);
     this.text = "";                             //Text for FPS counter
 }
 
+//FPS counter prototype
 FPSCounter.prototype = 
 Object.create(GameObject.prototype);
 Object.assign(FPSCounter.prototype, {

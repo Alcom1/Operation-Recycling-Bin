@@ -2,7 +2,7 @@
     "scene" : {
         "name" : "LevelInterface",
         "need" : ["Level"],
-        "zIndex" : -10
+        "zIndex" : 10
     },
     "gameObjects" : [
         {
@@ -13,6 +13,9 @@
         },
         {
             "name" : "CursorIcon"
+        },
+        {
+            "name" : "UILevel"
         },
         {
             "name" : "FPSCounter",

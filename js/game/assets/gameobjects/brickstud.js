@@ -20,6 +20,7 @@ var BrickStud = function(args) { GameObject.call(this, args);
     this.isVisible = true;                                  //If this stud is visible
 }
 
+//Brickstud prototype
 BrickStud.prototype = 
 Object.create(GameObject.prototype);
 Object.assign(BrickStud.prototype, {
