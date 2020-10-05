@@ -232,8 +232,8 @@ Object.assign(Brick.prototype, {
         
         //Depth Border
         ctx.beginPath(); 
-        ctx.moveTo(                                  engine.math.zDepth,    -engine.math.zDepth);       //Upper left corner (back)
-        ctx.lineTo(engine.math.lineWidth / 2,       0);                                                 //Upper left corner
+        ctx.moveTo(engine.math.zDepth,          -engine.math.zDepth);   //Upper left corner (back)
+        ctx.lineTo(engine.math.lineWidth / 2,   0);                     //Upper left corner
         ctx.stroke();
 
         //Border style
@@ -241,7 +241,7 @@ Object.assign(Brick.prototype, {
 
         //Border
         ctx.beginPath();                                                                                //Start path
-        ctx.lineTo(engine.math.lineWidth / 2,       engine.math.lineWidth / 2);                         //Upper left corner
+        ctx.moveTo(engine.math.lineWidth / 2,       engine.math.lineWidth / 2);                         //Upper left corner
         ctx.lineTo(engine.math.lineWidth / 2,       engine.math.gmulty - engine.math.lineWidth / 2);    //Lower left corner
         ctx.lineTo(this.width * engine.math.gmultx, engine.math.gmulty - engine.math.lineWidth / 2);    //Lower right corner
         ctx.stroke();
