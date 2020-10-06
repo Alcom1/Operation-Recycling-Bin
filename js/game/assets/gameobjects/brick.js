@@ -20,12 +20,15 @@ var Brick = function(args) { GameObject.call(this, args);
     this.isSelected = false;                                //If this brick is selected
     this.isSnapped = false;                                 //If this brick is snapped to a position
 
-    this.selectedPos = new Vect(0, 0)                       //Relative selected position
+    this.selectedPos = new Vect(0, 0);                      //Relative selected position
 
     this.isGrounded = false;                                //Temporary recursion state
     this.isChecked = false;                                 //Temporary recursion state
 
     this.studs = [];                                        //The stud objects for this brick
+
+    this.minCarry = new Vect(0, 0);                         //boundary offset for minimum carried position
+    this.maxCarry = new Vect(0, 0);                         //boundary offset for maximum carried position
 
     //Generate studs across the width of this brick
     for(var i = 0; i < this.width; i++) {                   //For each width unit of this brick
@@ -96,27 +99,25 @@ Object.assign(Brick.prototype, {
     setToCursor : function() {
 
         //Poisition based difference between stored selected position and new cursor position
-        this.spos = engine.mouse.getPos().getSub(this.selectedPos);     //Brick position is its position relative to the cursor
+        this.spos = engine.mouse.getPos().getSub(this.selectedPos).getClamp({       //Brick position is its position relative to the cursor
+            x : (engine.math.boundary.minx - this.minCarry.x) * engine.math.gmultx, //Clamp above minimum-x position
+            y : (engine.math.boundary.miny - this.minCarry.y) * engine.math.gmulty  //Clamp above minimum-y position
+        },{  
+            x : (engine.math.boundary.maxx - this.maxCarry.x) * engine.math.gmultx, //Clamp below maximum-x position
+            y : (engine.math.boundary.maxy - this.maxCarry.y) * engine.math.gmulty  //Clamp below maximum-y position
+        });    
 
         //Grid positioning
-        if(this.isSnapped) {                                            //If this brick should be snapped to position
+        if(this.isSnapped) {                                                        //If this brick should be snapped to position
 
-            this.spos.set({                                             //Snap position
-                x : engine.math.round(this.spos.x, engine.math.gmultx), //Snapped x distance
-                y : engine.math.round(this.spos.y, engine.math.gmulty)  //Snapped y distance
+            this.spos.set({                                                         //Snap position
+                x : engine.math.round(this.spos.x, engine.math.gmultx),             //Snapped x distance
+                y : engine.math.round(this.spos.y, engine.math.gmulty)              //Snapped y distance
             });
         }
 
-        //Reset studs
-        this.resetStuds();                                              //Set studs to match the position of this brick while selected.
-    },
-
-    //Reset studs to match the position of this brick
-    resetStuds : function() {
-        this.studs.forEach((s, i) => {                      //For each of this bricks studs
-            s.gpos.set(this.gpos.x + i, this.gpos.y - 1);   //Set stud global pos to match this brick
-            s.spos.set(this.spos);                          //Set stud sub pos to match this brick
-        });
+        //Reset studs           
+        this.resetStuds();                                                          //Set studs to match the position of this brick while selected.
     },
 
     //Setup this brick for pressing
@@ -126,27 +127,6 @@ Object.assign(Brick.prototype, {
         if(!this.isStatic) {                    //If this brick is not static
             this.isPressed = true;              //Press this brick
             this.studs.forEach(s => s.press()); //Press studs for transparency
-        }
-    },
-
-    //Set this brick's snap state
-    snap : function(state) {
-
-        this.studs.forEach(s => s.snap(state));                                     //Snap studs
-
-        if(state) {                                                                 //If snap state
-
-            this.isSnapped = true;                                                  //Set as snapped
-            this.zIndex =                                                           //Set z-index
-               (this.gpos.x + Math.round(this.spos.x / engine.math.gmultx)) * 2 -   //2x multiplier for stud overlap
-               (this.gpos.y + Math.round(this.spos.y / engine.math.gmulty)) * 100 + //Y-pos has priority over X-pos.
-                this.width * 2                                                      //2x width added for stud overlap
-        }
-        else {                                                                      //If unsnap state
-
-            this.isSnapped = false;                                                 //Set as unsnapped
-            this.zIndex = engine.math.underCursorZIndex;                            //Set Z-index for dragging
-            this.setToCursor();                                                     //Reposition for unsnapped state to fix 1-frame jump on pickup
         }
     },
 
@@ -181,10 +161,50 @@ Object.assign(Brick.prototype, {
         this.studs.forEach(s => s.deselect());                              //Clear stud selection states.
     },
 
+    //Set this brick's snap state
+    snap : function(state) {
+
+        this.studs.forEach(s => s.snap(state));                                     //Snap studs
+
+        //Snap or unsnap based on the given state
+        if(state) {                                                                 //If snap state
+
+            this.isSnapped = true;                                                  //Set as snapped
+            this.zIndex =                                                           //Set z-index
+               (this.gpos.x + Math.round(this.spos.x / engine.math.gmultx)) * 2 -   //2x multiplier for stud overlap
+               (this.gpos.y + Math.round(this.spos.y / engine.math.gmulty)) * 100 + //Y-pos has priority over X-pos.
+                this.width * 2                                                      //2x width added for stud overlap
+        }
+        else {                                                                      //If unsnap state
+
+            this.isSnapped = false;                                                 //Set as unsnapped
+            this.zIndex = engine.math.underCursorZIndex;                            //Set Z-index for dragging
+            this.setToCursor();                                                     //Reposition for unsnapped state to fix 1-frame jump on pickup
+        }
+    },
+
     //Clear this brick's recursion states
     clearRecursion : function() {
+
         this.isGrounded = false;    //Unmark brick as grounded
         this.isChecked = false;     //Unmark brick as checked
+    },
+
+    //Reset studs to match the position of this brick
+    resetStuds : function() {
+
+        this.studs.forEach((s, i) => {                      //For each of this bricks studs
+            
+            s.gpos.set(this.gpos.x + i, this.gpos.y - 1);   //Set stud global pos to match this brick
+            s.spos.set(this.spos);                          //Set stud sub pos to match this brick
+        });
+    },
+
+    //Set the minimum and maximum carry positions of this brick
+    setMinMax : function(min, max) {
+
+        this.minCarry = min;    //Set min
+        this.maxCarry = max;    //Set max
     },
 
     //Draw this brick

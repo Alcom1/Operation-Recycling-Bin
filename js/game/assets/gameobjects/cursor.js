@@ -218,6 +218,7 @@ Object.assign(Cursor.prototype, {
         
             this.brickHandler.cullBrickStuds();         //Reset culled studs
             this.brickHandler.setSnappedBricks(true);   //Carried bricks should start as snapped
+            this.brickHandler.setSelectedMinMax();      //Set minimum and maximum position of carried bricks
             this.level.sortGO();                        //Sort for new brick z-indices
             this.state = this.states.CARRY;             //Set state to NONE stateStart carrying if we selected some bricks
         }

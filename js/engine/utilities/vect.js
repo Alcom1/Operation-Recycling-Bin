@@ -95,6 +95,21 @@ Vect.prototype = {
             this.y / value);
     },
 
+    //Vector clamping between minimum and maximum values
+    clamp : function(min, max) {
+
+        this.x = Math.max(min.x, Math.min(max.x, this.x));
+        this.y = Math.max(min.y, Math.min(max.y, this.y));
+    },
+
+    //Vector get clamping between minimum and maximum values result
+    getClamp : function(min, max) {
+        
+        return new Vect(
+            Math.max(min.x, Math.min(max.x, this.x)),
+            Math.max(min.y, Math.min(max.y, this.y)));
+    },
+
     //Return dot product with another vector
     getDot : function(value) {
 

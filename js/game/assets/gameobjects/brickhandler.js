@@ -48,7 +48,7 @@ Object.assign(BrickHandler.prototype, {
         var adjacents = [];  //Adjacency states, contains if we're attatching in the indexed direction.
 
         //For each selected brick
-        for(var brick1 of this.bricks.filter(b => b.isSelected == true)) {
+        for(var brick1 of this.bricks.filter(b => b.isSelected)) {
 
             brick1.setToCursor();   //Force update so the brick position matches this frame and not the previous
 
@@ -99,7 +99,7 @@ Object.assign(BrickHandler.prototype, {
 
     //Disable studs that are covered
     cullBrickStuds : function() {
-        this.bricks.filter(b => b.isSelected == false).forEach(b => b.studs.forEach(s => {  //For each stud in unselected bricks
+        this.bricks.filter(b => !b.isSelected).forEach(b => b.studs.forEach(s => {          //For each stud in unselected bricks
 
             s.isVisible = true;                                                             //Unhide this stud
 
@@ -120,12 +120,30 @@ Object.assign(BrickHandler.prototype, {
         }))
 
         //Always show studs for selected bricks
-        this.bricks.filter(b => b.isSelected == true).forEach(b => b.studs.forEach(s => s.isVisible = true));   //For each selected brick, show its studs
+        this.bricks.filter(b => b.isSelected).forEach(b => b.studs.forEach(s => s.isVisible = true));   //For each selected brick, show its studs
+    },
+
+    //Set the minimum and maximum position for selected bricks
+    setSelectedMinMax : function() {
+
+        var selected = this.bricks.filter(b => b.isSelected);           //Selected bricks
+
+        //Minimum brick position among selected bricks
+        var boundaryMin = new Vect(
+            Math.min(...selected.map(b => b.gpos.x)),                   //Minimum-x
+            Math.min(...selected.map(b => b.gpos.y)));                  //Minimum-y
+        
+        //Maximum brick position among selected bricks
+        var boundaryMax = new Vect(
+            Math.max(...selected.map(b => b.gpos.x + b.width)),         //Maximum-x, width included for proper boundary
+            Math.max(...selected.map(b => b.gpos.y + 1)));              //Maximum-y, height included for proper boundary
+
+        selected.forEach(b => b.setMinMax(boundaryMin, boundaryMax));   //Set min-max for all selected bricks based on boundary
     },
 
     //Set snapped state of selected bricks
     setSnappedBricks : function(state) {
-        this.bricks.filter(b => b.isSelected == true).forEach(b => b.snap(state));  //For each selected brick, set its snap to the given state
+        this.bricks.filter(b => b.isSelected).forEach(b => b.snap(state));  //For each selected brick, set its snap to the given state
     },
 
     //Deselect all bricks
