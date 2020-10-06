@@ -289,7 +289,8 @@ Object.assign(BrickHandler.prototype, {
 
             //Select floating bricks and clear recursion states
             this.bricks.forEach(b => {                                  //For each brick
-                if(!b.isGrounded) {                                     //If the brick is floating (not grounded)
+                if (!b.isGrounded &&                                    //If the brick is floating (not grounded)
+                    !b.isSelected) {                                    //If the brick hasn't been selected yet
                     b.select(pos);                                      //Select the floating brick
                 }
                 b.clearRecursion();                                     //Clear recursion for this brick

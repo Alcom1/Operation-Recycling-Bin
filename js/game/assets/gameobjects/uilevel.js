@@ -87,23 +87,25 @@ Object.assign(UILevel.prototype, {
         ctx.strokeStyle = this.colorDark;   //Stroke dark color
 
         //Border
-        ctx.beginPath();                                                                            //Start path
-        ctx.moveTo(engine.math.lineWidth / 2,   engine.math.lineWidth / 2);                         //Upper left corner
-        ctx.lineTo(engine.math.lineWidth / 2,   engine.math.gmulty - engine.math.lineWidth / 2);    //Lower left corner
-        ctx.lineTo(ctx.canvas.width,            engine.math.gmulty - engine.math.lineWidth / 2);    //Lower right corner
-        ctx.stroke();
-        
-        //Dark plate border
-        ctx.beginPath();
-        ctx.moveTo(engine.math.lineWidth * 1.5, engine.math.gmulty / 3);                            //Border start
-        ctx.lineTo(ctx.canvas.width,            engine.math.gmulty / 3);                            //Border end
-        ctx.stroke();
+        ctx.beginPath();                                                                                //Start path
+        ctx.moveTo(engine.math.lineWidth / 2,   engine.math.lineWidth / 2);                             //Upper left corner
+        ctx.lineTo(engine.math.lineWidth / 2,   engine.math.gmulty - engine.math.lineWidth / 2);        //Lower left corner
+        ctx.lineTo(ctx.canvas.width,            engine.math.gmulty - engine.math.lineWidth / 2);        //Lower right corner
+        ctx.stroke();   
 
-        //Light plate border
-        ctx.strokeStyle = this.colorBright; //Stroke bright color
-        ctx.beginPath();
-        ctx.moveTo(engine.math.lineWidth * 1.5, engine.math.gmulty / 3 + engine.math.lineWidth);    //Border start
-        ctx.lineTo(ctx.canvas.width,            engine.math.gmulty / 3 + engine.math.lineWidth);    //Border end
+        //Light plate border    
+        ctx.strokeStyle = this.colorBright; //Stroke bright color   
+        ctx.beginPath();    
+        ctx.moveTo(engine.math.lineWidth * 1.5, engine.math.gmulty / 3);                                //Border start
+        ctx.lineTo(ctx.canvas.width,            engine.math.gmulty / 3);                                //Border end
+        ctx.stroke();   
+            
+        //Dark plate border 
+        ctx.strokeStyle = this.colorDark;   //Stroke dark color 
+        ctx.beginPath();    
+        ctx.moveTo(engine.math.lineWidth,       engine.math.gmulty / 3 - engine.math.lineWidth / 2);    //Left pseudo-pixel
+        ctx.lineTo(engine.math.lineWidth * 1.5, engine.math.gmulty / 3 - engine.math.lineWidth);        //Border start
+        ctx.lineTo(ctx.canvas.width,            engine.math.gmulty / 3 - engine.math.lineWidth);        //Border end
         ctx.stroke();
     }
 });

@@ -42,9 +42,6 @@ Object.assign(Cursor.prototype, {
     //Game object update
     update : function(dt) {
 
-        if(this.spos.x == -1) {
-        }
-
         var tempSpos = engine.mouse.getPos();                           //Get mouse position and assign it to a temporary value
 
         //Handle cursor state when the mouse moves
