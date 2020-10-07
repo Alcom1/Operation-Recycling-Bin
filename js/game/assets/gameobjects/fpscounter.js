@@ -1,7 +1,7 @@
 //FPS counter game object
 var FPSCounter = function(args) { GameObject.call(this, args);
 
-    this.font = args.font || "16pt Consolas";   //Font and default font
+    this.font = args.font || "18pt Consolas";   //Font and default font
     this.color = args.color || "white";         //Color and default color
 
     this.text = "";                             //Text for FPS counter

@@ -18,7 +18,7 @@ engine.math = (function() {
     //Environment boundary
     var boundary = Object.freeze({
         minx : 0,                   //Minimum X-position
-        miny : 2,                   //Minimum Y-position
+        miny : 1.5,                 //Minimum Y-position
         maxx : 35,                  //Maximum X-position
         maxy : 24                   //Maximum Y-position
     })
@@ -122,7 +122,6 @@ engine.math = (function() {
 
         switch(color){
 
-            case null :
             case undefined: return "#999999"    //No color translates to grey
             case "white":   return "#EEEEEE"
             case "blue" :   return "#0033FF"

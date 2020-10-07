@@ -1,11 +1,11 @@
 //Level UI Game Object
 var UILevel = function(args) { GameObject.call(this, args);
 
-    this.color = engine.math.colorTranslate(null);  //The UI rect color
-    this.colorDark = null;                          //The UI rect shaded color
-    this.colorBright = null;                        //The UI rect light color
+    this.color = engine.math.colorTranslate();  //The UI rect color
+    this.colorDark = null;                      //The UI rect shaded color
+    this.colorBright = null;                    //The UI rect light color
 
-    this.image = new Image;                         //Baked image data for this background
+    this.image = new Image;                     //Baked image data for this background
 }
 
 //Level UI Prototype
@@ -38,36 +38,37 @@ Object.assign(UILevel.prototype, {
 
         ctx.fillStyle = this.color;             //Fill style
 
-        //UI rect Border style
-        ctx.strokeStyle = this.colorDark;       //Stroke dark color
-        ctx.lineWidth = engine.math.lineWidth;  //Line width
-        ctx.lineCap = "square";                 //Square corners
-
-        //UI rect
+        //UI side rect
         ctx.beginPath();                        //Begin background rect
-        ctx.rect(
-                               engine.math.gmultx * engine.math.boundary.maxx + engine.math.lineWidth / 2 + engine.math.zDepth / 2,     //xpos
-                               0                                              + engine.math.lineWidth / 2,                              //ypos
-            ctx.canvas.width - engine.math.gmultx * engine.math.boundary.maxx - engine.math.lineWidth / 2,                              //width
-                               engine.math.gmulty * engine.math.boundary.maxy - engine.math.lineWidth     - engine.math.zDepth / 2);    //height
+        ctx.fillRect(
+                               engine.math.gmultx * engine.math.boundary.maxx + engine.math.zDepth / 2,     //xpos
+                               0                                                                      ,     //ypos
+            ctx.canvas.width - engine.math.gmultx * engine.math.boundary.maxx                         ,     //width
+                               engine.math.gmulty * engine.math.boundary.maxy - engine.math.zDepth / 2);    //height
+                               
+        ctx.fillStyle = this.color;             //Fill style
 
-        ctx.fill();                             //Fill background rect
-        ctx.stroke();                           //Stroke background rect
+        //UI top rect
+        ctx.fillRect(
+                                                                                engine.math.zDepth / 2,     //xpos
+                               0,                                                                           //ypos
+                               engine.math.gmultx * engine.math.boundary.maxx,                              //width                     
+                               engine.math.gmulty                             - engine.math.zDepth / 2);    //height
 
         //Translate for lower brick
         ctx.translate(
-            engine.math.gmultx * engine.math.boundary.maxx,
-            engine.math.gmulty * (engine.math.boundary.maxy - 1));
+            engine.math.gmultx * engine.math.boundary.maxx,             //Translate-x
+            engine.math.gmulty * (engine.math.boundary.maxy - 1));      //Translate-y
 
-        ctx.fillRect(               //Rectangle for front face
-            0,                      //Origin
-            0,                      //Origin
-            engine.math.gmultx * 9, //Brick width
-            engine.math.gmulty);    //Brick height
+        ctx.fillRect(                           //Rectangle for front face
+            0,                                  //Origin
+            0,                                  //Origin
+            engine.math.gmultx * 9,             //Brick width
+            engine.math.gmulty);                //Brick height
 
         
         //Top face style
-        ctx.fillStyle = this.colorBright;   //Fill bright color
+        ctx.fillStyle = this.colorBright;       //Fill bright color
 
         //Top face
         ctx.beginPath();                                                //Start path    
@@ -77,35 +78,44 @@ Object.assign(UILevel.prototype, {
         ctx.lineTo(ctx.canvas.width,        0);                         //Lower right corner
         ctx.fill();      
 
-        //Depth Border
-        ctx.beginPath(); 
-        ctx.moveTo(engine.math.zDepth    / 2,   -engine.math.zDepth / 2);   //Upper left corner (back)
-        ctx.lineTo(engine.math.lineWidth / 2,   0);                         //Upper left corner
-        ctx.stroke();
-
-        //Border style
-        ctx.strokeStyle = this.colorDark;   //Stroke dark color
-
-        //Border
-        ctx.beginPath();                                                                                //Start path
-        ctx.moveTo(engine.math.lineWidth / 2,   engine.math.lineWidth / 2);                             //Upper left corner
-        ctx.lineTo(engine.math.lineWidth / 2,   engine.math.gmulty - engine.math.lineWidth / 2);        //Lower left corner
-        ctx.lineTo(ctx.canvas.width,            engine.math.gmulty - engine.math.lineWidth / 2);        //Lower right corner
-        ctx.stroke();   
+        //UI Border style
+        ctx.strokeStyle = this.colorBright;     //Stroke dark color
+        ctx.lineWidth = engine.math.lineWidth;  //Line width
+        ctx.lineCap = "square";                 //Square corners   
 
         //Light plate border    
-        ctx.strokeStyle = this.colorBright; //Stroke bright color   
+        ctx.strokeStyle = this.colorBright;     //Stroke bright color   
         ctx.beginPath();    
         ctx.moveTo(engine.math.lineWidth * 1.5, engine.math.gmulty / 3);                                //Border start
         ctx.lineTo(ctx.canvas.width,            engine.math.gmulty / 3);                                //Border end
         ctx.stroke();   
             
         //Dark plate border 
-        ctx.strokeStyle = this.colorDark;   //Stroke dark color 
+        ctx.strokeStyle = this.colorDark;       //Stroke dark color 
         ctx.beginPath();    
         ctx.moveTo(engine.math.lineWidth,       engine.math.gmulty / 3 - engine.math.lineWidth / 2);    //Left pseudo-pixel
         ctx.lineTo(engine.math.lineWidth * 1.5, engine.math.gmulty / 3 - engine.math.lineWidth);        //Border start
         ctx.lineTo(ctx.canvas.width,            engine.math.gmulty / 3 - engine.math.lineWidth);        //Border end
+        ctx.stroke();
+
+        //Border
+        ctx.beginPath();
+        ctx.moveTo(                             -engine.math.gmultx * (engine.math.boundary.maxx)     + engine.math.zDepth / 2,
+                                                -engine.math.gmulty * (engine.math.boundary.maxy - 1) - engine.math.zDepth / 2);    //Upper left corner top
+        ctx.lineTo(                             -engine.math.gmultx * (engine.math.boundary.maxx)     + engine.math.zDepth / 2,
+                                                -engine.math.gmulty * (engine.math.boundary.maxy - 2) - engine.math.zDepth / 2);    //Upper left corner far
+        ctx.lineTo(engine.math.zDepth    / 2,   -engine.math.gmulty * (engine.math.boundary.maxy - 2) - engine.math.zDepth / 2);    //Upper right border far
+        ctx.lineTo(engine.math.zDepth    / 2,                                                         - engine.math.zDepth / 2);    //Upper left corner (back)                                                                                //Start path
+        ctx.lineTo(engine.math.lineWidth / 2,   0);                                                                                 //Upper left corner
+        ctx.lineTo(engine.math.lineWidth / 2,   engine.math.gmulty                                    - engine.math.lineWidth / 2); //Lower left corner
+        ctx.lineTo(ctx.canvas.width,            engine.math.gmulty                                    - engine.math.lineWidth / 2); //Lower right corner
+        ctx.stroke();
+
+        //Depth Border
+        ctx.strokeStyle = this.color;           //Stroke color
+        ctx.beginPath(); 
+        ctx.moveTo(engine.math.zDepth    / 2,   -engine.math.zDepth / 2);   //Upper left corner (back)
+        ctx.lineTo(engine.math.lineWidth / 2,   0);                         //Upper left corner
         ctx.stroke();
     }
 });
