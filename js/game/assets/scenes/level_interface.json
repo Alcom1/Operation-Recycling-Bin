@@ -18,6 +18,15 @@
             "name" : "UILevel"
         },
         {
+            "position" : {"x" : 39, "y" : 21},
+            "name" : "Button",
+            "size" : {"x" : 120, "y" : 30},
+            "backgroundColor" : "#DDD",
+            "hoverColor" : "#FF0",
+            "color" : "#333",
+            "text" : "Button!"
+        },
+        {
             "name" : "FPSCounter",
             "position" : {"x" : 1, "y" : 0}
         }

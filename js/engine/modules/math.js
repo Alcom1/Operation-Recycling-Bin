@@ -179,6 +179,7 @@ engine.math = (function() {
         studHeight :        constant.studHeight,
         zDepth :            constant.zDepth,
         boundary : boundary,
+        colPointRect,
         colBorderBoxGrid,
         colPointRectGrid,
         colPointParHGrid,
