@@ -29,8 +29,8 @@ engine.baker = (function() {
         };
 
         //Temporary canvas size for baking.
-        canvas.width = width ?? canvas.width;       //Default to current canvas width
-        canvas.height = height ?? canvas.height;    //Default to current canvas height
+        canvas.width = width || canvas.width;       //Default to current canvas width
+        canvas.height = height || canvas.height;    //Default to current canvas height
 
         ctx.save();
             ctx.clearRect(0, 0, width, height);     //Clear canvas for drawing

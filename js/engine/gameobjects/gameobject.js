@@ -1,15 +1,18 @@
 //Base game object
 var GameObject = function(args) {
 
-    args.position = args.position || {x : 0, y : 0}             //Default position
+    this.gpos = new Vect(               //Grid position
+        args.position?.x || 0,          //Grid position-x
+        args.position?.y || 0);         //Grid position-y
 
-    this.gpos = new Vect(args.position.x, args.position.y);     //Grid position
-    this.spos = new Vect(0,0);                                  //Sub position
+    this.spos = new Vect(               //Sub position
+        args.subPosition?.x || 0,       //Sub position-x
+        args.subPosition?.y || 0);      //Sub position-y
 
-    this.zIndex = args.zIndex ?? 0                              //zIndex
-    this.tag = args.tag || args.name;
+    this.zIndex = args.zIndex || 0;     //zIndex
+    this.tag = args.tag || args.name;   //Tag based on tag or name
 
-    this.parent = args.scene;                                   //Parent scene
+    this.parent = args.scene;           //Parent scene
 }
 
 //GameObject prototype
@@ -23,7 +26,7 @@ GameObject.prototype = {
     //Set a New Scene to load it
     loadScene : function(newSceneName) {
 
-        engine.main.pushScene(newSceneName);
+        engine.main.pushScene(newSceneName);    //Push the new scene name
     },
 
     //Compare two objects, return true if they are the same

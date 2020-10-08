@@ -1,8 +1,8 @@
 //Scene
 var Scene = function(args) {
     
-    this.name = args.name ?? "nameless";                //Name of this scene
-    this.need = args.need ?? [];                        //Required scenes for this scene to initialize
+    this.name = args.name || "nameless";                //Name of this scene
+    this.need = args.need || [];                        //Required scenes for this scene to initialize
     this.zIndex = args.zIndex != null ? args.zIndex : 0 //zIndex
     this.gameObjects = [];                              //Game Objects in this scene
     this.initialized = false;                           //If this scene has been initialized

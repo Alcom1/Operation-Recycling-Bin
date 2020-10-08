@@ -66,7 +66,7 @@ Object.assign(BrickHandler.prototype, {
             }
 
             //Check collision between current selected brick and every brick in its potential new row.
-            for(var brick2 of this.rows.find(r => r.row == tposy)?.bricks ?? []) {              //For each brick in the current row
+            for(var brick2 of this.rows.find(r => r.row == tposy)?.bricks || []) {              //For each brick in the current row
                 if (!brick2.isSelected &&                                                       //If the brick-in-row is colliding with this brick
                     engine.math.col1D(
                     tposx, tposx + brick1.width,
@@ -80,7 +80,7 @@ Object.assign(BrickHandler.prototype, {
             for (var dir of [-1, 1]) {                                                          //For each direction
 
                 //If row in the direction (above/below) has bricks, check each brick
-                for (var brick2 of this.rows.find(r => r.row == tposy + dir)?.bricks ?? []) {   //For each brick in the row in that direction
+                for (var brick2 of this.rows.find(r => r.row == tposy + dir)?.bricks || []) {   //For each brick in the row in that direction
                     if (!brick2.isSelected &&                                                   //If the brick-in-row is colliding with this brick
                         engine.math.col1D(
                         tposx, tposx + brick1.width,
@@ -103,7 +103,7 @@ Object.assign(BrickHandler.prototype, {
 
             s.isVisible = true;                                                             //Unhide this stud
 
-            for(var brick of this.rows.find(r => r.row == s.gpos.y)?.bricks ?? []) {        //For each brick in this stud's row
+            for(var brick of this.rows.find(r => r.row == s.gpos.y)?.bricks || []) {        //For each brick in this stud's row
 
                 if (!brick.isSelected &&                                                    //Do not cull for selected bricks
                     !brick.isPressed &&                                                     //Do not cull for pressed bricks
@@ -197,7 +197,7 @@ Object.assign(BrickHandler.prototype, {
 
     //Check all bricks for hover, return hover state
     hoverBricks : function(pos) {
-        return this.checkBricks(pos, (b, p) => this.hoverBrick(b, p)) ?? this.states.NONE;  //Check all bricks and return if the first sucessful check is not static
+        return this.checkBricks(pos, (b, p) => this.hoverBrick(b, p)) || this.states.NONE;  //Check all bricks and return if the first sucessful check is not static
     },
 
     //Check all bricks for a mouse position and return the result of a function against that brick and position
@@ -335,7 +335,7 @@ Object.assign(BrickHandler.prototype, {
         for (var dir of dirs) {                                                                     //For direction
 
             //If row in the direction (above/below) has bricks, check and recurse for each brick
-            for (var brick2 of this.rows.find(r => r.row == brick1.gpos.y + dir)?.bricks ?? []) {   //For each brick in the adjacent row for that direction    
+            for (var brick2 of this.rows.find(r => r.row == brick1.gpos.y + dir)?.bricks || []) {   //For each brick in the adjacent row for that direction    
 
                 if (!brick2.isChecked &&                                                            //If brick hasn't been checked
                     engine.math.col1D(                                                              //If brick is in contact with the previous brick
