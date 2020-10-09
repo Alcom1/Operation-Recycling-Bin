@@ -1,18 +1,14 @@
 //FPS counter game object
 var Button = function(args) { GameObject.call(this, args);
 
-    this.states = Object.freeze({           //Button states
-        NONE : 0,                           //None state
-        PRESS : 2                           //Press state
-    });
+    this.press = false;                                 //Button press state
+    this.hover = false;                                 //Button hover state
 
-    this.state = this.states.NONE;          //Default button state
+    this.size = new Vect(                               //Button size
+        args.size.x,                                    //Button width
+        args.size.y);                                   //Button height
 
-    this.hover = false;                     //If cursor is hovering over this button
-
-    this.size = new Vect(                   //Button size
-        args.size.x,                        //Button width
-        args.size.y);                       //Button height
+    this.depth = args.depth || engine.math.zDepth / 4;  //Button depth
 
     this.bgColor = engine.math.colorTranslate(args.backgroundColor || "#DDD");  //Button color
     this.bgColorDark = null;                                                    //Button shaded color
@@ -25,9 +21,11 @@ var Button = function(args) { GameObject.call(this, args);
     this.font = args.font || "bold 18pt Consolas";                              //Font and default font
     this.color = args.color || "#333";                                          //Color and default color
 
-    this.text = args.text;                  //Button text
-    this.isCenterUI = args.isCenterUI;      //If this button is horizontally centered around the UI
-}
+    this.text = args.text;                              //Button text
+    this.isCenterUI = args.isCenterUI;                  //If this button is horizontally centered around the UI
+
+    this.images = [];                                   //Stored button images
+}           
 
 //FPS counter prototype
 Button.prototype = 
@@ -55,12 +53,35 @@ Object.assign(Button.prototype, {
 
         this.bhColorDark = engine.math.colorMult(ctx.fillStyle, 0.75);  //Calculate dark color
         this.bhColorBright = engine.math.colorAdd(ctx.fillStyle, 48);   //Calculate bright color
+
+        //Bake buttons
+        for(var i = 0; i < 4; i++) {
+
+            this.press = i % 2 != 0;    //Flip press state
+            this.hover = i >= 2;        //Flip hover state
+
+            this.images[i] = new Image;
+
+            this.images[i].src = engine.baker.bake(     //Set image src from baking results
+                this,                                   //Bake for this button
+                this.drawButton,                        //Draw button for baked image
+                this.size.x + this.depth,   
+                this.size.y + this.depth,               
+                "BUTTON." + 
+                this.text + "." + 
+               (this.press ? "PRESS" : "UNPRS") + "." +
+               (this.hover ? "HOVER" : "OUTSD"));
+        }
+
+        //Reset button states after baking
+        this.press = false;
+        this.hover = false;
     },
 
     //Game object update
     update : function(dt) {
         
-        var pos = engine.mouse.getPos();        //
+        var pos = engine.mouse.getPos();        //Cursor position
         
         //Set hover if the cursor is inside the button area
         this.hover = engine.math.colPointRect(  //Check collision between cursor and button
@@ -68,8 +89,8 @@ Object.assign(Button.prototype, {
             pos.y,                              //Cursor y-pos
             this.spos.x - this.size.x / 2,      //Button x-corner
             this.spos.y - this.size.y / 2,      //Button y-corner
-            this.size.x,                        //Button width
-            this.size.y);                       //Button height
+            this.size.x + this.depth,           //Button width with depth compensation
+            this.size.y + this.depth);          //Button height with depth compensation
         
         //If the cursor is over the button
         if (this.hover) {
@@ -80,22 +101,22 @@ Object.assign(Button.prototype, {
                 //Cursor is not pressed
                 case engine.mouse.mouseStates.ISRELEASED :  //If cursor is not pressed
 
-                    this.state = this.states.NONE;          //NONE state
+                    this.press = false;                     //NONE state
                     break;
 
                 //Cursor is pressed
                 case engine.mouse.mouseStates.WASPRESSED :  //If cursor was pressed
 
-                    this.state = this.states.PRESS;         //PRESS state
+                    this.press = true;                      //PRESS state
                     break;
 
                 //Cursor was released
                 case engine.mouse.mouseStates.WASRELEASED : //If cursor was released
 
-                    if (this.state == this.states.PRESS) {  //If button is in the PRESS state
+                    if (this.press) {                       //If button is in the PRESS state
 
                         this.doButtonAction();              //Do the button's action
-                        this.state = this.states.NONE;      //Return to NONE state
+                        this.press = false;                 //Return to NONE state
                     }
                     break;
             }
@@ -103,12 +124,19 @@ Object.assign(Button.prototype, {
         else {                                              //If the cursor is not over the button
             
             //Go from pressed state to none state if cursor is released outside the button
-            if (this.state == this.states.PRESS &&          //If pressed but mouse is released
-                engine.mouse.getMouseState() == engine.mouse.mouseStates.ISRELEASED) {
+            if (this.press &&                               //If pressed but mouse is released
+                engine.mouse.getMouseState() == engine.mouse.mouseStates.ISRELEASED) {  
 
-                this.state = this.states.NONE;              //NONE state
+                this.press = false;                         //NONE state
             }
         }
+    },
+
+    //Game object draw
+    draw : function(ctx) {
+        ctx.drawImage(this.images[this.press + this.hover * 2], 
+            -this.size.x / 2, 
+            -this.size.y / 2);
     },
 
     //Default button action
@@ -117,20 +145,12 @@ Object.assign(Button.prototype, {
         console.log(this.text); //Log this button's text as a default action
     },
 
-    //Game object draw
-    draw : function(ctx) {
+    //Button draw
+    drawButton : function(ctx) {
         
-        var buttonDepth;
-
-        //Offset for pressed state or draw border faces otherwise
-        if(this.state == this.states.PRESS)  {          //If this button is pressed
-            
-            buttonDepth = engine.math.zDepth / 8;       //Pressed depth
-            ctx.translate(buttonDepth, -buttonDepth);   //Offset to move button face
-        }
-        else {
-            buttonDepth = engine.math.zDepth / 4;       //Normal depth
-        }
+        //Handle button depth
+        var currentDepth = this.press ? this.depth / 2 : this.depth;        //Depth for pressed or unpressed state
+        ctx.translate(this.depth - currentDepth, currentDepth);             //Translate by depth
 
         //Button top face color
         ctx.fillStyle = this.hover ?    //If cursor is hovering
@@ -139,10 +159,10 @@ Object.assign(Button.prototype, {
 
         //Draw button top face
         ctx.beginPath();
-        ctx.moveTo(-this.size.x / 2,               -this.size.y / 2);               //Lower Right
-        ctx.lineTo(-this.size.x / 2 + buttonDepth, -this.size.y / 2 - buttonDepth); //Upper Right
-        ctx.lineTo( this.size.x / 2 + buttonDepth, -this.size.y / 2 - buttonDepth); //Upper Left
-        ctx.lineTo( this.size.x / 2,               -this.size.y / 2);               //Lower Left
+        ctx.moveTo(0,                          0);                          //Lower Right
+        ctx.lineTo(              currentDepth, -currentDepth);              //Upper Right
+        ctx.lineTo(this.size.x + currentDepth, -currentDepth);              //Upper Left
+        ctx.lineTo(this.size.x,                0);                          //Lower Left
         ctx.fill();
 
         //Button right face color
@@ -152,10 +172,10 @@ Object.assign(Button.prototype, {
 
         //Draw button right face
         ctx.beginPath();
-        ctx.moveTo(this.size.x / 2,               -this.size.y / 2);                //Upper Left
-        ctx.lineTo(this.size.x / 2 + buttonDepth, -this.size.y / 2 - buttonDepth);  //Upper Right
-        ctx.lineTo(this.size.x / 2 + buttonDepth,  this.size.y / 2 - buttonDepth);  //Lower Left
-        ctx.lineTo(this.size.x / 2,                this.size.y / 2);                //Lower Right
+        ctx.moveTo(this.size.x,                0);                          //Upper Left
+        ctx.lineTo(this.size.x + currentDepth,             - currentDepth); //Upper Right
+        ctx.lineTo(this.size.x + currentDepth, this.size.y - currentDepth); //Lower Left
+        ctx.lineTo(this.size.x,                this.size.y);                //Lower Right
         ctx.fill();
 
         //Button rectangle color
@@ -165,8 +185,8 @@ Object.assign(Button.prototype, {
 
         //Draw button rectangle 
         ctx.fillRect(   
-           -this.size.x / 2,            //Center vertical
-           -this.size.y / 2,            //Center horizontal
+            0,                          //Center vertical
+            0,                          //Center horizontal
             this.size.x,                //Button width
             this.size.y);               //Button height
 
@@ -175,6 +195,8 @@ Object.assign(Button.prototype, {
         ctx.textAlign = "center";       //Center horizontal
         ctx.font = this.font;           //Font
         ctx.fillStyle = this.color;     //Color
-        ctx.fillText(this.text, 1, 1);  //Fill FPS counter text
+        ctx.fillText(this.text,         //Fill button text
+            this.size.x / 2 + 1, 
+            this.size.y / 2 + 1);  
     }
 });
