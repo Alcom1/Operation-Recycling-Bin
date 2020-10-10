@@ -4,88 +4,79 @@ var engine = engine || {};
 //Module that handles tags and game objects grouped by tag.
 engine.tag = (function() {
 
-    var masterGroup = [];   //Master group containing scene groups.
-    var TAGLESS_TAG = "tagless"
+    var scenes = [];    //Master group containing scenes.
 
-    //Init
-    function init() {
-
-        var masterGroup = [];
-    }
-
-    //Return true if a scene by name exists in the master group.
+    //Return true if a scene by name exists in the scene.
     function exists(sceneName) {
 
-        return masterGroup.some(s => s.name == sceneName);
+        return scenes.some(s => s.name == sceneName);  //Return if any scene matches the provided scene name.
     }
     
-    //Push a game object to the master group
+    //Push a game object to the scene
     function pushGOToScene(gameObject, sceneName) {
 
-        var curr = masterGroup.find(sg => sg.name == sceneName );
+        //Get scene with name
+        var curr = scenes.find(sg => sg.name == sceneName );    //Current scene that matches the name
 
-        if(curr == null) {
+        //Store new scene or push gameObject to existing scene  
+        if(curr == null) {                                      //If current scene does not exist
 
-            console.log("New Scene Group : " + sceneName)
+            scenes.push({                                       //Store a new scene
 
-            masterGroup.push({
-                name : sceneName,
-                sceneGroup : [{
-                    tag : gameObject.tag,
-                    gameObjects : [gameObject]}]
-            })
+                name : sceneName,                               //Scene name
+                tags : [{                                       //Scene tags
+
+                    tag : gameObject.tag,                       //Tag name
+                    tagObjects : [gameObject]}]                 //Tagged objects, new object goes here
+            });
         }
-        else {
+        else {                                                  //If current scene exists
 
-            console.log("Existing Scene Group : " + sceneName)
-            pushGOToGroup(gameObject, curr.sceneGroup)
+            pushGOToGroup(gameObject, curr.tags);               //Push the game object to that scene
         }
     }
 
-    //Push a game object to the scene group
-    function pushGOToGroup(gameObject, sceneGroup) {
+    //Push a game object to the tag
+    function pushGOToGroup(gameObject, tags) {
 
-        gameObject.tag = gameObject.tag || TAGLESS_TAG
+        //Get tag with game object's name
+        var curr = tags.find(gos => gos.tag == gameObject.tag); //Current tag that matches the name
 
-        var curr = sceneGroup.find(gos => gos.tag == gameObject.tag);
+        //Store new tag or push gameObject to existing tag
+        if(curr == null) {                                      //If current tag does not exist
 
-        if(curr == null) {
+            tags.push({                                         //Store a new tag
 
-            console.log("New game object list created for tag " + gameObject.tag)
-
-            sceneGroup.push({
-                tag : gameObject.tag,
-                gameObjects : [gameObject]
+                tag : gameObject.tag,                           //Tag name
+                tagObjects : [gameObject]                       //Tagged objects, new object goes here
             })
         }
-        else {
-
-            console.log("New game object added to list for tag " + gameObject.tag)
-            curr.gameObjects.push(gameObject)
+        else {                                                  //If current tag exists
+            
+            curr.tagObjects.push(gameObject);                   //Push the game object to that tag
         }
     }
     
-    //Returns the mouse position
+    //Returns all game objects for the given tag and scene name
     function get(tag, sceneName) {
 
-        return masterGroup.find(sg => {
+        return scenes.find(sg => {          //Go into scene with name
 
-            return sg.name == sceneName;
-        }).sceneGroup.find(gos => {
+            return sg.name == sceneName;    //Match scene name
+        }).tags.find(gos => {               //Go into tag with name
 
-            return gos.tag == tag
-        }).gameObjects;
+            return gos.tag == tag;          //Match tag name
+        }).tagObjects;                      //Return game objects for scene and tag
     }
 
-    //Init
-    function clear(sceneName) {
+    //Remove scenes with names in the provided list
+    function clear(sceneNames) {
 
-        masterGroup = masterGroup.filter(sg => sg != sceneName);
+        scenes = scenes.filter(sg => !sceneNames.some(sn => sg.name == sn));    //Remove scenes by name
     }
     
     //Return
     return {
-        init,
         exists,
         pushGO : pushGOToScene,
         get,

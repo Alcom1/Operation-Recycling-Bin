@@ -124,7 +124,7 @@ engine.core = (function() {
         if(killSceneNames.length > 1) {                                     //If there are scenes in the kill list
 
             scenes = scenes.filter(s => !killSceneNames.includes(s.name));  //Clear scene names from core
-            killSceneNames.forEach(n => engine.tag.clear(n));               //Clear scene names from tags
+            engine.tag.clear(killSceneNames);                               //Clear scene names from tags
             killSceneNames = [];                                            //Scenes have been cleared, reset kill list
         }
     }
