@@ -4,303 +4,538 @@
         "zIndex" : 0
     },
     "gameObjects" : [
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 15, "y" : 14},
-            "color" : "red",
-            "width" : 2
+        {
+            "name" : "LevelSequence",
+            "levels" : {
+                "NextLevel" : "level_2",
+                "PrevLevel" : "level_3"
+            }
+        },
+        {
+            "name" : "Background",
+            "zIndex" : -50000
         },
         {    
             "name" : "Brick",
-            "position" : {"x" : 17, "y" : 14},
-            "color" : "red",
-            "width" : 4
+            "position" : {"x" : 0, "y" : 23},
+            "width" : 8
         },
         {    
             "name" : "Brick",
-            "position" : {"x" : 21, "y" : 14},
-            "color" : "red",
-            "width" : 2
+            "position" : {"x" : 8, "y" : 23},
+            "width" : 8
         },
         {    
             "name" : "Brick",
-            "position" : {"x" : 26, "y" : 14},
-            "color" : "red",
-            "width" : 1
+            "position" : {"x" : 16, "y" : 23},
+            "width" : 8
         },
         {    
             "name" : "Brick",
-            "position" : {"x" : 22, "y" : 15},
-            "width" : 4
-        },
-
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 15, "y" : 15},
-            "color" : "red",
-            "width" : 4
+            "position" : {"x" : 24, "y" : 23},
+            "width" : 8
         },
         {    
             "name" : "Brick",
-            "position" : {"x" : 19, "y" : 15},
-            "color" : "red",
+            "position" : {"x" : 32, "y" : 23},
             "width" : 3
-        },
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 26, "y" : 15},
-            "color" : "red",
-            "width" : 1
-        },
-
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 15, "y" : 13},
-            "color" : "red",
-            "width" : 4
-        },
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 19, "y" : 13},
-            "color" : "red",
-            "width" : 4
-        },
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 26, "y" : 13},
-            "color" : "red",
-            "width" : 1
-        },
-
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 26, "y" : 12},
-            "color" : "red",
-            "width" : 1
-        },
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 26, "y" : 11},
-            "color" : "red",
-            "width" : 1
-        },
-
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 22, "y" : 12},
-            "color" : "red",
-            "width" : 1
-        },
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 22, "y" : 11},
-            "color" : "red",
-            "width" : 1
-        },
-
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 15, "y" : 12},
-            "color" : "red",
-            "width" : 1
-        },
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 15, "y" : 11},
-            "color" : "red",
-            "width" : 1
-        },
-
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 15, "y" : 10},
-            "color" : "red",
-            "width" : 2
-        },
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 17, "y" : 10},
-            "color" : "red",
-            "width" : 4
-        },
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 21, "y" : 10},
-            "color" : "red",
-            "width" : 4
-        },
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 25, "y" : 10},
-            "color" : "red",
-            "width" : 2
-        },
-
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 16, "y" : 9},
-            "color" : "red",
-            "width" : 3
-        },
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 19, "y" : 9},
-            "color" : "red",
-            "width" : 4
-        },
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 23, "y" : 9},
-            "color" : "red",
-            "width" : 3
-        },
-
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 18, "y" : 8},
-            "color" : "red",
-            "width" : 3
-        },
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 21, "y" : 8},
-            "color" : "red",
-            "width" : 3
-        },
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 20, "y" : 7},
-            "color" : "red",
-            "width" : 2
-        },
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 16, "y" : 7},
-            "color" : "red",
-            "width" : 1
-        },
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 16, "y" : 6},
-            "color" : "red",
-            "width" : 2
-        },
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 16, "y" : 5},
-            "color" : "red",
-            "width" : 2
         },
         
         {    
             "name" : "Brick",
-            "position" : {"x" : 23, "y" : 14},
-            "color" : "yellow",
+            "position" : {"x" : 2, "y" : 22},
+            "color" : "white",
+            "width" : 1
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 2, "y" : 21},
+            "color" : "white",
+            "width" : 1
+        },
+
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 23, "y" : 18},
+            "width" : 4
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 27, "y" : 18},
+            "width" : 8
+        },
+
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 23, "y" : 13},
+            "width" : 4
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 27, "y" : 13},
+            "width" : 8
+        },
+
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 23, "y" : 8},
+            "width" : 4
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 27, "y" : 8},
+            "width" : 8
+        },
+
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 23, "y" : 3},
+            "width" : 4
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 27, "y" : 3},
+            "width" : 8
+        },
+
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 23, "y" : 22},
+            "color" : "red",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 23, "y" : 21},
+            "color" : "red",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 23, "y" : 20},
+            "color" : "red",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 25, "y" : 22},
+            "color" : "red",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 25, "y" : 21},
+            "color" : "red",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 25, "y" : 20},
+            "color" : "red",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 27, "y" : 22},
+            "color" : "red",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 27, "y" : 21},
+            "color" : "red",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 27, "y" : 20},
+            "color" : "red",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 29, "y" : 22},
+            "color" : "red",
             "width" : 3
         },
         {    
             "name" : "Brick",
-            "position" : {"x" : 23, "y" : 13},
-            "color" : "yellow",
+            "position" : {"x" : 29, "y" : 21},
+            "color" : "red",
             "width" : 3
         },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 29, "y" : 20},
+            "color" : "red",
+            "width" : 3
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 32, "y" : 22},
+            "color" : "red",
+            "width" : 3
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 32, "y" : 21},
+            "color" : "red",
+            "width" : 3
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 32, "y" : 20},
+            "color" : "red",
+            "width" : 3
+        },
+
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 23, "y" : 17},
+            "color" : "blue",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 23, "y" : 16},
+            "color" : "blue",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 23, "y" : 15},
+            "color" : "blue",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 25, "y" : 17},
+            "color" : "blue",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 25, "y" : 16},
+            "color" : "blue",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 25, "y" : 15},
+            "color" : "blue",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 27, "y" : 17},
+            "color" : "blue",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 27, "y" : 16},
+            "color" : "blue",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 27, "y" : 15},
+            "color" : "blue",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 29, "y" : 17},
+            "color" : "blue",
+            "width" : 3
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 29, "y" : 16},
+            "color" : "blue",
+            "width" : 3
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 29, "y" : 15},
+            "color" : "blue",
+            "width" : 3
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 32, "y" : 17},
+            "color" : "blue",
+            "width" : 3
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 32, "y" : 16},
+            "color" : "blue",
+            "width" : 3
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 32, "y" : 15},
+            "color" : "blue",
+            "width" : 3
+        },
+
         {    
             "name" : "Brick",
             "position" : {"x" : 23, "y" : 12},
             "color" : "yellow",
-            "width" : 3
+            "width" : 2
         },
         {    
             "name" : "Brick",
             "position" : {"x" : 23, "y" : 11},
             "color" : "yellow",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 23, "y" : 10},
+            "color" : "yellow",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 25, "y" : 12},
+            "color" : "yellow",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 25, "y" : 11},
+            "color" : "yellow",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 25, "y" : 10},
+            "color" : "yellow",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 27, "y" : 12},
+            "color" : "yellow",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 27, "y" : 11},
+            "color" : "yellow",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 27, "y" : 10},
+            "color" : "yellow",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 29, "y" : 12},
+            "color" : "yellow",
+            "width" : 3
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 29, "y" : 11},
+            "color" : "yellow",
+            "width" : 3
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 29, "y" : 10},
+            "color" : "yellow",
+            "width" : 3
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 32, "y" : 12},
+            "color" : "yellow",
+            "width" : 3
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 32, "y" : 11},
+            "color" : "yellow",
+            "width" : 3
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 32, "y" : 10},
+            "color" : "yellow",
             "width" : 3
         },
 
         {    
             "name" : "Brick",
-            "position" : {"x" : 13, "y" : 9},
-            "color" : "yellow",
+            "position" : {"x" : 23, "y" : 7},
+            "color" : "white",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 23, "y" : 6},
+            "color" : "white",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 23, "y" : 5},
+            "color" : "white",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 25, "y" : 7},
+            "color" : "white",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 25, "y" : 6},
+            "color" : "white",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 25, "y" : 5},
+            "color" : "white",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 27, "y" : 7},
+            "color" : "white",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 27, "y" : 6},
+            "color" : "white",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 27, "y" : 5},
+            "color" : "white",
+            "width" : 2
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 29, "y" : 7},
+            "color" : "white",
             "width" : 3
         },
         {    
             "name" : "Brick",
-            "position" : {"x" : 15, "y" : 8},
-            "color" : "yellow",
+            "position" : {"x" : 29, "y" : 6},
+            "color" : "white",
             "width" : 3
         },
         {    
             "name" : "Brick",
-            "position" : {"x" : 17, "y" : 7},
-            "color" : "yellow",
+            "position" : {"x" : 29, "y" : 5},
+            "color" : "white",
             "width" : 3
         },
         {    
             "name" : "Brick",
-            "position" : {"x" : 22, "y" : 7},
-            "color" : "yellow",
+            "position" : {"x" : 32, "y" : 7},
+            "color" : "white",
             "width" : 3
         },
         {    
             "name" : "Brick",
-            "position" : {"x" : 19, "y" : 6},
-            "color" : "yellow",
-            "width" : 4
-        },
-        {    
-            "name" : "Brick",
-            "position" : {"x" : 24, "y" : 8},
-            "color" : "yellow",
+            "position" : {"x" : 32, "y" : 6},
+            "color" : "white",
             "width" : 3
         },
         {    
             "name" : "Brick",
-            "position" : {"x" : 26, "y" : 9},
-            "color" : "yellow",
+            "position" : {"x" : 32, "y" : 5},
+            "color" : "white",
             "width" : 3
         },
 
         {    
             "name" : "Brick",
-            "position" : {"x" : 16, "y" : 12},
+            "position" : {"x" : 23, "y" : 2},
+            "color" : "red",
+            "width" : 1
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 24, "y" : 2},
+            "color" : "red",
+            "width" : 1
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 25, "y" : 2},
+            "color" : "red",
+            "width" : 1
+        },
+
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 26, "y" : 2},
             "color" : "blue",
-            "width" : 6
+            "width" : 1
         },
         {    
             "name" : "Brick",
-            "position" : {"x" : 16, "y" : 11},
+            "position" : {"x" : 27, "y" : 2},
             "color" : "blue",
-            "width" : 6
+            "width" : 1
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 28, "y" : 2},
+            "color" : "blue",
+            "width" : 1
         },
 
         {    
             "name" : "Brick",
-            "position" : {"x" : 9, "y" : 16},
-            "color" : "green",
-            "width" : 8
+            "position" : {"x" : 29, "y" : 2},
+            "color" : "yellow",
+            "width" : 1
         },
         {    
             "name" : "Brick",
-            "position" : {"x" : 17, "y" : 16},
-            "color" : "green",
-            "width" : 8
+            "position" : {"x" : 30, "y" : 2},
+            "color" : "yellow",
+            "width" : 1
         },
         {    
             "name" : "Brick",
-            "position" : {"x" : 25, "y" : 16},
-            "color" : "green",
-            "width" : 8
+            "position" : {"x" : 31, "y" : 2},
+            "color" : "yellow",
+            "width" : 1
         },
 
         {    
             "name" : "Brick",
-            "position" : {"x" : 9, "y" : 17},
-            "width" : 12
+            "position" : {"x" : 32, "y" : 2},
+            "color" : "white",
+            "width" : 1
         },
         {    
             "name" : "Brick",
-            "position" : {"x" : 21, "y" : 17},
-            "width" : 12
+            "position" : {"x" : 33, "y" : 2},
+            "color" : "white",
+            "width" : 1
+        },
+        {    
+            "name" : "Brick",
+            "position" : {"x" : 34, "y" : 2},
+            "color" : "white",
+            "width" : 1
         }
     ]
 }

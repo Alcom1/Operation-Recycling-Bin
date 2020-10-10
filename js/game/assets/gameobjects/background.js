@@ -38,7 +38,7 @@ Object.assign(Background.prototype, {
         ctx.fillStyle = this.colorDark;                                                 //Fill dark color
 
         //Iteratively draw right sides for the left side wall.
-        for(var i = 0; i < 23; i++) {                                                   //For each background left-side brick
+        for(var i = 0; i < engine.math.boundary.maxy + 1; i++) {  //For each background left-side brick
 
             //Right face
             ctx.beginPath();                                                            //Start path

@@ -66,7 +66,7 @@ engine.tag = (function() {
         }).tags.find(gos => {               //Go into tag with name
 
             return gos.tag == tag;          //Match tag name
-        }).tagObjects;                      //Return game objects for scene and tag
+        })?.tagObjects || [];               //Return game objects for scene and tag
     }
 
     //Remove scenes with names in the provided list
