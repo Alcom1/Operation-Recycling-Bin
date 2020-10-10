@@ -23,12 +23,6 @@ GameObject.prototype = {
 
     },
 
-    //Set a New Scene to load it
-    loadScene : function(newSceneName) {
-
-        engine.main.pushScene(newSceneName);    //Push the new scene name
-    },
-
     //Compare two objects, return true if they are the same
     compare : function(gameObject) {
 

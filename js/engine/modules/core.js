@@ -49,10 +49,10 @@ engine.core = (function() {
         var dt = calculateDeltaTime();                          //Calculate delta time, time since last frame
         ctx.clearRect(0, 0, WIDTH, HEIGHT);                     //Clear the canvas
 
-        //Load and Unload scenes
+        //Unload and load scenes
+        unloadScenes(killSceneNames);
         pushSceneNames.forEach(sn => loadScene(sn));            //Load each scene name in the push list
         pushSceneNames = [];                                    //Reset push list
-        unloadScenes(killSceneNames);
 
         //Scene actions
         initScenes();                                           //Initialize scenes that haven't been initialized yet.
@@ -174,6 +174,15 @@ engine.core = (function() {
             killSceneNames.push(sceneName);     //Add file name to list of scene names to be unloaded
         }
     }
+
+    //set all current scenes to be unloaded 
+    function killAllScenes() {
+
+        scenes.forEach(s => {                   //For each current scene
+
+            killScene(s.name);             //Put the scene on the kill list
+        });
+    }
         
     //Calculate delta-time
     function calculateDeltaTime() {
@@ -188,6 +197,7 @@ engine.core = (function() {
         init,
         pushScenes,
         killScenes,
+        killAllScenes,
     }
 }());
 

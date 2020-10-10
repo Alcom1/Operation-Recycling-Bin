@@ -5,8 +5,8 @@ var Button = function(args) { GameObject.call(this, args);
     this.hover = false;                                 //Button hover state
 
     this.size = new Vect(                               //Button size
-        args.size.x,                                    //Button width
-        args.size.y);                                   //Button height
+        args.size?.x || 0,                              //Button width
+        args.size?.y || 0);                             //Button height
 
     this.depth = args.depth || engine.math.zDepth / 4;  //Button depth
 
@@ -21,7 +21,7 @@ var Button = function(args) { GameObject.call(this, args);
     this.font = args.font || "bold 18pt Consolas";                              //Font and default font
     this.color = args.color || "#333";                                          //Color and default color
 
-    this.text = args.text;                              //Button text
+    this.text = args.text || "";                        //Button text
     this.isCenterUI = args.isCenterUI;                  //If this button is horizontally centered around the UI
 
     this.images = [];                                   //Stored button images
@@ -197,6 +197,6 @@ Object.assign(Button.prototype, {
         ctx.fillStyle = this.color;     //Color
         ctx.fillText(this.text,         //Fill button text
             this.size.x / 2 + 1, 
-            this.size.y / 2 + 1);  
+            this.size.y / 2 + 1);
     }
 });
