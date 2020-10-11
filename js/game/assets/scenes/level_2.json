@@ -15,6 +15,7 @@
             "name" : "Background",
             "zIndex" : -50000
         },
+        
         {    
             "name" : "Brick",
             "position" : {"x" : 0, "y" : 23},
