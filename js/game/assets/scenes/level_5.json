@@ -1,0 +1,19 @@
+{
+    "scene" : {
+        "name" : "Level",
+        "zIndex" : 0
+    },
+    "gameObjects" : [
+        {
+            "name" : "LevelSequence",
+            "levels" : {
+                "NextLevel" : "level_1",
+                "PrevLevel" : "level_4"
+            }
+        },
+        {
+            "name" : "Background",
+            "zIndex" : -50000
+        }
+    ]
+}
