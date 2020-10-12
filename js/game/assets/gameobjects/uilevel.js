@@ -1,9 +1,13 @@
 //Level UI Game Object
 var UILevel = function(args) { GameObject.call(this, args);
 
-    this.color = engine.math.colorTranslate();  //The UI rect color
-    this.colorDark = null;                      //The UI rect shaded color
-    this.colorBright = null;                    //The UI rect light color
+    this.color = engine.math.colorTranslate();              //The UI rect color
+    this.colorDark = null;                                  //The UI rect shaded color
+    this.colorBright = null;                                //The UI rect light color
+
+    this.colorCeiling = engine.math.colorTranslate('#334'); //The ceiling rect color
+    this.colorCeilingDark = null;                           //The ceiling rect shaded color
+    this.colorCeilingBright = null;                         //The ceiling rect light color
 
     this.image = new Image;                     //Baked image data for this background
 }
@@ -17,14 +21,18 @@ Object.assign(UILevel.prototype, {
     init : function(ctx, scenes) {
 
         //Initialize colors
-        ctx.fillStyle = this.color;                                     //ctx fill style will be a hex color for good math
-        this.colorDark = engine.math.colorMult(ctx.fillStyle, 0.625);   //Calculate dark color
-        this.colorBright = engine.math.colorAdd(ctx.fillStyle, 48);     //Calculate bright color
+        ctx.fillStyle = this.color;                                             //Store color in canvas for hex conversion
+        this.colorDark = engine.math.colorMult(ctx.fillStyle, 0.625);           //Calculate dark color
+        this.colorBright = engine.math.colorAdd(ctx.fillStyle, 48);             //Calculate bright color
+
+        ctx.fillStyle = this.colorCeiling;                                      //Store ceiling color in canvas for hex conversion
+        this.colorCeilingDark = engine.math.colorMult(ctx.fillStyle, 0.625);    //Calculate dark ceiling color
+        this.colorCeilingBright = engine.math.colorAdd(ctx.fillStyle, 48);      //Calculate bright ceiling color
 
         //Bake image of brick
-        this.image.src = engine.baker.bake(                             //Set image src from baking results
-            this,                                                       //Bake for this background
-            this.drawBackground);                                       //Draw background for baked image
+        this.image.src = engine.baker.bake(                                     //Set image src from baking results
+            this,                                                               //Bake for this background
+            this.drawBackground);                                               //Draw background for baked image
     },
 
     //Game object draw
@@ -116,6 +124,90 @@ Object.assign(UILevel.prototype, {
         ctx.beginPath(); 
         ctx.moveTo(engine.math.zDepth    / 2,   -engine.math.zDepth / 2);   //Upper left corner (back)
         ctx.lineTo(engine.math.lineWidth / 2,   0);                         //Upper left corner
+        ctx.stroke();
+
+        //
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        var topWidth = engine.math.gmultx * engine.math.boundary.maxx + engine.math.zDepth / 2;
+
+        //
+        ctx.fillStyle = this.colorCeiling;
+
+        //
+        ctx.fillRect(
+            0,
+            engine.math.gmulty / 3 * 4,
+            ctx.canvas.width,
+            engine.math.gmulty / 3);
+
+        //
+        ctx.fillStyle = this.colorCeilingBright;
+
+        //
+        ctx.fillRect(
+                               topWidth - engine.math.lineWidth / 2,
+            engine.math.gmulty / 3 * 4  - engine.math.zDepth / 2,
+            ctx.canvas.width - topWidth + engine.math.lineWidth / 2,
+                                          engine.math.zDepth / 2);
+
+        //
+        ctx.beginPath();
+        ctx.moveTo(0,                                    engine.math.gmulty / 3 * 4);
+        ctx.lineTo(           engine.math.zDepth,        engine.math.gmulty / 3 * 4 - engine.math.zDepth);
+        ctx.lineTo(topWidth - engine.math.lineWidth / 2, engine.math.gmulty / 3 * 4 - engine.math.zDepth);
+        ctx.lineTo(topWidth - engine.math.lineWidth / 2, engine.math.gmulty / 3 * 4);
+        ctx.fill();
+
+        //
+        ctx.strokeStyle = this.colorCeilingDark;
+
+        //            
+        ctx.beginPath();
+        ctx.moveTo(0,                engine.math.gmulty / 3 * 5);
+        ctx.lineTo(ctx.canvas.width, engine.math.gmulty / 3 * 5);
+        ctx.stroke();
+
+        //
+        for(var i = -engine.math.lineWidth * 2; i < ctx.canvas.width;) {
+
+            //
+            ctx.strokeStyle = this.colorCeiling;
+
+            //
+            ctx.beginPath();
+
+            //
+            if(i < engine.math.boundary.maxx * engine.math.gmultx) {
+
+                ctx.moveTo(i,                                           engine.math.gmulty - engine.math.zDepth / 2);
+            }
+            else {
+
+                ctx.moveTo(i + engine.math.zDepth - engine.math.gmulty, engine.math.gmulty);
+            }
+
+            ctx.lineTo(i + engine.math.zDepth - engine.math.gmulty / 3 * 4, engine.math.gmulty / 3 * 4);
+            ctx.stroke();
+
+            //
+            ctx.strokeStyle = this.colorCeilingDark;
+
+            //
+            ctx.beginPath();
+            ctx.moveTo(i + engine.math.zDepth - engine.math.gmulty / 3 * 4, engine.math.gmulty / 3 * 4);
+            ctx.lineTo(i + engine.math.zDepth - engine.math.gmulty / 3 * 4, engine.math.gmulty / 3 * 5);
+            ctx.stroke();
+
+            i += 4 * engine.math.gmultx;
+        }
+
+        //
+        ctx.strokeStyle = this.colorDark;
+
+        //            
+        ctx.beginPath();
+        ctx.moveTo(engine.math.boundary.maxx * engine.math.gmultx + engine.math.zDepth / 2, engine.math.gmulty);
+        ctx.lineTo(ctx.canvas.width,                                                        engine.math.gmulty);
         ctx.stroke();
     }
 });
