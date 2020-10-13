@@ -40,7 +40,8 @@ Object.assign(Button.prototype, {
             this.spos.x =                                               //Horizontally center button around UI
                 ctx.canvas.width / 2 +
                 engine.math.boundary.maxx * engine.math.gmultx / 2 +
-                engine.math.zDepth / 16;
+                engine.math.lineWidth / 2 +
+                this.depth / 2;
         }
 
         //Initialize colors

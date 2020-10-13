@@ -24,6 +24,6 @@ Object.assign(FPSCounter.prototype, {
         ctx.textBaseline = "top";       //Top baseline
         ctx.font = this.font;           //Font
         ctx.fillStyle = this.color;     //Color
-        ctx.fillText(this.text, 2, 0);  //Fill FPS counter text
+        ctx.fillText(this.text, 0, 1);  //Fill FPS counter text
     }
 });

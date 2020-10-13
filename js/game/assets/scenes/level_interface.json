@@ -19,17 +19,17 @@
         },
         {
             "name" : "ButtonScene",
-            "subPosition" : {"x" : 0, "y" : 740},
+            "subPosition" : {"x" : 0, "y" : 728},
             "isCenterUI" : true,
             "size" : {"x" : 200, "y" : 32},
             "text" : "Next Level"
         },
         {
             "name" : "ButtonScene",
-            "subPosition" : {"x" : 0, "y" : 788},
+            "subPosition" : {"x" : 0, "y" : 780},
             "isCenterUI" : true,
             "size" : {"x" : 200, "y" : 32},
-            "text" : "Prev Level"
+            "text" : "Previous Level"
         },
         {
             "name" : "FPSCounter",

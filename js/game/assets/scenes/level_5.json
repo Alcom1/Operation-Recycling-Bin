@@ -6,9 +6,11 @@
     "gameObjects" : [
         {
             "name" : "LevelSequence",
+            "position" : {"x" : 43, "y" : 0},
+            "levelName" : "Trapped in The Freezer 5/5",
             "levels" : {
                 "NextLevel" : "level_1",
-                "PrevLevel" : "level_4"
+                "PreviousLevel" : "level_4"
             }
         },
         {

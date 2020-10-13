@@ -6,9 +6,11 @@
     "gameObjects" : [
         {
             "name" : "LevelSequence",
+            "position" : {"x" : 43, "y" : 0},
+            "levelName" : "Art Factory 1/5",
             "levels" : {
                 "NextLevel" : "level_2",
-                "PrevLevel" : "level_3"
+                "PreviousLevel" : "level_5"
             }
         },
         {
