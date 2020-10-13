@@ -50,10 +50,10 @@ Object.assign(UILevel.prototype, {
         //UI side rect
         ctx.beginPath();
         ctx.fillRect(
-                               engine.math.gmultx * engine.math.boundary.maxx + engine.math.zDepth / 2,     //xpos
-                               0                                                                      ,     //ypos
-            ctx.canvas.width - engine.math.gmultx * engine.math.boundary.maxx                         ,     //width
-                               engine.math.gmulty * engine.math.boundary.maxy - engine.math.zDepth / 2);    //height
+                                engine.math.gmultx * (engine.math.boundary.maxx) + engine.math.zDepth / 2,  //xpos
+                                engine.math.gmulty,                                                         //ypos
+            ctx.canvas.width -  engine.math.gmultx * (engine.math.boundary.maxx),                           //width
+            ctx.canvas.height - engine.math.gmulty);                                                        //height
 
         //Translate for lower brick
         ctx.translate(
@@ -122,6 +122,9 @@ Object.assign(UILevel.prototype, {
 
         //Reset transform to draw from the top-left corner
         ctx.setTransform(1, 0, 0, 1, 0, 0);
+        var ceilOffsetU = engine.math.gmulty / 3 * 4;                       //Upper edge of ceiling
+        var ceilOffsetL = engine.math.gmulty / 3 * 5;                       //Lower edge of ceiling
+        var ceilOffsetB = ceilOffsetU - engine.math.zDepth;                 //Back edge of ceiling
 
         //Ceiling front face color
         ctx.fillStyle = this.colorCeiling;
@@ -129,19 +132,19 @@ Object.assign(UILevel.prototype, {
         //Ceiling front face
         ctx.fillRect(
             0,                                                              //xpos
-            engine.math.gmulty / 3 * 4,                                     //ypos
+            ceilOffsetU,                                                    //ypos
             ctx.canvas.width,                                               //width
-            engine.math.gmulty / 3);                                        //height
+            ceilOffsetL - ceilOffsetU);                                     //height
 
         //Ceiling top face color
         ctx.fillStyle = this.colorCeilingBright;
 
         //Ceiling top face
         ctx.beginPath();
-        ctx.moveTo(0,                      engine.math.gmulty / 3 * 4);                             //Lower left
-        ctx.lineTo(engine.math.zDepth / 2, engine.math.gmulty / 3 * 4 - engine.math.zDepth / 2);    //Upper left
-        ctx.lineTo(ctx.canvas.width,       engine.math.gmulty / 3 * 4 - engine.math.zDepth / 2);    //Upper right
-        ctx.lineTo(ctx.canvas.width,       engine.math.gmulty / 3 * 4);                             //Lower right
+        ctx.moveTo(0,                  ceilOffsetU);                        //Lower left
+        ctx.lineTo(engine.math.zDepth, ceilOffsetB);                        //Upper left
+        ctx.lineTo(ctx.canvas.width,   ceilOffsetB);                        //Upper right
+        ctx.lineTo(ctx.canvas.width,   ceilOffsetU);                        //Lower right
         ctx.fill();
 
         //Ceiling bottom line color
@@ -149,8 +152,8 @@ Object.assign(UILevel.prototype, {
 
         //Ceiling bottom line
         ctx.beginPath();
-        ctx.moveTo(0,                engine.math.gmulty / 3 * 5);           //Left side
-        ctx.lineTo(ctx.canvas.width, engine.math.gmulty / 3 * 5);           //Right side
+        ctx.moveTo(0,                ceilOffsetL);                          //Left side
+        ctx.lineTo(ctx.canvas.width, ceilOffsetL);                          //Right side
         ctx.stroke();
 
         //Draw ceiling lines across the
@@ -161,8 +164,8 @@ Object.assign(UILevel.prototype, {
 
             //Top line
             ctx.beginPath();
-            ctx.moveTo(i + engine.math.zDepth / 2, engine.math.gmulty);     //Top line upper
-            ctx.lineTo(i, engine.math.gmulty + engine.math.zDepth / 2);     //Top line lower
+            ctx.moveTo(i + engine.math.zDepth - engine.math.lineWidth, ceilOffsetB + engine.math.lineWidth);   //Top line upper
+            ctx.lineTo(i,                                              ceilOffsetU);                           //Top line lower
             ctx.stroke();   
 
             //Front line color  
@@ -170,25 +173,20 @@ Object.assign(UILevel.prototype, {
 
             //Front line    
             ctx.beginPath();    
-            ctx.moveTo(i, engine.math.gmulty / 3 * 4);                      //Front line upper
-            ctx.lineTo(i, engine.math.gmulty / 3 * 5);                      //Front line lower
+            ctx.moveTo(i, ceilOffsetU + engine.math.lineWidth / 2);         //Front line upper
+            ctx.lineTo(i, ceilOffsetL);                                     //Front line lower
             ctx.stroke();   
 
             i += 4 * engine.math.gmultx;                                    //Increment for set of lines
         }
 
         //Upper UI rect fill and border colors
-        ctx.fillStyle =   this.color;
-        ctx.strokeStyle = this.colorDark;
-
+        ctx.strokeStyle = this.colorCeiling;
+ 
         //Upper UI rect
         ctx.beginPath();
-        ctx.rect(
-            engine.math.lineWidth / 2 + engine.math.zDepth / 2 ,            //xpos
-          - engine.math.lineWidth / 2,                                      //ypos
-            ctx.canvas.width          - engine.math.zDepth / 2,             //width
-            engine.math.lineWidth / 2 + engine.math.gmulty);                //height
-        ctx.fill();
+        ctx.moveTo(engine.math.zDepth, ceilOffsetB + engine.math.lineWidth / 2);    //Left side
+        ctx.lineTo(ctx.canvas.width,   ceilOffsetB + engine.math.lineWidth / 2);    //Right side
         ctx.stroke();
     }
 });
