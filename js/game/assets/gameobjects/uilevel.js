@@ -1,13 +1,15 @@
 //Level UI Game Object
 var UILevel = function(args) { GameObject.call(this, args);
 
-    this.color = engine.math.colorTranslate();              //The UI rect color
-    this.colorDark = null;                                  //The UI rect shaded color
-    this.colorBright = null;                                //The UI rect light color
+    this.color = engine.math.colorTranslate();                  //The UI rect color
+    this.colorDark = null;                                      //The UI rect shaded color
+    this.colorBright = null;                                    //The UI rect light color
 
-    this.colorCeiling = engine.math.colorTranslate('#334'); //The ceiling rect color
-    this.colorCeilingDark = null;                           //The ceiling rect shaded color
-    this.colorCeilingBright = null;                         //The ceiling rect light color
+    this.colorCeiling = engine.math.colorTranslate('black');    //The ceiling rect color
+    this.colorCeilingDark = null;                               //The ceiling rect shaded color
+    this.colorCeilingBright = null;                             //The ceiling rect light color
+
+    this.logoColor = '#747474'                                  //The logo color
 
     this.image = new Image;                     //Baked image data for this background
 }
@@ -41,8 +43,27 @@ Object.assign(UILevel.prototype, {
         ctx.drawImage(this.image, 0, 0);    //Draw background image
     },
 
-    //Draw the UI level background
+    //Draw the level UI background
     drawBackground : function(ctx) {
+
+        //Draw sidebar
+        ctx.save();
+        this.drawSidebar(ctx);
+        ctx.restore();
+
+        //Draw ceiling
+        ctx.save();
+        this.drawCeiling(ctx);
+        ctx.restore();
+
+        //Draw logo
+        ctx.save();
+        this.drawLogo(ctx);
+        ctx.restore();
+    },
+
+    //Draw the sidebar menu
+    drawSidebar : function(ctx) {
 
         //Main UI color
         ctx.fillStyle = this.color;
@@ -119,32 +140,35 @@ Object.assign(UILevel.prototype, {
         ctx.moveTo(engine.math.zDepth    / 2,   -engine.math.zDepth / 2);   //Upper left corner (back)
         ctx.lineTo(engine.math.lineWidth / 2,   0);                         //Upper left corner
         ctx.stroke();
+    },
+
+    //Draw the universal ceiling
+    drawCeiling : function(ctx) {
 
         //Reset transform to draw from the top-left corner
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        var ceilOffsetU = engine.math.gmulty / 3 * 4;                       //Upper edge of ceiling
-        var ceilOffsetL = engine.math.gmulty / 3 * 5;                       //Lower edge of ceiling
-        var ceilOffsetB = ceilOffsetU - engine.math.zDepth;                 //Back edge of ceiling
+        var ceilOffsetU = engine.math.gmulty / 3 * 4;                   //Upper edge of ceiling
+        var ceilOffsetL = engine.math.gmulty / 3 * 5;                   //Lower edge of ceiling
+        var ceilOffsetB = ceilOffsetU - engine.math.zDepth;             //Back edge of ceiling
 
         //Ceiling front face color
         ctx.fillStyle = this.colorCeiling;
 
         //Ceiling front face
         ctx.fillRect(
-            0,                                                              //xpos
-            ceilOffsetU,                                                    //ypos
-            ctx.canvas.width,                                               //width
-            ceilOffsetL - ceilOffsetU);                                     //height
+            0,                                                          //xpos
+            ceilOffsetU,                                                //ypos
+            ctx.canvas.width,                                           //width
+            ceilOffsetL - ceilOffsetU);                                 //height
 
         //Ceiling top face color
         ctx.fillStyle = this.colorCeilingBright;
 
         //Ceiling top face
         ctx.beginPath();
-        ctx.moveTo(0,                  ceilOffsetU);                        //Lower left
-        ctx.lineTo(engine.math.zDepth, ceilOffsetB);                        //Upper left
-        ctx.lineTo(ctx.canvas.width,   ceilOffsetB);                        //Upper right
-        ctx.lineTo(ctx.canvas.width,   ceilOffsetU);                        //Lower right
+        ctx.moveTo(0,                  ceilOffsetU);                    //Lower left
+        ctx.lineTo(engine.math.zDepth, ceilOffsetB);                    //Upper left
+        ctx.lineTo(ctx.canvas.width,   ceilOffsetB);                    //Upper right
+        ctx.lineTo(ctx.canvas.width,   ceilOffsetU);                    //Lower right
         ctx.fill();
 
         //Ceiling bottom line color
@@ -152,12 +176,12 @@ Object.assign(UILevel.prototype, {
 
         //Ceiling bottom line
         ctx.beginPath();
-        ctx.moveTo(0,                ceilOffsetL);                          //Left side
-        ctx.lineTo(ctx.canvas.width, ceilOffsetL);                          //Right side
+        ctx.moveTo(0,                ceilOffsetL);                      //Left side
+        ctx.lineTo(ctx.canvas.width, ceilOffsetL);                      //Right side
         ctx.stroke();
 
         //Draw ceiling lines across the
-        for(var i = engine.math.lineWidth / 2; i < ctx.canvas.width;) {     //Going across the canvas width
+        for(var i = engine.math.lineWidth / 2; i < ctx.canvas.width;) { //Going across the canvas width
 
             //Top line color
             ctx.strokeStyle = this.colorCeiling;
@@ -173,11 +197,11 @@ Object.assign(UILevel.prototype, {
 
             //Front line    
             ctx.beginPath();    
-            ctx.moveTo(i, ceilOffsetU + engine.math.lineWidth / 2);         //Front line upper
-            ctx.lineTo(i, ceilOffsetL);                                     //Front line lower
+            ctx.moveTo(i, ceilOffsetU + engine.math.lineWidth / 2);     //Front line upper
+            ctx.lineTo(i, ceilOffsetL);                                 //Front line lower
             ctx.stroke();   
 
-            i += 4 * engine.math.gmultx;                                    //Increment for set of lines
+            i += 4 * engine.math.gmultx;                                //Increment for set of lines
         }
 
         //Upper UI rect fill and border colors
@@ -188,5 +212,44 @@ Object.assign(UILevel.prototype, {
         ctx.moveTo(engine.math.zDepth, ceilOffsetB + engine.math.lineWidth / 2);    //Left side
         ctx.lineTo(ctx.canvas.width,   ceilOffsetB + engine.math.lineWidth / 2);    //Right side
         ctx.stroke();
+    },
+
+    //Draw the recyle logo on the sidebar
+    drawLogo : function(ctx) {
+
+        //Translate to logo center
+        ctx.translate(        
+            ctx.canvas.width / 2 +
+            engine.math.boundary.maxx * engine.math.gmultx / 2 +
+            engine.math.zDepth / 4,
+            175);
+
+        //Draw 4 arrows of logo
+        for(var i = 0; i < 4; i++) {
+
+            //Logo color
+            ctx.fillStyle = this.logoColor;
+
+            var logoStart = 10; //Starting point of the logo arrow
+            var logoWidth = 64; //Width of the logo
+            var logoThick = 17; //Thickness of the logo arrows
+            var logoPoint = 28; //Depth of the logo arrow points
+
+            //Draw logo arrow
+            ctx.beginPath();
+            ctx.moveTo(logoStart,             logoWidth - logoThick);   //Bruh do you think SVG would have been better for all of this?
+            ctx.lineTo(logoWidth - logoThick, logoWidth - logoThick);   
+            ctx.lineTo(logoWidth - logoThick, logoPoint);
+            ctx.lineTo(logoWidth / 2,         logoPoint);
+            ctx.lineTo(logoWidth,            -logoStart / 2);
+            ctx.lineTo(logoWidth / 2 * 3,     logoPoint);
+            ctx.lineTo(logoWidth + logoThick, logoPoint);
+            ctx.lineTo(logoWidth + logoThick, logoWidth + logoThick);   //Nah
+            ctx.lineTo(logoStart,             logoWidth + logoThick);
+            ctx.fill();
+
+            //Rotate 90 degrees for the next arrow
+            ctx.rotate(Math.PI / 2);
+        }
     }
 });

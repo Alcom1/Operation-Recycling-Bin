@@ -122,11 +122,12 @@ engine.math = (function() {
 
         switch(color){
 
-            case undefined: return "#999999"    //No color translates to grey
-            case "white":   return "#EEEEEE"
-            case "blue" :   return "#0033FF"
-            case "yellow":  return "#FFCC00"
-            case "red":     return "#CC0000"
+            case undefined: return '#999999'    //No color translates to grey
+            case 'white':   return '#EEEEEE'
+            case 'blue' :   return '#0033FF'
+            case 'yellow':  return '#FFCC00'
+            case 'red':     return '#CC0000'
+            case 'black':   return '#333344'
             default:        return color;       //Color unchanged
         }
     }
