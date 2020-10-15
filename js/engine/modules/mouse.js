@@ -60,6 +60,8 @@ engine.mouse = (function() {
     //Update the mouse position.
     function updatePos(e) {
 
+        e.preventDefault();                                             //Prevent scroll events
+
         mousePos = new Vect(                                            //Set mouse position from event.
             (e.offsetX ?? (e.touches[0].pageX - e.target.offsetLeft)) * //OffsetX for desktop. Touches for mobile.
             (resolution.x / e.target.clientWidth),                      //Multiply by resolution-target ratio incase element is scaled
