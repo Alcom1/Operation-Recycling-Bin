@@ -9,7 +9,6 @@ engine.mouse = (function() {
     var mousePressed = false;   //If the mouse is pressed
     var afterPressed = false;   //Is different from mousePressed on frames where the mouse state has changed
     var resolution = null;      //Resolution of the mouse space
-    var isMobile = false;       //If the enviornment is mobile
 
     //Mouse press states
     var mouseStates = Object.freeze({
@@ -22,26 +21,17 @@ engine.mouse = (function() {
     //Init
     function init(element) {
 
-        mouseElement = element;                                         //Set mouse element
-        mousePos = new Vect(0, 0);                                      //Set mouse position to default position
-        resolution = new Vect(1, 1);                                    //Set default resolution space
-        isMobile =                                                      //Set mobile environment status
-            navigator.maxTouchPoints ||                                 //True for mobile environment
-            'ontouchstart' in document.documentElement;                 //True for mobile environment (Desktop debug)
+        mouseElement = element;                                     //Set mouse element
+        mousePos = new Vect(0, 0);                                  //Set mouse position to default position
+        resolution = new Vect(1, 1);                                //Set default resolution space
 
-        //Separate mobile and desktop events so they do not overlap
-        if(isMobile) {                                                  //If the environment is mobile
+        mouseElement.ontouchmove =          updatePos.bind(this);   //Touch movement, move the mouse position
+        mouseElement.ontouchstart =         updateTouch.bind(this); //Touch start, move and press the mouse
+        mouseElement.ontouchend =   () =>   mousePressed = false;   //Touch end, release the mouse
 
-            mouseElement.ontouchmove =          updatePos.bind(this);   //Touch movement, move the mouse position
-            mouseElement.ontouchstart =         updateTouch.bind(this); //Touch start, move and press the mouse
-            mouseElement.ontouchend =   () =>   mousePressed = false;   //Touch end, release the mouse
-        }
-        else {
-
-            mouseElement.onmousemove =          updatePos.bind(this);   //Mouse move, move the mouse position
-            mouseElement.onmousedown =  () =>   mousePressed = true;    //Mouse press
-            mouseElement.onmouseup =    () =>   mousePressed = false;   //Mouse release
-        }
+        mouseElement.onmousemove =          updatePos.bind(this);   //Mouse move, move the mouse position
+        mouseElement.onmousedown =  () =>   mousePressed = true;    //Mouse press
+        mouseElement.onmouseup =    () =>   mousePressed = false;   //Mouse release
     }
     
     //Update the mouse for a frame (Should be the last action of a frame)
@@ -92,12 +82,6 @@ engine.mouse = (function() {
         }
     }
 
-    //Expose if the current environment is mobile
-    function getMobile() {
-
-        return isMobile;    //Return the current mobile state
-    }
-
     //Sets the mouse cursor to a URL
     function setCursorURL(url) {
 
@@ -115,7 +99,6 @@ engine.mouse = (function() {
         update,
         getPos,
         getMouseState,
-        getMobile,
         setCursorURL,
         setResolution,
         mouseStates
