@@ -5,73 +5,14 @@
         <title>ORB</title>
         <style>
             * {
-                margin : 0;
-            }
-            html {
+                margin: 0;
+                padding: 0;
                 height: 100%;
-            }
-            body {
-                background-color: #000;
-                height: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            canvas {
-                background: #7F8887;
-            }
-            @media (max-aspect-ratio: 3/2) {
-                canvas {
-                    width: 100%;
-                }
-            }
-            @media (min-aspect-ratio: 3/2) {
-                canvas {
-                    height: 100%;
-                }
+                overflow: hidden;
             }
         </style>
     </head>
     <body>
-        <!-- Canvas -->
-        <canvas></canvas>
-
-        <!-- ==================================== -->
-        <!-- = engine                           = -->
-        <!-- ==================================== -->
-        <!-- gameobjects -->
-        <script src='js/engine/gameobjects/gameobject.js'></script>
-        
-        <!-- modules -->
-        <script src='js/engine/modules/baker.js'></script>
-        <script src='js/engine/modules/core.js'></script>
-        <script src='js/engine/modules/math.js'></script>
-        <script src='js/engine/modules/mouse.js'></script>
-        <script src='js/engine/modules/tag.js'></script>
-
-        <!-- scene -->
-        <script src='js/engine/scene/scene.js'></script>
-
-        <!-- utilties -->
-        <script src='js/engine/utilities/vect.js'></script>
-
-        <!-- ==================================== -->
-        <!-- = game                             = -->
-        <!-- ==================================== -->
-        <!-- load -->
-        <script src='js/game/load.js'></script>
-
-        <!-- gameobjects -->
-        <script src='js/game/assets/gameobjects/background.js'></script>
-        <script src='js/game/assets/gameobjects/brick.js'></script>
-        <script src='js/game/assets/gameobjects/brickhandler.js'></script>
-        <script src='js/game/assets/gameobjects/brickstud.js'></script>
-        <script src='js/game/assets/gameobjects/button.js'></script>
-        <script src='js/game/assets/gameobjects/buttonscene.js'></script>
-        <script src='js/game/assets/gameobjects/cursor.js'></script>
-        <script src='js/game/assets/gameobjects/cursoricon.js'></script>
-        <script src='js/game/assets/gameobjects/fpscounter.js'></script>
-        <script src='js/game/assets/gameobjects/levelsequence.js'></script>
-        <script src='js/game/assets/gameobjects/uilevel.js'></script>
+        <iframe src="./build/index.html" style="width: 100%; border: none;">
     </body>
 </html>

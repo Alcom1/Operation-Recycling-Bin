@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" name="viewport" content="width=device-width, user-scalable=no">
+        <title>ORB</title>
+        <style>
+            * {
+                margin : 0;
+            }
+            html {
+                height: 100%;
+            }
+            body {
+                background-color: #000;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            canvas {
+                background: #7F8887;
+            }
+            @media (max-aspect-ratio: 3/2) {
+                canvas {
+                    width: 100%;
+                }
+            }
+            @media (min-aspect-ratio: 3/2) {
+                canvas {
+                    height: 100%;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Canvas -->
+        <canvas></canvas>
+
+        <script src='game/load.js' type="module"></script>
+    </body>
+</html>
