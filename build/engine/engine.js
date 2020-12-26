@@ -12,6 +12,7 @@ export default class Engine {
     this.scenes = [];
     this.pushSceneNames = [];
     this.killSceneNames = [];
+    this.crashed = false;
     this.gameObjectTypes = new Map();
     this.scenePath = scenePathName;
     this.canvas = element;
@@ -31,12 +32,19 @@ export default class Engine {
     startScenes.forEach((s) => this.loadScene(s));
     this.frame();
   }
-  frame() {
-    this.animationID = requestAnimationFrame(() => this.frame());
+  async frame() {
+    this.animationID = requestAnimationFrame(() => {
+      if (this.crashed)
+        return;
+      this.frame().catch((e) => {
+        this.crashed = true;
+        throw e;
+      });
+    });
     const dt = this.calculateDeltaTime();
     this.ctx.clearRect(0, 0, this.width, this.height);
     this.unloadScenes(this.killSceneNames);
-    this.pushSceneNames.forEach((sn) => this.loadScene(sn));
+    await this.pushSceneNames.map((sn) => this.loadScene(sn));
     this.pushSceneNames = [];
     this.initScenes();
     this.updateScenes(dt);

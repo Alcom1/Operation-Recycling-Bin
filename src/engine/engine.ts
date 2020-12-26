@@ -24,6 +24,9 @@ export default class Engine {
     /** Names of scenes to be removed next frame */
     private killSceneNames: string[] = [];
 
+    /** If the last frame threw an error */
+    private crashed = false;
+
     private gameObjectTypes = new Map<string, typeof GameObject>();
 
     public baker: BakerModule;
@@ -67,8 +70,15 @@ export default class Engine {
     }
 
     /** Update loop */
-    private frame() {
-        this.animationID = requestAnimationFrame(() => this.frame());
+    private async frame(): Promise<void> {
+        this.animationID = requestAnimationFrame(() => {
+            // Don't continue throwing errors repeatedly without hope of recovering
+            if (this.crashed) return;
+            this.frame().catch(e => {
+                this.crashed = true;
+                throw e;
+            });
+        });
         
         // Setup frame
         // Calculate time delta since last frame
@@ -79,7 +89,7 @@ export default class Engine {
         // Unload and load scenes
         this.unloadScenes(this.killSceneNames);
         // Load each scene name in the push list
-        this.pushSceneNames.forEach(sn => this.loadScene(sn));
+        await this.pushSceneNames.map(sn => this.loadScene(sn));
         // Reset push list
         this.pushSceneNames = [];
 
@@ -93,27 +103,27 @@ export default class Engine {
     }
 
     /** Initialize all scenes */
-    private initScenes() {
+    private initScenes(): void {
         this.scenes.forEach(s => s.init(this.ctx, this.scenes));
     }
 
     /** Update all scenes */
-    private updateScenes(dt: number) {
+    private updateScenes(dt: number): void {
         this.scenes.forEach(s => s.update(dt));
     }
 
     /** Draw all scenes */
-    private drawScenes() {
+    private drawScenes(): void {
         this.scenes.forEach(s => s.draw(this.ctx));
     }
 
     /** Sort scenes by z-index */
-    private sortScenes() {
+    private sortScenes(): void {
         this.scenes.sort((a, b) => a.zIndex - b.zIndex);
     }
 
     /** Load a scene */
-    private async loadScene(sceneName: string) {
+    private async loadScene(sceneName: string): Promise<void> {
         const sceneResponse = await fetch(`${this.scenePath}${sceneName}.json`);
         const sceneData: {
             scene: SceneParams;
@@ -136,7 +146,7 @@ export default class Engine {
     }
 
     /** Unload scenes pending removal */
-    private unloadScenes(killSceneNames: string[]) {
+    private unloadScenes(killSceneNames: string[]): void {
         if (killSceneNames.length > 1) {
             // Clear scene names from core
             this.scenes = this.scenes.filter(s => !this.killSceneNames.includes(s.name)); 
@@ -149,7 +159,7 @@ export default class Engine {
      * Set scenes to be loaded
      * @param fileNames File name(s) of scenes to load
      */
-    public pushScenes(fileNames: string | string[]) {
+    public pushScenes(fileNames: string | string[]): void {
         if (Array.isArray(fileNames)) {
             fileNames.forEach(s => this.pushScene(s));
         } else {
@@ -161,7 +171,7 @@ export default class Engine {
      * Set scenes to be unloaded
      * @param sceneNames Scene name(s) to be unloaded
      */
-    public killScenes(sceneNames: string | string[]) {
+    public killScenes(sceneNames: string | string[]): void {
         if (Array.isArray(sceneNames)) {
             sceneNames.forEach(s => this.killScene(s));
         } else {
@@ -173,7 +183,7 @@ export default class Engine {
      * Set scene to be loaded
      * @param fileName Filename of scene to load
      */
-    private pushScene(fileName: string) {
+    private pushScene(fileName: string): void {
         if (!this.pushSceneNames.includes(fileName)) {
             this.pushSceneNames.push(fileName);
         }
@@ -183,14 +193,14 @@ export default class Engine {
      * Set scene to be unloaded
      * @param sceneName Scene name of scene to unload
      */
-    private killScene(sceneName: string) {
+    private killScene(sceneName: string): void {
         if(!this.killSceneNames.includes(sceneName)) {
             this.killSceneNames.push(sceneName);
         }
     }
 
     /** Unload all current scenes */
-    public killAllScenes() {
+    public killAllScenes(): void {
         this.killScenes(this.scenes.map(s => s.name));
     }
 
@@ -198,7 +208,7 @@ export default class Engine {
      * Get time since last frame
      * @returns Time since last frame
      */
-    private calculateDeltaTime() {
+    private calculateDeltaTime(): number {
         // Date as milliseconds
         const now = (+new Date);
         // Frames per second, limited between 12 and 240

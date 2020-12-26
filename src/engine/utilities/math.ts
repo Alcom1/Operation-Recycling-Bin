@@ -129,7 +129,10 @@ export function colorTranslate(color?: string): string {
         case 'red':     return '#CC0000'
         case 'black':   return '#333344'
         case 'grey':    return '#808080'
-        default:        return color;       // Color unchanged
+        case 'green':   return '#008000'
+        default:
+            if (color.startsWith('#')) return color;
+            else throw new Error(`No color definition available for color '${color}'`);
     }
 }
 

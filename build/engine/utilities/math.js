@@ -57,8 +57,13 @@ export function colorTranslate(color) {
       return "#333344";
     case "grey":
       return "#808080";
+    case "green":
+      return "#008000";
     default:
-      return color;
+      if (color.startsWith("#"))
+        return color;
+      else
+        throw new Error(`No color definition available for color '${color}'`);
   }
 }
 export function colorMult(color, value) {
