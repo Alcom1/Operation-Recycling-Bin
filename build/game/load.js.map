@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["/home/jonathan/Development/lego/Operation-Recycling-Bin/src/game/load.ts"],
+  "sourcesContent": ["import Engine from \"engine/engine\";\nimport Background from \"game/gameobjects/background\";\nimport Brick from \"game/gameobjects/brick\";\nimport BrickHandler from \"game/gameobjects/brickhandler\";\nimport BrickStud from \"./gameobjects/brickstud\";\nimport Button from \"./gameobjects/button\";\nimport ButtonScene from \"./gameobjects/buttonscene\";\nimport Cursor from \"./gameobjects/cursor\";\nimport CursorIcon from \"./gameobjects/cursoricon\";\nimport FPSCounter from \"./gameobjects/fpscounter\";\nimport LevelSequence from \"./gameobjects/levelsequence\";\nimport UILevel from \"./gameobjects/uilevel\";\n\n//Load\nwindow.onload = function() {\n    const canvas = document.querySelector('canvas');\n    if (!canvas) throw new Error(\"Can't get canvas\");\n    \n    new Engine(\n        canvas, \n        \"assets/scenes/\",\n        [\"level_interface\", \"level_1\"],\n        [\n            Background, Brick, BrickHandler, BrickStud, Button, ButtonScene,\n            Cursor, CursorIcon, FPSCounter, LevelSequence, UILevel\n        ]\n    );    \n}"],
+  "mappings": "AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AAGA,OAAO,SAAS;AACZ,QAAM,SAAS,SAAS,cAAc;AACtC,MAAI,CAAC;AAAQ,UAAM,IAAI,MAAM;AAE7B,MAAI,OACA,QACA,kBACA,CAAC,mBAAmB,YACpB;AAAA,IACI;AAAA,IAAY;AAAA,IAAO;AAAA,IAAc;AAAA,IAAW;AAAA,IAAQ;AAAA,IACpD;AAAA,IAAQ;AAAA,IAAY;AAAA,IAAY;AAAA,IAAe;AAAA;AAAA;",
+  "names": []
+}
