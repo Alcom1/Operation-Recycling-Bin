@@ -13,6 +13,8 @@ export const STUD_RADIUS = 11;
 export const STUD_HEIGHT = 6;
 /** Distance to draw depth */
 export const Z_DEPTH = 22;
+/** Array of unit and negative unit for opposed functions */
+export const OPPOSITE_DIRS = [-1, 1] as (-1 | 1)[];
 
 /** Environment boundary */
 export const BOUNDARY = Object.freeze({
