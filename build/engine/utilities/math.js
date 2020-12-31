@@ -5,6 +5,7 @@ export const LINE_WIDTH = 2;
 export const STUD_RADIUS = 11;
 export const STUD_HEIGHT = 6;
 export const Z_DEPTH = 22;
+export const OPPOSITE_DIRS = [-1, 1];
 export const BOUNDARY = Object.freeze({
   minx: 0,
   miny: 2,

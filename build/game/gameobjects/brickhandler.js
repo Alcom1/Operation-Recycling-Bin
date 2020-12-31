@@ -1,5 +1,5 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
-import {colBorderBoxGrid, col1D, GMULTX, GMULTY, colPointRectGrid, colPointParHGrid, colPointParVGrid} from "../../engine/utilities/math.js";
+import {colBorderBoxGrid, col1D, GMULTX, GMULTY, colPointRectGrid, colPointParHGrid, colPointParVGrid, OPPOSITE_DIRS} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
 export var BrickHandlerState;
 (function(BrickHandlerState2) {
@@ -17,19 +17,24 @@ export default class BrickHandler extends GameObject {
     this.selectedBrick = null;
     this.selections = [];
   }
+  get bricksGrey() {
+    return this.bricks.filter((b) => b.isGrey == true);
+  }
   init(ctx, scenes) {
     this.bricks = this.engine.tag.get("Brick", "Level");
     this.bricks.forEach((b) => this.addBrickToRows(b));
     this.sortRows();
+    this.rows.forEach((r) => r.bricks.forEach((b1, i) => {
+      var b2 = r.bricks[i - 1];
+      if (i > 0 && col1D(b1.gpos.x, b1.gpos.x + b1.width, b2.gpos.x, b2.gpos.x + b2.width)) {
+        console.log(`OVERLAPPING BRICK AT {"x" : ${b1.gpos.x}, "y" : ${r.row}}`);
+      }
+    }));
     for (const b of this.bricks) {
-      const dirs = [-1, 1];
-      b.isStatic = dirs.reduce((a, c) => a && !this.recurseBrick(b, [c], true), true);
+      b.isStatic = OPPOSITE_DIRS.reduce((a, c) => a && !this.recurseBrick(b, [c], true), true);
       this.bricks.forEach((b2) => b2.clearRecursion());
     }
     this.cullBrickStuds();
-  }
-  get bricksGrey() {
-    return this.bricks.filter((b) => b.isGrey == true);
   }
   checkSelectionCollision() {
     const adjacents = [];
@@ -45,7 +50,7 @@ export default class BrickHandler extends GameObject {
           return false;
         }
       }
-      for (var dir of [-1, 1]) {
+      for (var dir of OPPOSITE_DIRS) {
         for (var brick2 of this.rows.find((r) => r.row == tposy + dir)?.bricks || []) {
           if (!brick2.isSelected && col1D(tposx, tposx + brick1.width, brick2.gpos.x, brick2.gpos.x + brick2.width)) {
             adjacents[dir] = true;
@@ -125,18 +130,14 @@ export default class BrickHandler extends GameObject {
     }
     this.selectedBrick = brick2;
     this.selections = [];
-    const dirs = [-1, 1];
-    for (const dir of dirs) {
+    for (const dir of OPPOSITE_DIRS) {
       this.selections[dir] = this.recurseBrick(brick2, [dir], true);
     }
     this.bricks.forEach((b) => b.clearRecursion());
     return this.selections[-1] && this.selections[1] ? 1 : this.selections[-1] ? 3 : this.selections[1] ? 2 : 0;
   }
   pressBricks(pos) {
-    const validSelections = [
-      this.selections[-1],
-      this.selections[1]
-    ].filter((s) => s);
+    const validSelections = OPPOSITE_DIRS.map((d) => this.selections[d]).filter((s) => s);
     if (validSelections.length == 1) {
       return this.processSelection(validSelections[0], pos);
     }
@@ -153,7 +154,7 @@ export default class BrickHandler extends GameObject {
     if (selection != null) {
       for (const brick2 of this.bricksGrey) {
         if (!brick2.isChecked) {
-          this.recurseBrick(brick2, [-1, 1], false)?.forEach((c) => c.isGrounded = true);
+          this.recurseBrick(brick2, OPPOSITE_DIRS, false)?.forEach((c) => c.isGrounded = true);
         }
       }
       for (const brick2 of this.bricks) {
