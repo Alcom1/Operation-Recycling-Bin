@@ -27,7 +27,7 @@ export default class UILevel extends GameObject {
         this.colorCeilingDark = colorMult(this.colorCeiling, 0.625);
         this.colorCeilingBright = colorAdd(this.colorCeiling, 48);
 
-        this.image.src = this.engine.baker.bake(ctx => this.drawBackground(ctx));
+        this.image.src = this.engine.baker.bake(ctx => this.drawBackground(ctx), undefined, undefined, "BACKGROUND.MENU");
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {

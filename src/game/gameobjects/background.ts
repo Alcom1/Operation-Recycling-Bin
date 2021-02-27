@@ -16,7 +16,7 @@ export default class Background extends GameObject {
         this.colorDark = colorMult(this.color, 0.625);
 
         // Bake image of brick
-        this.image.src = this.engine.baker.bake((ctx) => this.drawBackground(ctx));
+        this.image.src = this.engine.baker.bake((ctx) => this.drawBackground(ctx), undefined, undefined, "BACKGROUND." + this.parent.name);
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
