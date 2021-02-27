@@ -6,7 +6,7 @@ export default class Background extends GameObject {
     this.color = colorTranslate("grey");
     this.image = new Image();
     this.colorDark = colorMult(this.color, 0.625);
-    this.image.src = this.engine.baker.bake((ctx) => this.drawBackground(ctx));
+    this.image.src = this.engine.baker.bake((ctx) => this.drawBackground(ctx), void 0, void 0, "BACKGROUND." + this.parent.name);
   }
   draw(ctx) {
     ctx.drawImage(this.image, 0, 0);
