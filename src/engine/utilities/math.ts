@@ -1,4 +1,6 @@
 // Constants
+/** Path to image assets */
+export const PATH_IMG = "assets/img/";
 /** Horizontal multiplier for grid positions */
 export const GMULTX = 30;
 /** Vertical multiplier for grid positions */
@@ -27,6 +29,12 @@ export const BOUNDARY = Object.freeze({
     /** Maximum Y-position */
     maxy: 24
 });
+
+/** Handles file extension - image */
+export function pathImg(fileName : string, extension?: string) {
+
+    return `${PATH_IMG}${fileName}.${extension ?? "png"}`;    //Default to png
+}
 
 /** Constrain value between min and max (inclusive) */
 export function clamp(val: number, min: number, max: number): number {

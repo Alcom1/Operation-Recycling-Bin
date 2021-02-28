@@ -1,3 +1,4 @@
+export const PATH_IMG = "assets/img/";
 export const GMULTX = 30;
 export const GMULTY = 36;
 export const UNDER_CURSOR_Z_INDEX = 100;
@@ -12,6 +13,9 @@ export const BOUNDARY = Object.freeze({
   maxx: 35,
   maxy: 24
 });
+export function pathImg(fileName, extension) {
+  return `${PATH_IMG}${fileName}.${extension ?? "png"}`;
+}
 export function clamp(val, min, max) {
   return Math.max(min, Math.min(max, val));
 }
