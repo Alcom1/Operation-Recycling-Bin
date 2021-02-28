@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["C:\\Users\\Alcom\\Desktop\\Dev\\Git\\Operation Recycling Bin\\src\\game\\gameobjects\\sprite.ts"],
-  "sourcesContent": ["import Engine from \"engine/engine\";\r\nimport GameObject, { GameObjectParams } from \"engine/gameobjects/gameobject\";\r\n\r\ninterface SpriteParams extends GameObjectParams {\r\n    image?: string;\r\n    extention?: string;\r\n}\r\n\r\nexport default class Sprite extends GameObject {\r\n\r\n    private image = new Image();\r\n\r\n    constructor(engine: Engine, params: SpriteParams) {\r\n        super(engine, params);\r\n\r\n        this.image.src = `/assets/img/${params.image}.${params.extention ?? \"png\"}`\r\n    }\r\n\r\n    public draw(ctx: CanvasRenderingContext2D): void {\r\n        ctx.drawImage(this.image, 0, 0);\r\n    }\r\n}"],
-  "mappings": "AACA;AADA,oCAQoC;AAAA,EAIhC,YAAY;AACR,UAAM,SAAQ;AAHV,iBAAQ,IAAI;AAKhB,SAAK,MAAM,MAAM,eAAe,OAAO,SAAS,OAAO,aAAa;AAAA;AAAA,EAGjE;AACH,QAAI,UAAU,KAAK,OAAO,GAAG;AAAA;AAAA;",
+  "sourcesContent": ["import Engine from \"engine/engine\";\r\nimport GameObject, { GameObjectParams } from \"engine/gameobjects/gameobject\";\r\n\r\ninterface SpriteParams extends GameObjectParams {\r\n    image?: string;\r\n    extention?: string;\r\n}\r\n\r\nexport default class Sprite extends GameObject {\r\n\r\n    private image = new Image();\r\n\r\n    constructor(engine: Engine, params: SpriteParams) {\r\n        super(engine, params);\r\n\r\n        this.image.src = `assets/img/${params.image}.${params.extention ?? \"png\"}`\r\n    }\r\n\r\n    public draw(ctx: CanvasRenderingContext2D): void {\r\n        ctx.drawImage(this.image, 0, 0);\r\n    }\r\n}"],
+  "mappings": "AACA;AADA,oCAQoC;AAAA,EAIhC,YAAY;AACR,UAAM,SAAQ;AAHV,iBAAQ,IAAI;AAKhB,SAAK,MAAM,MAAM,cAAc,OAAO,SAAS,OAAO,aAAa;AAAA;AAAA,EAGhE;AACH,QAAI,UAAU,KAAK,OAAO,GAAG;AAAA;AAAA;",
   "names": []
 }

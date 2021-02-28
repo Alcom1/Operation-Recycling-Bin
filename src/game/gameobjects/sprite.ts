@@ -13,7 +13,7 @@ export default class Sprite extends GameObject {
     constructor(engine: Engine, params: SpriteParams) {
         super(engine, params);
 
-        this.image.src = `/assets/img/${params.image}.${params.extention ?? "png"}`
+        this.image.src = `assets/img/${params.image}.${params.extention ?? "png"}`
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
