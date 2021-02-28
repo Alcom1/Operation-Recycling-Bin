@@ -15,7 +15,9 @@
             "name" : "CursorIcon"
         },
         {
-            "name" : "UILevel"
+            "name" : "Sprite",
+            "image" : "background_menu",
+            "zIndex" : -50000
         },
         {
             "name" : "ButtonScene",

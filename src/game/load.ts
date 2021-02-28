@@ -1,5 +1,4 @@
 import Engine from "engine/engine";
-import Background from "game/gameobjects/background";
 import Brick from "game/gameobjects/brick";
 import BrickHandler from "game/gameobjects/brickhandler";
 import BrickStud from "./gameobjects/brickstud";
@@ -9,7 +8,7 @@ import Cursor from "./gameobjects/cursor";
 import CursorIcon from "./gameobjects/cursoricon";
 import FPSCounter from "./gameobjects/fpscounter";
 import LevelSequence from "./gameobjects/levelsequence";
-import UILevel from "./gameobjects/uilevel";
+import Sprite from "./gameobjects/sprite";
 
 //Load
 window.onload = function() {
@@ -21,8 +20,16 @@ window.onload = function() {
         "assets/scenes/",
         ["level_interface", "level_1"],
         [
-            Background, Brick, BrickHandler, BrickStud, Button, ButtonScene,
-            Cursor, CursorIcon, FPSCounter, LevelSequence, UILevel
+            Brick,
+            BrickHandler,
+            BrickStud,
+            Button,
+            ButtonScene,
+            Cursor,
+            CursorIcon,
+            FPSCounter,
+            LevelSequence,
+            Sprite
         ]
     );    
 }

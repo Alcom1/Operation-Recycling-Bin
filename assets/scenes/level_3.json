@@ -14,7 +14,8 @@
             }
         },
         {
-            "name" : "Background",
+            "name" : "Sprite",
+            "image" : "background_level",
             "zIndex" : -50000
         },
 
