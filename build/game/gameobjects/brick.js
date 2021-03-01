@@ -1,5 +1,5 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
-import {colorTranslate, colorMult, colorAdd, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX, LINE_WIDTH, STUD_RADIUS} from "../../engine/utilities/math.js";
+import {pathImg, colorTranslate, colorMult, colorAdd, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX, STUD_RADIUS} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
 import BrickStud from "./brickstud.js";
 export default class Brick extends GameObject {
@@ -7,6 +7,10 @@ export default class Brick extends GameObject {
     super(engine2, params);
     this.engine = engine2;
     this.image = new Image();
+    this.imageBrickL = new Image();
+    this.imageBrickM = new Image();
+    this.imageBrickR = new Image();
+    this.isBaked = false;
     this.isStatic = false;
     this.isPressed = false;
     this.isSelected = false;
@@ -34,9 +38,15 @@ export default class Brick extends GameObject {
       this.studs.push(stud);
       this.parent.pushGO(stud);
     }
-    this.image.src = this.engine.baker.bake((ctx) => this.drawBrick(ctx), this.width * GMULTX + Z_DEPTH + 3, GMULTY + Z_DEPTH + 3, `BRICK.${this.width}.${this.color}`);
+    this.imageBrickL.src = pathImg(`brick_l_${this.color.replace("#", "")}`);
+    this.imageBrickM.src = pathImg(`brick_m_${this.color.replace("#", "")}`);
+    this.imageBrickR.src = pathImg(`brick_r_${this.color.replace("#", "")}`);
   }
   update(dt) {
+    if (!this.isBaked && this.imageBrickL.complete && this.imageBrickM.complete && this.imageBrickR.complete) {
+      this.image.src = this.engine.baker.bake((ctx) => this.drawBrick(ctx), this.width * GMULTX + Z_DEPTH + 3, GMULTY + Z_DEPTH + 3, `BRICK.${this.width}.${this.color}`);
+      this.isBaked = true;
+    }
     if (this.isSelected) {
       this.setToCursor();
     }
@@ -113,38 +123,19 @@ export default class Brick extends GameObject {
     this.maxCarry = max;
   }
   drawBrick(ctx) {
-    ctx.translate(0, Z_DEPTH + 3);
-    ctx.fillStyle = this.color;
-    ctx.fillRect(0, 0, this.width * GMULTX, GMULTY);
-    ctx.fillStyle = this.colorDark;
-    ctx.beginPath();
-    ctx.moveTo(this.width * GMULTX, GMULTY);
-    ctx.lineTo(this.width * GMULTX, 0);
-    ctx.lineTo(this.width * GMULTX + Z_DEPTH, -Z_DEPTH);
-    ctx.lineTo(this.width * GMULTX + Z_DEPTH, GMULTY - Z_DEPTH);
-    ctx.fill();
-    ctx.fillStyle = this.colorBright;
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(Z_DEPTH, -Z_DEPTH);
-    ctx.lineTo(this.width * GMULTX + Z_DEPTH, -Z_DEPTH);
-    ctx.lineTo(this.width * GMULTX, 0);
-    ctx.fill();
-    ctx.strokeStyle = this.color;
-    ctx.lineWidth = LINE_WIDTH;
-    ctx.lineCap = "square";
-    ctx.beginPath();
-    ctx.moveTo(Z_DEPTH, -Z_DEPTH);
-    ctx.lineTo(LINE_WIDTH / 2, 0);
-    ctx.stroke();
-    ctx.strokeStyle = this.colorDark;
-    ctx.beginPath();
-    ctx.moveTo(LINE_WIDTH / 2, LINE_WIDTH / 2);
-    ctx.lineTo(LINE_WIDTH / 2, GMULTY - LINE_WIDTH / 2);
-    ctx.lineTo(this.width * GMULTX, GMULTY - LINE_WIDTH / 2);
-    ctx.stroke();
+    ctx.save();
+    ctx.drawImage(this.imageBrickL, 0, 0);
+    ctx.translate(30, 0);
+    for (let j = 1; j < this.width; j++) {
+      ctx.drawImage(this.imageBrickM, 0, 0);
+      ctx.translate(30, 0);
+    }
+    ctx.drawImage(this.imageBrickR, 0, 0);
+    ctx.restore();
     if (this.isGrey) {
-      const yoff = Math.ceil(GMULTY * 0.4);
+      ctx.strokeStyle = this.colorDark;
+      ctx.lineWidth = 2;
+      const yoff = Math.ceil(GMULTY * 1.1);
       ctx.fillStyle = this.colorDark;
       for (let j = 1; j < this.width; j++) {
         const xoff = GMULTX * j;

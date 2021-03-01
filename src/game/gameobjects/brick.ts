@@ -1,6 +1,6 @@
 import GameObject, {GameObjectParams} from "engine/gameobjects/gameobject";
 import Engine from "engine/engine";
-import { colorTranslate, colorMult, colorAdd, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX, LINE_WIDTH, STUD_RADIUS } from "engine/utilities/math";
+import { pathImg, colorTranslate, colorMult, colorAdd, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX, STUD_RADIUS } from "engine/utilities/math";
 import Vect, {Point} from "engine/utilities/vect";
 import Scene from "engine/scene/scene";
 import BrickStud from "./brickstud";
@@ -23,14 +23,26 @@ export default class Brick extends GameObject {
     /** Baked image data for this brick */
     private image = new Image();
 
+    //Brick segments (Left, Middle, Right)
+    private imageBrickL = new Image();
+    private imageBrickM = new Image();
+    private imageBrickR = new Image();
+
+    /** If the image for this brick has been baked */
+    public isBaked = false;
+
     /** If this is a static brick that will never move (grey or blocked by grey bricks), calculated later */
     public isStatic = false;
 
     /** Width of this brick */
     public width: number;
 
+    /** If this brick is pressed */
     public isPressed = false;
+
+    /** If this brick is selected */
     public isSelected = false;
+
     /** If this brick is snapped to a position */
     private isSnapped = false;
 
@@ -39,6 +51,7 @@ export default class Brick extends GameObject {
 
     /** Temporary recursion state */
     public isGrounded = false;
+
     /** Temporary recursion state */
     public isChecked = false;
 
@@ -47,6 +60,7 @@ export default class Brick extends GameObject {
 
     /** Boundary offset for minimum carried position */
     private minCarry = new Vect(0, 0);
+
     /** Boundary offset for maximum carried position */
     private maxCarry = new Vect(0, 0);
 
@@ -87,18 +101,34 @@ export default class Brick extends GameObject {
             this.parent.pushGO(stud);
         }
 
-        //Bake image of brick
-        this.image.src = this.engine.baker.bake(
-            ctx => this.drawBrick(ctx),
-            // Width to contain the brick, the right face, and the border
-            this.width * GMULTX + Z_DEPTH + 3,
-            // Height to contain the brick, the top face, and the border
-            GMULTY + Z_DEPTH + 3,
-            `BRICK.${this.width}.${this.color}`
-        );
+        //Get images for brick segments
+        this.imageBrickL.src = pathImg(`brick_l_${this.color.replace("#", "")}`);
+        this.imageBrickM.src = pathImg(`brick_m_${this.color.replace("#", "")}`);
+        this.imageBrickR.src = pathImg(`brick_r_${this.color.replace("#", "")}`);
     }
 
     public update(dt: number): void {
+
+        //If images are loaded and brick hasn't been baked yet
+        if(
+            !this.isBaked &&
+            this.imageBrickL.complete &&
+            this.imageBrickM.complete &&
+            this.imageBrickR.complete)
+        {
+            //Bake image of brick
+            this.image.src = this.engine.baker.bake(
+                ctx => this.drawBrick(ctx),
+                // Width to contain the brick, the right face, and the border
+                this.width * GMULTX + Z_DEPTH + 3,
+                // Height to contain the brick, the top face, and the border
+                GMULTY + Z_DEPTH + 3,
+                `BRICK.${this.width}.${this.color}`
+            );
+
+            this.isBaked = true;
+        }
+
         // Follow mouse if selected
         if (this.isSelected) {
             this.setToCursor();
@@ -238,66 +268,32 @@ export default class Brick extends GameObject {
 
     /** Draw this brick */
     private drawBrick(ctx: CanvasRenderingContext2D): void {
-        // Offset for top face and borders for baked drawing
-        ctx.translate(0, Z_DEPTH + 3);
 
-        // Base rectangle color
-        ctx.fillStyle = this.color;
+        ctx.save();
 
-        // Front face
-        ctx.fillRect(
-            0, 0,                   // Origin
-            this.width * GMULTX,    // Brick width
-            GMULTY                  // Brick height
-        );                    
+        //Draw left side
+        ctx.drawImage(this.imageBrickL, 0, 0);
+        ctx.translate(30, 0);
 
-        // Right face style
-        ctx.fillStyle = this.colorDark;
+        //Draw middle segments
+        for (let j = 1; j < this.width; j++) {
+            ctx.drawImage(this.imageBrickM, 0, 0);
+            ctx.translate(30, 0);
+        }
 
-        // Right face
-        ctx.beginPath();
-        ctx.moveTo(this.width * GMULTX,             GMULTY);             // Lower left corner
-        ctx.lineTo(this.width * GMULTX,             0);                  // Upper left corner
-        ctx.lineTo(this.width * GMULTX + Z_DEPTH,           -Z_DEPTH);   // Upper right corner
-        ctx.lineTo(this.width * GMULTX + Z_DEPTH,   GMULTY - Z_DEPTH);   // Lower right corner
-        ctx.fill();
-
-        // Top face style
-        ctx.fillStyle = this.colorBright;
-
-        // Top face
-        ctx.beginPath();
-        ctx.moveTo(0,                              0);          // Lower left corner
-        ctx.lineTo(                      Z_DEPTH,  -Z_DEPTH);   // Upper left corner
-        ctx.lineTo(this.width * GMULTX + Z_DEPTH,  -Z_DEPTH);   // Upper right corner
-        ctx.lineTo(this.width * GMULTX,            0);          // Lower right corner
-        ctx.fill();
-
-        // Border style
-        ctx.strokeStyle = this.color;
-        ctx.lineWidth = LINE_WIDTH;
-        ctx.lineCap = "square";
-        
-        // Depth Border
-        ctx.beginPath(); 
-        ctx.moveTo(Z_DEPTH,          -Z_DEPTH);   //Upper left corner (back)
-        ctx.lineTo(LINE_WIDTH / 2,   0);          //Upper left corner
-        ctx.stroke();
-
-        // Border style
-        ctx.strokeStyle = this.colorDark;
-
-        // Border
-        ctx.beginPath();
-        ctx.moveTo(LINE_WIDTH / 2,      LINE_WIDTH / 2);             // Upper left corner
-        ctx.lineTo(LINE_WIDTH / 2,      GMULTY - LINE_WIDTH / 2);    // Lower left corner
-        ctx.lineTo(this.width * GMULTX, GMULTY - LINE_WIDTH / 2);    // Lower right corner
-        ctx.stroke();
+        //Draw right side
+        ctx.drawImage(this.imageBrickR, 0, 0);
+        ctx.restore();
 
         // Grey holes
         if (this.isGrey) {
+
+            //Set style for grey holes
+            ctx.strokeStyle = this.colorDark;
+            ctx.lineWidth = 2;
+
             // All holes share the same Y-offset
-            const yoff = Math.ceil(GMULTY * 0.4);
+            const yoff = Math.ceil(GMULTY * 1.1);
 
             // Hole styles
             ctx.fillStyle = this.colorDark;
