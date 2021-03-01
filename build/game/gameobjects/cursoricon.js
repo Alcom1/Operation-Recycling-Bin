@@ -12,22 +12,19 @@ export var CursorIconState;
 export default class CursorIcon extends GameObject {
   constructor(engine2, params) {
     super(engine2, params);
-    this.cursorImages = {
-      [0]: "cursor_none",
-      [1]: "cursor_drag",
-      [2]: "cursor_carry",
-      [3]: "cursor_drag",
-      [4]: "cursor_down",
-      [5]: "cursor_up"
-    };
-    for (let key in this.cursorImages) {
-      const key2 = Number(key);
-      this.cursorImages[key2] = pathImg(this.cursorImages[key2]);
-    }
+    this.cursorImages = new Map([
+      [0, "cursor_none"],
+      [1, "cursor_drag"],
+      [2, "cursor_carry"],
+      [3, "cursor_drag"],
+      [4, "cursor_down"],
+      [5, "cursor_up"]
+    ]);
+    this.cursorImages.forEach((v, k) => this.cursorImages.set(k, pathImg(v)));
     this.setCursor(0);
   }
   setCursor(state) {
-    this.engine.mouse.setCursorURL(this.cursorImages[state]);
+    this.engine.mouse.setCursorURL(this.cursorImages.get(state));
   }
 }
 //# sourceMappingURL=cursoricon.js.map

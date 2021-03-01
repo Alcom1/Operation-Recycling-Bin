@@ -55,19 +55,20 @@ export default class MouseModule {
 
     /** Mouse state */
     public getMouseState(): MouseState {
-        if (this.mousePressed && !this.afterPressed) {        // If mouse is pressed and afterPressed is different
-            return MouseState.WASPRESSED;                     // Mouse was pressed this frame
+        if (this.mousePressed && !this.afterPressed) {          // If mouse is pressed and afterPressed is different
+            return MouseState.WASPRESSED;                       // Mouse was pressed this frame
         } else if (this.mousePressed) {                         // If mouse is pressed and afterPressed is same
-            return MouseState.ISPRESSED;                      // Mouse is currently pressed
+            return MouseState.ISPRESSED;                        // Mouse is currently pressed
         } else if(!this.mousePressed && this.afterPressed) {    // If mouse is released and afterPressed is different
-            return MouseState.WASRELEASED;                    // Mouse was released this frame
+            return MouseState.WASRELEASED;                      // Mouse was released this frame
         } else {                                                // If mouse is released and afterPressed is same
-            return MouseState.ISRELEASED;                     // Mouse is currently released
+            return MouseState.ISRELEASED;                       // Mouse is currently released
         }
     }
 
     /** Sets the mouse cursor from a URL */
-    public setCursorURL(url: string) {
+    public setCursorURL(url?: string) {
+        console.log(url);
         this.mouseElement.style.cursor = "url(" + url + "), auto";
     }
 

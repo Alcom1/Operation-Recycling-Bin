@@ -43,6 +43,7 @@ export default class MouseModule {
     }
   }
   setCursorURL(url) {
+    console.log(url);
     this.mouseElement.style.cursor = "url(" + url + "), auto";
   }
   setResolution(resx, resy) {

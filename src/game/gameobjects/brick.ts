@@ -23,10 +23,8 @@ export default class Brick extends GameObject {
     /** Baked image data for this brick */
     private image = new Image();
 
-    //Brick segments (Left, Middle, Right)
-    private imageBrickL = new Image();
-    private imageBrickM = new Image();
-    private imageBrickR = new Image();
+    /** Brick segments (Left, Middle, Right) */
+    private brickSprites: Map<string, HTMLImageElement>;
 
     /** If the image for this brick has been baked */
     public isBaked = false;
@@ -101,10 +99,13 @@ export default class Brick extends GameObject {
             this.parent.pushGO(stud);
         }
 
-        //Get images for brick segments
-        this.imageBrickL.src = pathImg(`brick_l_${this.color.replace("#", "")}`);
-        this.imageBrickM.src = pathImg(`brick_m_${this.color.replace("#", "")}`);
-        this.imageBrickR.src = pathImg(`brick_r_${this.color.replace("#", "")}`);
+        this.brickSprites = new Map<string, HTMLImageElement>([
+            ["l", new Image()],
+            ["m", new Image()],
+            ["r", new Image()]
+        ]);
+
+        this.brickSprites.forEach((v, k) => v.src = pathImg(`brick_${k}_${this.color.replace("#", "")}`));
     }
 
     public update(dt: number): void {
@@ -112,9 +113,7 @@ export default class Brick extends GameObject {
         //If images are loaded and brick hasn't been baked yet
         if(
             !this.isBaked &&
-            this.imageBrickL.complete &&
-            this.imageBrickM.complete &&
-            this.imageBrickR.complete)
+            Array.from(this.brickSprites.values()).every(i => i.complete))
         {
             //Bake image of brick
             this.image.src = this.engine.baker.bake(
@@ -272,17 +271,17 @@ export default class Brick extends GameObject {
         ctx.save();
 
         //Draw left side
-        ctx.drawImage(this.imageBrickL, 0, 0);
+        ctx.drawImage(this.brickSprites.get("l")!!, 0, 0);
         ctx.translate(30, 0);
 
         //Draw middle segments
         for (let j = 1; j < this.width; j++) {
-            ctx.drawImage(this.imageBrickM, 0, 0);
+            ctx.drawImage(this.brickSprites.get("m")!!, 0, 0);
             ctx.translate(30, 0);
         }
 
         //Draw right side
-        ctx.drawImage(this.imageBrickR, 0, 0);
+        ctx.drawImage(this.brickSprites.get("r")!!, 0, 0);
         ctx.restore();
 
         // Grey holes

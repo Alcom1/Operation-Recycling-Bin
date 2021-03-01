@@ -7,9 +7,6 @@ export default class Brick extends GameObject {
     super(engine2, params);
     this.engine = engine2;
     this.image = new Image();
-    this.imageBrickL = new Image();
-    this.imageBrickM = new Image();
-    this.imageBrickR = new Image();
     this.isBaked = false;
     this.isStatic = false;
     this.isPressed = false;
@@ -38,12 +35,15 @@ export default class Brick extends GameObject {
       this.studs.push(stud);
       this.parent.pushGO(stud);
     }
-    this.imageBrickL.src = pathImg(`brick_l_${this.color.replace("#", "")}`);
-    this.imageBrickM.src = pathImg(`brick_m_${this.color.replace("#", "")}`);
-    this.imageBrickR.src = pathImg(`brick_r_${this.color.replace("#", "")}`);
+    this.brickSprites = new Map([
+      ["l", new Image()],
+      ["m", new Image()],
+      ["r", new Image()]
+    ]);
+    this.brickSprites.forEach((v, k) => v.src = pathImg(`brick_${k}_${this.color.replace("#", "")}`));
   }
   update(dt) {
-    if (!this.isBaked && this.imageBrickL.complete && this.imageBrickM.complete && this.imageBrickR.complete) {
+    if (!this.isBaked && Array.from(this.brickSprites.values()).every((i) => i.complete)) {
       this.image.src = this.engine.baker.bake((ctx) => this.drawBrick(ctx), this.width * GMULTX + Z_DEPTH + 3, GMULTY + Z_DEPTH + 3, `BRICK.${this.width}.${this.color}`);
       this.isBaked = true;
     }
@@ -124,13 +124,13 @@ export default class Brick extends GameObject {
   }
   drawBrick(ctx) {
     ctx.save();
-    ctx.drawImage(this.imageBrickL, 0, 0);
+    ctx.drawImage(this.brickSprites.get("l"), 0, 0);
     ctx.translate(30, 0);
     for (let j = 1; j < this.width; j++) {
-      ctx.drawImage(this.imageBrickM, 0, 0);
+      ctx.drawImage(this.brickSprites.get("m"), 0, 0);
       ctx.translate(30, 0);
     }
-    ctx.drawImage(this.imageBrickR, 0, 0);
+    ctx.drawImage(this.brickSprites.get("r"), 0, 0);
     ctx.restore();
     if (this.isGrey) {
       ctx.strokeStyle = this.colorDark;

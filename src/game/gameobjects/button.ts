@@ -103,7 +103,7 @@ export default class Button extends GameObject {
         
         if (this.hover) {
             // Mouse states
-            switch(this.engine.mouse.getMouseState()) {          // Get mouse state for different cursor-buttone events
+            switch(this.engine.mouse.getMouseState()) {     // Get mouse state for different cursor-buttone events
                 case MouseState.ISRELEASED:
                     this.press = false;                     // NONE state
                     break;
