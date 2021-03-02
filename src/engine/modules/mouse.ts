@@ -68,7 +68,6 @@ export default class MouseModule {
 
     /** Sets the mouse cursor from a URL */
     public setCursorURL(url?: string) {
-        console.log(url);
         this.mouseElement.style.cursor = "url(" + url + "), auto";
     }
 

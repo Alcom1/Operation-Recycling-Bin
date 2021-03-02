@@ -1,5 +1,5 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
-import {pathImg, colorTranslate, colorMult, colorAdd, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX, STUD_RADIUS} from "../../engine/utilities/math.js";
+import {pathImg, colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
 import BrickStud from "./brickstud.js";
 export default class Brick extends GameObject {
@@ -19,8 +19,6 @@ export default class Brick extends GameObject {
     this.minCarry = new Vect(0, 0);
     this.maxCarry = new Vect(0, 0);
     this.color = colorTranslate(params.color);
-    this.colorDark = colorMult(this.color, 0.625);
-    this.colorBright = colorAdd(this.color, 48);
     this.isGrey = !params.color;
     this.width = params.width || 1;
     this.zIndex = this.gpos.x * 2 - this.gpos.y * 100 + this.width * 2;
@@ -40,6 +38,9 @@ export default class Brick extends GameObject {
       ["m", new Image()],
       ["r", new Image()]
     ]);
+    if (this.isGrey) {
+      this.brickSprites.set("h", new Image());
+    }
     this.brickSprites.forEach((v, k) => v.src = pathImg(`brick_${k}_${this.color.replace("#", "")}`));
   }
   update(dt) {
@@ -133,18 +134,8 @@ export default class Brick extends GameObject {
     ctx.drawImage(this.brickSprites.get("r"), 0, 0);
     ctx.restore();
     if (this.isGrey) {
-      ctx.strokeStyle = this.colorDark;
-      ctx.lineWidth = 2;
-      const yoff = Math.ceil(GMULTY * 1.1);
-      ctx.fillStyle = this.colorDark;
       for (let j = 1; j < this.width; j++) {
-        const xoff = GMULTX * j;
-        ctx.beginPath();
-        ctx.arc(xoff, yoff, STUD_RADIUS, 0, 2 * Math.PI);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(xoff, yoff, STUD_RADIUS * 0.64, 0, 2 * Math.PI);
-        ctx.fill();
+        ctx.drawImage(this.brickSprites.get("h"), 30 * (j - 1), 0);
       }
     }
   }

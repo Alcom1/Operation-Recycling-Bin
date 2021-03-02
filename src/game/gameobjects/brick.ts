@@ -1,6 +1,6 @@
 import GameObject, {GameObjectParams} from "engine/gameobjects/gameobject";
 import Engine from "engine/engine";
-import { pathImg, colorTranslate, colorMult, colorAdd, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX, STUD_RADIUS } from "engine/utilities/math";
+import { pathImg, colorTranslate, colorMult, colorAdd, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX, STUD_RADIUS, LINE_WIDTH } from "engine/utilities/math";
 import Vect, {Point} from "engine/utilities/vect";
 import Scene from "engine/scene/scene";
 import BrickStud from "./brickstud";
@@ -13,10 +13,7 @@ interface BrickParams extends GameObjectParams {
 export default class Brick extends GameObject {
     /** The color of this brick */
     private color: string;
-    /** The shaded color of this brick */
-    private colorDark: string;
-    /** The bright color of this brick */
-    private colorBright: string;
+
     /** If this is a grey brick */
     public isGrey: boolean;
 
@@ -66,8 +63,6 @@ export default class Brick extends GameObject {
         super(engine, params);
         
         this.color = colorTranslate(params.color);
-        this.colorDark = colorMult(this.color, 0.625);
-        this.colorBright = colorAdd(this.color, 48);
         this.isGrey = !params.color;
 
         this.width = params.width || 1;
@@ -104,6 +99,10 @@ export default class Brick extends GameObject {
             ["m", new Image()],
             ["r", new Image()]
         ]);
+
+        if(this.isGrey) {
+            this.brickSprites.set("h", new Image());
+        }
 
         this.brickSprites.forEach((v, k) => v.src = pathImg(`brick_${k}_${this.color.replace("#", "")}`));
     }
@@ -287,30 +286,10 @@ export default class Brick extends GameObject {
         // Grey holes
         if (this.isGrey) {
 
-            //Set style for grey holes
-            ctx.strokeStyle = this.colorDark;
-            ctx.lineWidth = 2;
-
-            // All holes share the same Y-offset
-            const yoff = Math.ceil(GMULTY * 1.1);
-
-            // Hole styles
-            ctx.fillStyle = this.colorDark;
-
             // Draw hole for each brick width, except for the last one
             for (let j = 1; j < this.width; j++) {
-                // X-offset increases for each hole
-                const xoff = GMULTX * j;
 
-                // Hole border
-                ctx.beginPath();
-                ctx.arc(xoff, yoff, STUD_RADIUS, 0, 2 * Math.PI);
-                ctx.stroke();
-
-                // Hole center
-                ctx.beginPath();
-                ctx.arc(xoff, yoff, STUD_RADIUS * 0.64, 0, 2 * Math.PI);
-                ctx.fill();
+                ctx.drawImage(this.brickSprites.get("h")!!, 30 * (j - 1), 0);
             }
         }
     }
