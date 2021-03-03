@@ -31,6 +31,7 @@ export default class Cursor extends GameObject {
     private cursorIcon!: CursorIcon;
 
     public init(ctx: CanvasRenderingContext2D, scenes: Scene[]) {
+        
         // Get level containing bricks.
         const level = scenes.find(s => s.name == "Level");
         if (!level) throw new Error("Can't find level");

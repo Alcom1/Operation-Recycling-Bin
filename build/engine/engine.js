@@ -1,4 +1,5 @@
 import BakerModule from "./modules/baker.js";
+import LibraryModule from "./modules/library.js";
 import MouseModule from "./modules/mouse.js";
 import TagModule from "./modules/tag.js";
 import Scene from "./scene/scene.js";
@@ -25,6 +26,7 @@ export default class Engine {
       throw new Error("Unable to acquire WebGL context");
     this.ctx = ctx;
     this.baker = new BakerModule(this.canvas);
+    this.library = new LibraryModule();
     this.mouse = new MouseModule(this.canvas);
     this.mouse.setResolution(this.canvas.width, this.canvas.height);
     this.tag = new TagModule();
@@ -47,8 +49,10 @@ export default class Engine {
     await this.pushSceneNames.map((sn) => this.loadScene(sn));
     this.pushSceneNames = [];
     this.initScenes();
-    this.updateScenes(dt);
-    this.drawScenes();
+    if (this.library.getLoaded()) {
+      this.updateScenes(dt);
+      this.drawScenes();
+    }
     this.mouse.update();
   }
   initScenes() {

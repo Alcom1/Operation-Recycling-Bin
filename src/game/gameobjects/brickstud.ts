@@ -1,7 +1,6 @@
 import Engine from "engine/engine";
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
-import Scene from "engine/scene/scene";
-import { pathImg, colorAdd, colorMult, colorTranslate, GMULTX, GMULTY, STUD_HEIGHT, STUD_RADIUS, UNDER_CURSOR_Z_INDEX, Z_DEPTH } from "engine/utilities/math";
+import { colorTranslate, GMULTX, GMULTY, UNDER_CURSOR_Z_INDEX, Z_DEPTH } from "engine/utilities/math";
 
 interface BrickStudParams extends GameObjectParams {
     color?: string;
@@ -11,7 +10,7 @@ interface BrickStudParams extends GameObjectParams {
 export default class BrickStud extends GameObject {
     color: string;
 
-    image = new Image();
+    image : HTMLImageElement;
 
     isPressed = false;
     isSelected = false;
@@ -28,7 +27,7 @@ export default class BrickStud extends GameObject {
             this.gpos.y * 100  // Y-pos has priority over X-pos.
             + 1;               // Plus one for stud overlap
 
-        this.image.src = pathImg(`stud_${this.color.replace("#", "")}`);
+        this.image = this.engine.library.getImage(`stud_${this.color.replace("#", "")}`);
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {

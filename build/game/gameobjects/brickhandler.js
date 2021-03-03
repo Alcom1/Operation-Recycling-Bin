@@ -20,7 +20,7 @@ export default class BrickHandler extends GameObject {
   get bricksGrey() {
     return this.bricks.filter((b) => b.isGrey == true);
   }
-  init(ctx, scenes) {
+  init(ctx) {
     this.bricks = this.engine.tag.get("Brick", "Level");
     this.bricks.forEach((b) => this.addBrickToRows(b));
     this.sortRows();

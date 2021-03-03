@@ -1,5 +1,6 @@
 import GameObject, {GameObjectParams} from "./gameobjects/gameobject";
 import BakerModule from "./modules/baker";
+import LibraryModule from "./modules/library";
 import MouseModule from "./modules/mouse";
 import TagModule from "./modules/tag";
 import Scene, {SceneParams} from "./scene/scene";
@@ -29,7 +30,9 @@ export default class Engine {
 
     private gameObjectTypes = new Map<string, typeof GameObject>();
 
+    //Modules
     public baker: BakerModule;
+    public library: LibraryModule;
     public mouse: MouseModule;
     public tag: TagModule;
 
@@ -55,6 +58,7 @@ export default class Engine {
 
         // Set up modules
         this.baker = new BakerModule(this.canvas);
+        this.library = new LibraryModule();
         this.mouse = new MouseModule(this.canvas);
         this.mouse.setResolution(this.canvas.width, this.canvas.height);
         this.tag = new TagModule();
@@ -95,8 +99,10 @@ export default class Engine {
 
         // Scene actions
         this.initScenes();
-        this.updateScenes(dt);
-        this.drawScenes();
+        if(this.library.getLoaded()) {  //Check if all assets are loaded before proceeding
+            this.updateScenes(dt);
+            this.drawScenes();
+        }
 
         // Module updates
         this.mouse.update();

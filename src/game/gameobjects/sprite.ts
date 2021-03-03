@@ -1,6 +1,5 @@
 import Engine from "engine/engine";
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
-import { pathImg } from "engine/utilities/math";
 
 interface SpriteParams extends GameObjectParams {
     image: string;
@@ -10,12 +9,12 @@ interface SpriteParams extends GameObjectParams {
 /** Single image gameobject */
 export default class Sprite extends GameObject {
 
-    private image = new Image();
+    private image : HTMLImageElement;
 
     constructor(engine: Engine, params: SpriteParams) {
         super(engine, params);
 
-        this.image.src = pathImg(params.image, params.extension)
+        this.image = this.engine.library.getImage(params.image, params.extension);
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {

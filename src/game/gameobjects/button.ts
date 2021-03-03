@@ -78,6 +78,7 @@ export default class Button extends GameObject {
     }
 
     public init(ctx: CanvasRenderingContext2D, scenes: Scene[]): void {
+        
         // Center button horizontally around the UI
         if (this.isCenterUI) {
             this.spos.x =

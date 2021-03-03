@@ -1,5 +1,4 @@
 import GameObject from "engine/gameobjects/gameobject";
-import Scene from "engine/scene/scene";
 import {colBorderBoxGrid, col1D, GMULTX, GMULTY, colPointRectGrid, colPointParHGrid, colPointParVGrid, OPPOSITE_DIRS} from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 import Brick from "./brick";
@@ -38,7 +37,7 @@ export default class BrickHandler extends GameObject {
         return this.bricks.filter(b => b.isGrey == true);
     }
 
-    public init(ctx: CanvasRenderingContext2D, scenes: Scene[]) {
+    public init(ctx: CanvasRenderingContext2D) {
         
         this.bricks = this.engine.tag.get("Brick", "Level") as Brick[]; // Get bricks from scene
         this.bricks.forEach(b => this.addBrickToRows(b));               // Add bricks into rows

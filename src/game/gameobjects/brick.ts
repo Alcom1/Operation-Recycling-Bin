@@ -2,7 +2,6 @@ import GameObject, {GameObjectParams} from "engine/gameobjects/gameobject";
 import Engine from "engine/engine";
 import { pathImg, colorTranslate, colorMult, colorAdd, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX, STUD_RADIUS, LINE_WIDTH } from "engine/utilities/math";
 import Vect, {Point} from "engine/utilities/vect";
-import Scene from "engine/scene/scene";
 import BrickStud from "./brickstud";
 
 interface BrickParams extends GameObjectParams {
@@ -21,7 +20,15 @@ export default class Brick extends GameObject {
     private image = new Image();
 
     /** Brick segments (Left, Middle, Right) */
-    private brickSprites: Map<string, HTMLImageElement>;
+    private brickSprites: Map<string, HTMLImageElement> = new Map<string, HTMLImageElement>();
+
+    /** Char keys for each brick sprite */
+    private brickSpriteKeys: Map<string, Boolean> = new Map<string, Boolean>([
+        ["l", false],
+        ["m", false],
+        ["r", false],
+        ["h", true]
+    ]);
 
     /** If the image for this brick has been baked */
     public isBaked = false;
@@ -94,26 +101,21 @@ export default class Brick extends GameObject {
             this.parent.pushGO(stud);
         }
 
-        this.brickSprites = new Map<string, HTMLImageElement>([
-            ["l", new Image()],
-            ["m", new Image()],
-            ["r", new Image()]
-        ]);
-
-        if(this.isGrey) {
-            this.brickSprites.set("h", new Image());
-        }
-
-        this.brickSprites.forEach((v, k) => v.src = pathImg(`brick_${k}_${this.color.replace("#", "")}`));
+        //Get image for each brick sprite key
+        this.brickSpriteKeys.forEach((needsGrey, spriteKey) => {
+            if(!needsGrey || this.isGrey) { //Check if the key is grey-brick exclusive
+                this.brickSprites.set(
+                    spriteKey, 
+                    engine.library.getImage(`brick_${spriteKey}_${this.color.replace("#", "")}`));
+            }
+        });
     }
 
     public update(dt: number): void {
+        
+        //If the brick hasn't been baked yet
+        if(!this.isBaked) {
 
-        //If images are loaded and brick hasn't been baked yet
-        if(
-            !this.isBaked &&
-            Array.from(this.brickSprites.values()).every(i => i.complete))
-        {
             //Bake image of brick
             this.image.src = this.engine.baker.bake(
                 ctx => this.drawBrick(ctx),
@@ -264,7 +266,7 @@ export default class Brick extends GameObject {
         this.maxCarry = max;
     }
 
-    /** Draw this brick */
+    /** Build the sprite for this brick */
     private drawBrick(ctx: CanvasRenderingContext2D): void {
 
         ctx.save();

@@ -1,5 +1,5 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
-import {pathImg, colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX} from "../../engine/utilities/math.js";
+import {colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
 import BrickStud from "./brickstud.js";
 export default class Brick extends GameObject {
@@ -7,6 +7,13 @@ export default class Brick extends GameObject {
     super(engine2, params);
     this.engine = engine2;
     this.image = new Image();
+    this.brickSprites = new Map();
+    this.brickSpriteKeys = new Map([
+      ["l", false],
+      ["m", false],
+      ["r", false],
+      ["h", true]
+    ]);
     this.isBaked = false;
     this.isStatic = false;
     this.isPressed = false;
@@ -33,18 +40,14 @@ export default class Brick extends GameObject {
       this.studs.push(stud);
       this.parent.pushGO(stud);
     }
-    this.brickSprites = new Map([
-      ["l", new Image()],
-      ["m", new Image()],
-      ["r", new Image()]
-    ]);
-    if (this.isGrey) {
-      this.brickSprites.set("h", new Image());
-    }
-    this.brickSprites.forEach((v, k) => v.src = pathImg(`brick_${k}_${this.color.replace("#", "")}`));
+    this.brickSpriteKeys.forEach((needsGrey, spriteKey) => {
+      if (!needsGrey || this.isGrey) {
+        this.brickSprites.set(spriteKey, engine2.library.getImage(`brick_${spriteKey}_${this.color.replace("#", "")}`));
+      }
+    });
   }
   update(dt) {
-    if (!this.isBaked && Array.from(this.brickSprites.values()).every((i) => i.complete)) {
+    if (!this.isBaked) {
       this.image.src = this.engine.baker.bake((ctx) => this.drawBrick(ctx), this.width * GMULTX + Z_DEPTH + 3, GMULTY + Z_DEPTH + 3, `BRICK.${this.width}.${this.color}`);
       this.isBaked = true;
     }

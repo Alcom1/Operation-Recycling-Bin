@@ -1,16 +1,15 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
-import {pathImg, colorTranslate, GMULTX, GMULTY, UNDER_CURSOR_Z_INDEX, Z_DEPTH} from "../../engine/utilities/math.js";
+import {colorTranslate, GMULTX, GMULTY, UNDER_CURSOR_Z_INDEX, Z_DEPTH} from "../../engine/utilities/math.js";
 export default class BrickStud extends GameObject {
   constructor(engine2, params) {
     super(engine2, params);
-    this.image = new Image();
     this.isPressed = false;
     this.isSelected = false;
     this.isSnapped = false;
     this.isVisible = true;
     this.color = colorTranslate(params.color);
     this.zIndex = this.gpos.x * 2 - this.gpos.y * 100 + 1;
-    this.image.src = pathImg(`stud_${this.color.replace("#", "")}`);
+    this.image = this.engine.library.getImage(`stud_${this.color.replace("#", "")}`);
   }
   draw(ctx) {
     if (this.isVisible) {
