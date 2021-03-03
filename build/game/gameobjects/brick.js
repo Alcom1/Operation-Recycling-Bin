@@ -42,7 +42,7 @@ export default class Brick extends GameObject {
     }
     this.brickSpriteKeys.forEach((needsGrey, spriteKey) => {
       if (!needsGrey || this.isGrey) {
-        this.brickSprites.set(spriteKey, engine2.library.getImage(`brick_${spriteKey}_${this.color.replace("#", "")}`));
+        this.brickSprites.set(spriteKey, engine2.library.getImage(`brick_${spriteKey}_${this.color.replace("#", "").toLowerCase()}`));
       }
     });
   }

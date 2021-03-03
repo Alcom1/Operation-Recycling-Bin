@@ -9,7 +9,7 @@ export default class BrickStud extends GameObject {
     this.isVisible = true;
     this.color = colorTranslate(params.color);
     this.zIndex = this.gpos.x * 2 - this.gpos.y * 100 + 1;
-    this.image = this.engine.library.getImage(`stud_${this.color.replace("#", "")}`);
+    this.image = this.engine.library.getImage(`stud_${this.color.replace("#", "").toLowerCase()}`);
   }
   draw(ctx) {
     if (this.isVisible) {

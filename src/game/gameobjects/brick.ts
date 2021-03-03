@@ -106,7 +106,7 @@ export default class Brick extends GameObject {
             if(!needsGrey || this.isGrey) { //Check if the key is grey-brick exclusive
                 this.brickSprites.set(
                     spriteKey, 
-                    engine.library.getImage(`brick_${spriteKey}_${this.color.replace("#", "")}`));
+                    engine.library.getImage(`brick_${spriteKey}_${this.color.replace("#", "").toLowerCase()}`));
             }
         });
     }

@@ -2,27 +2,22 @@ import {pathImg} from "../utilities/math.js";
 export default class LibraryModule {
   constructor() {
     this.assetsImage = new Map();
-    this.isLoaded = true;
+    this.loadingCount = 0;
   }
   getImage(name, extension) {
     const curr = this.assetsImage.get(name);
     if (curr == null) {
-      this.isLoaded = false;
+      this.loadingCount++;
       const image = new Image();
       image.src = pathImg(name, extension);
+      image.onload = (e) => this.loadingCount--;
       this.assetsImage.set(name, image);
       return image;
     }
     return curr;
   }
   getLoaded() {
-    if (!this.isLoaded) {
-      if (Array.from(this.assetsImage.values()).every((i) => i.complete)) {
-        this.isLoaded = true;
-      }
-      return this.isLoaded;
-    }
-    return true;
+    return this.loadingCount <= 0;
   }
 }
 //# sourceMappingURL=library.js.map

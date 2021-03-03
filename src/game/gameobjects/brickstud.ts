@@ -27,7 +27,7 @@ export default class BrickStud extends GameObject {
             this.gpos.y * 100  // Y-pos has priority over X-pos.
             + 1;               // Plus one for stud overlap
 
-        this.image = this.engine.library.getImage(`stud_${this.color.replace("#", "")}`);
+        this.image = this.engine.library.getImage(`stud_${this.color.replace("#", "").toLowerCase()}`);
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
