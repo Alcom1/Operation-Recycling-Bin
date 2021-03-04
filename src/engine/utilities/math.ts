@@ -7,14 +7,10 @@ export const GMULTX = 30;
 export const GMULTY = 36;
 /** Z-index to place objects beneath the cursor */
 export const UNDER_CURSOR_Z_INDEX = 100;
-/** Thickness of lines */
-export const LINE_WIDTH = 2;
-/** Radius of studs */
-export const STUD_RADIUS = 11;
-/** Height of studs */
-export const STUD_HEIGHT = 6;
 /** Distance to draw depth */
 export const Z_DEPTH = 22;
+/** Width of the sidepanel UI */
+export const WIDTH_SIDEPANEL = 234;
 /** Array of unit and negative unit for opposed functions */
 export const OPPOSITE_DIRS = [-1, 1] as (-1 | 1)[];
 

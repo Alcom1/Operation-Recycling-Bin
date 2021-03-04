@@ -1,6 +1,6 @@
 import GameObject, {GameObjectParams} from "engine/gameobjects/gameobject";
 import Engine from "engine/engine";
-import { pathImg, colorTranslate, colorMult, colorAdd, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX, STUD_RADIUS, LINE_WIDTH } from "engine/utilities/math";
+import { colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX } from "engine/utilities/math";
 import Vect, {Point} from "engine/utilities/vect";
 import BrickStud from "./brickstud";
 

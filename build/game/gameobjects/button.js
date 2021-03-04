@@ -1,6 +1,6 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
 import {MouseState} from "../../engine/modules/mouse.js";
-import {BOUNDARY, colorAdd, colorMult, colorTranslate, colPointRect, GMULTX, LINE_WIDTH, Z_DEPTH} from "../../engine/utilities/math.js";
+import {colorAdd, colorMult, colorTranslate, colPointRect, Z_DEPTH, WIDTH_SIDEPANEL} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
 export default class Button extends GameObject {
   constructor(engine2, params) {
@@ -30,7 +30,7 @@ export default class Button extends GameObject {
   }
   init(ctx, scenes) {
     if (this.isCenterUI) {
-      this.spos.x = ctx.canvas.width / 2 + BOUNDARY.maxx * GMULTX / 2 + LINE_WIDTH / 2 + this.depth / 2;
+      this.spos.x = ctx.canvas.width - WIDTH_SIDEPANEL / 2;
     }
   }
   update(dt) {

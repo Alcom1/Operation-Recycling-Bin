@@ -2,7 +2,7 @@ import Engine from "engine/engine";
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import Scene from "engine/scene/scene";
 import {MouseState} from "engine/modules/mouse";
-import { BOUNDARY, colorAdd, colorMult, colorTranslate, colPointRect, GMULTX, LINE_WIDTH, Z_DEPTH } from "engine/utilities/math";
+import { BOUNDARY, colorAdd, colorMult, colorTranslate, colPointRect, Z_DEPTH, WIDTH_SIDEPANEL } from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 
 interface ButtonParams extends GameObjectParams {
@@ -81,11 +81,7 @@ export default class Button extends GameObject {
         
         // Center button horizontally around the UI
         if (this.isCenterUI) {
-            this.spos.x =
-                ctx.canvas.width / 2 +
-                BOUNDARY.maxx * GMULTX / 2 +
-                LINE_WIDTH / 2 +
-                this.depth / 2;
+            this.spos.x = ctx.canvas.width - WIDTH_SIDEPANEL / 2;
         }
     }
 
