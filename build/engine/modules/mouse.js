@@ -13,6 +13,7 @@ export default class MouseModule {
     this.afterPressed = false;
     this.resolution = new Vect(0, 0);
     this.mouseElement = element;
+    this.mouseElement.style.touchAction = "none";
     this.mouseElement.onpointermove = (e) => this.updatePos(e);
     this.mouseElement.onpointerdown = (e) => {
       this.mousePressed = true;

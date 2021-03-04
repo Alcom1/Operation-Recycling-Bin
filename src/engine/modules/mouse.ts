@@ -21,6 +21,7 @@ export default class MouseModule {
 
     constructor(element: HTMLElement) {
         this.mouseElement = element;
+        this.mouseElement.style.touchAction = 'none';
 
         this.mouseElement.onpointermove = e => this.updatePos(e);
         this.mouseElement.onpointerdown = e => {
@@ -40,6 +41,7 @@ export default class MouseModule {
 
     /** Update the mouse position */
     private updatePos(e: PointerEvent) {
+
         // Prevent scroll events
         e.preventDefault();
         this.mousePos = new Vect(
