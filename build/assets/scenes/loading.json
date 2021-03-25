@@ -1,0 +1,12 @@
+{
+    "scene" : {
+        "name" : "Loading",
+        "zIndex" : 0
+    },
+    "gameObjects" : [
+        {
+            "name" : "FPSCounter",
+            "position" : {"x" : 1, "y" : 0}
+        }
+    ]
+}

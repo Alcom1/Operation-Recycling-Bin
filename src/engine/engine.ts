@@ -20,6 +20,8 @@ export default class Engine {
     private scenePath: string;
     /** Currently loaded scenes */
     private scenes: Scene[] = [];
+    /** Loading screen scenes */
+    private scenesLoading: Scene[] = [];
     /** Names of scenes to be added next frame */
     private pushSceneNames: string[] = [];
     /** Names of scenes to be removed next frame */
@@ -40,6 +42,7 @@ export default class Engine {
         element: HTMLCanvasElement,
         scenePathName: string,
         startScenes: string[],
+        loadingScenes: string[],
         gameObjectTypes: typeof GameObject[],
         private width: number = 1296,
         private height: number = 864
@@ -66,8 +69,9 @@ export default class Engine {
         // Register available game object types
         this.registerGameObjects(gameObjectTypes)
 
-        // Load each starting scene
-        startScenes.forEach(s => this.loadScene(s));
+        // Load each starting & loading scene
+        startScenes.forEach(s => this.loadScene(s, this.scenes));
+        loadingScenes.forEach(s => this.loadScene(s, this.scenesLoading));
         
         // Start the game loop
         this.frame();
@@ -87,22 +91,24 @@ export default class Engine {
         // Setup frame
         // Calculate time delta since last frame
         const dt = this.calculateDeltaTime();
+
         // Clear the canvas
         this.ctx.clearRect(0, 0, this.width, this.height);
 
         // Unload and load scenes
         this.unloadScenes(this.killSceneNames);
+
         // Load each scene name in the push list
-        await this.pushSceneNames.map(sn => this.loadScene(sn));
+        await this.pushSceneNames.map(sn => this.loadScene(sn, this.scenes));
+
         // Reset push list
         this.pushSceneNames = [];
 
         // Scene actions
         this.initScenes();
-        if(this.library.getLoaded()) {  //Check if all assets are loaded before proceeding
-            this.updateScenes(dt);
-            this.drawScenes();
-        }
+        this.updateDrawScenes(
+            this.library.getLoaded() ? this.scenes : this.scenesLoading,
+            dt);
 
         // Module updates
         this.mouse.update();
@@ -110,26 +116,18 @@ export default class Engine {
 
     /** Initialize all scenes */
     private initScenes(): void {
+        this.scenesLoading.forEach(s => s.init(this.ctx, this.scenes));
         this.scenes.forEach(s => s.init(this.ctx, this.scenes));
     }
 
-    /** Update all scenes */
-    private updateScenes(dt: number): void {
-        this.scenes.forEach(s => s.update(dt));
-    }
-
-    /** Draw all scenes */
-    private drawScenes(): void {
-        this.scenes.forEach(s => s.draw(this.ctx));
-    }
-
-    /** Sort scenes by z-index */
-    private sortScenes(): void {
-        this.scenes.sort((a, b) => a.zIndex - b.zIndex);
+    //Perform both an update and draw
+    private updateDrawScenes(scenes : Scene[], dt: number): void {
+        scenes.forEach(s => s.update(dt));
+        scenes.forEach(s => s.draw(this.ctx));
     }
 
     /** Load a scene */
-    private async loadScene(sceneName: string): Promise<void> {
+    private async loadScene(sceneName: string, scenes: Scene[]): Promise<void> {
         const sceneResponse = await fetch(`${this.scenePath}${sceneName}.json`);
         const sceneData: {
             scene: SceneParams;
@@ -147,8 +145,8 @@ export default class Engine {
         }
 
         scene.sortGO();
-        this.scenes.push(scene);
-        this.sortScenes();
+        scenes.push(scene);
+        scenes.sort((a, b) => a.zIndex - b.zIndex);
     }
 
     /** Unload scenes pending removal */

@@ -5,12 +5,13 @@ import TagModule from "./modules/tag.js";
 import Scene from "./scene/scene.js";
 import {clamp} from "./utilities/math.js";
 export default class Engine {
-  constructor(element, scenePathName, startScenes, gameObjectTypes, width = 1296, height = 864) {
+  constructor(element, scenePathName, startScenes, loadingScenes, gameObjectTypes, width = 1296, height = 864) {
     this.width = width;
     this.height = height;
     this.lastTime = 0;
     this.animationID = 0;
     this.scenes = [];
+    this.scenesLoading = [];
     this.pushSceneNames = [];
     this.killSceneNames = [];
     this.crashed = false;
@@ -31,7 +32,8 @@ export default class Engine {
     this.mouse.setResolution(this.canvas.width, this.canvas.height);
     this.tag = new TagModule();
     this.registerGameObjects(gameObjectTypes);
-    startScenes.forEach((s) => this.loadScene(s));
+    startScenes.forEach((s) => this.loadScene(s, this.scenes));
+    loadingScenes.forEach((s) => this.loadScene(s, this.scenesLoading));
     this.frame();
   }
   async frame() {
@@ -46,28 +48,21 @@ export default class Engine {
     const dt = this.calculateDeltaTime();
     this.ctx.clearRect(0, 0, this.width, this.height);
     this.unloadScenes(this.killSceneNames);
-    await this.pushSceneNames.map((sn) => this.loadScene(sn));
+    await this.pushSceneNames.map((sn) => this.loadScene(sn, this.scenes));
     this.pushSceneNames = [];
     this.initScenes();
-    if (this.library.getLoaded()) {
-      this.updateScenes(dt);
-      this.drawScenes();
-    }
+    this.updateDrawScenes(this.library.getLoaded() ? this.scenes : this.scenesLoading, dt);
     this.mouse.update();
   }
   initScenes() {
+    this.scenesLoading.forEach((s) => s.init(this.ctx, this.scenes));
     this.scenes.forEach((s) => s.init(this.ctx, this.scenes));
   }
-  updateScenes(dt) {
-    this.scenes.forEach((s) => s.update(dt));
+  updateDrawScenes(scenes, dt) {
+    scenes.forEach((s) => s.update(dt));
+    scenes.forEach((s) => s.draw(this.ctx));
   }
-  drawScenes() {
-    this.scenes.forEach((s) => s.draw(this.ctx));
-  }
-  sortScenes() {
-    this.scenes.sort((a, b) => a.zIndex - b.zIndex);
-  }
-  async loadScene(sceneName) {
+  async loadScene(sceneName, scenes) {
     const sceneResponse = await fetch(`${this.scenePath}${sceneName}.json`);
     const sceneData = await sceneResponse.json();
     const scene2 = new Scene(this, sceneData.scene);
@@ -80,8 +75,8 @@ export default class Engine {
       this.tag.pushGO(go, scene2.name);
     }
     scene2.sortGO();
-    this.scenes.push(scene2);
-    this.sortScenes();
+    scenes.push(scene2);
+    scenes.sort((a, b) => a.zIndex - b.zIndex);
   }
   unloadScenes(killSceneNames) {
     if (killSceneNames.length > 1) {
