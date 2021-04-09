@@ -22,16 +22,28 @@ export default class Character extends GameObject {
       this.checkCollision = true;
     }
     if (this.checkCollision) {
-      if (this.move.x < 0 && (this.gpos.x <= BOUNDARY.minx || this.brickHandler.checkSelectionCollisionHorz(this.gpos.getAdd(new Vect(-1, 0)), this.size.y))) {
-        this.move.x = 1;
-      } else if (this.move.x > 0 && (this.gpos.x > BOUNDARY.maxx || this.brickHandler.checkSelectionCollisionHorz(this.gpos.getAdd(new Vect(this.size.x, 0)), this.size.y))) {
-        this.move.x = -1;
+      if (this.move.x < 0) {
+        if (this.brickHandler.checkSelectionCollisionHorz(this.gpos, 1)) {
+          this.gpos.y -= 1;
+        } else if (this.gpos.x <= BOUNDARY.minx || this.brickHandler.checkSelectionCollisionHorz(this.gpos.getAdd(new Vect(-1, -1)), this.size.y - 1)) {
+          this.move.x = 1;
+        }
+      } else if (this.move.x > 0) {
+        if (this.brickHandler.checkSelectionCollisionHorz(this.gpos.getAdd(new Vect(this.size.x - 1, 0)), 1)) {
+          this.gpos.y -= 1;
+        } else if (this.gpos.x > BOUNDARY.maxx || this.brickHandler.checkSelectionCollisionHorz(this.gpos.getAdd(new Vect(this.size.x, -1)), this.size.y - 1)) {
+          this.move.x = -1;
+        }
       } else {
         this.checkCollision = false;
       }
     }
   }
   draw(ctx) {
+    ctx.strokeStyle = "#F00";
+    ctx.lineWidth = 4;
+    ctx.strokeRect(0, GMULTY, this.size.x * GMULTX, -this.size.y * GMULTY);
+    ctx.translate(-this.spos.x, 0);
     ctx.fillStyle = "#FF0";
     ctx.globalAlpha = 0.5;
     ctx.fillRect(0, GMULTY, this.size.x * GMULTX, -this.size.y * GMULTY);
