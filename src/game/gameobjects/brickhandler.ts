@@ -122,6 +122,27 @@ export default class BrickHandler extends GameObject {
         return adjacents[-1] != adjacents[1];
     }
 
+    /** Check collision with an object */
+    public checkSelectionCollisionHorz(pos: Vect, height: number): boolean {
+
+        for (let y = pos.y; y > pos.y - height; y--) {
+
+            for (const brick of this.rows.find(r => r.row == y)?.bricks.filter(b => !b.isSelected) || []) {
+                
+                if(col1D(
+                    brick.gpos.x - 1, 
+                    brick.gpos.x + brick.width, 
+                    pos.x, 
+                    pos.x
+                )) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     /** Disable studs that are covered */
     cullBrickStuds(): void {
         

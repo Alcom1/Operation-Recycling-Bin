@@ -1,7 +1,8 @@
 import Engine from "engine/engine";
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
-import { GMULTX, GMULTY } from "engine/utilities/math";
+import { BOUNDARY, GMULTX, GMULTY } from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
+import BrickHandler from "./brickhandler";
 
 interface CharacterParams extends GameObjectParams {
     size?: Point;
@@ -12,31 +13,70 @@ export default class Character extends GameObject {
     private size: Vect;
     private speed: number;
     private text: string = '';
+    private move: Vect;
+    private brickHandler!: BrickHandler;
+    private checkCollision: boolean;
 
     constructor(engine: Engine, params: CharacterParams) {
         super(engine, params);
         this.size = new Vect(params.size?.x ?? 0, params.size?.y ?? 0);
         this.speed = params.speed ?? 1;
+        this.move = new Vect(1, 1);
+        this.checkCollision = true;
+    }
+
+    public init(ctx: CanvasRenderingContext2D) {
+        
+        this.brickHandler = this.engine.tag.get("BrickHandler", "LevelInterface")[0] as BrickHandler;
     }
 
     public update(dt: number) {
 
         //Increment position by speed
-        this.spos.x += this.speed * GMULTX * dt;
+        this.spos.x += this.move.x * this.speed * GMULTX * dt;
 
         //Step grid position further once subposition goes past a grid-unit
-        if(this.spos.x > GMULTX) {
-            this.spos.x -= GMULTX;
-            this.gpos.x += 1;
+        if(Math.abs(this.spos.x) > GMULTX) {
+            var dir = Math.sign(this.spos.x);
+
+            this.spos.x -= GMULTX * dir;
+            this.gpos.x += dir;
+
+            this.checkCollision = true;
+        }
+
+        if(this.checkCollision) {
+            
+            if(
+                this.move.x < 0 && (
+                this.gpos.x <= BOUNDARY.minx ||
+                this.brickHandler.checkSelectionCollisionHorz(
+                    this.gpos.getAdd(new Vect(-1, 0 )),
+                    this.size.y))) {
+
+                this.move.x = 1;
+            }
+            else if(
+                this.move.x > 0 && (
+                this.gpos.x > BOUNDARY.maxx ||
+                this.brickHandler.checkSelectionCollisionHorz(
+                    this.gpos.getAdd(new Vect(this.size.x, 0 )),
+                    this.size.y))) {
+
+                this.move.x = -1;
+            }
+            else {
+                this.checkCollision = false;
+            }
         }
     }
 
     public draw(ctx: CanvasRenderingContext2D) {
-        ctx.fillStyle = "#F00"
+        ctx.fillStyle = "#FF0"
         ctx.globalAlpha = 0.5;
         ctx.fillRect(
             0, 
-            0, 
+            GMULTY, 
             this.size.x * GMULTX, 
            -this.size.y * GMULTY);
     }

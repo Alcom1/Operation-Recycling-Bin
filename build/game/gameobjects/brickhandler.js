@@ -61,6 +61,16 @@ export default class BrickHandler extends GameObject {
     }
     return adjacents[-1] != adjacents[1];
   }
+  checkSelectionCollisionHorz(pos, height) {
+    for (let y = pos.y; y > pos.y - height; y--) {
+      for (const brick2 of this.rows.find((r) => r.row == y)?.bricks.filter((b) => !b.isSelected) || []) {
+        if (col1D(brick2.gpos.x - 1, brick2.gpos.x + brick2.width, pos.x, pos.x)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
   cullBrickStuds() {
     for (const stud of this.bricks.filter((b) => !b.isSelected).flatMap((b) => b.studs)) {
       stud.isVisible = true;
