@@ -1,5 +1,5 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
-import {BOUNDARY, GMULTX, GMULTY} from "../../engine/utilities/math.js";
+import {GMULTX, GMULTY} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
 export default class Character extends GameObject {
   constructor(engine2, params) {
@@ -22,31 +22,38 @@ export default class Character extends GameObject {
       this.checkCollision = true;
     }
     if (this.checkCollision) {
-      if (this.move.x < 0) {
-        if (this.brickHandler.checkSelectionCollisionHorz(this.gpos, 1)) {
-          this.gpos.y -= 1;
-        } else if (this.gpos.x <= BOUNDARY.minx || this.brickHandler.checkSelectionCollisionHorz(this.gpos.getAdd(new Vect(-1, -1)), this.size.y - 1)) {
-          this.move.x = 1;
-        }
-      } else if (this.move.x > 0) {
-        if (this.brickHandler.checkSelectionCollisionHorz(this.gpos.getAdd(new Vect(this.size.x - 1, 0)), 1)) {
-          this.gpos.y -= 1;
-        } else if (this.gpos.x > BOUNDARY.maxx || this.brickHandler.checkSelectionCollisionHorz(this.gpos.getAdd(new Vect(this.size.x, -1)), this.size.y - 1)) {
-          this.move.x = -1;
-        }
+      var block = this.brickHandler.checkSelectionCollisionVert(this.gpos.getAdd(new Vect(this.move.x < 0 ? -1 : 0, 1 - this.size.y)), this.size.y + 2);
+      if (block > 0 && block < this.size.y - 1) {
+        console.log(block);
+        this.move.x *= -1;
       } else {
-        this.checkCollision = false;
+        switch (block) {
+          case -1:
+            this.move.x *= -1;
+            break;
+          case 0:
+            break;
+          case this.size.y - 1:
+            this.gpos.y -= 1;
+            break;
+          case this.size.y:
+            break;
+          case this.size.y + 1:
+            this.gpos.y += 1;
+            break;
+        }
       }
+      this.checkCollision = false;
     }
   }
   draw(ctx) {
+    ctx.globalAlpha = 0.5;
     ctx.strokeStyle = "#F00";
     ctx.lineWidth = 4;
-    ctx.strokeRect(0, GMULTY, this.size.x * GMULTX, -this.size.y * GMULTY);
+    ctx.strokeRect(-GMULTX, GMULTY, this.size.x * GMULTX, -this.size.y * GMULTY);
     ctx.translate(-this.spos.x, 0);
-    ctx.fillStyle = "#FF0";
-    ctx.globalAlpha = 0.5;
-    ctx.fillRect(0, GMULTY, this.size.x * GMULTX, -this.size.y * GMULTY);
+    ctx.fillStyle = this.move.x > 0 ? "#FF0" : "#00F";
+    ctx.fillRect(-GMULTX, GMULTY, this.size.x * GMULTX, -this.size.y * GMULTY);
   }
 }
 //# sourceMappingURL=character.js.map

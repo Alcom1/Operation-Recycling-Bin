@@ -46,65 +46,63 @@ export default class Character extends GameObject {
         }
 
         if (this.checkCollision) {
-            
-            if (this.move.x < 0) {
 
-                if (
-                    this.brickHandler.checkSelectionCollisionHorz(
-                        this.gpos,
-                        1)) {
+            var block = this.brickHandler.checkSelectionCollisionVert(
+                this.gpos.getAdd(new Vect(this.move.x < 0 ? -1 : 0, 1 - this.size.y)),
+                this.size.y + 2)
 
-                    this.gpos.y -= 1;
-                }
-                else if (
-                    this.gpos.x <= BOUNDARY.minx ||
-                    this.brickHandler.checkSelectionCollisionHorz(
-                        this.gpos.getAdd(new Vect(-1, -1 )),
-                        this.size.y - 1)) {
-
-                    this.move.x = 1;
-                }
-            }
-            else if(this.move.x > 0) {
-
-                if (
-                    this.brickHandler.checkSelectionCollisionHorz(
-                        this.gpos.getAdd(new Vect(this.size.x - 1, 0 )),
-                        1)) {
-
-                    this.gpos.y -= 1;
-                }
-                else if (this.gpos.x > BOUNDARY.maxx ||
-                    this.brickHandler.checkSelectionCollisionHorz(
-                        this.gpos.getAdd(new Vect(this.size.x, -1 )),
-                        this.size.y - 1)) {
-
-                    this.move.x = -1;
-                }
-                 
+            if(block > 0 && block < this.size.y - 1) {
+                console.log(block)
+                this.move.x *= -1;
             }
             else {
-                this.checkCollision = false;
+                switch (block) {
+
+                    //No bricks - go back
+                    case -1:
+                        this.move.x *= -1;
+                        break;
+
+                    //Head brick - check for down stair
+                    case 0:
+                        break;
+
+                    //Up-step brick - step upwards
+                    case this.size.y - 1:
+                        this.gpos.y -= 1;
+                        break;
+
+                    //Floor brick - continue forward
+                    case this.size.y:
+                        break;
+                    
+                    //Down-step - step downwards
+                    case this.size.y + 1:
+                        this.gpos.y += 1;
+                        break;
+                }
             }
+            
+            this.checkCollision = false;
         }
     }
 
     public draw(ctx: CanvasRenderingContext2D) {
 
+        ctx.globalAlpha = 0.5;
         ctx.strokeStyle = "#F00"
         ctx.lineWidth = 4;
         ctx.strokeRect(
-            0, 
+           -GMULTX, 
             GMULTY, 
             this.size.x * GMULTX, 
            -this.size.y * GMULTY);
 
         ctx.translate(-this.spos.x, 0);
         
-        ctx.fillStyle = "#FF0"
-        ctx.globalAlpha = 0.5;
+        ctx.fillStyle = this.move.x > 0 ? "#FF0" : "#00F"
         ctx.fillRect(
-            0, 
+           -GMULTX, 
             GMULTY, 
             this.size.x * GMULTX, 
            -this.size.y * GMULTY);

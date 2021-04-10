@@ -122,12 +122,12 @@ export default class BrickHandler extends GameObject {
         return adjacents[-1] != adjacents[1];
     }
 
-    /** Check collision with an object */
-    public checkSelectionCollisionHorz(pos: Vect, height: number): boolean {
+    /** Check collision with an object, vertically */
+    public checkSelectionCollisionVert(pos: Vect, height: number): number {
 
-        for (let y = pos.y; y > pos.y - height; y--) {
+        for (let y = 0; y < height; y++) {
 
-            for (const brick of this.rows.find(r => r.row == y)?.bricks.filter(b => !b.isSelected) || []) {
+            for (const brick of this.rows.find(r => r.row == pos.y + y)?.bricks.filter(b => !b.isSelected) || []) {
                 
                 if(col1D(
                     brick.gpos.x - 1, 
@@ -135,8 +135,26 @@ export default class BrickHandler extends GameObject {
                     pos.x, 
                     pos.x
                 )) {
-                    return true;
+                    return y;
                 }
+            }
+        }
+
+        return -1;
+    }
+
+    /** Check collision with an object, horizontally */
+    public checkSelectionCollisionHorz(pos: Vect, width: number): boolean {
+
+        for (const brick of this.rows.find(r => r.row == pos.y)?.bricks.filter(b => !b.isSelected) || []) {
+                
+            if(col1D(
+                brick.gpos.x - 1, 
+                brick.gpos.x + brick.width, 
+                pos.x, 
+                pos.x + width
+            )) {
+                return true;
             }
         }
 
