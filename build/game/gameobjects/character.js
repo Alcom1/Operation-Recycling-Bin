@@ -1,5 +1,5 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
-import {GMULTX, GMULTY} from "../../engine/utilities/math.js";
+import {BOUNDARY, GMULTX, GMULTY} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
 export default class Character extends GameObject {
   constructor(engine2, params) {
@@ -23,15 +23,17 @@ export default class Character extends GameObject {
     }
     if (this.checkCollision) {
       var block = this.brickHandler.checkSelectionCollisionVert(this.gpos.getAdd(new Vect(this.move.x < 0 ? -1 : 0, 1 - this.size.y)), this.size.y + 2);
-      if (block > 0 && block < this.size.y - 1) {
-        console.log(block);
+      console.log(block);
+      if (this.gpos.x - 1 < BOUNDARY.minx || this.gpos.x + 1 > BOUNDARY.maxx || block > 0 && block < this.size.y - 1) {
         this.move.x *= -1;
+        this.gpos.x += this.move.x;
       } else {
         switch (block) {
           case -1:
             this.move.x *= -1;
             break;
           case 0:
+            this.move.x *= -1;
             break;
           case this.size.y - 1:
             this.gpos.y -= 1;

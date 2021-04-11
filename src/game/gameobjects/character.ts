@@ -51,10 +51,16 @@ export default class Character extends GameObject {
                 this.gpos.getAdd(new Vect(this.move.x < 0 ? -1 : 0, 1 - this.size.y)),
                 this.size.y + 2)
 
-            if(block > 0 && block < this.size.y - 1) {
-                console.log(block)
+            console.log(block)
+
+            //Walls
+            if (this.gpos.x - 1 < BOUNDARY.minx ||          //Left-level border
+                this.gpos.x + 1 > BOUNDARY.maxx || (        //Right level border
+                block > 0 && block < this.size.y - 1)) {    //Normal wall
                 this.move.x *= -1;
+                this.gpos.x += this.move.x;
             }
+            //Other states
             else {
                 switch (block) {
 
@@ -65,6 +71,7 @@ export default class Character extends GameObject {
 
                     //Head brick - check for down stair
                     case 0:
+                        this.move.x *= -1;
                         break;
 
                     //Up-step brick - step upwards
@@ -82,7 +89,8 @@ export default class Character extends GameObject {
                         break;
                 }
             }
-            
+        
+            //Do not check collisions until the next step
             this.checkCollision = false;
         }
     }
