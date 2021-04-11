@@ -22,7 +22,7 @@ export default class Character extends GameObject {
       this.checkCollision = true;
     }
     if (this.checkCollision) {
-      var block = this.brickHandler.checkSelectionCollisionVert(this.gpos.getAdd(new Vect(this.move.x < 0 ? -1 : 0, 1 - this.size.y)), this.size.y + 2);
+      var block = this.brickHandler.checkSelectionCollisionForward(this.gpos.getAdd(new Vect(this.move.x < 0 ? -1 : 0, 1 - this.size.y)), this.size.y + 2, this.move.x);
       console.log(block);
       if (this.gpos.x - 1 < BOUNDARY.minx || this.gpos.x + 1 > BOUNDARY.maxx || block > 0 && block < this.size.y - 1) {
         this.move.x *= -1;

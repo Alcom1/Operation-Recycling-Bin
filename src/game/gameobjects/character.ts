@@ -47,16 +47,18 @@ export default class Character extends GameObject {
 
         if (this.checkCollision) {
 
-            var block = this.brickHandler.checkSelectionCollisionVert(
+            var block = this.brickHandler.checkSelectionCollisionForward(
                 this.gpos.getAdd(new Vect(this.move.x < 0 ? -1 : 0, 1 - this.size.y)),
-                this.size.y + 2)
+                this.size.y + 2,
+                this.move.x)
 
-            console.log(block)
+            console.log(block);
 
             //Walls
             if (this.gpos.x - 1 < BOUNDARY.minx ||          //Left-level border
                 this.gpos.x + 1 > BOUNDARY.maxx || (        //Right level border
                 block > 0 && block < this.size.y - 1)) {    //Normal wall
+
                 this.move.x *= -1;
                 this.gpos.x += this.move.x;
             }
