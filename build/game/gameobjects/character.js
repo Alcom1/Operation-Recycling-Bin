@@ -22,31 +22,45 @@ export default class Character extends GameObject {
       this.checkCollision = true;
     }
     if (this.checkCollision) {
-      var block = this.brickHandler.checkSelectionCollisionForward(this.gpos.getAdd(new Vect(this.move.x < 0 ? -1 : 0, 1 - this.size.y)), this.size.y + 2, this.move.x);
-      console.log(block);
+      let block = this.getCollsion();
       if (this.gpos.x - 1 < BOUNDARY.minx || this.gpos.x + 1 > BOUNDARY.maxx || block > 0 && block < this.size.y - 1) {
+        console.log("MOVE - WALL");
         this.move.x *= -1;
         this.gpos.x += this.move.x;
       } else {
         switch (block) {
           case -1:
+            console.log("MOVE - CLIFF");
             this.move.x *= -1;
             break;
           case 0:
+            console.log("MOVE - HEADBLOCK");
             this.move.x *= -1;
             break;
           case this.size.y - 1:
+            console.log("MOVE - UP");
             this.gpos.y -= 1;
             break;
           case this.size.y:
+            console.log("MOVE");
             break;
           case this.size.y + 1:
+            console.log("MOVE - DOWN");
             this.gpos.y += 1;
             break;
         }
       }
       this.checkCollision = false;
     }
+  }
+  getCollsion() {
+    for (let xOffset = 0; Math.abs(xOffset) <= 1; xOffset += this.move.x) {
+      var block = this.brickHandler.checkCollision(this.gpos.getAdd(new Vect((this.move.x < 0 ? -1 : 0) + xOffset, 1 - this.size.y)), this.size.y + 2);
+      if (block >= 0) {
+        return block * (Math.abs(xOffset) + 1);
+      }
+    }
+    return -1;
   }
   draw(ctx) {
     ctx.globalAlpha = 0.5;

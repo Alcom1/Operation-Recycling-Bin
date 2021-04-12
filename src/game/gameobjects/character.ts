@@ -47,46 +47,49 @@ export default class Character extends GameObject {
 
         if (this.checkCollision) {
 
-            var block = this.brickHandler.checkSelectionCollisionForward(
-                this.gpos.getAdd(new Vect(this.move.x < 0 ? -1 : 0, 1 - this.size.y)),
-                this.size.y + 2,
-                this.move.x)
-
-            console.log(block);
+            //Block value - number that indicates the existence and position of a blocking elements
+            let block = this.getCollsion();
 
             //Walls
             if (this.gpos.x - 1 < BOUNDARY.minx ||          //Left-level border
                 this.gpos.x + 1 > BOUNDARY.maxx || (        //Right level border
                 block > 0 && block < this.size.y - 1)) {    //Normal wall
 
+                console.log("MOVE - WALL");
                 this.move.x *= -1;
                 this.gpos.x += this.move.x;
             }
             //Other states
             else {
+                
                 switch (block) {
 
                     //No bricks - go back
                     case -1:
+                        console.log("MOVE - CLIFF");
                         this.move.x *= -1;
                         break;
 
                     //Head brick - check for down stair
                     case 0:
+                        console.log("MOVE - HEADBLOCK");
                         this.move.x *= -1;
                         break;
 
                     //Up-step brick - step upwards
                     case this.size.y - 1:
+                        console.log("MOVE - UP");
                         this.gpos.y -= 1;
                         break;
 
                     //Floor brick - continue forward
                     case this.size.y:
+                        console.log("MOVE");
                         break;
                     
                     //Down-step - step downwards
                     case this.size.y + 1:
+                        console.log("MOVE - DOWN");
                         this.gpos.y += 1;
                         break;
                 }
@@ -95,6 +98,29 @@ export default class Character extends GameObject {
             //Do not check collisions until the next step
             this.checkCollision = false;
         }
+    }
+
+    /** Check collision and return the block-value */
+    private getCollsion(): number {
+
+        //For the current and next column
+        for(let xOffset = 0; Math.abs(xOffset) <= 1; xOffset += this.move.x) {
+
+            //Check if there
+            var block = this.brickHandler.checkCollision(
+                this.gpos.getAdd(
+                    new Vect(
+                        (this.move.x < 0 ? -1 : 0) + xOffset, 
+                        1 - this.size.y)),
+                this.size.y + 2)
+
+            //If there is a blocking element return a block-value
+            if(block >= 0) {
+                return block * (Math.abs(xOffset) + 1)
+            }
+        }
+
+        return -1;
     }
 
     public draw(ctx: CanvasRenderingContext2D) {

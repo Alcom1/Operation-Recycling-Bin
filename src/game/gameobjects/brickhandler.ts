@@ -122,26 +122,22 @@ export default class BrickHandler extends GameObject {
         return adjacents[-1] != adjacents[1];
     }
 
-    /** Check collision with an object, vertically */
-    public checkSelectionCollisionForward(pos: Vect, height: number, dir: number): number {
+    /** Check collision with an object */
+    public checkCollision(pos: Vect, height: number): number {
 
-        //Check here and then over there in the given direction
-        for(let x = 0; Math.abs(x) <= 1; x += dir) {
-            
-            //Check rows going downwards
-            for (let y = 0; y < height; y++) {
+        //Check rows going downwards
+        for (let y = 0; y < height; y++) {
 
-                //Check row for collision, return single collapsed value if there is a collision
-                for (const brick of this.rows.find(r => r.row == pos.y + y)?.bricks.filter(b => !b.isSelected) || []) {
-                    
-                    if(col1D(
-                        brick.gpos.x - 1, 
-                        brick.gpos.x + brick.width, 
-                        pos.x + x,
-                        pos.x + x
-                    )) {
-                        return y * (Math.abs(x) + 1);
-                    }
+            //Check row for collision, return single collapsed value if there is a collision
+            for (const brick of this.rows.find(r => r.row == pos.y + y)?.bricks.filter(b => !b.isSelected) || []) {
+                
+                if(col1D(
+                    brick.gpos.x - 1, 
+                    brick.gpos.x + brick.width, 
+                    pos.x,
+                    pos.x
+                )) {
+                    return y;
                 }
             }
         }
