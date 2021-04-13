@@ -21,7 +21,7 @@
         },
 
         {
-            "name" : "Character",
+            "name" : "CharacterBot",
             "position" : {"x" : 8, "y" : 15},
             "size" : {"x" : 2, "y" : 4},
             "speed" : 2

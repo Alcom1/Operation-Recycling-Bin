@@ -5,6 +5,7 @@ import BrickStud from "./gameobjects/brickstud";
 import Button from "./gameobjects/button";
 import ButtonScene from "./gameobjects/buttonscene";
 import Character from "./gameobjects/character";
+import CharacterBot from "./gameobjects/characterbot";
 import Cursor from "./gameobjects/cursor";
 import CursorIcon from "./gameobjects/cursoricon";
 import FPSCounter from "./gameobjects/fpscounter";
@@ -28,6 +29,7 @@ window.onload = function() {
             Button,
             ButtonScene,
             Character,
+            CharacterBot,
             Cursor,
             CursorIcon,
             FPSCounter,

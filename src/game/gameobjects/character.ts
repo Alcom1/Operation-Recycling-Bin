@@ -10,12 +10,12 @@ interface CharacterParams extends GameObjectParams {
 }
 
 export default class Character extends GameObject {
-    private size: Vect;
+    protected size: Vect;
     private speed: number;
     private text: string = '';
-    private move: Vect;
-    private brickHandler!: BrickHandler;
-    private checkCollision: boolean;
+    protected move: Vect;
+    protected brickHandler!: BrickHandler;
+    protected checkCollision: boolean;
 
     constructor(engine: Engine, params: CharacterParams) {
         super(engine, params);
@@ -45,76 +45,16 @@ export default class Character extends GameObject {
             this.checkCollision = true;
         }
 
-        if (this.checkCollision) {
+        //Check collision
+        if(this.checkCollision) {
+            this.handleCollision();
 
-            //Collision bitmask
-            let cbm = this.brickHandler.checkCollisionSuper(
-                this.gpos.getSub(new Vect(this.move.x > 0 ? 1 : 0, this.size.y + 1)),   //Position
-                this.size.y + 1,                                                        //Start
-                2 * (this.size.y + 3),                                                  //Final
-                this.size.y + 3,                                                        //Height
-                this.move.x);                                                           //Direction
-
-            // var qq = ""
-
-            // for(let i = 0; i < 8; i++) {
-            //     if(c & 1 << i) {
-            //         qq += i + " ";
-            //     }
-            // }
-
-            // console.log(qq);
-            
-            //WALL BOUNDARY
-            if(
-                this.gpos.x - 1 < BOUNDARY.minx || 
-                this.gpos.x + 1 > BOUNDARY.maxx) {
-
-                this.move.x *= -1;
-                this.gpos.x += this.move.x;
-            }
-            else {
-
-                //WALL - REVERSE
-                if(cbm & 0b000110000) {
-                    this.move.x *= -1;
-                    this.gpos.x += this.move.x;
-                }
-                //HEAD-WALL - REVERSE
-                else if(cbm & 0b000001000 && cbm & 0b010000001) {
-                    this.move.x *= -1;
-                    this.gpos.x += this.move.x;
-                }
-                //UP-STEP - GO UP
-                else if(cbm & 0b001000000) {
-
-                    //BLOCKED BY HEADBRICK
-                    if(cbm & 0b000000100) {
-                        this.move.x *= -1;
-                        this.gpos.x += this.move.x;
-                    }
-                    else {
-                        this.gpos.y -= 1;
-                    }
-                }
-                //FLOOR - DO NOTHING
-                else if(cbm & 0b010000001) {
-
-                }
-                //DOWN-STEP - GO DOWN
-                else if(cbm & 0b100000010) {
-                    this.gpos.y += 1;
-                }
-                //VOID - REVERSE
-                else {
-                    this.move.x *= -1;
-                    this.gpos.x += this.move.x;
-                }
-            }
-        
-            //Do not check collisions until the next step
             this.checkCollision = false;
         }
+    }
+
+    protected handleCollision() {
+
     }
 
     public draw(ctx: CanvasRenderingContext2D) {
@@ -127,16 +67,5 @@ export default class Character extends GameObject {
             GMULTY, 
             this.size.x * GMULTX, 
            -this.size.y * GMULTY);
-
-        ctx.translate(-this.spos.x, 0);
-        
-        ctx.fillStyle = "#FF0"
-        ctx.beginPath();
-        ctx.moveTo(-GMULTX * this.size.x / 2, GMULTY);
-        ctx.lineTo(-GMULTX * this.size.x / 2, GMULTY - this.size.y * GMULTY + (this.move.x < 0 ? 1 : 0) * GMULTY);
-        ctx.lineTo(                        0, GMULTY - this.size.y * GMULTY);
-        ctx.lineTo( GMULTX * this.size.x / 2, GMULTY - this.size.y * GMULTY + (this.move.x > 0 ? 1 : 0) * GMULTY);
-        ctx.lineTo( GMULTX * this.size.x / 2, GMULTY);
-        ctx.fill();
     }
 }
