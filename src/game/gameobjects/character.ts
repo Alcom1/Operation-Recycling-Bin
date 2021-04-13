@@ -10,16 +10,13 @@ interface CharacterParams extends GameObjectParams {
 }
 
 export default class Character extends GameObject {
-    protected size: Vect;
     private speed: number;
-    private text: string = '';
     protected move: Vect;
     protected brickHandler!: BrickHandler;
     protected checkCollision: boolean;
 
     constructor(engine: Engine, params: CharacterParams) {
         super(engine, params);
-        this.size = new Vect(params.size?.x ?? 0, params.size?.y ?? 0);
         this.speed = params.speed ?? 1;
         this.move = new Vect(1, 1);
         this.checkCollision = true;
@@ -65,7 +62,7 @@ export default class Character extends GameObject {
         ctx.strokeRect(
            -GMULTX, 
             GMULTY, 
-            this.size.x * GMULTX, 
-           -this.size.y * GMULTY);
+            GMULTX * 2, 
+            GMULTY * 2);
     }
 }
