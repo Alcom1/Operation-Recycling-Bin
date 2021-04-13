@@ -1,5 +1,5 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
-import {BOUNDARY, GMULTX, GMULTY} from "../../engine/utilities/math.js";
+import {GMULTX, GMULTY} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
 export default class Character extends GameObject {
   constructor(engine2, params) {
@@ -22,45 +22,31 @@ export default class Character extends GameObject {
       this.checkCollision = true;
     }
     if (this.checkCollision) {
-      let block = this.getCollsion();
-      if (this.gpos.x - 1 < BOUNDARY.minx || this.gpos.x + 1 > BOUNDARY.maxx || block > 0 && block < this.size.y - 1) {
-        console.log("MOVE - WALL");
+      let c = this.brickHandler.checkCollisionSuper(this.gpos.getSub(new Vect(this.move.x > 0 ? 1 : 0, this.size.y)), this.size.y, 2 * (this.size.y + 2), this.size.y + 2, this.move.x);
+      var qq = "";
+      for (let i = 0; i < 8; i++) {
+        if (c & 1 << i) {
+          qq += i + " ";
+        }
+      }
+      console.log(qq);
+      if (c & 24) {
         this.move.x *= -1;
         this.gpos.x += this.move.x;
+      } else if (c & 67 && c & 4) {
+        this.move.x *= -1;
+        this.gpos.x += this.move.x;
+      } else if (c & 32) {
+        this.gpos.y -= 1;
+      } else if (c & 65) {
+      } else if (c & 130) {
+        this.gpos.y += 1;
       } else {
-        switch (block) {
-          case -1:
-            console.log("MOVE - CLIFF");
-            this.move.x *= -1;
-            break;
-          case 0:
-            console.log("MOVE - HEADBLOCK");
-            this.move.x *= -1;
-            break;
-          case this.size.y - 1:
-            console.log("MOVE - UP");
-            this.gpos.y -= 1;
-            break;
-          case this.size.y:
-            console.log("MOVE");
-            break;
-          case this.size.y + 1:
-            console.log("MOVE - DOWN");
-            this.gpos.y += 1;
-            break;
-        }
+        this.move.x *= -1;
+        this.gpos.x += this.move.x;
       }
       this.checkCollision = false;
     }
-  }
-  getCollsion() {
-    for (let xOffset = 0; Math.abs(xOffset) <= 1; xOffset += this.move.x) {
-      var block = this.brickHandler.checkCollision(this.gpos.getAdd(new Vect((this.move.x < 0 ? -1 : 0) + xOffset, 1 - this.size.y)), this.size.y + 2);
-      if (block >= 0) {
-        return block * (Math.abs(xOffset) + 1);
-      }
-    }
-    return -1;
   }
   draw(ctx) {
     ctx.globalAlpha = 0.5;

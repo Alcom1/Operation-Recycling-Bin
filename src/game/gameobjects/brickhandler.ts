@@ -122,27 +122,29 @@ export default class BrickHandler extends GameObject {
         return adjacents[-1] != adjacents[1];
     }
 
-    /** Check collision with an object */
-    public checkCollision(pos: Vect, height: number): number {
+    public checkCollisionSuper(pos: Vect, start: number, final: number, height: number, dir: number) {
 
-        //Check rows going downwards
-        for (let y = 0; y < height; y++) {
+        let collisions = 0;
 
-            //Check row for collision, return single collapsed value if there is a collision
-            for (const brick of this.rows.find(r => r.row == pos.y + y)?.bricks.filter(b => !b.isSelected) || []) {
-                
+        for(let i = start; i < final; i++) {
+
+            let y = i % height;
+            let x = Math.floor(i / height);
+
+            for (const brick of this.rows.find(r => r.row == pos.y + y + 1)?.bricks.filter(b => !b.isSelected) || []) {
+
                 if(col1D(
                     brick.gpos.x - 1, 
                     brick.gpos.x + brick.width, 
-                    pos.x,
-                    pos.x
+                    pos.x + x * dir,
+                    pos.x + x * dir
                 )) {
-                    return y;
+                    collisions = collisions | 1 << (i - start);
                 }
             }
         }
 
-        return -1;
+        return collisions;
     }
 
     /** Disable studs that are covered */

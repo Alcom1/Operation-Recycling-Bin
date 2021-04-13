@@ -47,80 +47,55 @@ export default class Character extends GameObject {
 
         if (this.checkCollision) {
 
-            //Block value - number that indicates the existence and position of a blocking elements
-            let block = this.getCollsion();
+            //Mask of colliding elements
+            let c = this.brickHandler.checkCollisionSuper(
+                this.gpos.getSub(new Vect(this.move.x > 0 ? 1 : 0, this.size.y)),
+                this.size.y,
+                2 * (this.size.y + 2),
+                this.size.y + 2,
+                this.move.x);
 
-            //Walls
-            if (this.gpos.x - 1 < BOUNDARY.minx ||          //Left-level border
-                this.gpos.x + 1 > BOUNDARY.maxx || (        //Right level border
-                block > 0 && block < this.size.y - 1)) {    //Normal wall
+            var qq = ""
 
-                console.log("MOVE - WALL");
+            for(let i = 0; i < 8; i++) {
+                if(c & 1 << i) {
+                    qq += i + " ";
+                }
+            }
+
+            console.log(qq);
+
+            //WALL - REVERSE
+            if(c & 0b00011000) {
                 this.move.x *= -1;
                 this.gpos.x += this.move.x;
             }
-            //Other states
+            //HEAD-WALL - REVERSE
+            else if(c & 0b01000011 && c & 0b00000100) {
+                this.move.x *= -1;
+                this.gpos.x += this.move.x;
+            }
+            //UP-STEP - GO UP
+            else if(c & 0b00100000) {
+                this.gpos.y -= 1;
+            }
+            //FLOOR - DO NOTHING
+            else if(c & 0b01000001) {
+
+            }
+            //DOWN-STEP - GO DOWN
+            else if(c & 0b10000010) {
+                this.gpos.y += 1;
+            }
+            //VOID - REVERSE
             else {
-                
-                switch (block) {
-
-                    //No bricks - go back
-                    case -1:
-                        console.log("MOVE - CLIFF");
-                        this.move.x *= -1;
-                        break;
-
-                    //Head brick - check for down stair
-                    case 0:
-                        console.log("MOVE - HEADBLOCK");
-                        this.move.x *= -1;
-                        break;
-
-                    //Up-step brick - step upwards
-                    case this.size.y - 1:
-                        console.log("MOVE - UP");
-                        this.gpos.y -= 1;
-                        break;
-
-                    //Floor brick - continue forward
-                    case this.size.y:
-                        console.log("MOVE");
-                        break;
-                    
-                    //Down-step - step downwards
-                    case this.size.y + 1:
-                        console.log("MOVE - DOWN");
-                        this.gpos.y += 1;
-                        break;
-                }
+                this.move.x *= -1;
+                this.gpos.x += this.move.x;
             }
         
             //Do not check collisions until the next step
             this.checkCollision = false;
         }
-    }
-
-    /** Check collision and return the block-value */
-    private getCollsion(): number {
-
-        //For the current and next column
-        for(let xOffset = 0; Math.abs(xOffset) <= 1; xOffset += this.move.x) {
-
-            //Check if there
-            var block = this.brickHandler.checkCollision(
-                this.gpos.getAdd(
-                    new Vect(
-                        (this.move.x < 0 ? -1 : 0) + xOffset, 
-                        1 - this.size.y)),
-                this.size.y + 2)
-
-            //If there is a blocking element return a block-value
-            if(block >= 0) {
-                return block * (Math.abs(xOffset) + 1)
-            }
-        }
-
-        return -1;
     }
 
     public draw(ctx: CanvasRenderingContext2D) {
