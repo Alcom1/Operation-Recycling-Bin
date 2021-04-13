@@ -47,50 +47,69 @@ export default class Character extends GameObject {
 
         if (this.checkCollision) {
 
-            //Mask of colliding elements
-            let c = this.brickHandler.checkCollisionSuper(
-                this.gpos.getSub(new Vect(this.move.x > 0 ? 1 : 0, this.size.y)),
-                this.size.y,
-                2 * (this.size.y + 2),
-                this.size.y + 2,
-                this.move.x);
+            //Collision bitmask
+            let cbm = this.brickHandler.checkCollisionSuper(
+                this.gpos.getSub(new Vect(this.move.x > 0 ? 1 : 0, this.size.y + 1)),   //Position
+                this.size.y + 1,                                                        //Start
+                2 * (this.size.y + 3),                                                  //Final
+                this.size.y + 3,                                                        //Height
+                this.move.x);                                                           //Direction
 
-            var qq = ""
+            // var qq = ""
 
-            for(let i = 0; i < 8; i++) {
-                if(c & 1 << i) {
-                    qq += i + " ";
-                }
-            }
+            // for(let i = 0; i < 8; i++) {
+            //     if(c & 1 << i) {
+            //         qq += i + " ";
+            //     }
+            // }
 
-            console.log(qq);
+            // console.log(qq);
+            
+            //WALL BOUNDARY
+            if(
+                this.gpos.x - 1 < BOUNDARY.minx || 
+                this.gpos.x + 1 > BOUNDARY.maxx) {
 
-            //WALL - REVERSE
-            if(c & 0b00011000) {
                 this.move.x *= -1;
                 this.gpos.x += this.move.x;
             }
-            //HEAD-WALL - REVERSE
-            else if(c & 0b01000011 && c & 0b00000100) {
-                this.move.x *= -1;
-                this.gpos.x += this.move.x;
-            }
-            //UP-STEP - GO UP
-            else if(c & 0b00100000) {
-                this.gpos.y -= 1;
-            }
-            //FLOOR - DO NOTHING
-            else if(c & 0b01000001) {
-
-            }
-            //DOWN-STEP - GO DOWN
-            else if(c & 0b10000010) {
-                this.gpos.y += 1;
-            }
-            //VOID - REVERSE
             else {
-                this.move.x *= -1;
-                this.gpos.x += this.move.x;
+
+                //WALL - REVERSE
+                if(cbm & 0b000110000) {
+                    this.move.x *= -1;
+                    this.gpos.x += this.move.x;
+                }
+                //HEAD-WALL - REVERSE
+                else if(cbm & 0b000001000 && cbm & 0b010000001) {
+                    this.move.x *= -1;
+                    this.gpos.x += this.move.x;
+                }
+                //UP-STEP - GO UP
+                else if(cbm & 0b001000000) {
+
+                    //BLOCKED BY HEADBRICK
+                    if(cbm & 0b000000100) {
+                        this.move.x *= -1;
+                        this.gpos.x += this.move.x;
+                    }
+                    else {
+                        this.gpos.y -= 1;
+                    }
+                }
+                //FLOOR - DO NOTHING
+                else if(cbm & 0b010000001) {
+
+                }
+                //DOWN-STEP - GO DOWN
+                else if(cbm & 0b100000010) {
+                    this.gpos.y += 1;
+                }
+                //VOID - REVERSE
+                else {
+                    this.move.x *= -1;
+                    this.gpos.x += this.move.x;
+                }
             }
         
             //Do not check collisions until the next step
@@ -111,11 +130,13 @@ export default class Character extends GameObject {
 
         ctx.translate(-this.spos.x, 0);
         
-        ctx.fillStyle = this.move.x > 0 ? "#FF0" : "#00F"
-        ctx.fillRect(
-           -GMULTX, 
-            GMULTY, 
-            this.size.x * GMULTX, 
-           -this.size.y * GMULTY);
+        ctx.fillStyle = "#FF0"
+        ctx.beginPath();
+        ctx.moveTo(-GMULTX * this.size.x / 2, GMULTY);
+        ctx.lineTo(-GMULTX * this.size.x / 2, GMULTY - this.size.y * GMULTY + (this.move.x < 0 ? 1 : 0) * GMULTY);
+        ctx.lineTo(                        0, GMULTY - this.size.y * GMULTY);
+        ctx.lineTo( GMULTX * this.size.x / 2, GMULTY - this.size.y * GMULTY + (this.move.x > 0 ? 1 : 0) * GMULTY);
+        ctx.lineTo( GMULTX * this.size.x / 2, GMULTY);
+        ctx.fill();
     }
 }

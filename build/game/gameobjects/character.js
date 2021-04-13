@@ -1,5 +1,5 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
-import {GMULTX, GMULTY} from "../../engine/utilities/math.js";
+import {BOUNDARY, GMULTX, GMULTY} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
 export default class Character extends GameObject {
   constructor(engine2, params) {
@@ -22,28 +22,31 @@ export default class Character extends GameObject {
       this.checkCollision = true;
     }
     if (this.checkCollision) {
-      let c = this.brickHandler.checkCollisionSuper(this.gpos.getSub(new Vect(this.move.x > 0 ? 1 : 0, this.size.y)), this.size.y, 2 * (this.size.y + 2), this.size.y + 2, this.move.x);
-      var qq = "";
-      for (let i = 0; i < 8; i++) {
-        if (c & 1 << i) {
-          qq += i + " ";
-        }
-      }
-      console.log(qq);
-      if (c & 24) {
+      let cbm = this.brickHandler.checkCollisionSuper(this.gpos.getSub(new Vect(this.move.x > 0 ? 1 : 0, this.size.y + 1)), this.size.y + 1, 2 * (this.size.y + 3), this.size.y + 3, this.move.x);
+      if (this.gpos.x - 1 < BOUNDARY.minx || this.gpos.x + 1 > BOUNDARY.maxx) {
         this.move.x *= -1;
         this.gpos.x += this.move.x;
-      } else if (c & 67 && c & 4) {
-        this.move.x *= -1;
-        this.gpos.x += this.move.x;
-      } else if (c & 32) {
-        this.gpos.y -= 1;
-      } else if (c & 65) {
-      } else if (c & 130) {
-        this.gpos.y += 1;
       } else {
-        this.move.x *= -1;
-        this.gpos.x += this.move.x;
+        if (cbm & 48) {
+          this.move.x *= -1;
+          this.gpos.x += this.move.x;
+        } else if (cbm & 8 && cbm & 129) {
+          this.move.x *= -1;
+          this.gpos.x += this.move.x;
+        } else if (cbm & 64) {
+          if (cbm & 4) {
+            this.move.x *= -1;
+            this.gpos.x += this.move.x;
+          } else {
+            this.gpos.y -= 1;
+          }
+        } else if (cbm & 129) {
+        } else if (cbm & 258) {
+          this.gpos.y += 1;
+        } else {
+          this.move.x *= -1;
+          this.gpos.x += this.move.x;
+        }
       }
       this.checkCollision = false;
     }
@@ -54,8 +57,14 @@ export default class Character extends GameObject {
     ctx.lineWidth = 4;
     ctx.strokeRect(-GMULTX, GMULTY, this.size.x * GMULTX, -this.size.y * GMULTY);
     ctx.translate(-this.spos.x, 0);
-    ctx.fillStyle = this.move.x > 0 ? "#FF0" : "#00F";
-    ctx.fillRect(-GMULTX, GMULTY, this.size.x * GMULTX, -this.size.y * GMULTY);
+    ctx.fillStyle = "#FF0";
+    ctx.beginPath();
+    ctx.moveTo(-GMULTX * this.size.x / 2, GMULTY);
+    ctx.lineTo(-GMULTX * this.size.x / 2, GMULTY - this.size.y * GMULTY + (this.move.x < 0 ? 1 : 0) * GMULTY);
+    ctx.lineTo(0, GMULTY - this.size.y * GMULTY);
+    ctx.lineTo(GMULTX * this.size.x / 2, GMULTY - this.size.y * GMULTY + (this.move.x > 0 ? 1 : 0) * GMULTY);
+    ctx.lineTo(GMULTX * this.size.x / 2, GMULTY);
+    ctx.fill();
   }
 }
 //# sourceMappingURL=character.js.map
