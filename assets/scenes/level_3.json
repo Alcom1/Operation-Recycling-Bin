@@ -1,13 +1,14 @@
 {
     "scene" : {
         "name" : "Level",
+        "need" : ["LevelInterface"],
         "zIndex" : 0
     },
     "gameObjects" : [
         {
             "name" : "LevelSequence",
             "position" : {"x" : 43, "y" : 0},
-            "levelName" : "House 3/5",
+            "levelName" : "Working from Home 3/5",
             "levels" : {
                 "NextLevel" : "level_4",
                 "PreviousLevel" : "level_2"
@@ -17,6 +18,13 @@
             "name" : "Sprite",
             "image" : "background_level",
             "zIndex" : -50000
+        },
+
+        {
+            "name" : "Character",
+            "position" : {"x" : 8, "y" : 15},
+            "size" : {"x" : 2, "y" : 4},
+            "speed" : 2
         },
 
         {    
