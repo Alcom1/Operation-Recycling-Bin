@@ -1,13 +1,22 @@
-import Scene from "engine/scene/scene";
-import Character from "./character";
+import Engine from "engine/engine";
+import Character, { CharacterParams } from "./character";
 import { BOUNDARY, GMULTX, GMULTY } from "engine/utilities/math";
-import Vect, { Point } from "engine/utilities/vect";
+import Vect from "engine/utilities/vect";
+import { GameObjectParams } from "engine/gameobjects/gameobject";
+
+const characterBotOverride = Object.freeze({
+    speed : 2.5
+});
 
 export default class CharacterBot extends Character {
     private sceneName: string | null = null;
 
     public init(ctx: CanvasRenderingContext2D): void {
         super.init(ctx);
+    }
+
+    constructor(engine: Engine, params: GameObjectParams) {
+        super(engine, Object.assign(params, characterBotOverride) as CharacterParams);
     }
 
     protected handleCollision() {

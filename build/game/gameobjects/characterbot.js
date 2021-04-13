@@ -1,9 +1,12 @@
 import Character from "./character.js";
 import {BOUNDARY, GMULTX, GMULTY} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
+const characterBotOverride = Object.freeze({
+  speed: 2.5
+});
 export default class CharacterBot extends Character {
-  constructor() {
-    super(...arguments);
+  constructor(engine2, params) {
+    super(engine2, Object.assign(params, characterBotOverride));
     this.sceneName = null;
   }
   init(ctx) {

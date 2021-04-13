@@ -4,8 +4,7 @@ import { BOUNDARY, GMULTX, GMULTY } from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 import BrickHandler from "./brickhandler";
 
-interface CharacterParams extends GameObjectParams {
-    size?: Point;
+export interface CharacterParams extends GameObjectParams {
     speed?: number;
 }
 
