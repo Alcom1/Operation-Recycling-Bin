@@ -20,6 +20,11 @@ export function clamp(val, min, max) {
 export function round(val, target) {
   return Math.round(val / target) * target;
 }
+export function bitStack(numbers) {
+  var ret = 0;
+  numbers.forEach((n) => ret += 1 << n);
+  return ret;
+}
 export function colBorderBoxGrid(x, y, w) {
   return x < BOUNDARY.minx || y < BOUNDARY.miny || x + w - 1 >= BOUNDARY.maxx || y >= BOUNDARY.maxy;
 }

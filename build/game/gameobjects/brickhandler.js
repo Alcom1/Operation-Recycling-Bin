@@ -68,7 +68,7 @@ export default class BrickHandler extends GameObject {
       let x = Math.floor(i / height);
       for (const brick2 of this.rows.find((r) => r.row == pos.y + y + 1)?.bricks.filter((b) => !b.isSelected) || []) {
         if (col1D(brick2.gpos.x - 1, brick2.gpos.x + brick2.width, pos.x + x * dir, pos.x + x * dir)) {
-          collisions = collisions | 1 << i - start;
+          collisions += 1 << i - start;
         }
       }
     }

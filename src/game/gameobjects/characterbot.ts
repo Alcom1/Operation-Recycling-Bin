@@ -1,11 +1,20 @@
 import Engine from "engine/engine";
 import Character, { CharacterParams } from "./character";
-import { BOUNDARY, GMULTX, GMULTY } from "engine/utilities/math";
+import { BOUNDARY, GMULTX, GMULTY, bitStack } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 import { GameObjectParams } from "engine/gameobjects/gameobject";
 
 const characterBotOverride = Object.freeze({
     speed : 2.5
+});
+
+const cbc = Object.freeze({
+    flor : bitStack([0, 7]),
+    down : bitStack([1, 8]),
+    ceil : bitStack([2]),
+    head : bitStack([3]),
+    wall : bitStack([4, 5]),
+    step : bitStack([6])
 });
 
 export default class CharacterBot extends Character {
@@ -32,7 +41,7 @@ export default class CharacterBot extends Character {
         // var qq = ""
 
         // for(let i = 0; i < 8; i++) {
-        //     if(c & 1 << i) {
+        //     if(cbm & 1 << i) {
         //         qq += i + " ";
         //     }
         // }
@@ -50,20 +59,20 @@ export default class CharacterBot extends Character {
         else {
 
             //WALL - REVERSE
-            if(cbm & 0b000110000) {
+            if(cbm & cbc.wall) {
                 this.move.x *= -1;
                 this.gpos.x += this.move.x;
             }
             //HEAD-WALL - REVERSE
-            else if(cbm & 0b000001000 && cbm & 0b010000001) {
+            else if(cbm & cbc.head && cbm & cbc.flor) {
                 this.move.x *= -1;
                 this.gpos.x += this.move.x;
             }
             //UP-STEP - GO UP
-            else if(cbm & 0b001000000) {
+            else if(cbm & cbc.step) {
 
-                //BLOCKED BY HEADBRICK
-                if(cbm & 0b000000100) {
+                //BLOCKED BY CEILING
+                if(cbm & cbc.ceil) {
                     this.move.x *= -1;
                     this.gpos.x += this.move.x;
                 }
@@ -72,11 +81,11 @@ export default class CharacterBot extends Character {
                 }
             }
             //FLOOR - DO NOTHING
-            else if(cbm & 0b010000001) {
+            else if(cbm & cbc.flor) {
 
             }
             //DOWN-STEP - GO DOWN
-            else if(cbm & 0b100000010) {
+            else if(cbm & cbc.down) {
                 this.gpos.y += 1;
             }
             //VOID - REVERSE

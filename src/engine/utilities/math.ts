@@ -43,6 +43,14 @@ export function round(val: number, target: number): number {
     return Math.round(val / target) * target;
 }
 
+/** Stack an array of integers into a bitmask */
+export function bitStack(numbers: number[]): number {
+
+    var ret = 0;
+    numbers.forEach(n => ret += 1 << n);
+    return ret;
+}
+
 /** Collision between a bar and a bounding box but with grid coordinates */
 export function colBorderBoxGrid(x: number, y: number, w: number): boolean {
     return (

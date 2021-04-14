@@ -139,7 +139,7 @@ export default class BrickHandler extends GameObject {
                     pos.x + x * dir,
                     pos.x + x * dir
                 )) {
-                    collisions = collisions | 1 << (i - start);
+                    collisions += 1 << (i - start);
                 }
             }
         }

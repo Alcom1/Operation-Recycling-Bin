@@ -1,8 +1,16 @@
 import Character from "./character.js";
-import {BOUNDARY, GMULTX, GMULTY} from "../../engine/utilities/math.js";
+import {BOUNDARY, GMULTX, GMULTY, bitStack} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
 const characterBotOverride = Object.freeze({
   speed: 2.5
+});
+const cbc = Object.freeze({
+  flor: bitStack([0, 7]),
+  down: bitStack([1, 8]),
+  ceil: bitStack([2]),
+  head: bitStack([3]),
+  wall: bitStack([4, 5]),
+  step: bitStack([6])
 });
 export default class CharacterBot extends Character {
   constructor(engine2, params) {
@@ -18,21 +26,21 @@ export default class CharacterBot extends Character {
       this.move.x *= -1;
       this.gpos.x += this.move.x;
     } else {
-      if (cbm & 48) {
+      if (cbm & cbc.wall) {
         this.move.x *= -1;
         this.gpos.x += this.move.x;
-      } else if (cbm & 8 && cbm & 129) {
+      } else if (cbm & cbc.head && cbm & cbc.flor) {
         this.move.x *= -1;
         this.gpos.x += this.move.x;
-      } else if (cbm & 64) {
-        if (cbm & 4) {
+      } else if (cbm & cbc.step) {
+        if (cbm & cbc.ceil) {
           this.move.x *= -1;
           this.gpos.x += this.move.x;
         } else {
           this.gpos.y -= 1;
         }
-      } else if (cbm & 129) {
-      } else if (cbm & 258) {
+      } else if (cbm & cbc.flor) {
+      } else if (cbm & cbc.down) {
         this.gpos.y += 1;
       } else {
         this.move.x *= -1;
