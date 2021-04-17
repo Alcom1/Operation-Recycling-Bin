@@ -23,19 +23,15 @@ export default class CharacterBot extends Character {
   handleCollision() {
     let cbm = this.brickHandler.checkCollisionSuper(this.gpos.getSub(new Vect(this.move.x > 0 ? 1 : 0, 5)), 5, 14, 7, this.move.x);
     if (this.gpos.x - 1 < BOUNDARY.minx || this.gpos.x + 1 > BOUNDARY.maxx) {
-      this.move.x *= -1;
-      this.gpos.x += this.move.x;
+      this.reverse();
     } else {
       if (cbm & cbc.wall) {
-        this.move.x *= -1;
-        this.gpos.x += this.move.x;
+        this.reverse();
       } else if (cbm & cbc.head && cbm & cbc.flor) {
-        this.move.x *= -1;
-        this.gpos.x += this.move.x;
+        this.reverse();
       } else if (cbm & cbc.step) {
-        if (cbm & cbc.ceil) {
-          this.move.x *= -1;
-          this.gpos.x += this.move.x;
+        if (cbm & cbc.ceil || this.gpos.y <= BOUNDARY.miny + 3) {
+          this.reverse();
         } else {
           this.gpos.y -= 1;
         }
@@ -43,8 +39,7 @@ export default class CharacterBot extends Character {
       } else if (cbm & cbc.down) {
         this.gpos.y += 1;
       } else {
-        this.move.x *= -1;
-        this.gpos.x += this.move.x;
+        this.reverse();
       }
     }
   }

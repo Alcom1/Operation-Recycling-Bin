@@ -28,6 +28,7 @@ export default class Cursor extends GameObject {
     private isUpdateForced = false;
 
     public brickHandler!: BrickHandler;
+
     private cursorIcon!: CursorIcon;
 
     public init(ctx: CanvasRenderingContext2D, scenes: Scene[]) {
@@ -49,14 +50,15 @@ export default class Cursor extends GameObject {
     public update(dt: number): void {
         var tempSpos = this.engine.mouse.getPos();
 
-        // Handle cursor state when the mouse moves
-        if (this.isUpdateForced || tempSpos.getDiff(this.spos)) {
+        // Handle cursor state
+        if (this.isUpdateForced || tempSpos.getDiff(this.spos) || this.brickHandler.isPressured) {
+
             // Reset update forcing
             this.isUpdateForced = false;
             
             switch (this.state) {
-                case CursorState.NONE:
 
+                case CursorState.NONE:
                 case CursorState.HOVER:
                     this.hoverBricks(tempSpos);
                     break;
@@ -90,11 +92,16 @@ export default class Cursor extends GameObject {
             case MouseState.WASPRESSED:
                 // MOBILE - If a press event occurs in a NONE state/without a press (Only occurs on Mobile)
                 if (this.state == CursorState.NONE) {
+
                     this.hoverBricks(this.spos);
+
                 } else if(this.state == CursorState.HOVER) {
+
                     // If pressing the brick returns true (Indeterminate state)
                     if (this.brickHandler.pressBricks(this.spos)) {
+
                         this.carry();
+
                     } else {
                         // No selection occurred - Indeterminate state.
                         // Set pressed position to the current cursor position
@@ -109,11 +116,14 @@ export default class Cursor extends GameObject {
                 //Reset state upon release
                 // If the current state is not carrying or if the bricks are snapped to a valid location
                 if (this.state != CursorState.CARRY || this.snapState) {
+                    
                     this.brickHandler.deselectBricks();
+
                     // If we are deselecting bricks
                     if (this.snapState) {
                         this.brickHandler.cullBrickStuds();
                     }
+
                     //Sort for new brick z-indices
                     this.level.sortGO();
 
@@ -126,7 +136,9 @@ export default class Cursor extends GameObject {
 
     /** Hover over bricks, change state based on hover state */
     private hoverBricks(pos: Vect): void {
+
         const hoverState = this.brickHandler.hoverBricks(pos);
+
         switch(hoverState) {
             case BrickHandlerState.NONE:
                 this.resetState();
@@ -141,16 +153,21 @@ export default class Cursor extends GameObject {
         }
     }
 
+    /** Select bricks in a given direction */
     private selectBricks(dir: -1 | 1): void {
+
         // Initialize the selection. If doing so caused bricks to be carried, enter carry state
         if(this.brickHandler.initSelection(this.ppos, dir)) {
+
             this.carry();
         }  
     }
 
     /** Set cursor to no state */
     private resetState(): void {
+
         if(this.state != CursorState.NONE) {
+
             this.cursorIcon.setCursor(CursorIconState.NONE);
             // Ensure no brick is selected in the NONE state
             this.brickHandler.selectedBrick = null;
@@ -160,8 +177,11 @@ export default class Cursor extends GameObject {
 
     /** Set cursor to its over state */
     private hover(hoverState: BrickHandlerState): void {
+
         if (this.state != CursorState.HOVER || this.hoverState != hoverState) {
+
             switch(hoverState) {
+
                 case BrickHandlerState.INDY:
                     this.cursorIcon.setCursor(CursorIconState.HOVER);
                     break;
@@ -182,7 +202,9 @@ export default class Cursor extends GameObject {
 
     /** Set the cursor to its drag state */
     private drag(): void {
+
         if(this.state != CursorState.DRAG) {
+
             this.cursorIcon.setCursor(CursorIconState.DRAG);
             this.brickHandler.cullBrickStuds();
             this.state = CursorState.DRAG;
@@ -191,7 +213,9 @@ export default class Cursor extends GameObject {
 
     /** Set the cursor to its carry state */
     carry(): void {
+
         if (this.state != CursorState.CARRY) {
+
             this.cursorIcon.setCursor(CursorIconState.CARRY);
         
             this.brickHandler.cullBrickStuds();         // Reset culled studs

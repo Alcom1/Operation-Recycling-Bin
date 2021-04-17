@@ -4,6 +4,7 @@ import Vect from "../../engine/utilities/vect.js";
 export default class Character extends GameObject {
   constructor(engine2, params) {
     super(engine2, params);
+    this.underBricks = [];
     this.speed = params.speed ?? 1;
     this.move = new Vect(1, 1);
     this.checkCollision = true;
@@ -21,10 +22,21 @@ export default class Character extends GameObject {
     }
     if (this.checkCollision) {
       this.handleCollision();
+      this.handleBricks();
       this.checkCollision = false;
     }
   }
+  handleBricks() {
+    this.underBricks.forEach((b) => b.pressure -= 1);
+    this.underBricks = this.brickHandler.checkCollisionRow(this.gpos.getAdd(new Vect(-1, 1)), 2);
+    this.underBricks.forEach((b) => b.pressure += 1);
+    this.brickHandler.isPressured = true;
+  }
   handleCollision() {
+  }
+  reverse() {
+    this.move.x *= -1;
+    this.gpos.x += this.move.x;
   }
   draw(ctx) {
     ctx.globalAlpha = 0.5;

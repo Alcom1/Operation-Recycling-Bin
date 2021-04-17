@@ -31,11 +31,12 @@ export default class BrickHandler extends GameObject {
     public selectedBrick: Brick | null = null;
     /** All selected bricks */
     private selections: (Brick[] | null)[] = [];
-
     /** Grey bricks */
     private get bricksGrey(): Brick[] {
         return this.bricks.filter(b => b.isGrey == true);
     }
+    /** If a brick has been stepped on or off */
+    public isPressured = true;
 
     public init(ctx: CanvasRenderingContext2D) {
         
@@ -122,7 +123,8 @@ export default class BrickHandler extends GameObject {
         return adjacents[-1] != adjacents[1];
     }
 
-    public checkCollisionSuper(pos: Vect, start: number, final: number, height: number, dir: number) {
+    /** Check collisons for a vertically-looping range and return a bitmask */
+    public checkCollisionSuper(pos: Vect, start: number, final: number, height: number, dir: number): number {
 
         let collisions = 0;
 
@@ -145,6 +147,26 @@ export default class BrickHandler extends GameObject {
         }
 
         return collisions;
+    }
+
+    /** Check collisions for a row and return the colliding bricks */
+    public checkCollisionRow(pos: Vect, width: number): Brick[] {
+
+        let bricks : Brick[] = [];
+
+        for (const brick of this.rows.find(r => r.row == pos.y)?.bricks.filter(b => !b.isSelected) || []) {
+
+            if(col1D(
+                brick.gpos.x, 
+                brick.gpos.x + brick.width, 
+                pos.x,
+                pos.x + width
+            )) {
+                bricks.push(brick);
+            }
+        }
+
+        return bricks;
     }
 
     /** Disable studs that are covered */
@@ -302,12 +324,13 @@ export default class BrickHandler extends GameObject {
 
     /** Press a single brick */
     private hoverBrick(brick: Brick, pos: Vect): BrickHandlerState {
-        
+
         // Do nothing if the two bricks are the same
-        if (this.selectedBrick != null && this.selectedBrick.compare(brick)) {
+        if (this.selectedBrick != null && this.selectedBrick.compare(brick) && !this.isPressured) {
             return BrickHandlerState.SAME;
         }
 
+        this.isPressured = false;   // Reset pressured state
         this.selectedBrick = brick; // Set current selected brick for later use
         this.selections = [];       // Reset selections
 
@@ -382,7 +405,7 @@ export default class BrickHandler extends GameObject {
             // Select floating bricks and clear recursion states
             //Stop trying to move the selected check! You know why it's there! 
             for (const brick of this.bricks) {
-                if (!brick.isGrounded && !brick.isSelected) { 
+                if (!brick.isGrounded && !brick.isSelected) {
                     brick.select(pos);
                 }
                 brick.clearRecursion();
@@ -396,7 +419,7 @@ export default class BrickHandler extends GameObject {
     private recurseBrick(brick1: Brick, dirs: (-1 | 1)[], checkGrey: boolean) {
 
         // Return nothing for grey bricks
-        if (checkGrey && brick1.isGrey) {
+        if (checkGrey && (brick1.isGrey || brick1.pressure > 0)) {
             return null;
         }
 

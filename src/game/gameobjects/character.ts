@@ -3,6 +3,8 @@ import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import { BOUNDARY, GMULTX, GMULTY } from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 import BrickHandler from "./brickhandler";
+import Brick from "./brick";
+import Cursor from "./cursor";
 
 export interface CharacterParams extends GameObjectParams {
     speed?: number;
@@ -12,6 +14,8 @@ export default class Character extends GameObject {
     private speed: number;
     protected move: Vect;
     protected brickHandler!: BrickHandler;
+    private underBricks: Brick[] = [];
+    private cursor!: Cursor;
     protected checkCollision: boolean;
 
     constructor(engine: Engine, params: CharacterParams) {
@@ -43,14 +47,33 @@ export default class Character extends GameObject {
 
         //Check collision
         if(this.checkCollision) {
+
             this.handleCollision();
+            this.handleBricks();
 
             this.checkCollision = false;
         }
     }
 
+    private handleBricks() {
+
+        this.underBricks.forEach(b => b.pressure -= 1);
+
+        this.underBricks = this.brickHandler.checkCollisionRow(
+            this.gpos.getAdd(new Vect(-1, 1)), 
+            2);
+
+        this.underBricks.forEach(b => b.pressure += 1);
+        this.brickHandler.isPressured = true;
+    }
+
     protected handleCollision() {
 
+    }
+
+    protected reverse() {
+        this.move.x *= -1;
+        this.gpos.x += this.move.x;
     }
 
     public draw(ctx: CanvasRenderingContext2D) {

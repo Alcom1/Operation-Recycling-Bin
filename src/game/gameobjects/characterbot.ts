@@ -18,6 +18,7 @@ const cbc = Object.freeze({
 });
 
 export default class CharacterBot extends Character {
+
     private sceneName: string | null = null;
 
     public init(ctx: CanvasRenderingContext2D): void {
@@ -53,28 +54,24 @@ export default class CharacterBot extends Character {
             this.gpos.x - 1 < BOUNDARY.minx || 
             this.gpos.x + 1 > BOUNDARY.maxx) {
 
-            this.move.x *= -1;
-            this.gpos.x += this.move.x;
+            this.reverse();
         }
         else {
 
             //WALL - REVERSE
             if(cbm & cbc.wall) {
-                this.move.x *= -1;
-                this.gpos.x += this.move.x;
+                this.reverse();
             }
             //HEAD-WALL - REVERSE
             else if(cbm & cbc.head && cbm & cbc.flor) {
-                this.move.x *= -1;
-                this.gpos.x += this.move.x;
+                this.reverse();
             }
             //UP-STEP - GO UP
             else if(cbm & cbc.step) {
 
                 //BLOCKED BY CEILING
-                if(cbm & cbc.ceil) {
-                    this.move.x *= -1;
-                    this.gpos.x += this.move.x;
+                if(cbm & cbc.ceil || this.gpos.y <= BOUNDARY.miny + 3) {
+                    this.reverse();
                 }
                 else {
                     this.gpos.y -= 1;
@@ -90,8 +87,7 @@ export default class CharacterBot extends Character {
             }
             //VOID - REVERSE
             else {
-                this.move.x *= -1;
-                this.gpos.x += this.move.x;
+                this.reverse();
             }
         }
     }

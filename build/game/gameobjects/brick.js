@@ -22,6 +22,7 @@ export default class Brick extends GameObject {
     this.selectedPos = new Vect(0, 0);
     this.isGrounded = false;
     this.isChecked = false;
+    this.pressure = 0;
     this.studs = [];
     this.minCarry = new Vect(0, 0);
     this.maxCarry = new Vect(0, 0);
@@ -58,6 +59,16 @@ export default class Brick extends GameObject {
   draw(ctx) {
     ctx.globalAlpha = this.isSnapped ? 0.75 : this.isSelected ? 0.5 : this.isPressed ? 0.75 : 1;
     ctx.drawImage(this.image, 0, -Z_DEPTH - 3);
+    if (this.pressure > 0) {
+      ctx.strokeStyle = "#F00";
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(GMULTX * this.width, GMULTY);
+      ctx.moveTo(GMULTX * this.width, 0);
+      ctx.lineTo(0, GMULTY);
+      ctx.stroke();
+    }
   }
   setToCursor() {
     this.spos = this.engine.mouse.getPos().getSub(this.selectedPos).getClamp({

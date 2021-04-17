@@ -57,6 +57,9 @@ export default class Brick extends GameObject {
     /** Temporary recursion state */
     public isChecked = false;
 
+    /** Number of objects on top of this brick */
+    public pressure = 0;
+
     /** The stud objects for this brick */
     public studs: BrickStud[] = [];
 
@@ -145,6 +148,17 @@ export default class Brick extends GameObject {
         
         // Draw with vertical offset for top face
         ctx.drawImage(this.image, 0, -Z_DEPTH - 3);
+
+        if(this.pressure > 0) {
+            ctx.strokeStyle = "#F00";
+            ctx.lineWidth = 5;
+            ctx.beginPath();
+            ctx.moveTo(0                  , 0);
+            ctx.lineTo(GMULTX * this.width, GMULTY);
+            ctx.moveTo(GMULTX * this.width, 0);
+            ctx.lineTo(0                  , GMULTY);
+            ctx.stroke();
+        }
     }
 
     /** Set the brick to match the cursor position, based on its stored selected position */

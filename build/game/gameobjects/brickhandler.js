@@ -16,6 +16,7 @@ export default class BrickHandler extends GameObject {
     this.bricks = [];
     this.selectedBrick = null;
     this.selections = [];
+    this.isPressured = true;
   }
   get bricksGrey() {
     return this.bricks.filter((b) => b.isGrey == true);
@@ -73,6 +74,15 @@ export default class BrickHandler extends GameObject {
       }
     }
     return collisions;
+  }
+  checkCollisionRow(pos, width) {
+    let bricks = [];
+    for (const brick2 of this.rows.find((r) => r.row == pos.y)?.bricks.filter((b) => !b.isSelected) || []) {
+      if (col1D(brick2.gpos.x, brick2.gpos.x + brick2.width, pos.x, pos.x + width)) {
+        bricks.push(brick2);
+      }
+    }
+    return bricks;
   }
   cullBrickStuds() {
     for (const stud of this.bricks.filter((b) => !b.isSelected).flatMap((b) => b.studs)) {
@@ -138,9 +148,10 @@ export default class BrickHandler extends GameObject {
     return null;
   }
   hoverBrick(brick2, pos) {
-    if (this.selectedBrick != null && this.selectedBrick.compare(brick2)) {
+    if (this.selectedBrick != null && this.selectedBrick.compare(brick2) && !this.isPressured) {
       return 4;
     }
+    this.isPressured = false;
     this.selectedBrick = brick2;
     this.selections = [];
     for (const dir of OPPOSITE_DIRS) {
@@ -180,7 +191,7 @@ export default class BrickHandler extends GameObject {
     return !!selection;
   }
   recurseBrick(brick1, dirs, checkGrey) {
-    if (checkGrey && brick1.isGrey) {
+    if (checkGrey && (brick1.isGrey || brick1.pressure > 0)) {
       return null;
     }
     brick1.isChecked = true;
