@@ -37,7 +37,7 @@ export default class BrickHandler extends GameObject {
     }
     this.cullBrickStuds();
   }
-  checkSelectionCollision() {
+  checkCollisionSelection() {
     const adjacents = [];
     for (const brick1 of this.bricks.filter((b) => b.isSelected)) {
       brick1.setToCursor();
@@ -155,10 +155,31 @@ export default class BrickHandler extends GameObject {
     this.selectedBrick = brick2;
     this.selections = [];
     for (const dir of OPPOSITE_DIRS) {
-      this.selections[dir] = this.recurseBrick(brick2, [dir], true);
+      let selectionNew = this.recurseBrick(brick2, [dir], true) ?? [];
+      if (selectionNew.length > 0) {
+        let floats = this.getFloatingBricks();
+        if (floats.every((b) => b.pressure == 0)) {
+          this.selections[dir] = selectionNew.concat(floats);
+        }
+      }
     }
     this.bricks.forEach((b) => b.clearRecursion());
     return this.selections[-1] && this.selections[1] ? 1 : this.selections[-1] ? 3 : this.selections[1] ? 2 : 0;
+  }
+  getFloatingBricks() {
+    var ret = [];
+    for (const brick2 of this.bricksGrey) {
+      if (!brick2.isChecked) {
+        this.recurseBrick(brick2, OPPOSITE_DIRS, false)?.forEach((c) => c.isGrounded = true);
+      }
+    }
+    for (const brick2 of this.bricks) {
+      if (!brick2.isGrounded && !brick2.isSelected) {
+        ret.push(brick2);
+      }
+      brick2.clearRecursion();
+    }
+    return ret;
   }
   pressBricks(pos) {
     const validSelections = OPPOSITE_DIRS.map((d) => this.selections[d]).filter((s) => s);
@@ -175,19 +196,6 @@ export default class BrickHandler extends GameObject {
   }
   processSelection(selection, pos) {
     selection?.forEach((b) => b.select(pos));
-    if (selection != null) {
-      for (const brick2 of this.bricksGrey) {
-        if (!brick2.isChecked) {
-          this.recurseBrick(brick2, OPPOSITE_DIRS, false)?.forEach((c) => c.isGrounded = true);
-        }
-      }
-      for (const brick2 of this.bricks) {
-        if (!brick2.isGrounded && !brick2.isSelected) {
-          brick2.select(pos);
-        }
-        brick2.clearRecursion();
-      }
-    }
     return !!selection;
   }
   recurseBrick(brick1, dirs, checkGrey) {

@@ -51,7 +51,7 @@ export default class Cursor extends GameObject {
           }
           break;
         case 2:
-          this.snapState = this.brickHandler.checkSelectionCollision();
+          this.snapState = this.brickHandler.checkCollisionSelection();
           this.brickHandler.setSnappedBricks(this.snapState);
           this.level.sortGO();
           break;

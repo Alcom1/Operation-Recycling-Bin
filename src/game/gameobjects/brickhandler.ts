@@ -68,11 +68,11 @@ export default class BrickHandler extends GameObject {
             this.bricks.forEach(b => b.clearRecursion());
         }
 
-        this.cullBrickStuds();                                          // Initial stud culling
+        this.cullBrickStuds();  // Initial stud culling
     }
 
-    /** Check a batch of grid-spaces for collision, return a bitmask of those spaces **/
-    public checkSelectionCollision(): boolean {
+    /** Check a batch of grid-spaces for collision and return a bitmask of those spaces **/
+    public checkCollisionSelection(): boolean {
 
         const adjacents = [];       // Adjacency states, contains if we're attaching in the indexed direction.
 
@@ -337,8 +337,19 @@ export default class BrickHandler extends GameObject {
         // Check both directions if they're valid (valid == not null)
         for (const dir of OPPOSITE_DIRS) {
 
-            // Recurse in that direction. Assign result to valid directions.
-            this.selections[dir] = this.recurseBrick(brick, [dir], true);
+            let selectionNew = this.recurseBrick(brick, [dir], true) ?? [];
+
+            //If there are bricks to select
+            if(selectionNew!.length > 0) {
+
+                let floats = this.getFloatingBricks();
+
+                //If every floating brick
+                if(floats.every(b => b.pressure == 0)) {
+
+                    this.selections[dir] = selectionNew.concat(floats);
+                }
+            }
         }
 
         // Clear recursion states after both recursive direction checks
@@ -349,6 +360,31 @@ export default class BrickHandler extends GameObject {
             this.selections[-1] ? BrickHandlerState.UP :    // If upward selection is valid, return up state
             this.selections[1]  ? BrickHandlerState.DOWN :  // If downward selection is valid, return down state
             BrickHandlerState.NONE;                         // No direction is valid. Return no state
+    }
+
+    /** Return floating bricks after a selection */
+    private getFloatingBricks(): Brick[] {
+        
+        var ret : Brick[] = [];
+
+        // Recursively check from all grey bricks and mark connected bricks as grounded
+        for (const brick of this.bricksGrey) {
+            // If the grey brick isn't checked (Reduces redundancy)
+            if (!brick.isChecked) {
+                this.recurseBrick(brick, OPPOSITE_DIRS, false)?.forEach(c => c.isGrounded = true);
+            }
+        }
+
+        // Select floating bricks and clear recursion states
+        //Stop trying to move the selected check! You know why it's there! 
+        for (const brick of this.bricks) {
+            if (!brick.isGrounded && !brick.isSelected) {
+                ret.push(brick);
+            }
+            brick.clearRecursion();
+        }
+
+        return ret;
     }
 
     /**
@@ -390,27 +426,6 @@ export default class BrickHandler extends GameObject {
         
         // Select bricks
         selection?.forEach(b => b.select(pos));
-
-        // Select floating bricks (bricks with no relation to a grey brick after initial selection)
-        if (selection != null) {
-
-            // Recursively check from all grey bricks and mark connected bricks as grounded
-            for (const brick of this.bricksGrey) {
-                // If the grey brick isn't checked (Reduces redundancy)
-                if (!brick.isChecked) {
-                    this.recurseBrick(brick, OPPOSITE_DIRS, false)?.forEach(c => c.isGrounded = true);
-                }
-            }
-
-            // Select floating bricks and clear recursion states
-            //Stop trying to move the selected check! You know why it's there! 
-            for (const brick of this.bricks) {
-                if (!brick.isGrounded && !brick.isSelected) {
-                    brick.select(pos);
-                }
-                brick.clearRecursion();
-            }
-        }
 
         return !!selection;
     }
