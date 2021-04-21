@@ -142,23 +142,24 @@ export default class Brick extends GameObject {
         // Global transparency for selection states
         ctx.globalAlpha =
             this.isSnapped ? 0.75 : // Snapped bricks are transparent
-            this.isSelected ? 0.5 : // Selected bricks are more transparent
+            this.isSelected ? 0.4 : // Selected bricks are more transparent
             this.isPressed ? 0.75 : // Pressed bricks are less transparent again
             1.0;                    // Otherwise opaque if not selected or pressed
         
         // Draw with vertical offset for top face
         ctx.drawImage(this.image, 0, -Z_DEPTH - 3);
 
-        if(this.pressure > 0) {
-            ctx.strokeStyle = "#F00";
-            ctx.lineWidth = 5;
-            ctx.beginPath();
-            ctx.moveTo(0                  , 0);
-            ctx.lineTo(GMULTX * this.width, GMULTY);
-            ctx.moveTo(GMULTX * this.width, 0);
-            ctx.lineTo(0                  , GMULTY);
-            ctx.stroke();
-        }
+        // Debug - draw pressure
+        // if(this.pressure > 0) {
+        //     ctx.strokeStyle = "#F00";
+        //     ctx.lineWidth = 5;
+        //     ctx.beginPath();
+        //     ctx.moveTo(0                  , 0);
+        //     ctx.lineTo(GMULTX * this.width, GMULTY);
+        //     ctx.moveTo(GMULTX * this.width, 0);
+        //     ctx.lineTo(0                  , GMULTY);
+        //     ctx.stroke();
+        // }
     }
 
     /** Set the brick to match the cursor position, based on its stored selected position */

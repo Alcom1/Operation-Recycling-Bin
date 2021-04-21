@@ -1,4 +1,7 @@
 // Constants
+
+import { Point } from "./vect";
+
 /** Path to image assets */
 export const PATH_IMG = "assets/img/";
 /** Horizontal multiplier for grid positions */
@@ -51,13 +54,13 @@ export function bitStack(numbers: number[]): number {
     return ret;
 }
 
-/** Collision between a bar and a bounding box but with grid coordinates */
-export function colBorderBoxGrid(x: number, y: number, w: number): boolean {
+/** Check if a box is inside a bounding box */
+export function colBoundingBoxGrid(min: Point, max: Point): boolean {
     return (
-        x <          BOUNDARY.minx ||   // Lower horizontal bound
-        y <          BOUNDARY.miny ||   // Lower vertical bound
-        x + w - 1 >= BOUNDARY.maxx ||   // Upper horiziontal bound with width
-        y >=         BOUNDARY.maxy      // Upper vertical bound
+        min.x <  BOUNDARY.minx     ||   // Lower horizontal bound
+        min.y <  BOUNDARY.miny     ||   // Lower vertical bound
+        max.x >= BOUNDARY.maxx + 1 ||   // Upper horiziontal bound
+        max.y >= BOUNDARY.maxy + 1      // Upper vertical bound
     );
 }
 
@@ -69,6 +72,46 @@ export function colPointRect(px: number, py: number, rx: number, ry: number, rw:
         px <  rx + rw &&    // Upper horizontal bound
         py <  ry + rh       // Upper vertical bound
     );
+}
+
+/** Rectangle-rectangle collision with a corner and size rectangle */
+export function colRectRectCorner(
+    aminx : number,
+    amaxx : number,
+    aminy : number,
+    amaxy : number,
+    brx : number,
+    bry : number,
+    brw : number,
+    brh : number) : boolean {
+
+    return colRectRectCorners(
+        aminx,
+        amaxx,
+        aminy,
+        amaxy,
+        brx,
+        brx + brw,
+        bry,
+        bry + brh)
+}
+
+/** Rectangle-rectangle collision with two corner rectangles */
+export function colRectRectCorners(
+    aminx : number,
+    amaxx : number,
+    aminy : number,
+    amaxy : number,
+    bminx : number,
+    bmaxx : number,
+    bminy : number,
+    bmaxy : number) : boolean {
+
+    return (
+        aminx < bmaxx &&
+        amaxx > bminx &&
+        aminy < bmaxy &&
+        amaxy > bminy);
 }
 
 /** Point-rectangle collision but with grid coordinates */

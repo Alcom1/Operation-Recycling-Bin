@@ -1,7 +1,8 @@
 import GameObject from "engine/gameobjects/gameobject";
-import {colBorderBoxGrid, col1D, GMULTX, GMULTY, colPointRectGrid, colPointParHGrid, colPointParVGrid, OPPOSITE_DIRS} from "engine/utilities/math";
-import Vect from "engine/utilities/vect";
+import {col1D, GMULTX, GMULTY, colBoundingBoxGrid, colPointRectGrid, colPointParHGrid, colPointParVGrid, OPPOSITE_DIRS, colRectRectCorner} from "engine/utilities/math";
+import Vect, { Point } from "engine/utilities/vect";
 import Brick from "./brick";
+import CharacterHandler from "./characterhandler";
 
 export enum BrickHandlerState {
     /** Empty */
@@ -23,6 +24,9 @@ interface BrickRow {
 }
 
 export default class BrickHandler extends GameObject {
+
+    /** */
+    private characterHandler! : CharacterHandler;
     /** Rows of bricks */
     private rows: BrickRow[] = [];
     /** All bricks */
@@ -32,19 +36,22 @@ export default class BrickHandler extends GameObject {
     /** All selected bricks */
     private selections: (Brick[] | null)[] = [];
     /** Grey bricks */
-    private get bricksGrey(): Brick[] {
-        return this.bricks.filter(b => b.isGrey == true);
-    }
+    private get bricksGrey(): Brick[] { return this.bricks.filter(b => b.isGrey == true); }
     /** If a brick has been stepped on or off */
     public isPressured = true;
 
     public init(ctx: CanvasRenderingContext2D) {
         
-        this.bricks = this.engine.tag.get("Brick", "Level") as Brick[]; // Get bricks from scene
-        this.bricks.forEach(b => this.addBrickToRows(b));               // Add bricks into rows
-        this.sortRows();                                                // Sort rows/bricks within rows
+        this.characterHandler = this.engine.tag.get(        // Get character handler from scene
+            "CharacterHandler", 
+            "LevelInterface")[0] as CharacterHandler;
+        this.bricks = this.engine.tag.get(                  // Get bricks from scene
+            "Brick", 
+            "Level") as Brick[];                            
+        this.bricks.forEach(b => this.addBrickToRows(b));   // Add bricks into rows
+        this.sortRows();                                    // Sort rows/bricks within rows
 
-        //Check for and log overlapping bricks
+        // Check for and log overlapping bricks
         this.rows.forEach(r => r.bricks.forEach((b1, i) => {
             
             var b2 = r.bricks[i - 1];
@@ -71,10 +78,13 @@ export default class BrickHandler extends GameObject {
         this.cullBrickStuds();  // Initial stud culling
     }
 
-    /** Check a batch of grid-spaces for collision and return a bitmask of those spaces **/
+    /** BRICK CHECK - Check selection collision, return true if this is a valid position **/
     public checkCollisionSelection(): boolean {
 
         const adjacents = [];       // Adjacency states, contains if we're attaching in the indexed direction.
+
+        const min : Point = {x : Number.MAX_VALUE, y : Number.MAX_VALUE}
+        const max : Point = {x : 0, y : 0}
 
         for (const brick1 of this.bricks.filter(b => b.isSelected)) {
             
@@ -84,10 +94,11 @@ export default class BrickHandler extends GameObject {
             var tposx = brick1.gpos.x + Math.round(brick1.spos.x / GMULTX);
             var tposy = brick1.gpos.y + Math.round(brick1.spos.y / GMULTY);
 
-            // Check if this brick is inside the boundary
-            if (colBorderBoxGrid(tposx, tposy, brick1.width)) {
-                return false;       // Fail if outside boundary
-            }
+            // Store minimum and maximum positions for a bounding box
+            min.x = Math.min(min.x, tposx);
+            min.y = Math.min(min.y, tposy);
+            max.x = Math.max(max.x, tposx + brick1.width);
+            max.y = Math.max(max.y, tposy + 1);
 
             // Check collision between current selected brick and every brick in its potential new row.
             for (const brick2 of this.rows.find(r => r.row == tposy)?.bricks || []) { // For each brick in the current row
@@ -114,6 +125,33 @@ export default class BrickHandler extends GameObject {
                         adjacents[dir] = true;          // Set adjacency state for this direction.
                         break;                          // Check other direction.
                     }
+                }
+            }
+        }
+
+        // LEVEL BOUNDARY CHECK - Check if this brick is inside the boundary
+        if (colBoundingBoxGrid(min, max)) {
+            return false;       // Fail if outside boundary
+        }
+
+        // CHARACTER - CHECK Check if any characters are in the current selection bounding box
+        for(const c of this.characterHandler.getCharacterBoxes(min, max)) {
+
+            // For each individual brick in the selection
+            for (const b of this.bricks.filter(b => b.isSelected)) {
+
+                // Check collision between each selected brick and the character
+                if (colRectRectCorner(
+                    c.gpos.x - 1,
+                    c.gpos.x + 1,
+                    c.gpos.y + 1 - c.height,
+                    c.gpos.y + 1,
+                    b.gpos.x + Math.round(b.spos.x / GMULTX),
+                    b.gpos.y + Math.round(b.spos.y / GMULTY),
+                    b.width,
+                    1)) {
+
+                    return false;
                 }
             }
         }
@@ -209,7 +247,7 @@ export default class BrickHandler extends GameObject {
             Math.min(...selected.map(b => b.gpos.y))
         );
         
-        //Maximum brick position among selected bricks
+        // Maximum brick position among selected bricks
         const boundaryMax = new Vect(
             Math.max(...selected.map(b => b.gpos.x + b.width)), // Width included for proper boundary
             Math.max(...selected.map(b => b.gpos.y + 1))        // Height included for proper boundary
@@ -233,14 +271,14 @@ export default class BrickHandler extends GameObject {
         this.selections = [];
         this.bricks.forEach(b => b.deselect());
 
-        //Move bricks to the new row
-        this.rows.forEach(r => {                                //For each row
-            var move = r.bricks.filter(b => b.gpos.y != r.row); //Get move-bricks that are no longer in this row
-            r.bricks = r.bricks.filter(b => b.gpos.y == r.row); //Remove bricks that are no longer in this row
-            move.forEach(b => this.addBrickToRows(b));          //For each move-brick, add it to its new row
+        // Move bricks to the new row
+        this.rows.forEach(r => {                                // For each row
+            var move = r.bricks.filter(b => b.gpos.y != r.row); // Get move-bricks that are no longer in this row
+            r.bricks = r.bricks.filter(b => b.gpos.y == r.row); // Remove bricks that are no longer in this row
+            move.forEach(b => this.addBrickToRows(b));          // For each move-brick, add it to its new row
         });
 
-        //Sort
+        // Sort
         this.sortRows();
     }
 
@@ -282,7 +320,7 @@ export default class BrickHandler extends GameObject {
         // Front face check
         for (const brick of this.bricks) {
 
-            //Front face - if position is over this face
+            // Front face - if position is over this face
             if (colPointRectGrid(
                 pos.x,
                 pos.y,
@@ -339,12 +377,12 @@ export default class BrickHandler extends GameObject {
 
             let selectionNew = this.recurseBrick(brick, [dir], true) ?? [];
 
-            //If there are bricks to select
+            // If there are bricks to select
             if(selectionNew!.length > 0) {
 
                 let floats = this.getFloatingBricks();
 
-                //If every floating brick
+                // If every floating brick
                 if(floats.every(b => b.pressure == 0)) {
 
                     this.selections[dir] = selectionNew.concat(floats);
@@ -376,7 +414,7 @@ export default class BrickHandler extends GameObject {
         }
 
         // Select floating bricks and clear recursion states
-        //Stop trying to move the selected check! You know why it's there! 
+        // Stop trying to move the selected check! You know why it's there! 
         for (const brick of this.bricks) {
             if (!brick.isGrounded && !brick.isSelected) {
                 ret.push(brick);

@@ -27,13 +27,15 @@ export default class CharacterBot extends Character {
 
     constructor(engine: Engine, params: GameObjectParams) {
         super(engine, Object.assign(params, characterBotOverride) as CharacterParams);
+
+        this._height = 4;
     }
 
     protected handleCollision() {
 
         //Collision bitmask
         let cbm = this.brickHandler.checkCollisionSuper(
-            this.gpos.getSub(new Vect(this.move.x > 0 ? 1 : 0, 5)),   //Position
+            this.gpos.getSub({x: this.move.x > 0 ? 1 : 0, y : 5}),   //Position
             5,                                                        // n + 1
             14,                                                       //(n + 3) * 2
             7,                                                        // n + 3

@@ -11,7 +11,10 @@ export interface CharacterParams extends GameObjectParams {
 }
 
 export default class Character extends GameObject {
+
     private speed: number;
+    protected _height: number;
+    public get height() { return this._height; }
     protected move: Vect;
     protected brickHandler!: BrickHandler;
     private underBricks: Brick[] = [];
@@ -20,8 +23,10 @@ export default class Character extends GameObject {
 
     constructor(engine: Engine, params: CharacterParams) {
         super(engine, params);
-        this.speed = params.speed ?? 1;
-        this.move = new Vect(1, 1);
+        
+        this.speed = params.speed ?? 1; //Default speed
+        this.move = new Vect(1, 0);     //Default move directions
+        this._height = 2;               //Default height for a character
         this.checkCollision = true;
     }
 
@@ -60,7 +65,7 @@ export default class Character extends GameObject {
         this.underBricks.forEach(b => b.pressure -= 1);
 
         this.underBricks = this.brickHandler.checkCollisionRow(
-            this.gpos.getAdd(new Vect(-1, 1)), 
+            this.gpos.getAdd({x : -1, y : 1}), 
             2);
 
         this.underBricks.forEach(b => b.pressure += 1);

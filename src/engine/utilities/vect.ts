@@ -37,7 +37,7 @@ export default class Vect implements Point {
         this.y += vect.y;
     }
 
-    public getAdd (vect: Point): Vect {
+    public getAdd(vect: Point): Vect {
         return new Vect(this.x + vect.x, this.y + vect.y);
     }
 
