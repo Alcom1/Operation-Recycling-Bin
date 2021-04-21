@@ -6,8 +6,12 @@ export default class Character extends GameObject {
     super(engine2, params);
     this.underBricks = [];
     this.speed = params.speed ?? 1;
-    this.move = new Vect(1, 1);
+    this.move = new Vect(1, 0);
+    this._height = 2;
     this.checkCollision = true;
+  }
+  get height() {
+    return this._height;
   }
   init(ctx) {
     this.brickHandler = this.engine.tag.get("BrickHandler", "LevelInterface")[0];
@@ -28,7 +32,7 @@ export default class Character extends GameObject {
   }
   handleBricks() {
     this.underBricks.forEach((b) => b.pressure -= 1);
-    this.underBricks = this.brickHandler.checkCollisionRow(this.gpos.getAdd(new Vect(-1, 1)), 2);
+    this.underBricks = this.brickHandler.checkCollisionRow(this.gpos.getAdd({x: -1, y: 1}), 2);
     this.underBricks.forEach((b) => b.pressure += 1);
     this.brickHandler.isPressured = true;
   }

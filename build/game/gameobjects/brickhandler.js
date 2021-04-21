@@ -1,5 +1,5 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
-import {colBorderBoxGrid, col1D, GMULTX, GMULTY, colPointRectGrid, colPointParHGrid, colPointParVGrid, OPPOSITE_DIRS} from "../../engine/utilities/math.js";
+import {col1D, GMULTX, GMULTY, colBoundingBoxGrid, colPointRectGrid, colPointParHGrid, colPointParVGrid, OPPOSITE_DIRS, colRectRectCorner} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
 export var BrickHandlerState;
 (function(BrickHandlerState2) {
@@ -22,6 +22,7 @@ export default class BrickHandler extends GameObject {
     return this.bricks.filter((b) => b.isGrey == true);
   }
   init(ctx) {
+    this.characterHandler = this.engine.tag.get("CharacterHandler", "LevelInterface")[0];
     this.bricks = this.engine.tag.get("Brick", "Level");
     this.bricks.forEach((b) => this.addBrickToRows(b));
     this.sortRows();
@@ -39,13 +40,16 @@ export default class BrickHandler extends GameObject {
   }
   checkCollisionSelection() {
     const adjacents = [];
+    const min = {x: Number.MAX_VALUE, y: Number.MAX_VALUE};
+    const max = {x: 0, y: 0};
     for (const brick1 of this.bricks.filter((b) => b.isSelected)) {
       brick1.setToCursor();
       var tposx = brick1.gpos.x + Math.round(brick1.spos.x / GMULTX);
       var tposy = brick1.gpos.y + Math.round(brick1.spos.y / GMULTY);
-      if (colBorderBoxGrid(tposx, tposy, brick1.width)) {
-        return false;
-      }
+      min.x = Math.min(min.x, tposx);
+      min.y = Math.min(min.y, tposy);
+      max.x = Math.max(max.x, tposx + brick1.width);
+      max.y = Math.max(max.y, tposy + 1);
       for (const brick22 of this.rows.find((r) => r.row == tposy)?.bricks || []) {
         if (!brick22.isSelected && col1D(tposx, tposx + brick1.width, brick22.gpos.x, brick22.gpos.x + brick22.width)) {
           return false;
@@ -57,6 +61,16 @@ export default class BrickHandler extends GameObject {
             adjacents[dir] = true;
             break;
           }
+        }
+      }
+    }
+    if (colBoundingBoxGrid(min, max)) {
+      return false;
+    }
+    for (const c of this.characterHandler.getCharacterBoxes(min, max)) {
+      for (const b of this.bricks.filter((b2) => b2.isSelected)) {
+        if (colRectRectCorner(c.gpos.x - 1, c.gpos.x + 1, c.gpos.y + 1 - c.height, c.gpos.y + 1, b.gpos.x + Math.round(b.spos.x / GMULTX), b.gpos.y + Math.round(b.spos.y / GMULTY), b.width, 1)) {
+          return false;
         }
       }
     }

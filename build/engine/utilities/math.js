@@ -25,11 +25,17 @@ export function bitStack(numbers) {
   numbers.forEach((n) => ret += 1 << n);
   return ret;
 }
-export function colBorderBoxGrid(x, y, w) {
-  return x < BOUNDARY.minx || y < BOUNDARY.miny || x + w - 1 >= BOUNDARY.maxx || y >= BOUNDARY.maxy;
+export function colBoundingBoxGrid(min, max) {
+  return min.x < BOUNDARY.minx || min.y < BOUNDARY.miny || max.x >= BOUNDARY.maxx + 1 || max.y >= BOUNDARY.maxy + 1;
 }
 export function colPointRect(px, py, rx, ry, rw, rh) {
   return px >= rx && py >= ry && px < rx + rw && py < ry + rh;
+}
+export function colRectRectCorner(aminx, amaxx, aminy, amaxy, brx, bry, brw, brh) {
+  return colRectRectCorners(aminx, amaxx, aminy, amaxy, brx, brx + brw, bry, bry + brh);
+}
+export function colRectRectCorners(aminx, amaxx, aminy, amaxy, bminx, bmaxx, bminy, bmaxy) {
+  return aminx < bmaxx && amaxx > bminx && aminy < bmaxy && amaxy > bminy;
 }
 export function colPointRectGrid(px, py, rx, ry, rw) {
   return colPointRect(px, py, rx * GMULTX, ry * GMULTY, rw * GMULTX, GMULTY);

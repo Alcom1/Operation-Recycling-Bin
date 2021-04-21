@@ -6,6 +6,7 @@ import Button from "./gameobjects/button.js";
 import ButtonScene from "./gameobjects/buttonscene.js";
 import Character from "./gameobjects/character.js";
 import CharacterBot from "./gameobjects/characterbot.js";
+import CharacterHandler from "./gameobjects/characterhandler.js";
 import Cursor from "./gameobjects/cursor.js";
 import CursorIcon from "./gameobjects/cursoricon.js";
 import FPSCounter from "./gameobjects/fpscounter.js";
@@ -23,6 +24,7 @@ window.onload = function() {
     ButtonScene,
     Character,
     CharacterBot,
+    CharacterHandler,
     Cursor,
     CursorIcon,
     FPSCounter,

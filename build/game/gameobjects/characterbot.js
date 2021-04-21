@@ -1,6 +1,5 @@
 import Character from "./character.js";
 import {BOUNDARY, GMULTX, GMULTY, bitStack} from "../../engine/utilities/math.js";
-import Vect from "../../engine/utilities/vect.js";
 const characterBotOverride = Object.freeze({
   speed: 2.5
 });
@@ -16,12 +15,13 @@ export default class CharacterBot extends Character {
   constructor(engine2, params) {
     super(engine2, Object.assign(params, characterBotOverride));
     this.sceneName = null;
+    this._height = 4;
   }
   init(ctx) {
     super.init(ctx);
   }
   handleCollision() {
-    let cbm = this.brickHandler.checkCollisionSuper(this.gpos.getSub(new Vect(this.move.x > 0 ? 1 : 0, 5)), 5, 14, 7, this.move.x);
+    let cbm = this.brickHandler.checkCollisionSuper(this.gpos.getSub({x: this.move.x > 0 ? 1 : 0, y: 5}), 5, 14, 7, this.move.x);
     if (this.gpos.x - 1 < BOUNDARY.minx || this.gpos.x + 1 > BOUNDARY.maxx) {
       this.reverse();
     } else {
