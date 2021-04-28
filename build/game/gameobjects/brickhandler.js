@@ -38,6 +38,9 @@ export default class BrickHandler extends GameObject {
     }
     this.cullBrickStuds();
   }
+  checkPressureSelection(dir) {
+    return this.selections[dir]?.every((x) => x.pressure <= 0) ?? false;
+  }
   checkCollisionSelection() {
     const adjacents = [];
     const min = {x: Number.MAX_VALUE, y: Number.MAX_VALUE};

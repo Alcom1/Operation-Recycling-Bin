@@ -66,12 +66,15 @@ export default class Cursor extends GameObject {
                 case CursorState.DRAG:
                     // Get difference between current and previously pressed positions
                     const diff = this.spos.y - this.ppos.y;
-                    // If we've dragged a sufficient distance
-                    if (Math.abs(diff) > this.pLength) {
-                        // Math.sign only ever returns +/-1, +/-0, or NaN. It won't be NaN,
-                        // and it can never be 0, because we've ensured it's greater than pLength,
-                        // which is never going to be negative anyways
-                        const dir = Math.sign(diff) as (-1 | 1);
+
+                    // Math.sign only ever returns +/-1, +/-0, or NaN. It won't be NaN,
+                    // and it can never be 0, because we've ensured it's greater than pLength,
+                    // which is never going to be negative anyways
+                    const dir = Math.sign(diff) as (-1 | 1);
+
+                    // If we've dragged a sufficient distance and no bricks in the chosen direction are pressured
+                    if (Math.abs(diff) > this.pLength && this.brickHandler.checkPressureSelection(dir)) {
+                        
                         // Select bricks in the direction of the difference
                         this.selectBricks(dir);
                     }
@@ -128,7 +131,7 @@ export default class Cursor extends GameObject {
                     this.level.sortGO();
 
                     this.isUpdateForced = true;
-                    this.state = CursorState.NONE;
+                    this.resetState();
                 }
                 break;
         }

@@ -45,8 +45,8 @@ export default class Cursor extends GameObject {
           break;
         case 1:
           const diff = this.spos.y - this.ppos.y;
-          if (Math.abs(diff) > this.pLength) {
-            const dir = Math.sign(diff);
+          const dir = Math.sign(diff);
+          if (Math.abs(diff) > this.pLength && this.brickHandler.checkPressureSelection(dir)) {
             this.selectBricks(dir);
           }
           break;
@@ -79,7 +79,7 @@ export default class Cursor extends GameObject {
           }
           this.level.sortGO();
           this.isUpdateForced = true;
-          this.state = 0;
+          this.resetState();
         }
         break;
     }

@@ -78,7 +78,12 @@ export default class BrickHandler extends GameObject {
         this.cullBrickStuds();  // Initial stud culling
     }
 
-    /** BRICK CHECK - Check selection collision, return true if this is a valid position **/
+    /** Check selection pressure, return if any selected bricks have a pressure <= 0  */
+    public checkPressureSelection(dir : -1 | 1) : boolean {
+        return this.selections[dir]?.every(x => x.pressure <= 0) ?? false;
+    }
+
+    /** Check selection collision, return true if this is a valid position **/
     public checkCollisionSelection(): boolean {
 
         const adjacents = [];       // Adjacency states, contains if we're attaching in the indexed direction.
