@@ -179,8 +179,8 @@ export default class BrickHandler extends GameObject {
           this.selections[dir] = selectionNew.concat(floats);
         }
       }
+      this.bricks.forEach((b) => b.clearRecursion());
     }
-    this.bricks.forEach((b) => b.clearRecursion());
     return this.selections[-1] && this.selections[1] ? 1 : this.selections[-1] ? 3 : this.selections[1] ? 2 : 0;
   }
   getFloatingBricks() {

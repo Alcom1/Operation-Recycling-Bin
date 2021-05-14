@@ -393,10 +393,10 @@ export default class BrickHandler extends GameObject {
                     this.selections[dir] = selectionNew.concat(floats);
                 }
             }
-        }
 
-        // Clear recursion states after both recursive direction checks
-        this.bricks.forEach(b => b.clearRecursion());
+            // Clear recursion states after each recursive direction check
+            this.bricks.forEach(b => b.clearRecursion());
+        }
 
         return this.selections[-1] && 
             this.selections[1]  ? BrickHandlerState.INDY :  // If both selections are valid, return indeterminate state
