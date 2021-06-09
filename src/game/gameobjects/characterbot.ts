@@ -1,11 +1,16 @@
 import Engine from "engine/engine";
-import Character, { CharacterParams } from "./character";
-import { BOUNDARY, GMULTX, GMULTY, bitStack } from "engine/utilities/math";
+import Character, { CharacterParams, CharacterImageParams } from "./character";
+import { BOUNDARY, GMULTX, GMULTY, bitStack} from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 import { GameObjectParams } from "engine/gameobjects/gameobject";
+import Scene from "engine/scene/scene";
 
 const characterBotOverride = Object.freeze({
-    speed : 2.5
+    speed : 2.5,
+    imageRight : { name : "char_bot_right", offset : 14},
+    imageLeft :  { name : "char_bot_left", offset : 38 },
+    animFrames : 10,
+    animCount : 2
 });
 
 const cbc = Object.freeze({
@@ -21,8 +26,8 @@ export default class CharacterBot extends Character {
 
     private sceneName: string | null = null;
 
-    public init(ctx: CanvasRenderingContext2D): void {
-        super.init(ctx);
+    public init(ctx: CanvasRenderingContext2D, scenes: Scene[]): void {
+        super.init(ctx, scenes);
     }
 
     constructor(engine: Engine, params: GameObjectParams) {
@@ -92,28 +97,5 @@ export default class CharacterBot extends Character {
                 this.reverse();
             }
         }
-    }
-
-    public draw(ctx: CanvasRenderingContext2D) {
-
-        ctx.globalAlpha = 0.5;
-        ctx.strokeStyle = "#F00"
-        ctx.lineWidth = 4;
-        ctx.strokeRect(
-           -GMULTX, 
-            GMULTY, 
-            GMULTX * 2, 
-            GMULTY * -4);
-
-        ctx.translate(-this.spos.x, 0);
-        
-        ctx.fillStyle = "#FF0"
-        ctx.beginPath();
-        ctx.moveTo(-GMULTX, GMULTY);
-        ctx.lineTo(-GMULTX, GMULTY + GMULTY * -4 + (this.move.x < 0 ? 1 : 0) * GMULTY);
-        ctx.lineTo(      0, GMULTY + GMULTY * -4);
-        ctx.lineTo( GMULTX, GMULTY + GMULTY * -4 + (this.move.x > 0 ? 1 : 0) * GMULTY);
-        ctx.lineTo( GMULTX, GMULTY);
-        ctx.fill();
     }
 }

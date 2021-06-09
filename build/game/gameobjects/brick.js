@@ -1,5 +1,5 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
-import {colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX} from "../../engine/utilities/math.js";
+import {colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX, getZIndex} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
 import BrickStud from "./brickstud.js";
 export default class Brick extends GameObject {
@@ -29,7 +29,7 @@ export default class Brick extends GameObject {
     this.color = colorTranslate(params.color);
     this.isGrey = !params.color;
     this.width = params.width || 1;
-    this.zIndex = this.gpos.x * 2 - this.gpos.y * 100 + this.width * 2;
+    this.zIndex = getZIndex(this.gpos, this.width * 2);
     for (let i = 0; i < this.width; i++) {
       const stud = new BrickStud(this.engine, {
         ...params,
@@ -98,7 +98,7 @@ export default class Brick extends GameObject {
     this.isSnapped = false;
     this.spos.set(0, 0);
     this.selectedPos.set(0, 0);
-    this.zIndex = this.gpos.x * 2 - this.gpos.y * 100 + this.width * 2;
+    this.zIndex = getZIndex(this.gpos, this.width * 2);
     this.resetStuds();
     this.studs.forEach((s) => s.deselect());
   }
@@ -106,7 +106,10 @@ export default class Brick extends GameObject {
     this.studs.forEach((s) => s.snap(state));
     if (state) {
       this.isSnapped = true;
-      this.zIndex = (this.gpos.x + Math.round(this.spos.x / GMULTX)) * 2 - (this.gpos.y + Math.round(this.spos.y / GMULTY)) * 100 + this.width * 2;
+      this.zIndex = getZIndex(this.gpos.getAdd({
+        x: Math.round(this.spos.x / GMULTX),
+        y: Math.round(this.spos.y / GMULTY)
+      }), this.width * 2);
     } else {
       this.isSnapped = false;
       this.zIndex = UNDER_CURSOR_Z_INDEX;

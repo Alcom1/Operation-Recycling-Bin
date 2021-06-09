@@ -1,7 +1,11 @@
 import Character from "./character.js";
-import {BOUNDARY, GMULTX, GMULTY, bitStack} from "../../engine/utilities/math.js";
+import {BOUNDARY, bitStack} from "../../engine/utilities/math.js";
 const characterBotOverride = Object.freeze({
-  speed: 2.5
+  speed: 2.5,
+  imageRight: {name: "char_bot_right", offset: 14},
+  imageLeft: {name: "char_bot_left", offset: 38},
+  animFrames: 10,
+  animCount: 2
 });
 const cbc = Object.freeze({
   flor: bitStack([0, 7]),
@@ -17,8 +21,8 @@ export default class CharacterBot extends Character {
     this.sceneName = null;
     this._height = 4;
   }
-  init(ctx) {
-    super.init(ctx);
+  init(ctx, scenes) {
+    super.init(ctx, scenes);
   }
   handleCollision() {
     let cbm = this.brickHandler.checkCollisionSuper(this.gpos.getSub({x: this.move.x > 0 ? 1 : 0, y: 5}), 5, 14, 7, this.move.x);
@@ -42,21 +46,6 @@ export default class CharacterBot extends Character {
         this.reverse();
       }
     }
-  }
-  draw(ctx) {
-    ctx.globalAlpha = 0.5;
-    ctx.strokeStyle = "#F00";
-    ctx.lineWidth = 4;
-    ctx.strokeRect(-GMULTX, GMULTY, GMULTX * 2, GMULTY * -4);
-    ctx.translate(-this.spos.x, 0);
-    ctx.fillStyle = "#FF0";
-    ctx.beginPath();
-    ctx.moveTo(-GMULTX, GMULTY);
-    ctx.lineTo(-GMULTX, GMULTY + GMULTY * -4 + (this.move.x < 0 ? 1 : 0) * GMULTY);
-    ctx.lineTo(0, GMULTY + GMULTY * -4);
-    ctx.lineTo(GMULTX, GMULTY + GMULTY * -4 + (this.move.x > 0 ? 1 : 0) * GMULTY);
-    ctx.lineTo(GMULTX, GMULTY);
-    ctx.fill();
   }
 }
 //# sourceMappingURL=characterbot.js.map

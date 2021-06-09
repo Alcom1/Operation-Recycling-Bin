@@ -1,6 +1,6 @@
 // Constants
 
-import { Point } from "./vect";
+import Vect, { Point } from "./vect";
 
 /** Path to image assets */
 export const PATH_IMG = "assets/img/";
@@ -174,6 +174,15 @@ export function colPointParVGrid(px: number, py: number, rx: number, ry: number,
 export function col1D(a1: number, a2: number, b1: number, b2: number): boolean {
     // Return if A and B objects overlap
     return a2 > b1 && a1 < b2;
+}
+
+/** Calculate the desire z-index of an object based on a position **/
+export function getZIndex(gpos: Vect, modifier : number = 0) {
+    // Z-sort vertically and then horizontally.
+    return (
+        gpos.x * 2 -
+        gpos.y * 100 +
+        modifier);
 }
 
 /** Translate text colors to custom values */

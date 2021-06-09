@@ -1,6 +1,6 @@
 import GameObject, {GameObjectParams} from "engine/gameobjects/gameobject";
 import Engine from "engine/engine";
-import { colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX } from "engine/utilities/math";
+import { colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX, getZIndex } from "engine/utilities/math";
 import Vect, {Point} from "engine/utilities/vect";
 import BrickStud from "./brickstud";
 
@@ -77,13 +77,7 @@ export default class Brick extends GameObject {
 
         this.width = params.width || 1;
         // Z-sort vertically and then horizontally.
-        this.zIndex =
-            // 2x multiplier for stud overlap
-            (this.gpos.x * 2)
-            // Y-pos has priority over X-pos.
-            - (this.gpos.y * 100)
-            // 2x width added for stud overlap
-            + (this.width * 2);
+        this.zIndex = getZIndex(this.gpos, this.width * 2);
 
         // Generate studs across the width of this brick
         // For each width unit of this brick
@@ -230,7 +224,7 @@ export default class Brick extends GameObject {
         this.isSnapped = false;
         this.spos.set(0, 0);
         this.selectedPos.set(0, 0);
-        this.zIndex = this.gpos.x * 2 - this.gpos.y * 100 + this.width * 2;
+        this.zIndex = getZIndex(this.gpos, this.width * 2);
         // Reset studs to match the final brick position
         this.resetStuds();
         this.studs.forEach(s => s.deselect());
@@ -243,13 +237,11 @@ export default class Brick extends GameObject {
         // Snap or unsnap based on the given state
         if (state) {
             this.isSnapped = true;
-            this.zIndex =
-                // 2x multiplier for stud overlap
-                ((this.gpos.x + Math.round(this.spos.x / GMULTX)) * 2)
-                // Y-pos has priority over X-pos.
-                - ((this.gpos.y + Math.round(this.spos.y / GMULTY)) * 100)
-                // 2x width added for stud overlap
-                + (this.width * 2);
+            this.zIndex = getZIndex(this.gpos.getAdd({
+                x : Math.round(this.spos.x / GMULTX),
+                y : Math.round(this.spos.y / GMULTY)
+            }),
+            this.width * 2);
         } else {
             this.isSnapped = false;
             // Set Z-index for dragging

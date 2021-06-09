@@ -55,6 +55,9 @@ export function colPointParVGrid(px, py, rx, ry, rw) {
 export function col1D(a1, a2, b1, b2) {
   return a2 > b1 && a1 < b2;
 }
+export function getZIndex(gpos, modifier = 0) {
+  return gpos.x * 2 - gpos.y * 100 + modifier;
+}
 export function colorTranslate(color) {
   switch (color) {
     case void 0:

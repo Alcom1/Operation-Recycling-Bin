@@ -1,6 +1,6 @@
 import Engine from "engine/engine";
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
-import { colorTranslate, GMULTX, GMULTY, UNDER_CURSOR_Z_INDEX, Z_DEPTH } from "engine/utilities/math";
+import { colorTranslate, getZIndex, GMULTX, GMULTY, UNDER_CURSOR_Z_INDEX, Z_DEPTH } from "engine/utilities/math";
 
 interface BrickStudParams extends GameObjectParams {
     color?: string;
@@ -22,10 +22,7 @@ export default class BrickStud extends GameObject {
 
         this.color = colorTranslate(params.color);
 
-        this.zIndex =          // Z-sort vertically and then horizontally.
-            this.gpos.x * 2 -  // 2x multiplier for stud overlap
-            this.gpos.y * 100  // Y-pos has priority over X-pos.
-            + 1;               // Plus one for stud overlap
+        this.zIndex = getZIndex(this.gpos, 1);
 
         this.image = this.engine.library.getImage(`stud_${this.color.replace("#", "").toLowerCase()}`);
     }
@@ -48,10 +45,11 @@ export default class BrickStud extends GameObject {
     public snap(state: boolean): void {
         if (state) {
             this.isSnapped = true;
-            this.zIndex =
-               (this.gpos.x + Math.round(this.spos.x / GMULTX)) * 2 -   // 2x multiplier for stud overlap
-               (this.gpos.y + Math.round(this.spos.y / GMULTY)) * 100 + // Y-pos has priority over X-pos.
-               1;                                                       // Plus one for stud overlap
+            this.zIndex = getZIndex(this.gpos.getAdd({
+                x : Math.round(this.spos.x / GMULTX),
+                y : Math.round(this.spos.y / GMULTY)
+            }),
+            1);
         }
         else {
             this.isSnapped = false;
@@ -73,10 +71,7 @@ export default class BrickStud extends GameObject {
 
     /** Reset this stud's z-index */
     public deselect(): void {
-        this.zIndex =               // Z-sort vertically and then horizontally.
-            this.gpos.x * 2 -       // 2x multiplier for stud overlap
-            this.gpos.y * 100 +     // Y-pos has priority over X-pos.
-            1;                      // Plus one for stud overlap
+        this.zIndex = getZIndex(this.gpos, 1);
         
         this.isPressed = false;
         this.isSelected = false;

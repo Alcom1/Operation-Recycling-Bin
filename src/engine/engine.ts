@@ -105,10 +105,13 @@ export default class Engine {
         this.pushSceneNames = [];
 
         // Scene actions
-        this.initScenes();
-        this.updateDrawScenes(
-            this.library.getLoaded() ? this.scenes : this.scenesLoading,
-            dt);
+        if(this.library.getLoaded()) {
+            this.initScenes();
+            this.updateDrawScenes(this.scenes, dt);
+        }
+        else {
+            this.updateDrawScenes(this.scenesLoading, dt);
+        }
 
         // Module updates
         this.mouse.update();

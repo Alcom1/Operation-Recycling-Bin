@@ -50,8 +50,12 @@ export default class Engine {
     this.unloadScenes(this.killSceneNames);
     await this.pushSceneNames.map((sn) => this.loadScene(sn, this.scenes));
     this.pushSceneNames = [];
-    this.initScenes();
-    this.updateDrawScenes(this.library.getLoaded() ? this.scenes : this.scenesLoading, dt);
+    if (this.library.getLoaded()) {
+      this.initScenes();
+      this.updateDrawScenes(this.scenes, dt);
+    } else {
+      this.updateDrawScenes(this.scenesLoading, dt);
+    }
     this.mouse.update();
   }
   initScenes() {

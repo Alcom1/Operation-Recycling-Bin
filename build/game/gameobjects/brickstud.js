@@ -1,5 +1,5 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
-import {colorTranslate, GMULTX, GMULTY, UNDER_CURSOR_Z_INDEX, Z_DEPTH} from "../../engine/utilities/math.js";
+import {colorTranslate, getZIndex, GMULTX, GMULTY, UNDER_CURSOR_Z_INDEX, Z_DEPTH} from "../../engine/utilities/math.js";
 export default class BrickStud extends GameObject {
   constructor(engine2, params) {
     super(engine2, params);
@@ -8,7 +8,7 @@ export default class BrickStud extends GameObject {
     this.isSnapped = false;
     this.isVisible = true;
     this.color = colorTranslate(params.color);
-    this.zIndex = this.gpos.x * 2 - this.gpos.y * 100 + 1;
+    this.zIndex = getZIndex(this.gpos, 1);
     this.image = this.engine.library.getImage(`stud_${this.color.replace("#", "").toLowerCase()}`);
   }
   draw(ctx) {
@@ -20,7 +20,10 @@ export default class BrickStud extends GameObject {
   snap(state) {
     if (state) {
       this.isSnapped = true;
-      this.zIndex = (this.gpos.x + Math.round(this.spos.x / GMULTX)) * 2 - (this.gpos.y + Math.round(this.spos.y / GMULTY)) * 100 + 1;
+      this.zIndex = getZIndex(this.gpos.getAdd({
+        x: Math.round(this.spos.x / GMULTX),
+        y: Math.round(this.spos.y / GMULTY)
+      }), 1);
     } else {
       this.isSnapped = false;
       this.zIndex = UNDER_CURSOR_Z_INDEX;
@@ -34,7 +37,7 @@ export default class BrickStud extends GameObject {
     this.zIndex = UNDER_CURSOR_Z_INDEX;
   }
   deselect() {
-    this.zIndex = this.gpos.x * 2 - this.gpos.y * 100 + 1;
+    this.zIndex = getZIndex(this.gpos, 1);
     this.isPressed = false;
     this.isSelected = false;
     this.isSnapped = false;
