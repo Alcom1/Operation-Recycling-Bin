@@ -180,7 +180,7 @@ export function col1D(a1: number, a2: number, b1: number, b2: number): boolean {
 export function getZIndex(gpos: Vect, modifier : number = 0) {
     // Z-sort vertically and then horizontally.
     return (
-        gpos.x * 2 -
+        gpos.x * 10 -
         gpos.y * 100 +
         modifier);
 }
