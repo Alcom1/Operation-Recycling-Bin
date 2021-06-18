@@ -1,6 +1,7 @@
 import Character from "./character.js";
 import {BOUNDARY, bitStack} from "../../engine/utilities/math.js";
 const characterBotOverride = Object.freeze({
+  height: 4,
   speed: 2.5,
   imageRight: {name: "char_bot_right", offset: 14},
   imageLeft: {name: "char_bot_left", offset: 38},
@@ -16,13 +17,11 @@ const cbc = Object.freeze({
   step: bitStack([6])
 });
 export default class CharacterBot extends Character {
-  constructor(engine2, params) {
-    super(engine2, Object.assign(params, characterBotOverride));
-    this.sceneName = null;
-    this._height = 4;
-  }
   init(ctx, scenes) {
     super.init(ctx, scenes);
+  }
+  constructor(engine2, params) {
+    super(engine2, Object.assign(params, characterBotOverride));
   }
   handleCollision() {
     let cbm = this.brickHandler.checkCollisionSuper(this.gpos.getSub({x: this.move.x > 0 ? 1 : 0, y: 5}), 5, 14, 7, this.move.x);

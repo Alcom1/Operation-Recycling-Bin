@@ -77,9 +77,9 @@ export default class Brick extends GameObject {
 
         this.width = params.width || 1;
         // Z-sort vertically and then horizontally.
-        this.zIndex = getZIndex(this.gpos, this.width * 2);
+        this.zIndex = getZIndex(this.gpos, this.width * 10);
 
-        // Generate studs across the width of this brick
+        // Spawn studs across the width of this brick
         // For each width unit of this brick
         for (let i = 0; i < this.width; i++) {
             const stud = new BrickStud(this.engine, {
@@ -224,7 +224,7 @@ export default class Brick extends GameObject {
         this.isSnapped = false;
         this.spos.set(0, 0);
         this.selectedPos.set(0, 0);
-        this.zIndex = getZIndex(this.gpos, this.width * 2);
+        this.zIndex = getZIndex(this.gpos, this.width * 10);
         // Reset studs to match the final brick position
         this.resetStuds();
         this.studs.forEach(s => s.deselect());
@@ -241,7 +241,7 @@ export default class Brick extends GameObject {
                 x : Math.round(this.spos.x / GMULTX),
                 y : Math.round(this.spos.y / GMULTY)
             }),
-            this.width * 2);
+            this.width * 10);
         } else {
             this.isSnapped = false;
             // Set Z-index for dragging

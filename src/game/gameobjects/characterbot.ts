@@ -6,6 +6,7 @@ import { GameObjectParams } from "engine/gameobjects/gameobject";
 import Scene from "engine/scene/scene";
 
 const characterBotOverride = Object.freeze({
+    height: 4,
     speed : 2.5,
     imageRight : { name : "char_bot_right", offset : 14},
     imageLeft :  { name : "char_bot_left", offset : 38 },
@@ -24,27 +25,23 @@ const cbc = Object.freeze({
 
 export default class CharacterBot extends Character {
 
-    private sceneName: string | null = null;
-
     public init(ctx: CanvasRenderingContext2D, scenes: Scene[]): void {
         super.init(ctx, scenes);
     }
 
     constructor(engine: Engine, params: GameObjectParams) {
         super(engine, Object.assign(params, characterBotOverride) as CharacterParams);
-
-        this._height = 4;
     }
 
     protected handleCollision() {
 
         //Collision bitmask
         let cbm = this.brickHandler.checkCollisionSuper(
-            this.gpos.getSub({x: this.move.x > 0 ? 1 : 0, y : 5}),   //Position
-            5,                                                        // n + 1
-            14,                                                       //(n + 3) * 2
-            7,                                                        // n + 3
-            this.move.x);                                             //Direction
+            this.gpos.getSub({x: this.move.x > 0 ? 1 : 0, y : 5}),  //Position
+            5,                                                      // n + 1
+            14,                                                     //(n + 3) * 2
+            7,                                                      // n + 3
+            this.move.x);                                           //Direction
 
         // var qq = ""
 

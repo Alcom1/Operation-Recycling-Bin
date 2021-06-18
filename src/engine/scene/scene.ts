@@ -36,7 +36,7 @@ export default class Scene {
     }
 
     init(ctx: CanvasRenderingContext2D, scenes: Scene[]) {
-        const a = document.getElementById('x') as HTMLCanvasElement;
+        
         if (
             !this.initialized && 
             this.need.every(n => this.engine.tag.exists(n))

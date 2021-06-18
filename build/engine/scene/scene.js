@@ -15,7 +15,6 @@ export default class Scene {
     this.initialized = false;
   }
   init(ctx, scenes) {
-    const a = document.getElementById("x");
     if (!this.initialized && this.need.every((n) => this.engine.tag.exists(n))) {
       ctx.save();
       this.gameObjects.forEach((go) => go.init(ctx, scenes));
