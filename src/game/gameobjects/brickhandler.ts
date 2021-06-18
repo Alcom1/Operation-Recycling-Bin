@@ -173,8 +173,8 @@ export default class BrickHandler extends GameObject {
 
         for(let i = start; i < final; i++) {
 
-            let y = i % height;
-            let x = Math.floor(i / height);
+            let y = i % height;                 //Wrap by height
+            let x = Math.floor(i / height) % 2; //Wrap by 2 to go back and check ceiling
 
             for (const brick of this.rows.find(r => r.row == pos.y + y + 1)?.bricks.filter(b => !b.isSelected) || []) {
 

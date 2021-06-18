@@ -11,7 +11,7 @@ const characterBotOverride = Object.freeze({
 const cbc = Object.freeze({
   flor: bitStack([0, 7]),
   down: bitStack([1, 8]),
-  ceil: bitStack([2]),
+  ceil: bitStack([2, 9]),
   head: bitStack([3]),
   wall: bitStack([4, 5]),
   step: bitStack([6])
@@ -24,7 +24,7 @@ export default class CharacterBot extends Character {
     super(engine2, Object.assign(params, characterBotOverride));
   }
   handleCollision() {
-    let cbm = this.brickHandler.checkCollisionSuper(this.gpos.getSub({x: this.move.x > 0 ? 1 : 0, y: 5}), 5, 14, 7, this.move.x);
+    let cbm = this.brickHandler.checkCollisionSuper(this.gpos.getSub({x: this.move.x > 0 ? 1 : 0, y: 5}), 5, 15, 7, this.move.x);
     if (this.gpos.x - 1 < BOUNDARY.minx || this.gpos.x + 1 > BOUNDARY.maxx) {
       this.reverse();
     } else {
