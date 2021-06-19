@@ -9,7 +9,7 @@ const characterBotOverride = Object.freeze({
     height: 4,
     speed : 2.5,
     imageRight : { name : "char_bot_right", offset : 14},
-    imageLeft :  { name : "char_bot_left", offset : 38 },
+    imageLeft :  { name : "char_bot_left", offset : 36 },
     animFrames : 10,
     animCount : 2
 });
