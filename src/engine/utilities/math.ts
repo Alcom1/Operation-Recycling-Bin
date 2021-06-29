@@ -46,6 +46,11 @@ export function round(val: number, target: number): number {
     return Math.round(val / target) * target;
 }
 
+/** Floor a value to the nearest target */
+export function floor(val: number, target: number): number {
+    return Math.floor(val / target) * target;
+}
+
 /** Stack an array of integers into a bitmask */
 export function bitStack(numbers: number[]): number {
 

@@ -20,6 +20,9 @@ export function clamp(val, min, max) {
 export function round(val, target) {
   return Math.round(val / target) * target;
 }
+export function floor(val, target) {
+  return Math.floor(val / target) * target;
+}
 export function bitStack(numbers) {
   var ret = 0;
   numbers.forEach((n) => ret += 1 << n);

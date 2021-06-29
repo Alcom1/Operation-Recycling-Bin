@@ -1,6 +1,6 @@
 import Engine from "engine/engine";
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
-import { getZIndex, GMULTX, GMULTY, round, Z_DEPTH } from "engine/utilities/math";
+import { floor, getZIndex, GMULTX, GMULTY, round, Z_DEPTH } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 import { CharacterImage, CharacterParams } from "./character";
 
@@ -86,24 +86,29 @@ export default class SpriteCharacter extends GameObject {
         ctx.translate(-this.spos.x, 0);
 
         ctx.drawImage(
-            this.direction > 0 ? this.imageRight.image : this.imageLeft.image,
-            GMULTX * this.order + (this.direction > 0 ? this.imageRight.offset : this.imageLeft.offset) +
-            round((
-                this.animTrack +
-                this.timer * 
-                this.speed) * 
-                this.animWidth * 
-                this.animFrames / 
-                this.animCount - 
-
-                this.animWidth / 2,
-
-                this.animWidth),
+            this.direction > 0 ?            //Use different sprites based on travelling direction
+            this.imageRight.image :         //Right-travelling sprite
+            this.imageLeft.image,           //Left- travelling sprite
+                
+            GMULTX * this.order + (         //Move slice forward based on which segment this is.
+                this.direction > 0 ?        //Use different offsets based on travelling direction
+                this.imageRight.offset :    //Right-travelling offset
+                this.imageLeft.offset) +    //Left- travelling offset
+            floor((                         //Move slice forward to the current animation and current frame
+                this.animTrack +            //Move slice forward to the current animation
+                Math.min(                   //Get current frame based on the timer and speed of the character
+                    this.timer * 
+                    this.speed, 
+                    1 - Number.EPSILON)) *  //Subtract epsilon to prevent grabbing the next frame at max value
+                this.animWidth *            
+                this.animFrames /           
+                this.animCount,             
+                this.animWidth),            //Floor by frame-widths
             0,
             GMULTX,
             this.animHeight, 
 
-            GMULTX * (this.order - 1),
+            GMULTX * (this.order - 1),      //Move slice forward based on which segment this is.
             GMULTY - this.animHeight,
             GMULTX,
             this.animHeight);

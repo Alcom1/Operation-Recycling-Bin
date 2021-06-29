@@ -14,7 +14,6 @@ export default class Brick extends GameObject {
       ["r", false],
       ["h", true]
     ]);
-    this.isBaked = false;
     this.isStatic = false;
     this.isPressed = false;
     this.isSelected = false;
@@ -47,11 +46,10 @@ export default class Brick extends GameObject {
       }
     });
   }
+  init() {
+    this.image.src = this.engine.baker.bake((ctx) => this.drawBrick(ctx), this.width * GMULTX + Z_DEPTH + 3, GMULTY + Z_DEPTH + 3, `BRICK.${this.width}.${this.color}`);
+  }
   update(dt) {
-    if (!this.isBaked) {
-      this.image.src = this.engine.baker.bake((ctx) => this.drawBrick(ctx), this.width * GMULTX + Z_DEPTH + 3, GMULTY + Z_DEPTH + 3, `BRICK.${this.width}.${this.color}`);
-      this.isBaked = true;
-    }
     if (this.isSelected) {
       this.setToCursor();
     }

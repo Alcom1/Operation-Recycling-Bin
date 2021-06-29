@@ -1,5 +1,5 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
-import {getZIndex, GMULTX, GMULTY, round} from "../../engine/utilities/math.js";
+import {floor, getZIndex, GMULTX, GMULTY} from "../../engine/utilities/math.js";
 export default class SpriteCharacter extends GameObject {
   constructor(engine2, params) {
     super(engine2, params);
@@ -40,7 +40,7 @@ export default class SpriteCharacter extends GameObject {
   }
   draw(ctx) {
     ctx.translate(-this.spos.x, 0);
-    ctx.drawImage(this.direction > 0 ? this.imageRight.image : this.imageLeft.image, GMULTX * this.order + (this.direction > 0 ? this.imageRight.offset : this.imageLeft.offset) + round((this.animTrack + this.timer * this.speed) * this.animWidth * this.animFrames / this.animCount - this.animWidth / 2, this.animWidth), 0, GMULTX, this.animHeight, GMULTX * (this.order - 1), GMULTY - this.animHeight, GMULTX, this.animHeight);
+    ctx.drawImage(this.direction > 0 ? this.imageRight.image : this.imageLeft.image, GMULTX * this.order + (this.direction > 0 ? this.imageRight.offset : this.imageLeft.offset) + floor((this.animTrack + Math.min(this.timer * this.speed, 1 - Number.EPSILON)) * this.animWidth * this.animFrames / this.animCount, this.animWidth), 0, GMULTX, this.animHeight, GMULTX * (this.order - 1), GMULTY - this.animHeight, GMULTX, this.animHeight);
   }
 }
 //# sourceMappingURL=spritecharacter.js.map

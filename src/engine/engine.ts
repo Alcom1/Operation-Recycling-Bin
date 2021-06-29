@@ -123,7 +123,7 @@ export default class Engine {
         this.scenes.forEach(s => s.init(this.ctx, this.scenes));
     }
 
-    //Perform both an update and draw
+    /** Perform both an update and draw */
     private updateDrawScenes(scenes : Scene[], dt: number): void {
         scenes.forEach(s => s.update(dt));
         scenes.forEach(s => s.draw(this.ctx));

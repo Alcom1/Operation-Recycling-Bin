@@ -30,9 +30,6 @@ export default class Brick extends GameObject {
         ["h", true]
     ]);
 
-    /** If the image for this brick has been baked */
-    public isBaked = false;
-
     /** If this is a static brick that will never move (grey or blocked by grey bricks), calculated later */
     public isStatic = false;
 
@@ -108,23 +105,19 @@ export default class Brick extends GameObject {
         });
     }
 
+    public init() {
+
+        //Bake image of brick
+        this.image.src = this.engine.baker.bake(
+            ctx => this.drawBrick(ctx),
+            // Width to contain the brick, the right face, and the border
+            this.width * GMULTX + Z_DEPTH + 3,
+            // Height to contain the brick, the top face, and the border
+            GMULTY + Z_DEPTH + 3,
+            `BRICK.${this.width}.${this.color}`);
+    }
+
     public update(dt: number): void {
-        
-        //If the brick hasn't been baked yet
-        if(!this.isBaked) {
-
-            //Bake image of brick
-            this.image.src = this.engine.baker.bake(
-                ctx => this.drawBrick(ctx),
-                // Width to contain the brick, the right face, and the border
-                this.width * GMULTX + Z_DEPTH + 3,
-                // Height to contain the brick, the top face, and the border
-                GMULTY + Z_DEPTH + 3,
-                `BRICK.${this.width}.${this.color}`
-            );
-
-            this.isBaked = true;
-        }
 
         // Follow mouse if selected
         if (this.isSelected) {
