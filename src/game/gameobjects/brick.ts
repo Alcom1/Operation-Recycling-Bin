@@ -107,14 +107,17 @@ export default class Brick extends GameObject {
 
     public init() {
 
-        //Bake image of brick
-        this.image.src = this.engine.baker.bake(
-            ctx => this.drawBrick(ctx),
-            // Width to contain the brick, the right face, and the border
-            this.width * GMULTX + Z_DEPTH + 3,
-            // Height to contain the brick, the top face, and the border
-            GMULTY + Z_DEPTH + 3,
-            `BRICK.${this.width}.${this.color}`);
+        var imageName = `BRICK.${this.width}.${this.color}`;
+
+        this.image = this.engine.library.getImageWithSrc(
+            imageName,
+            this.engine.baker.bake(
+                ctx => this.drawBrick(ctx),
+                // Width to contain the brick, the right face, and the border
+                this.width * GMULTX + Z_DEPTH + 3,
+                // Height to contain the brick, the top face, and the border
+                GMULTY + Z_DEPTH + 3,
+                imageName));
     }
 
     public update(dt: number): void {
@@ -126,6 +129,7 @@ export default class Brick extends GameObject {
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
+
         // Global transparency for selection states
         ctx.globalAlpha =
             this.isSnapped ? 0.75 : // Snapped bricks are transparent

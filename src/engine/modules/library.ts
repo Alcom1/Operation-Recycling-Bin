@@ -10,19 +10,31 @@ export default class LibraryModule {
 
         const curr = this.assetsImage.get(name);
 
-        //If the asset isn't in the library, add it
-        if(curr == null) {
-            this.loadingCount++;
+        return curr == null ? 
+            this.storeImage(name, pathImg(name, extension)) :   //If the asset isn't in the library, add it
+            curr;                                               //Otherwise, return existing asset
+    }
 
-            //Create, store, and return new image
-            const image = new Image();
-            image.src = pathImg(name, extension);
-            image.onload = e => this.loadingCount--;
-            this.assetsImage.set(name, image);
-            return image;
-        }
+    /** Get an image asset from a full src, store it if it's new. */
+    public getImageWithSrc(name : string, src : string) {
+
+        const curr = this.assetsImage.get(name);
+
+        return curr == null ? 
+            this.storeImage(name, src) :                        //If the asset isn't in the library, add it
+            curr;                                               //Otherwise, return existing asset
+    }
+
+    private storeImage(name : string, src : string) {
+
+        this.loadingCount++;
         
-        return curr;
+        //Create, store, and return new image
+        const image = new Image();
+        image.src = src;
+        image.onload = e => this.loadingCount--;
+        this.assetsImage.set(name, image);
+        return image;
     }
 
     /** Return true if all assets are loaded */

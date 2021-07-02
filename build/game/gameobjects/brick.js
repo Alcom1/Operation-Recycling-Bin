@@ -47,7 +47,8 @@ export default class Brick extends GameObject {
     });
   }
   init() {
-    this.image.src = this.engine.baker.bake((ctx) => this.drawBrick(ctx), this.width * GMULTX + Z_DEPTH + 3, GMULTY + Z_DEPTH + 3, `BRICK.${this.width}.${this.color}`);
+    var imageName = `BRICK.${this.width}.${this.color}`;
+    this.image = this.engine.library.getImageWithSrc(imageName, this.engine.baker.bake((ctx) => this.drawBrick(ctx), this.width * GMULTX + Z_DEPTH + 3, GMULTY + Z_DEPTH + 3, imageName));
   }
   update(dt) {
     if (this.isSelected) {
