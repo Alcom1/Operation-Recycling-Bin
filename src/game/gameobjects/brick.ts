@@ -219,6 +219,7 @@ export default class Brick extends GameObject {
         this.isPressed = false;
         this.isSelected = false;
         this.isSnapped = false;
+        this.isChecked = false; //Fixed bug where selections dragged offscreen wouldn't clear correctly.
         this.spos.set(0, 0);
         this.selectedPos.set(0, 0);
         this.zIndex = getZIndex(this.gpos, this.width * 10);
