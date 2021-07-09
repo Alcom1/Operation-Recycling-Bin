@@ -1,32 +1,32 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
 import {GMULTX} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
-import SpriteCharacter from "./spritecharacter.js";
+import SpriteAnimated from "./spriteanimated.js";
 export default class Character extends GameObject {
   constructor(engine2, params) {
     super(engine2, params);
     this.underBricks = [];
-    this.segmentIndex = 0;
-    this.segments = [[]];
+    this.spriteGroupIndex = 0;
+    this.spriteGroups = [[]];
     this.speed = params.speed ?? 1;
     this.move = new Vect(1, 0);
     this._height = params.height ?? 2;
     this.checkCollision = true;
     for (let i = -1; i < 4; i++) {
-      const segment = new SpriteCharacter(this.engine, {
+      const segment = new SpriteAnimated(this.engine, {
         ...params,
         order: i,
         width: GMULTX
       });
-      this.segmentsCurr.push(segment);
+      this.spriteGroupCurr.push(segment);
       this.parent.pushGO(segment);
     }
   }
   get height() {
     return this._height;
   }
-  get segmentsCurr() {
-    return this.segments[this.segmentIndex];
+  get spriteGroupCurr() {
+    return this.spriteGroups[this.spriteGroupIndex];
   }
   init(ctx, scenes) {
     const level = scenes.find((s) => s.name == "Level");
@@ -46,7 +46,7 @@ export default class Character extends GameObject {
     if (this.checkCollision) {
       this.handleCollision();
       this.handleBricks();
-      this.segmentsCurr.forEach((s) => s.updateSprite(this.gpos));
+      this.spriteGroupCurr.forEach((s) => s.updateSprite(this.gpos));
       this.level.sortGO();
       this.checkCollision = false;
     }
@@ -62,7 +62,7 @@ export default class Character extends GameObject {
   reverse() {
     this.move.x *= -1;
     this.gpos.x += this.move.x;
-    this.segmentsCurr.forEach((x) => x.direction = this.move.x);
+    this.spriteGroupCurr.forEach((x) => x.setImageIndex(this.move.x));
   }
 }
 //# sourceMappingURL=character.js.map

@@ -4,7 +4,11 @@ import { BOUNDARY, GMULTX, GMULTY, bitStack} from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 import { GameObjectParams } from "engine/gameobjects/gameobject";
 import Scene from "engine/scene/scene";
-import SpriteCharacter from "./spritecharacter";
+import SpriteAnimated, { SpriteAnimatedParams } from "./spriteanimated";
+
+export interface CharacterBotParams extends CharacterParams {
+    imagesMisc : CharacterImageParams[];
+}
 
 const characterBotOverride = Object.freeze({
     height: 4,
@@ -13,7 +17,7 @@ const characterBotOverride = Object.freeze({
         { name : "char_bot_left", offset : 36 },
         { name : "char_bot_right", offset : 14}],
     imagesMisc : [
-        { name : "char_bot_misc", offset : 0 }],
+        { name : "char_bot_bin", offset : 0 }],
     animFrames : 10,
     animCount : 2
 });
@@ -33,11 +37,17 @@ export default class CharacterBot extends Character {
         super.init(ctx, scenes);
     }
 
-    constructor(engine: Engine, params: GameObjectParams) {
-        super(engine, Object.assign(params, characterBotOverride) as CharacterParams);
+    constructor(engine: Engine, params: CharacterBotParams) {
+        super(engine, Object.assign(params, characterBotOverride));
 
-        //var newIndex = this.segments.push([]) - 1;
-        //this.segments[newIndex]
+        var newIndex = this.spriteGroups.push([]) - 1;
+        this.spriteGroups[newIndex].push(new SpriteAnimated(this.engine, {
+            ...params, 
+            images : params.imagesMisc,
+            order : 0, 
+            width : 126 
+        } as SpriteAnimatedParams));
+        this.parent.pushGO(this.spriteGroups[newIndex][0]);
     }
 
     protected handleCollision() {

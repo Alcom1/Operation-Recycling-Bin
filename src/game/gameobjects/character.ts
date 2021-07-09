@@ -6,13 +6,12 @@ import Vect, { Point } from "engine/utilities/vect";
 import BrickHandler from "./brickhandler";
 import Brick from "./brick";
 import Cursor from "./cursor";
-import SpriteCharacter, { SpriteCharacterParams } from "./spritecharacter";
+import SpriteAnimated, { SpriteAnimatedParams } from "./spriteanimated";
 
 export interface CharacterParams extends GameObjectParams {
     height? : number;
     speed? : number;
     images : CharacterImageParams[];
-    imagesMisc : CharacterImageParams[];
     animFrames : number;
     animCount : number;
 }
@@ -39,9 +38,9 @@ export default class Character extends GameObject {
     private underBricks: Brick[] = [];
     protected checkCollision: boolean;
 
-    protected segmentIndex = 0;
-    protected segments: SpriteCharacter[][] = [[]];
-    protected get segmentsCurr() : SpriteCharacter[] { return this.segments[this.segmentIndex] }
+    protected spriteGroupIndex = 0;
+    protected spriteGroups: SpriteAnimated[][] = [[]];
+    protected get spriteGroupCurr() : SpriteAnimated[] { return this.spriteGroups[this.spriteGroupIndex] }
 
     constructor(engine: Engine, params: CharacterParams) {
         super(engine, params);
@@ -51,16 +50,16 @@ export default class Character extends GameObject {
         this._height = params.height ?? 2;  //Default height for a character
         this.checkCollision = true;
 
-        //Spawn sprite segments
+        //Spawn sprite groups
         for(let i = -1; i < 4; i++) {
 
             //Generate segment
-            const segment = new SpriteCharacter(this.engine, {
+            const segment = new SpriteAnimated(this.engine, {
                 ...params, 
                 order : i, 
                 width : GMULTX 
-            } as SpriteCharacterParams);
-            this.segmentsCurr.push(segment);
+            } as SpriteAnimatedParams);
+            this.spriteGroupCurr.push(segment);
             
             // Add segment game object to scene
             this.parent.pushGO(segment);
@@ -101,7 +100,7 @@ export default class Character extends GameObject {
             this.handleCollision();
             this.handleBricks();
 
-            this.segmentsCurr.forEach(s => s.updateSprite(this.gpos));
+            this.spriteGroupCurr.forEach(s => s.updateSprite(this.gpos));
             this.level.sortGO();
 
             this.checkCollision = false;
@@ -127,6 +126,6 @@ export default class Character extends GameObject {
     protected reverse() {
         this.move.x *= -1;
         this.gpos.x += this.move.x;
-        this.segmentsCurr.forEach(x => x.direction = this.move.x);
+        this.spriteGroupCurr.forEach(x => x.setImageIndex(this.move.x));
     }
 }

@@ -2,15 +2,15 @@ import Engine from "engine/engine";
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import { floor, getZIndex, GMULTX, GMULTY, OPPOSITE_DIRS, round, Z_DEPTH } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
-import { CharacterImage, CharacterParams } from "./character";
+import { CharacterImage, CharacterImageParams, CharacterParams } from "./character";
 
-export interface SpriteCharacterParams extends CharacterParams {
+export interface SpriteAnimatedParams extends CharacterParams {
     order : number;
     width? : number;
 }
 
 /** Single image gameobject */
-export default class SpriteCharacter extends GameObject {
+export default class SpriteAnimated extends GameObject {
 
     //Set in constructor
     private order : number;
@@ -27,24 +27,40 @@ export default class SpriteCharacter extends GameObject {
     //Set here
     private animTrack : number = 0;
     private timer : number = 0;
-    public direction: number = 1;
+    private index: number = 1;
 
-    constructor(engine : Engine, params : SpriteCharacterParams) {
+    constructor(engine : Engine, params : SpriteAnimatedParams) {
         super(engine, params);
 
         this.order = params.order;
         this.width = params.width;
         this.speed = params.speed ?? 1;
 
-        OPPOSITE_DIRS.forEach(d => {
-            const index = Math.max(d, 0);
-            this.images[d] = {
-                image : this.engine.library.getImage(
-                    params.images[index].name, 
-                    params.images[index].extension),
-                offset : params.images[index].offset
-            }
-        });
+
+        switch(params.images.length){
+
+            //No images (why?)
+            case 0:
+                break;
+
+            //Single images
+            case 1:
+                this.index = 0;
+                this.getCharacterImage(params.images[0]);
+            
+            //Pair of images with opposing directions
+            case 2:
+                OPPOSITE_DIRS.forEach(d => {
+                    const index = Math.max(d, 0);
+                    if(params.images[index]) {
+                        this.images[d] = this.getCharacterImage(params.images[index]);
+                    }
+                });
+
+            //Many images
+            default:
+                params.images.forEach(i => this.images.push(this.getCharacterImage(i)));
+        }
 
         this.animFrames = params.animFrames;
         this.animCount = params.animCount;
@@ -52,11 +68,20 @@ export default class SpriteCharacter extends GameObject {
         this.setZIndex();
     }
 
+    private getCharacterImage(params : CharacterImageParams) : CharacterImage {
+        return {
+            image : this.engine.library.getImage(
+                params.name, 
+                params.extension),
+            offset : params.offset
+        }
+    }
+
     public init(ctx : CanvasRenderingContext2D) {
 
         //Wait for init, images are guaranteed loaded by then
-        this.animWidth = this.images[1].image.width / this.animFrames;
-        this.animHeight = this.images[1].image.height;
+        this.animWidth = this.images[this.index].image.width / this.animFrames;
+        this.animHeight = this.images[this.index].image.height;
     }
 
     public update(dt: number) {
@@ -79,10 +104,19 @@ export default class SpriteCharacter extends GameObject {
             300 - (this.order < 2 ? 0 : 295));
     }
 
+    public setImageIndex(index : number) {
+        this.index = index;
+    }
+
     public draw(ctx : CanvasRenderingContext2D) {
 
+        //Temporarily hiding single-image sprites
+        if(this.images[0]) {
+            return;
+        }
+
         const width = this.width ?? 0;
-        const image = this.images[this.direction];
+        const image = this.images[this.index];
 
         ctx.translate(-this.spos.x, 0);
 
