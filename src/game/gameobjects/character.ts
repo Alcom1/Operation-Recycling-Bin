@@ -11,8 +11,8 @@ import SpriteCharacter, { SpriteCharacterParams } from "./spritecharacter";
 export interface CharacterParams extends GameObjectParams {
     height? : number;
     speed? : number;
-    imageRight : CharacterImageParams;
-    imageLeft : CharacterImageParams;
+    images : CharacterImageParams[];
+    imagesMisc : CharacterImageParams[];
     animFrames : number;
     animCount : number;
 }
@@ -39,7 +39,9 @@ export default class Character extends GameObject {
     private underBricks: Brick[] = [];
     protected checkCollision: boolean;
 
-    private segments: SpriteCharacter[] = [];
+    protected segmentIndex = 0;
+    protected segments: SpriteCharacter[][] = [[]];
+    protected get segmentsCurr() : SpriteCharacter[] { return this.segments[this.segmentIndex] }
 
     constructor(engine: Engine, params: CharacterParams) {
         super(engine, params);
@@ -53,8 +55,12 @@ export default class Character extends GameObject {
         for(let i = -1; i < 4; i++) {
 
             //Generate segment
-            const segment = new SpriteCharacter(this.engine, {...params, order : i } as SpriteCharacterParams);
-            this.segments.push(segment);
+            const segment = new SpriteCharacter(this.engine, {
+                ...params, 
+                order : i, 
+                width : GMULTX 
+            } as SpriteCharacterParams);
+            this.segmentsCurr.push(segment);
             
             // Add segment game object to scene
             this.parent.pushGO(segment);
@@ -95,7 +101,7 @@ export default class Character extends GameObject {
             this.handleCollision();
             this.handleBricks();
 
-            this.segments.forEach(s => s.updateSprite(this.gpos));
+            this.segmentsCurr.forEach(s => s.updateSprite(this.gpos));
             this.level.sortGO();
 
             this.checkCollision = false;
@@ -121,6 +127,6 @@ export default class Character extends GameObject {
     protected reverse() {
         this.move.x *= -1;
         this.gpos.x += this.move.x;
-        this.segments.forEach(x => x.direction = this.move.x);
+        this.segmentsCurr.forEach(x => x.direction = this.move.x);
     }
 }

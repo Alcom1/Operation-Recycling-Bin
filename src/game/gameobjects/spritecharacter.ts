@@ -1,11 +1,12 @@
 import Engine from "engine/engine";
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
-import { floor, getZIndex, GMULTX, GMULTY, round, Z_DEPTH } from "engine/utilities/math";
+import { floor, getZIndex, GMULTX, GMULTY, OPPOSITE_DIRS, round, Z_DEPTH } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 import { CharacterImage, CharacterParams } from "./character";
 
 export interface SpriteCharacterParams extends CharacterParams {
     order : number;
+    width? : number;
 }
 
 /** Single image gameobject */
@@ -13,9 +14,9 @@ export default class SpriteCharacter extends GameObject {
 
     //Set in constructor
     private order : number;
+    private width? : number;
     private speed : number;
-    private imageRight : CharacterImage;
-    private imageLeft : CharacterImage;
+    private images : CharacterImage[] = [];
     private animFrames : number;
     private animCount : number;
 
@@ -32,21 +33,18 @@ export default class SpriteCharacter extends GameObject {
         super(engine, params);
 
         this.order = params.order;
+        this.width = params.width;
         this.speed = params.speed ?? 1;
-        
-        this.imageRight = {
-            image : this.engine.library.getImage(
-                params.imageRight.name, 
-                params.imageRight.extension),
-            offset : params.imageRight.offset
-        };
 
-        this.imageLeft = {
-            image : this.engine.library.getImage(
-                params.imageLeft.name, 
-                params.imageLeft.extension),
-            offset : params.imageLeft.offset
-        };
+        OPPOSITE_DIRS.forEach(d => {
+            const index = Math.max(d, 0);
+            this.images[d] = {
+                image : this.engine.library.getImage(
+                    params.images[index].name, 
+                    params.images[index].extension),
+                offset : params.images[index].offset
+            }
+        });
 
         this.animFrames = params.animFrames;
         this.animCount = params.animCount;
@@ -57,8 +55,8 @@ export default class SpriteCharacter extends GameObject {
     public init(ctx : CanvasRenderingContext2D) {
 
         //Wait for init, images are guaranteed loaded by then
-        this.animWidth = this.imageRight.image.width / this.animFrames;
-        this.animHeight = this.imageRight.image.height;
+        this.animWidth = this.images[1].image.width / this.animFrames;
+        this.animHeight = this.images[1].image.height;
     }
 
     public update(dt: number) {
@@ -83,43 +81,45 @@ export default class SpriteCharacter extends GameObject {
 
     public draw(ctx : CanvasRenderingContext2D) {
 
+        const width = this.width ?? 0;
+        const image = this.images[this.direction];
+
         ctx.translate(-this.spos.x, 0);
 
         ctx.drawImage(
-            this.direction > 0 ?            //Use different sprites based on travelling direction
-            this.imageRight.image :         //Right-travelling sprite
-            this.imageLeft.image,           //Left- travelling sprite
-                
-            GMULTX * this.order + (         //Move slice forward based on which segment this is.
-                this.direction > 0 ?        //Use different offsets based on travelling direction
-                this.imageRight.offset :    //Right-travelling offset
-                this.imageLeft.offset) +    //Left- travelling offset
+            //Greater image
+            image.image,                    //Use different sprites based on travelling direction
+            
+            //Slice position & size
+            width * this.order +            //Move slice forward based on which segment this is.
+            image.offset +                  //Use different offsets based on travelling direction  
             floor((                         //Move slice forward to the current animation and current frame
                 this.animTrack +            //Move slice forward to the current animation
                 Math.min(                   //Get current frame based on the timer and speed of the character
-                    this.timer * 
-                    this.speed, 
+                    this.timer *    
+                    this.speed,     
                     1 - Number.EPSILON)) *  //Subtract epsilon to prevent grabbing the next frame at max value
                 this.animWidth *            
                 this.animFrames /           
                 this.animCount,             
                 this.animWidth),            //Floor by frame-widths
-            0,
-            GMULTX,
-            this.animHeight, 
+            0,  
+            width,  
+            this.animHeight,    
 
-            GMULTX * (this.order - 1),      //Move slice forward based on which segment this is.
+            //Greater image position & size
+            width * (this.order - 1),       //Move slice forward based on which segment this is.
             GMULTY - this.animHeight,
-            GMULTX,
+            width,
             this.animHeight);
 
         // ctx.globalAlpha = 0.5;
         // ctx.strokeStyle = "#F00"
         // ctx.lineWidth = 4;
         // ctx.strokeRect(
-        //     GMULTX * (this.order - 1), 
+        //     width * (this.order - 1), 
         //     GMULTY, 
-        //     GMULTX, 
+        //     width, 
         //    -this.animHeight);
     }
 }

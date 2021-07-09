@@ -4,12 +4,16 @@ import { BOUNDARY, GMULTX, GMULTY, bitStack} from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 import { GameObjectParams } from "engine/gameobjects/gameobject";
 import Scene from "engine/scene/scene";
+import SpriteCharacter from "./spritecharacter";
 
 const characterBotOverride = Object.freeze({
     height: 4,
     speed : 2.5,
-    imageRight : { name : "char_bot_right", offset : 14},
-    imageLeft :  { name : "char_bot_left", offset : 36 },
+    images : [
+        { name : "char_bot_left", offset : 36 },
+        { name : "char_bot_right", offset : 14}],
+    imagesMisc : [
+        { name : "char_bot_misc", offset : 0 }],
     animFrames : 10,
     animCount : 2
 });
@@ -31,6 +35,9 @@ export default class CharacterBot extends Character {
 
     constructor(engine: Engine, params: GameObjectParams) {
         super(engine, Object.assign(params, characterBotOverride) as CharacterParams);
+
+        //var newIndex = this.segments.push([]) - 1;
+        //this.segments[newIndex]
     }
 
     protected handleCollision() {

@@ -3,8 +3,13 @@ import {BOUNDARY, bitStack} from "../../engine/utilities/math.js";
 const characterBotOverride = Object.freeze({
   height: 4,
   speed: 2.5,
-  imageRight: {name: "char_bot_right", offset: 14},
-  imageLeft: {name: "char_bot_left", offset: 36},
+  images: [
+    {name: "char_bot_left", offset: 36},
+    {name: "char_bot_right", offset: 14}
+  ],
+  imagesMisc: [
+    {name: "char_bot_misc", offset: 0}
+  ],
   animFrames: 10,
   animCount: 2
 });
