@@ -1,5 +1,5 @@
 import Character from "./character.js";
-import {BOUNDARY, bitStack} from "../../engine/utilities/math.js";
+import {BOUNDARY, GMULTX, bitStack} from "../../engine/utilities/math.js";
 import SpriteAnimated from "./spriteanimated.js";
 const characterBotOverride = Object.freeze({
   height: 4,
@@ -31,7 +31,11 @@ export default class CharacterBot extends Character {
       ...params,
       images: params.imagesMisc,
       order: 0,
-      width: 126
+      offset: -GMULTX,
+      width: 126,
+      animFrames: 12,
+      animCount: 1,
+      speed: 1
     }));
     this.parent.pushGO(this.spriteGroups[newIndex][0]);
   }
@@ -40,6 +44,10 @@ export default class CharacterBot extends Character {
   }
   handleUniqueMovmeent(dt) {
     this.timer += dt;
+    if (this.timer > 1) {
+      this.timer = 0;
+      this.setCurrentGroup(0);
+    }
   }
   handleCollision() {
     let cbm = this.brickHandler.checkCollisionSuper(this.gpos.getSub({x: this.move.x > 0 ? 1 : 0, y: 5}), 5, 15, 7, this.move.x);

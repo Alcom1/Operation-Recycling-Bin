@@ -7,6 +7,7 @@ import { CharacterImage, CharacterImageParams, CharacterParams } from "./charact
 export interface SpriteAnimatedParams extends CharacterParams {
     order : number;
     width? : number;
+    offset : number;
 }
 
 /** Single image gameobject */
@@ -15,6 +16,7 @@ export default class SpriteAnimated extends GameObject {
     //Set in constructor
     private order : number;
     private width? : number;
+    private offset : number;
     private speed : number;
     private images : CharacterImage[] = [];
     private animFrames : number;
@@ -34,6 +36,7 @@ export default class SpriteAnimated extends GameObject {
 
         this.order = params.order;
         this.width = params.width;
+        this.offset = params.offset;
         this.speed = params.speed ?? 1;
 
 
@@ -113,31 +116,29 @@ export default class SpriteAnimated extends GameObject {
         const width = this.width ?? 0;
         const image = this.images[this.index];
 
-        ctx.translate(-this.spos.x, 0);
-
         ctx.drawImage(
             //Greater image
-            image.image,                    //Use different sprites based on travelling direction
-            
-            //Slice position & size
-            width * this.order +            //Move slice forward based on which segment this is.
-            image.offset +                  //Use different offsets based on travelling direction  
-            floor((                         //Move slice forward to the current animation and current frame
-                this.animTrack +            //Move slice forward to the current animation
-                Math.min(                   //Get current frame based on the timer and speed of the character
-                    this.timer *    
-                    this.speed,     
-                    1 - Number.EPSILON)) *  //Subtract epsilon to prevent grabbing the next frame at max value
-                this.animWidth *            
-                this.animFrames /           
-                this.animCount,             
-                this.animWidth),            //Floor by frame-widths
+            image.image,                        //Use different sprites based on travelling direction
+
+            //Slice position & size 
+            width * this.order +                //Move slice forward based on which segment this is.
+            image.offset +                      //Use different offsets based on travelling direction  
+            floor((                             //Move slice forward to the current animation and current frame
+                this.animTrack +                //Move slice forward to the current animation
+                Math.min(                       //Get current frame based on the timer and speed of the character
+                    this.timer *        
+                    this.speed,         
+                    1 - Number.EPSILON)) *      //Subtract epsilon to prevent grabbing the next frame at max value
+                this.animWidth *                
+                this.animFrames /               
+                this.animCount,                 
+                this.animWidth),                //Floor by frame-widths
             0,  
             width,  
             this.animHeight,    
 
             //Greater image position & size
-            width * (this.order - 1),       //Move slice forward based on which segment this is.
+            width * this.order + this.offset,   //Move slice forward based on which segment this is and its offset
             GMULTY - this.animHeight,
             width,
             this.animHeight);
@@ -146,7 +147,7 @@ export default class SpriteAnimated extends GameObject {
         // ctx.strokeStyle = "#F00"
         // ctx.lineWidth = 4;
         // ctx.strokeRect(
-        //     width * (this.order - 1), 
+        //     width * this.order + this.offset, 
         //     GMULTY, 
         //     width, 
         //    -this.animHeight);

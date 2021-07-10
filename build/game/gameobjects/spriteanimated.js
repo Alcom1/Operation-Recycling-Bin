@@ -11,6 +11,7 @@ export default class SpriteAnimated extends GameObject {
     this.index = 1;
     this.order = params.order;
     this.width = params.width;
+    this.offset = params.offset;
     this.speed = params.speed ?? 1;
     switch (params.images.length) {
       case 0:
@@ -60,8 +61,7 @@ export default class SpriteAnimated extends GameObject {
   draw(ctx) {
     const width = this.width ?? 0;
     const image = this.images[this.index];
-    ctx.translate(-this.spos.x, 0);
-    ctx.drawImage(image.image, width * this.order + image.offset + floor((this.animTrack + Math.min(this.timer * this.speed, 1 - Number.EPSILON)) * this.animWidth * this.animFrames / this.animCount, this.animWidth), 0, width, this.animHeight, width * (this.order - 1), GMULTY - this.animHeight, width, this.animHeight);
+    ctx.drawImage(image.image, width * this.order + image.offset + floor((this.animTrack + Math.min(this.timer * this.speed, 1 - Number.EPSILON)) * this.animWidth * this.animFrames / this.animCount, this.animWidth), 0, width, this.animHeight, width * this.order + this.offset, GMULTY - this.animHeight, width, this.animHeight);
   }
 }
 //# sourceMappingURL=spriteanimated.js.map

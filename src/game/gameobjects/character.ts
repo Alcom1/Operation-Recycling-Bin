@@ -58,6 +58,7 @@ export default class Character extends GameObject {
             const segment = new SpriteAnimated(this.engine, {
                 ...params, 
                 order : i, 
+                offset : -GMULTX,
                 width : GMULTX 
             } as SpriteAnimatedParams);
             this.spriteGroupCurr.push(segment);
@@ -161,6 +162,9 @@ export default class Character extends GameObject {
 
         index = index ?? this.spriteGroupIndex;
         this.spriteGroupIndex = index;
-        this.spriteGroups.forEach((g, i) => g.forEach(s => s.isActive = i == index));
+        this.spriteGroups.forEach((g, i) => g.forEach(s => {
+            s.isActive = i == index;
+            s.updateSprite(this.gpos);
+        }));
     }
 }

@@ -46,8 +46,12 @@ export default class CharacterBot extends Character {
         this.spriteGroups[newIndex].push(new SpriteAnimated(this.engine, {
             ...params, 
             images : params.imagesMisc,
-            order : 0, 
-            width : 126 
+            order : 0,
+            offset : -GMULTX,
+            width : 126,
+            animFrames : 12,
+            animCount : 1,
+            speed : 1
         } as SpriteAnimatedParams));
         this.parent.pushGO(this.spriteGroups[newIndex][0]);
     }
@@ -55,9 +59,20 @@ export default class CharacterBot extends Character {
     protected handleUniqueMovmeent(dt : number) {
 
         this.timer += dt;
+
+        if(this.timer > 1) {
+            this.timer = 0;
+            this.setCurrentGroup(0);
+        }
     }
 
     protected handleCollision() {
+
+        // Test for alternate animation
+        // if(this.gpos.x % 5 == 0) {
+
+        //     this.setCurrentGroup(1);
+        // }
 
         //Collision bitmask
         let cbm = this.brickHandler.checkCollisionSuper(
