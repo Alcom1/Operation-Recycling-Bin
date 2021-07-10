@@ -89,6 +89,8 @@ export default class Character extends GameObject {
   deactivate() {
     this.isActive = false;
     this.spriteGroups.forEach((sg) => sg.forEach((s) => s.isActive = false));
+    this.underBricks.forEach((b) => b.pressure -= 1);
+    this.underBricks = [];
   }
 }
 //# sourceMappingURL=character.js.map
