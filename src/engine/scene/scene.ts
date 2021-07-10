@@ -67,13 +67,15 @@ export default class Scene {
 
     update(dt: number) {
         if(this.initialized) {
-            this.gameObjects.forEach(go =>  go.update(dt));
+            this.gameObjects.forEach(go => { if(!go.isActive) { return; }
+                go.update(dt)
+            });
         }
     }
 
     draw(ctx: CanvasRenderingContext2D) {
         if (this.initialized) {
-            for (const go of this.gameObjects) {
+            this.gameObjects.forEach(go => { if(!go.isActive) { return; }
                 ctx.save();
                 ctx.translate(
                     go.gpos.x * GMULTX + go.spos.x, 
@@ -81,7 +83,7 @@ export default class Scene {
                 );
                 go.draw(ctx);
                 ctx.restore();
-            }
+            });
         }
     } 
 }

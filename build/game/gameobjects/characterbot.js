@@ -23,11 +23,9 @@ const cbc = Object.freeze({
   step: bitStack([6])
 });
 export default class CharacterBot extends Character {
-  init(ctx, scenes) {
-    super.init(ctx, scenes);
-  }
   constructor(engine2, params) {
     super(engine2, Object.assign(params, characterBotOverride));
+    this.timer = 0;
     var newIndex = this.spriteGroups.push([]) - 1;
     this.spriteGroups[newIndex].push(new SpriteAnimated(this.engine, {
       ...params,
@@ -36,6 +34,12 @@ export default class CharacterBot extends Character {
       width: 126
     }));
     this.parent.pushGO(this.spriteGroups[newIndex][0]);
+  }
+  init(ctx, scenes) {
+    super.init(ctx, scenes);
+  }
+  handleUniqueMovmeent(dt) {
+    this.timer += dt;
   }
   handleCollision() {
     let cbm = this.brickHandler.checkCollisionSuper(this.gpos.getSub({x: this.move.x > 0 ? 1 : 0, y: 5}), 5, 15, 7, this.move.x);

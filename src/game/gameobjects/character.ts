@@ -41,6 +41,7 @@ export default class Character extends GameObject {
     protected spriteGroupIndex = 0;
     protected spriteGroups: SpriteAnimated[][] = [[]];
     protected get spriteGroupCurr() : SpriteAnimated[] { return this.spriteGroups[this.spriteGroupIndex] }
+    protected get isNormalMovment() : boolean { return this.spriteGroupIndex == 0 }
 
     constructor(engine: Engine, params: CharacterParams) {
         super(engine, params);
@@ -75,26 +76,22 @@ export default class Character extends GameObject {
 
         // Get brickhandler for pressure checks
         this.brickHandler = this.engine.tag.get("BrickHandler", "LevelInterface")[0] as BrickHandler;
+
+        // Set active groups
+        this.setCurrentGroup();
     }
 
     public update(dt: number) {
 
-        //Increment position by speed
-        this.spos.x += this.move.x * this.speed * GMULTX * dt;
-
-        //Step grid position further once subposition goes past a grid-unit
-        if (Math.abs(this.spos.x) > GMULTX) {
-
-            var dir = Math.sign(this.spos.x);
-
-            this.spos.x -= GMULTX * dir;
-            this.gpos.x += dir;
-
-
-            this.checkCollision = true;
+        //Normal or unique movement
+        if(this.isNormalMovment) {
+            this.handleNormalMovement(dt);
+        }
+        else {
+            this.handleUniqueMovmeent(dt);
         }
 
-        //Check collision
+        //Handle collision, set zIndices for new position
         if(this.checkCollision) {
 
             this.handleCollision();
@@ -107,25 +104,63 @@ export default class Character extends GameObject {
         }
     }
 
+    //Move forward and set collection check at each step.
+    private handleNormalMovement(dt: number) {
+
+        //Increment position by speed
+        this.spos.x += this.move.x * this.speed * GMULTX * dt;
+
+        //Step grid position further once subposition goes past a grid-unit
+        if (Math.abs(this.spos.x) > GMULTX) {
+
+            var dir = Math.sign(this.spos.x);
+
+            this.spos.x -= GMULTX * dir;
+            this.gpos.x += dir;
+
+            this.checkCollision = true;
+        }
+    }
+
+    //Do nothing - override
+    protected handleUniqueMovmeent(dt: number) {
+
+    }
+
+    //Manage bricks underneath this character, set pressure
     private handleBricks() {
 
+        //Reset pressures
         this.underBricks.forEach(b => b.pressure -= 1);
 
+        //Get new set of bricks for pressures
         this.underBricks = this.brickHandler.checkCollisionRow(
             this.gpos.getAdd({x : -1, y : 1}), 
             2);
 
+        //Set new pressures
         this.underBricks.forEach(b => b.pressure += 1);
         this.brickHandler.isPressured = true;
     }
 
+    //Do nothing - override
     protected handleCollision() {
 
     }
 
+    //Reverse the direction of this character
     protected reverse() {
+
         this.move.x *= -1;
         this.gpos.x += this.move.x;
-        this.spriteGroupCurr.forEach(x => x.setImageIndex(this.move.x));
+        this.spriteGroups[0].forEach(x => x.setImageIndex(this.move.x));
+    }
+
+    //Set current & active group based on the group index
+    protected setCurrentGroup(index? : number) {
+
+        index = index ?? this.spriteGroupIndex;
+        this.spriteGroupIndex = index;
+        this.spriteGroups.forEach((g, i) => g.forEach(s => s.isActive = i == index));
     }
 }

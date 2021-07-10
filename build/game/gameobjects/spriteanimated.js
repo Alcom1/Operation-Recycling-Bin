@@ -58,9 +58,6 @@ export default class SpriteAnimated extends GameObject {
     this.index = index;
   }
   draw(ctx) {
-    if (this.images[0]) {
-      return;
-    }
     const width = this.width ?? 0;
     const image = this.images[this.index];
     ctx.translate(-this.spos.x, 0);

@@ -34,17 +34,25 @@ export default class Scene {
   }
   update(dt) {
     if (this.initialized) {
-      this.gameObjects.forEach((go) => go.update(dt));
+      this.gameObjects.forEach((go) => {
+        if (!go.isActive) {
+          return;
+        }
+        go.update(dt);
+      });
     }
   }
   draw(ctx) {
     if (this.initialized) {
-      for (const go of this.gameObjects) {
+      this.gameObjects.forEach((go) => {
+        if (!go.isActive) {
+          return;
+        }
         ctx.save();
         ctx.translate(go.gpos.x * GMULTX + go.spos.x, go.gpos.y * GMULTY + go.spos.y);
         go.draw(ctx);
         ctx.restore();
-      }
+      });
     }
   }
 }

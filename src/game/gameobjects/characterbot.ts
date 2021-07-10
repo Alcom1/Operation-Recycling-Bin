@@ -33,6 +33,8 @@ const cbc = Object.freeze({
 
 export default class CharacterBot extends Character {
 
+    private timer : number = 0;
+
     public init(ctx: CanvasRenderingContext2D, scenes: Scene[]): void {
         super.init(ctx, scenes);
     }
@@ -48,6 +50,11 @@ export default class CharacterBot extends Character {
             width : 126 
         } as SpriteAnimatedParams));
         this.parent.pushGO(this.spriteGroups[newIndex][0]);
+    }
+
+    protected handleUniqueMovmeent(dt : number) {
+
+        this.timer += dt;
     }
 
     protected handleCollision() {

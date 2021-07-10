@@ -20,6 +20,7 @@ export default class GameObject {
     public zIndex: number;
     public tag: string;
     public parent: Scene;
+    public isActive: Boolean = true;
 
     constructor(protected engine: Engine, params: GameObjectParams) {
         this.gpos = new Vect(params.position?.x ?? 0, params.position?.y ?? 0);

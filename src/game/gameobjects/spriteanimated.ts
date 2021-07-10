@@ -110,11 +110,6 @@ export default class SpriteAnimated extends GameObject {
 
     public draw(ctx : CanvasRenderingContext2D) {
 
-        //Temporarily hiding single-image sprites
-        if(this.images[0]) {
-            return;
-        }
-
         const width = this.width ?? 0;
         const image = this.images[this.index];
 
