@@ -55,13 +55,14 @@ export default class TagModule {
         }
     }
 
-    /** Returns all game objects for the given tag and scene name */
-    public get(tag: string, sceneName: string): GameObject[] {
+    /** Returns all game objects for the given tag(s) and scene name */
+    public get(tag: string | string[], sceneName: string): GameObject[] {
+
         return this.scenes.find(
             sg => sg.name == sceneName
-        )?.tags.find(
-            gos => gos.tag == tag
-        )?.tagObjects || [];
+        )?.tags.filter(
+            gos => Array.isArray(tag) ? tag.includes(gos.tag) : gos.tag == tag
+        )?.flatMap(t => t.tagObjects) ?? [];
     }
 
     /** Remove scenes with names in the provided list */

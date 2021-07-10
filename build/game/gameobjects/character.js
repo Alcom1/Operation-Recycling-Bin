@@ -81,10 +81,14 @@ export default class Character extends GameObject {
   setCurrentGroup(index) {
     index = index ?? this.spriteGroupIndex;
     this.spriteGroupIndex = index;
-    this.spriteGroups.forEach((g, i) => g.forEach((s) => {
+    this.spriteGroups.forEach((sg, i) => sg.forEach((s) => {
       s.isActive = i == index;
       s.updateSprite(this.gpos);
     }));
+  }
+  deactivate() {
+    this.isActive = false;
+    this.spriteGroups.forEach((sg) => sg.forEach((s) => s.isActive = false));
   }
 }
 //# sourceMappingURL=character.js.map

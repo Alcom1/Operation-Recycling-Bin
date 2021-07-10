@@ -1,10 +1,9 @@
 import Engine from "engine/engine";
 import Character, { CharacterParams, CharacterImageParams } from "./character";
-import { BOUNDARY, GMULTX, GMULTY, bitStack} from "engine/utilities/math";
-import Vect from "engine/utilities/vect";
-import { GameObjectParams } from "engine/gameobjects/gameobject";
+import { BOUNDARY, GMULTX, GMULTY, bitStack, colRectRectSizes} from "engine/utilities/math";
 import Scene from "engine/scene/scene";
 import SpriteAnimated, { SpriteAnimatedParams } from "./spriteanimated";
+import CharacterBin from "./characterbin";
 
 export interface CharacterBotParams extends CharacterParams {
     imagesMisc : CharacterImageParams[];
@@ -34,10 +33,7 @@ const cbc = Object.freeze({
 export default class CharacterBot extends Character {
 
     private timer : number = 0;
-
-    public init(ctx: CanvasRenderingContext2D, scenes: Scene[]): void {
-        super.init(ctx, scenes);
-    }
+    private bins : CharacterBin[] = [];
 
     constructor(engine: Engine, params: CharacterBotParams) {
         super(engine, Object.assign(params, characterBotOverride));
@@ -56,6 +52,12 @@ export default class CharacterBot extends Character {
         this.parent.pushGO(this.spriteGroups[newIndex][0]);
     }
 
+    public init(ctx: CanvasRenderingContext2D, scenes: Scene[]): void {
+        super.init(ctx, scenes);
+
+        this.bins = this.engine.tag.get("CharacterBin", "Level") as Character[];
+    }
+
     protected handleUniqueMovmeent(dt : number) {
 
         this.timer += dt;
@@ -68,11 +70,22 @@ export default class CharacterBot extends Character {
 
     protected handleCollision() {
 
-        // Test for alternate animation
-        // if(this.gpos.x % 5 == 0) {
-
-        //     this.setCurrentGroup(1);
-        // }
+        this.bins.forEach(b => {
+            if (b.isActive && 
+                colRectRectSizes(
+                    this.gpos.x - 1,
+                    this.gpos.y,
+                    2,
+                    this.height,
+                    b.gpos.x - 1,
+                    b.gpos.y,
+                    2,
+                    b.height)) {
+                
+                b.deactivate();
+                this.setCurrentGroup(1);
+            }
+        })
 
         //Collision bitmask
         let cbm = this.brickHandler.checkCollisionSuper(

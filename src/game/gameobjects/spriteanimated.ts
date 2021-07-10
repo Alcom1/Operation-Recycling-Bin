@@ -1,6 +1,6 @@
 import Engine from "engine/engine";
-import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
-import { floor, getZIndex, GMULTX, GMULTY, OPPOSITE_DIRS, round, Z_DEPTH } from "engine/utilities/math";
+import GameObject from "engine/gameobjects/gameobject";
+import { floor, getZIndex, GMULTY, OPPOSITE_DIRS } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 import { CharacterImage, CharacterImageParams, CharacterParams } from "./character";
 
@@ -39,7 +39,6 @@ export default class SpriteAnimated extends GameObject {
         this.offset = params.offset;
         this.speed = params.speed ?? 1;
 
-
         switch(params.images.length){
 
             //No images (why?)
@@ -49,7 +48,7 @@ export default class SpriteAnimated extends GameObject {
             //Single images
             case 1:
                 this.index = 0;
-                this.getCharacterImage(params.images[0]);
+                this.images[0] = this.getCharacterImage(params.images[0]);
             
             //Pair of images with opposing directions
             case 2:
@@ -76,7 +75,7 @@ export default class SpriteAnimated extends GameObject {
             image : this.engine.library.getImage(
                 params.name, 
                 params.extension),
-            offset : params.offset
+            offset : params.offset ?? 0
         }
     }
 

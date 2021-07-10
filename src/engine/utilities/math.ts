@@ -79,8 +79,30 @@ export function colPointRect(px: number, py: number, rx: number, ry: number, rw:
     );
 }
 
+/** Rectangle-rectangle collision with two size rectangles */
+export function colRectRectSizes(
+    arx : number,
+    ary : number,
+    arw : number,
+    arh : number,
+    brx : number,
+    bry : number,
+    brw : number,
+    brh : number) : boolean {
+
+    return colRectRectCorners(
+        arx,
+        arx + arw,
+        ary,
+        ary + arh,
+        brx,
+        brx + brw,
+        bry,
+        bry + brh)
+}
+
 /** Rectangle-rectangle collision with a corner and size rectangle */
-export function colRectRectCorner(
+export function colRectRectCornerSize(
     aminx : number,
     amaxx : number,
     aminy : number,

@@ -5,6 +5,7 @@ import BrickStud from "./gameobjects/brickstud.js";
 import Button from "./gameobjects/button.js";
 import ButtonScene from "./gameobjects/buttonscene.js";
 import Character from "./gameobjects/character.js";
+import CharacterBin from "./gameobjects/characterbin.js";
 import CharacterBot from "./gameobjects/characterbot.js";
 import CharacterHandler from "./gameobjects/characterhandler.js";
 import Cursor from "./gameobjects/cursor.js";
@@ -24,6 +25,7 @@ window.onload = function() {
     ButtonScene,
     Character,
     CharacterBot,
+    CharacterBin,
     CharacterHandler,
     Cursor,
     CursorIcon,

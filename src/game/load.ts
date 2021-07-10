@@ -5,6 +5,7 @@ import BrickStud from "./gameobjects/brickstud";
 import Button from "./gameobjects/button";
 import ButtonScene from "./gameobjects/buttonscene";
 import Character from "./gameobjects/character";
+import CharacterBin from "./gameobjects/characterbin";
 import CharacterBot from "./gameobjects/characterbot";
 import CharacterHandler from "./gameobjects/characterhandler";
 import Cursor from "./gameobjects/cursor";
@@ -31,6 +32,7 @@ window.onload = function() {
             ButtonScene,
             Character,
             CharacterBot,
+            CharacterBin,
             CharacterHandler,
             Cursor,
             CursorIcon,

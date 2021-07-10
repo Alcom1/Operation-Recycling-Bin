@@ -24,6 +24,10 @@
             "name" : "CharacterBot",
             "position" : {"x" : 1, "y" : 18}
         },
+        {
+            "name" : "CharacterBin",
+            "position" : {"x" : 34, "y" : 18}
+        },
         
         {    
             "name" : "Brick",

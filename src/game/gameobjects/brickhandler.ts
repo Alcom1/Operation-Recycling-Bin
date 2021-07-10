@@ -1,5 +1,5 @@
 import GameObject from "engine/gameobjects/gameobject";
-import {col1D, GMULTX, GMULTY, colBoundingBoxGrid, colPointRectGrid, colPointParHGrid, colPointParVGrid, OPPOSITE_DIRS, colRectRectCorner} from "engine/utilities/math";
+import {col1D, GMULTX, GMULTY, colBoundingBoxGrid, colPointRectGrid, colPointParHGrid, colPointParVGrid, OPPOSITE_DIRS, colRectRectCornerSize} from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 import Brick from "./brick";
 import CharacterHandler from "./characterhandler";
@@ -146,7 +146,7 @@ export default class BrickHandler extends GameObject {
             for (const b of this.bricks.filter(b => b.isSelected)) {
 
                 // Check collision between each selected brick and the character
-                if (colRectRectCorner(
+                if (colRectRectCornerSize(
                     c.gpos.x - 1,
                     c.gpos.x + 1,
                     c.gpos.y + 1 - c.height,

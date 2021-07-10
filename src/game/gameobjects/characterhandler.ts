@@ -2,7 +2,6 @@ import GameObject from "engine/gameobjects/gameobject";
 import { colRectRectCorners } from "engine/utilities/math";
 import { Point } from "engine/utilities/vect";
 import Character from "./character";
-import CharacterBot from "./characterbot";
 
 export default class CharacterHandler extends GameObject {
 
@@ -10,7 +9,9 @@ export default class CharacterHandler extends GameObject {
 
     public init(ctx: CanvasRenderingContext2D) {
         
-        this.characters = this.engine.tag.get("CharacterBot", "Level") as Character[];
+        this.characters = this.engine.tag.get(["CharacterBin", "CharacterBot"], "Level") as Character[];
+
+        this.characters.forEach(c => console.log(c.tag));
     }
 
     public getCharacterBoxes(min : Point, max : Point) : Character[] {

@@ -1,5 +1,5 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
-import {col1D, GMULTX, GMULTY, colBoundingBoxGrid, colPointRectGrid, colPointParHGrid, colPointParVGrid, OPPOSITE_DIRS, colRectRectCorner} from "../../engine/utilities/math.js";
+import {col1D, GMULTX, GMULTY, colBoundingBoxGrid, colPointRectGrid, colPointParHGrid, colPointParVGrid, OPPOSITE_DIRS, colRectRectCornerSize} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
 export var BrickHandlerState;
 (function(BrickHandlerState2) {
@@ -72,7 +72,7 @@ export default class BrickHandler extends GameObject {
     }
     for (const c of this.characterHandler.getCharacterBoxes(min, max)) {
       for (const b of this.bricks.filter((b2) => b2.isSelected)) {
-        if (colRectRectCorner(c.gpos.x - 1, c.gpos.x + 1, c.gpos.y + 1 - c.height, c.gpos.y + 1, b.gpos.x + Math.round(b.spos.x / GMULTX), b.gpos.y + Math.round(b.spos.y / GMULTY), b.width, 1)) {
+        if (colRectRectCornerSize(c.gpos.x - 1, c.gpos.x + 1, c.gpos.y + 1 - c.height, c.gpos.y + 1, b.gpos.x + Math.round(b.spos.x / GMULTX), b.gpos.y + Math.round(b.spos.y / GMULTY), b.width, 1)) {
           return false;
         }
       }

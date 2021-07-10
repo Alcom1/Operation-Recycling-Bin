@@ -31,7 +31,7 @@ export default class TagModule {
     }
   }
   get(tag, sceneName) {
-    return this.scenes.find((sg) => sg.name == sceneName)?.tags.find((gos) => gos.tag == tag)?.tagObjects || [];
+    return this.scenes.find((sg) => sg.name == sceneName)?.tags.filter((gos) => Array.isArray(tag) ? tag.includes(gos.tag) : gos.tag == tag)?.flatMap((t) => t.tagObjects) ?? [];
   }
   clear(sceneNames) {
     this.scenes = this.scenes.filter((sg) => !sceneNames.some((sn) => sg.name == sn));

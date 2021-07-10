@@ -22,7 +22,23 @@
 
         {
             "name" : "CharacterBot",
-            "position" : {"x" : 15, "y" : 18}
+            "position" : {"x" : 15, "y" : 19}
+        },
+        {
+            "name" : "CharacterBin",
+            "position" : {"x" : 4, "y" : 19}
+        },
+        {
+            "name" : "CharacterBin",
+            "position" : {"x" : 30, "y" : 19}
+        },
+        {
+            "name" : "CharacterBin",
+            "position" : {"x" : 4, "y" : 10}
+        },
+        {
+            "name" : "CharacterBin",
+            "position" : {"x" : 30, "y" : 10}
         },
 
         {    

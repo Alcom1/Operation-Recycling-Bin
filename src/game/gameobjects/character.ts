@@ -1,11 +1,10 @@
 import Engine from "engine/engine";
 import Scene from "engine/scene/scene";
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
-import { BOUNDARY, getZIndex, GMULTX, GMULTY, round } from "engine/utilities/math";
-import Vect, { Point } from "engine/utilities/vect";
+import { GMULTX } from "engine/utilities/math";
+import Vect from "engine/utilities/vect";
 import BrickHandler from "./brickhandler";
 import Brick from "./brick";
-import Cursor from "./cursor";
 import SpriteAnimated, { SpriteAnimatedParams } from "./spriteanimated";
 
 export interface CharacterParams extends GameObjectParams {
@@ -162,9 +161,15 @@ export default class Character extends GameObject {
 
         index = index ?? this.spriteGroupIndex;
         this.spriteGroupIndex = index;
-        this.spriteGroups.forEach((g, i) => g.forEach(s => {
+        this.spriteGroups.forEach((sg, i) => sg.forEach(s => {
             s.isActive = i == index;
             s.updateSprite(this.gpos);
         }));
+    }
+
+    //Deactivate this gameObject
+    public deactivate() {
+        this.isActive = false;
+        this.spriteGroups.forEach(sg => sg.forEach(s => s.isActive = false));
     }
 }

@@ -34,7 +34,10 @@ export function colBoundingBoxGrid(min, max) {
 export function colPointRect(px, py, rx, ry, rw, rh) {
   return px >= rx && py >= ry && px < rx + rw && py < ry + rh;
 }
-export function colRectRectCorner(aminx, amaxx, aminy, amaxy, brx, bry, brw, brh) {
+export function colRectRectSizes(arx, ary, arw, arh, brx, bry, brw, brh) {
+  return colRectRectCorners(arx, arx + arw, ary, ary + arh, brx, brx + brw, bry, bry + brh);
+}
+export function colRectRectCornerSize(aminx, amaxx, aminy, amaxy, brx, bry, brw, brh) {
   return colRectRectCorners(aminx, amaxx, aminy, amaxy, brx, brx + brw, bry, bry + brh);
 }
 export function colRectRectCorners(aminx, amaxx, aminy, amaxy, bminx, bmaxx, bminy, bmaxy) {

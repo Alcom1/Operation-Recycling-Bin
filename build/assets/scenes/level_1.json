@@ -25,6 +25,11 @@
             "position" : {"x" : 1, "y" : 22}
         },
 
+        {
+            "name" : "CharacterBin",
+            "position" : {"x" : 5, "y" : 22}
+        },
+
         {    
             "name" : "Brick",
             "position" : {"x" : 0, "y" : 23},

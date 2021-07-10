@@ -18,7 +18,7 @@ export default class SpriteAnimated extends GameObject {
         break;
       case 1:
         this.index = 0;
-        this.getCharacterImage(params.images[0]);
+        this.images[0] = this.getCharacterImage(params.images[0]);
       case 2:
         OPPOSITE_DIRS.forEach((d) => {
           const index = Math.max(d, 0);
@@ -36,7 +36,7 @@ export default class SpriteAnimated extends GameObject {
   getCharacterImage(params) {
     return {
       image: this.engine.library.getImage(params.name, params.extension),
-      offset: params.offset
+      offset: params.offset ?? 0
     };
   }
   init(ctx) {

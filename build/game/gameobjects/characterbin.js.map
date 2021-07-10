@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["C:\\Users\\Alcom\\Desktop\\Dev\\Git\\Operation Recycling Bin\\src\\game\\gameobjects\\characterbin.ts"],
+  "sourcesContent": ["import Engine from \"engine/engine\";\r\nimport Character, { CharacterParams } from \"./character\";\r\nimport Scene from \"engine/scene/scene\";\r\n\r\nconst characterBinOverride = Object.freeze({\r\n    height: 3,\r\n    speed : 0,\r\n    images : [\r\n        { name : \"char_bin\", offset : -4 }],\r\n    animFrames : 1,\r\n    animCount : 1\r\n});\r\n\r\nexport default class CharacterBin extends Character {\r\n\r\n    constructor(engine: Engine, params: CharacterParams) {\r\n        super(engine, Object.assign(params, characterBinOverride));\r\n    }\r\n}\r\n"],
+  "mappings": "AACA;AAGA,MAAM,uBAAuB,OAAO,OAAO;AAAA,EACvC,QAAQ;AAAA,EACR,OAAQ;AAAA,EACR,QAAS;AAAA,IACL,CAAE,MAAO,YAAY,QAAS;AAAA;AAAA,EAClC,YAAa;AAAA,EACb,WAAY;AAAA;AAVhB,0CAa0C;AAAA,EAEtC;AACI,UAAM,SAAQ,OAAO,OAAO,QAAQ;AAAA;AAAA;",
+  "names": []
+}
