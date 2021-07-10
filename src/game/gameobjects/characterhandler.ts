@@ -10,20 +10,20 @@ export default class CharacterHandler extends GameObject {
     public init(ctx: CanvasRenderingContext2D) {
         
         this.characters = this.engine.tag.get(["CharacterBin", "CharacterBot"], "Level") as Character[];
-
-        this.characters.forEach(c => console.log(c.tag));
     }
 
     public getCharacterBoxes(min : Point, max : Point) : Character[] {
 
-        return this.characters.filter(c => colRectRectCorners(
-            min.x,
-            max.x,
-            min.y,
-            max.y,
-            c.gpos.x - 1,
-            c.gpos.x + 1,
-            c.gpos.y + 1 - c.height,
-            c.gpos.y + 1));
+        return this.characters.filter(c => 
+            c.isActive && 
+            colRectRectCorners(
+                min.x,
+                max.x,
+                min.y,
+                max.y,
+                c.gpos.x - 1,
+                c.gpos.x + 1,
+                c.gpos.y + 1 - c.height,
+                c.gpos.y + 1));
     }
 }
