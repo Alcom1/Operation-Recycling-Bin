@@ -1,5 +1,5 @@
 import GameObject from "engine/gameobjects/gameobject";
-import { colRectRectCorners } from "engine/utilities/math";
+import { colRectRectCorners, colRectRectCornerSize } from "engine/utilities/math";
 import { Point } from "engine/utilities/vect";
 import Character from "./character";
 
@@ -16,14 +16,14 @@ export default class CharacterHandler extends GameObject {
 
         return this.characters.filter(c => 
             c.isActive && 
-            colRectRectCorners(
+            colRectRectCornerSize(
                 min.x,
                 max.x,
                 min.y,
                 max.y,
                 c.gpos.x - 1,
-                c.gpos.x + 1,
-                c.gpos.y + 1 - c.height,
-                c.gpos.y + 1));
+                c.gpos.y,
+                2,
+                c.height));
     }
 }

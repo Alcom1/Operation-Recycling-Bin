@@ -16,9 +16,20 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
             }
             canvas {
                 background: #7F8887;
+            }
+            .fontholder {
+                position : absolute;
+                font-family: FiveByFive;
+                z-index: -1;
             }
             @media (max-aspect-ratio: 3/2) {
                 canvas {
@@ -30,10 +41,18 @@
                     height: 100%;
                 }
             }
+            @font-face {
+                font-family: FiveByFive;
+                src: url('assets/font/5x5_pixel.woff2') format('woff2');
+                font-weight: normal;
+                font-style: normal;
+                font-display: swap;
+            }
         </style>
     </head>
     <body>
         <!-- Canvas -->
+        <span class="fontholder">.</span>
         <canvas></canvas>
 
         <script src='game/load.js' type="module"></script>

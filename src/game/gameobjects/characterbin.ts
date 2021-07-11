@@ -6,7 +6,7 @@ const characterBinOverride = Object.freeze({
     height: 3,
     speed : 0,
     images : [
-        { name : "char_bin", offset : -4 }],
+        { name : "char_bin", offset : 0}],
     animFrames : 1,
     animCount : 1
 });
