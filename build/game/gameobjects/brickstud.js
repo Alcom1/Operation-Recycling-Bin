@@ -7,6 +7,7 @@ export default class BrickStud extends GameObject {
     this.isSelected = false;
     this.isSnapped = false;
     this.isVisible = true;
+    this.mobileOffset = 0;
     this.color = colorTranslate(params.color);
     this.zIndex = getZIndex(this.gpos, 1);
     this.image = this.engine.library.getImage(`stud_${this.color.replace("#", "").toLowerCase()}`);
@@ -15,6 +16,10 @@ export default class BrickStud extends GameObject {
     if (this.isVisible) {
       ctx.globalAlpha = this.isSnapped ? 0.75 : this.isSelected ? 0.5 : this.isPressed ? 0.75 : 1;
       ctx.drawImage(this.image, Z_DEPTH - 13.5, 0);
+      if (this.isSelected && this.mobileOffset > 0 && this.engine.mouse.getMouseType() != "mouse") {
+        ctx.globalAlpha = this.isSnapped ? 0.75 : 0.25;
+        ctx.drawImage(this.image, Z_DEPTH - 13.5, -GMULTY * this.mobileOffset);
+      }
     }
   }
   snap(state) {

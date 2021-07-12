@@ -17,6 +17,7 @@ export default class MouseModule {
     private mousePos = new Vect(0, 0);
     private mousePressed = false;
     private afterPressed = false;
+    private mouseType = "";
     private resolution = new Vect(0, 0);
 
     constructor(element: HTMLElement) {
@@ -44,6 +45,7 @@ export default class MouseModule {
 
         // Prevent scroll events
         e.preventDefault();
+        this.mouseType = e.pointerType;
         this.mousePos = new Vect(
             e.offsetX * (this.resolution.x / (e.target as HTMLElement).clientWidth),
             e.offsetY * (this.resolution.y / (e.target as HTMLElement).clientHeight)
@@ -66,6 +68,11 @@ export default class MouseModule {
         } else {                                                // If mouse is released and afterPressed is same
             return MouseState.ISRELEASED;                       // Mouse is currently released
         }
+    }
+
+    /** Mouse type */
+    public getMouseType(): string {
+        return this.mouseType;
     }
 
     /** Sets the mouse cursor from a URL */

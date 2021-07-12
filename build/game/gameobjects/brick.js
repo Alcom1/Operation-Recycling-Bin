@@ -25,6 +25,7 @@ export default class Brick extends GameObject {
     this.studs = [];
     this.minCarry = new Vect(0, 0);
     this.maxCarry = new Vect(0, 0);
+    this.mobileOffset = 0;
     this.color = colorTranslate(params.color);
     this.isGrey = !params.color;
     this.width = params.width || 1;
@@ -58,6 +59,10 @@ export default class Brick extends GameObject {
   draw(ctx) {
     ctx.globalAlpha = this.isSnapped ? 0.75 : this.isSelected ? 0.4 : this.isPressed ? 0.75 : 1;
     ctx.drawImage(this.image, 0, -Z_DEPTH - 3);
+    if (this.isSelected && this.mobileOffset > 0 && this.engine.mouse.getMouseType() != "mouse") {
+      ctx.globalAlpha = this.isSnapped ? 0.75 : 0.25;
+      ctx.drawImage(this.image, 0, -Z_DEPTH - 3 - GMULTY * this.mobileOffset);
+    }
   }
   setToCursor() {
     this.spos = this.engine.mouse.getPos().getSub(this.selectedPos).getClamp({
@@ -129,6 +134,8 @@ export default class Brick extends GameObject {
   setMinMax(min, max) {
     this.minCarry = min;
     this.maxCarry = max;
+    this.mobileOffset = 3 + max.y - min.y;
+    this.studs.forEach((s) => s.mobileOffset = this.mobileOffset);
   }
   drawBrick(ctx) {
     ctx.save();

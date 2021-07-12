@@ -12,10 +12,11 @@ export default class BrickStud extends GameObject {
 
     image : HTMLImageElement;
 
-    isPressed = false;
-    isSelected = false;
-    isSnapped = false;
-    isVisible = true;
+    private isPressed : boolean = false;
+    private isSelected : boolean = false;
+    private isSnapped : boolean = false;
+    public isVisible : boolean = true;
+    public mobileOffset : number = 0;
 
     constructor(engine: Engine, params: BrickStudParams) {
         super(engine, params);
@@ -28,7 +29,9 @@ export default class BrickStud extends GameObject {
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
+
         if(this.isVisible) {
+            
             // Global transparency for selection states
             ctx.globalAlpha =
                 this.isSnapped ? 0.75:  // Snapped studs are transparent
@@ -38,6 +41,12 @@ export default class BrickStud extends GameObject {
             
             // Draw the stored image for this stud
             ctx.drawImage(this.image, Z_DEPTH - 13.5, 0);
+
+            //Draw mobile view
+            if(this.isSelected && this.mobileOffset > 0 && this.engine.mouse.getMouseType() != "mouse") {
+                ctx.globalAlpha = this.isSnapped ? 0.75 : 0.25;
+                ctx.drawImage(this.image, Z_DEPTH - 13.5, -GMULTY * this.mobileOffset);
+            }
         }
     }
 

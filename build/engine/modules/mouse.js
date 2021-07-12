@@ -11,6 +11,7 @@ export default class MouseModule {
     this.mousePos = new Vect(0, 0);
     this.mousePressed = false;
     this.afterPressed = false;
+    this.mouseType = "";
     this.resolution = new Vect(0, 0);
     this.mouseElement = element;
     this.mouseElement.style.touchAction = "none";
@@ -27,6 +28,7 @@ export default class MouseModule {
   }
   updatePos(e) {
     e.preventDefault();
+    this.mouseType = e.pointerType;
     this.mousePos = new Vect(e.offsetX * (this.resolution.x / e.target.clientWidth), e.offsetY * (this.resolution.y / e.target.clientHeight));
   }
   getPos() {
@@ -42,6 +44,9 @@ export default class MouseModule {
     } else {
       return 0;
     }
+  }
+  getMouseType() {
+    return this.mouseType;
   }
   setCursorURL(url) {
     this.mouseElement.style.cursor = "url(" + url + "), auto";

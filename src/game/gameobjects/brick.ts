@@ -66,6 +66,9 @@ export default class Brick extends GameObject {
     /** Boundary offset for maximum carried position */
     private maxCarry = new Vect(0, 0);
 
+    /** Vertical offset for mobile devices*/
+    private mobileOffset : number = 0
+
     constructor(protected engine: Engine, params: BrickParams) {
         super(engine, params);
         
@@ -139,6 +142,12 @@ export default class Brick extends GameObject {
         
         // Draw with vertical offset for top face
         ctx.drawImage(this.image, 0, -Z_DEPTH - 3);
+
+        //Draw mobile view
+        if(this.isSelected && this.mobileOffset > 0 && this.engine.mouse.getMouseType() != "mouse") {
+            ctx.globalAlpha = this.isSnapped ? 0.75 : 0.25;
+            ctx.drawImage(this.image, 0, -Z_DEPTH - 3 - GMULTY * this.mobileOffset);
+        }
 
         // Debug - draw pressure
         // if(this.pressure > 0) {
@@ -269,6 +278,9 @@ export default class Brick extends GameObject {
     public setMinMax(min: Vect, max: Vect): void {
         this.minCarry = min;
         this.maxCarry = max;
+
+        this.mobileOffset = 3 + max.y - min.y;
+        this.studs.forEach(s => s.mobileOffset = this.mobileOffset);
     }
 
     /** Build the sprite for this brick */
