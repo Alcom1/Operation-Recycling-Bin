@@ -18,5 +18,7 @@ export default class GameObject {
   }
   draw(ctx) {
   }
+  superDraw(ctx) {
+  }
 }
 //# sourceMappingURL=gameobject.js.map

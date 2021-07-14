@@ -143,12 +143,6 @@ export default class Brick extends GameObject {
         // Draw with vertical offset for top face
         ctx.drawImage(this.image, 0, -Z_DEPTH - 3);
 
-        //Draw mobile view
-        if(this.isSelected && this.mobileOffset > 0 && this.engine.mouse.getMouseType() != "mouse") {
-            ctx.globalAlpha = this.isSnapped ? 0.75 : 0.25;
-            ctx.drawImage(this.image, 0, -Z_DEPTH - 3 - GMULTY * this.mobileOffset);
-        }
-
         // Debug - draw pressure
         // if(this.pressure > 0) {
         //     ctx.strokeStyle = "#F00";
@@ -160,6 +154,15 @@ export default class Brick extends GameObject {
         //     ctx.lineTo(0                  , GMULTY);
         //     ctx.stroke();
         // }
+    }
+
+    public superDraw(ctx: CanvasRenderingContext2D): void {
+
+        //Draw mobile view
+        if(this.isSelected && this.mobileOffset > 0 && this.engine.mouse.getMouseType() != "mouse") {
+            ctx.globalAlpha = this.isSnapped ? 0.75 : 0.25;
+            ctx.drawImage(this.image, 0, -Z_DEPTH - 3 - GMULTY * this.mobileOffset);
+        }
     }
 
     /** Set the brick to match the cursor position, based on its stored selected position */
@@ -279,7 +282,7 @@ export default class Brick extends GameObject {
         this.minCarry = min;
         this.maxCarry = max;
 
-        this.mobileOffset = 3 + max.y - min.y;
+        this.mobileOffset = 3.5 + max.y - min.y;
         this.studs.forEach(s => s.mobileOffset = this.mobileOffset);
     }
 

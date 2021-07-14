@@ -12,6 +12,7 @@ import Cursor from "./gameobjects/cursor";
 import CursorIcon from "./gameobjects/cursoricon";
 import FPSCounter from "./gameobjects/fpscounter";
 import LevelSequence from "./gameobjects/levelsequence";
+import MobileIndicator from "./gameobjects/mobileindicator";
 import Sprite from "./gameobjects/sprite";
 
 //Load
@@ -37,6 +38,7 @@ window.onload = function() {
             Cursor,
             CursorIcon,
             FPSCounter,
+            MobileIndicator,
             LevelSequence,
             Sprite
         ]

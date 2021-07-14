@@ -35,7 +35,7 @@ export default class Scene {
         this.initialized = false;
     }
 
-    init(ctx: CanvasRenderingContext2D, scenes: Scene[]) {
+    public init(ctx: CanvasRenderingContext2D, scenes: Scene[]) {
         
         if (
             !this.initialized && 
@@ -50,22 +50,22 @@ export default class Scene {
         }
     }
 
-    clear() {
+    public clear() {
         this.gameObjects = []
     }
 
-    pushGO(gameObject: GameObject) {
+    public pushGO(gameObject: GameObject) {
         // Establish parent scene before pushing
         gameObject.parent = this;
         this.gameObjects.push(gameObject);
     }
 
-    sortGO() {
+    public sortGO() {
         //Sort game objects by z-index.
         this.gameObjects.sort((a, b) => a.zIndex - b.zIndex);
     }
 
-    update(dt: number) {
+    public update(dt: number) {
         if(this.initialized) {
             this.gameObjects.forEach(go => { if(!go.isActive) { return; }
                 go.update(dt)
@@ -73,17 +73,21 @@ export default class Scene {
         }
     }
 
-    draw(ctx: CanvasRenderingContext2D) {
+    public draw(ctx: CanvasRenderingContext2D) {
         if (this.initialized) {
-            this.gameObjects.forEach(go => { if(!go.isActive) { return; }
-                ctx.save();
-                ctx.translate(
-                    go.gpos.x * GMULTX + go.spos.x, 
-                    go.gpos.y * GMULTY + go.spos.y
-                );
-                go.draw(ctx);
-                ctx.restore();
-            });
+            this.gameObjects.filter(go => go.isActive).forEach(go => this.subDraw(ctx, go, go.draw));
+            this.gameObjects.filter(go => go.isActive).forEach(go => this.subDraw(ctx, go, go.superDraw));
         }
-    } 
+    }
+
+    private subDraw(ctx: CanvasRenderingContext2D, gameObject : GameObject, drawAction : Function) {
+
+        ctx.save();
+        ctx.translate(
+            gameObject.gpos.x * GMULTX + gameObject.spos.x, 
+            gameObject.gpos.y * GMULTY + gameObject.spos.y
+        );
+        drawAction.call(gameObject, ctx);
+        ctx.restore();
+    }
 }

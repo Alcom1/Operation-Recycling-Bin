@@ -18,6 +18,9 @@
             "name" : "CursorIcon"
         },
         {
+            "name" : "MobileIndicator"
+        },
+        {
             "name" : "Sprite",
             "image" : "background_menu",
             "zIndex" : -50000

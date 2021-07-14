@@ -221,12 +221,12 @@ export default class Cursor extends GameObject {
 
             this.cursorIcon.setCursor(CursorIconState.CARRY);
         
-            this.brickHandler.cullBrickStuds();         // Reset culled studs
-            this.brickHandler.setSnappedBricks(true);   // Carried bricks should start as snapped
-            this.brickHandler.setSelectedMinMax();      // Set minimum and maximum position of carried bricks
+            this.brickHandler.cullBrickStuds();             // Reset culled studs
+            this.brickHandler.setSnappedBricks(true);       // Carried bricks should start as 
+            this.brickHandler.setSelectedMinMax(this.spos); // Set minimum and maximum position of carried bricks
 
-            this.level.sortGO();                        // Sort for new brick z-indices
-            this.state = CursorState.CARRY;             // Set state to NONE stateStart carrying if we selected some bricks
+            this.level.sortGO();                            // Sort for new brick z-indices
+            this.state = CursorState.CARRY;                 // Set state to NONE stateStart carrying if we selected some bricks
         }
     }
 }

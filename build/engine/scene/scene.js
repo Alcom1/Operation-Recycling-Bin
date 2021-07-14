@@ -44,16 +44,15 @@ export default class Scene {
   }
   draw(ctx) {
     if (this.initialized) {
-      this.gameObjects.forEach((go) => {
-        if (!go.isActive) {
-          return;
-        }
-        ctx.save();
-        ctx.translate(go.gpos.x * GMULTX + go.spos.x, go.gpos.y * GMULTY + go.spos.y);
-        go.draw(ctx);
-        ctx.restore();
-      });
+      this.gameObjects.filter((go) => go.isActive).forEach((go) => this.subDraw(ctx, go, go.draw));
+      this.gameObjects.filter((go) => go.isActive).forEach((go) => this.subDraw(ctx, go, go.superDraw));
     }
+  }
+  subDraw(ctx, gameObject, drawAction) {
+    ctx.save();
+    ctx.translate(gameObject.gpos.x * GMULTX + gameObject.spos.x, gameObject.gpos.y * GMULTY + gameObject.spos.y);
+    drawAction.call(gameObject, ctx);
+    ctx.restore();
   }
 }
 //# sourceMappingURL=scene.js.map

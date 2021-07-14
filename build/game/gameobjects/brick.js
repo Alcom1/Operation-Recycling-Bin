@@ -59,6 +59,8 @@ export default class Brick extends GameObject {
   draw(ctx) {
     ctx.globalAlpha = this.isSnapped ? 0.75 : this.isSelected ? 0.4 : this.isPressed ? 0.75 : 1;
     ctx.drawImage(this.image, 0, -Z_DEPTH - 3);
+  }
+  superDraw(ctx) {
     if (this.isSelected && this.mobileOffset > 0 && this.engine.mouse.getMouseType() != "mouse") {
       ctx.globalAlpha = this.isSnapped ? 0.75 : 0.25;
       ctx.drawImage(this.image, 0, -Z_DEPTH - 3 - GMULTY * this.mobileOffset);
@@ -134,7 +136,7 @@ export default class Brick extends GameObject {
   setMinMax(min, max) {
     this.minCarry = min;
     this.maxCarry = max;
-    this.mobileOffset = 3 + max.y - min.y;
+    this.mobileOffset = 3.5 + max.y - min.y;
     this.studs.forEach((s) => s.mobileOffset = this.mobileOffset);
   }
   drawBrick(ctx) {

@@ -58,4 +58,10 @@ export default class GameObject {
      * @param ctx
      */
     draw(ctx: CanvasRenderingContext2D): void {}
+
+    /**
+     * Latter game object draw
+     * @param ctx
+     */
+    superDraw(ctx: CanvasRenderingContext2D): void {}
 }

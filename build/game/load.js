@@ -12,6 +12,7 @@ import Cursor from "./gameobjects/cursor.js";
 import CursorIcon from "./gameobjects/cursoricon.js";
 import FPSCounter from "./gameobjects/fpscounter.js";
 import LevelSequence from "./gameobjects/levelsequence.js";
+import MobileIndicator from "./gameobjects/mobileindicator.js";
 import Sprite from "./gameobjects/sprite.js";
 window.onload = function() {
   const canvas = document.querySelector("canvas");
@@ -30,6 +31,7 @@ window.onload = function() {
     Cursor,
     CursorIcon,
     FPSCounter,
+    MobileIndicator,
     LevelSequence,
     Sprite
   ]);

@@ -48,7 +48,17 @@ export default class BrickStud extends GameObject {
                 ctx.drawImage(this.image, Z_DEPTH - 13.5, -GMULTY * this.mobileOffset);
             }
         }
+    }    
+    
+    public superDraw(ctx: CanvasRenderingContext2D): void {
+
+        //Draw mobile view
+        if(this.isSelected && this.mobileOffset > 0 && this.engine.mouse.getMouseType() != "mouse") {
+            ctx.globalAlpha = this.isSnapped ? 0.75 : 0.25;
+            ctx.drawImage(this.image, Z_DEPTH - 13.5, -GMULTY * this.mobileOffset);
+        }
     }
+
 
     /** Set this stud's snap state */
     public snap(state: boolean): void {

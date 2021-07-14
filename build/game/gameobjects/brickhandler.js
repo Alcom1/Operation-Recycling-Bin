@@ -14,6 +14,7 @@ export default class BrickHandler extends GameObject {
     super(...arguments);
     this.rows = [];
     this.bricks = [];
+    this.mobileIndicator = null;
     this.selectedBrick = null;
     this.selections = [];
     this.isPressured = true;
@@ -23,6 +24,7 @@ export default class BrickHandler extends GameObject {
   }
   init(ctx) {
     this.characterHandler = this.engine.tag.get("CharacterHandler", "LevelInterface")[0];
+    this.mobileIndicator = this.engine.tag.get("MobileIndicator", "LevelInterface")[0];
     this.bricks = this.engine.tag.get("Brick", "Level");
     this.bricks.forEach((b) => this.addBrickToRows(b));
     this.sortRows();
@@ -113,14 +115,16 @@ export default class BrickHandler extends GameObject {
     }
     this.bricks.filter((b) => b.isSelected).flatMap((b) => b.studs).forEach((s) => s.isVisible = true);
   }
-  setSelectedMinMax() {
+  setSelectedMinMax(spos) {
     const selected = this.bricks.filter((b) => b.isSelected);
     const boundaryMin = new Vect(Math.min(...selected.map((b) => b.gpos.x)), Math.min(...selected.map((b) => b.gpos.y)));
     const boundaryMax = new Vect(Math.max(...selected.map((b) => b.gpos.x + b.width)), Math.max(...selected.map((b) => b.gpos.y + 1)));
     selected.forEach((b) => b.setMinMax(boundaryMin, boundaryMax));
+    this.mobileIndicator?.setMinMax(boundaryMin, boundaryMax, spos);
   }
   setSnappedBricks(state) {
     this.bricks.filter((b) => b.isSelected).forEach((b) => b.snap(state));
+    this.mobileIndicator?.snap(state);
   }
   deselectBricks() {
     this.selectedBrick = null;
@@ -132,6 +136,7 @@ export default class BrickHandler extends GameObject {
       move.forEach((b) => this.addBrickToRows(b));
     });
     this.sortRows();
+    this.mobileIndicator.isActive = false;
   }
   addBrickToRows(brick2) {
     const currRow = this.rows.find((r) => r.row == brick2.gpos.y);

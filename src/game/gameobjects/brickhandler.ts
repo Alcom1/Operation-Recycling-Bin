@@ -3,6 +3,7 @@ import {col1D, GMULTX, GMULTY, colBoundingBoxGrid, colPointRectGrid, colPointPar
 import Vect, { Point } from "engine/utilities/vect";
 import Brick from "./brick";
 import CharacterHandler from "./characterhandler";
+import MobileIndicator from "./mobileindicator";
 
 export enum BrickHandlerState {
     /** Empty */
@@ -27,16 +28,25 @@ export default class BrickHandler extends GameObject {
 
     /** */
     private characterHandler! : CharacterHandler;
+
     /** Rows of bricks */
     private rows: BrickRow[] = [];
+
     /** All bricks */
     private bricks: Brick[] = [];
+
+    /** */
+    private mobileIndicator : MobileIndicator | null = null;
+
     /** Current selected bricks */
     public selectedBrick: Brick | null = null;
+
     /** All selected bricks */
     private selections: (Brick[] | null)[] = [];
+
     /** Grey bricks */
     private get bricksGrey(): Brick[] { return this.bricks.filter(b => b.isGrey == true); }
+
     /** If a brick has been stepped on or off */
     public isPressured = true;
 
@@ -45,6 +55,9 @@ export default class BrickHandler extends GameObject {
         this.characterHandler = this.engine.tag.get(        // Get character handler from scene
             "CharacterHandler", 
             "LevelInterface")[0] as CharacterHandler;
+        this.mobileIndicator = this.engine.tag.get(         // Get mobile indicator handler from scene
+            "MobileIndicator", 
+            "LevelInterface")[0] as MobileIndicator;
         this.bricks = this.engine.tag.get(                  // Get bricks from scene
             "Brick", 
             "Level") as Brick[];                            
@@ -213,7 +226,7 @@ export default class BrickHandler extends GameObject {
     }
 
     /** Disable studs that are covered */
-    cullBrickStuds(): void {
+    public cullBrickStuds(): void {
         
         // For each stud in unselected bricks
         for (const stud of this.bricks.filter(b => !b.isSelected).flatMap(b => b.studs)) {
@@ -243,7 +256,7 @@ export default class BrickHandler extends GameObject {
     }
 
     /** Set the minimum and maximum position for selected bricks */
-    public setSelectedMinMax(): void {
+    public setSelectedMinMax(spos: Vect): void {
         const selected = this.bricks.filter(b => b.isSelected);
 
         // Minimum brick position among selected bricks
@@ -260,6 +273,7 @@ export default class BrickHandler extends GameObject {
 
         // Set min-max for all selected bricks based on boundary
         selected.forEach(b => b.setMinMax(boundaryMin, boundaryMax));
+        this.mobileIndicator?.setMinMax(boundaryMin, boundaryMax, spos);
     }
 
     /** Set snapped state of selected bricks */
@@ -267,6 +281,7 @@ export default class BrickHandler extends GameObject {
 
         // For each selected brick, set its snap to the given state
         this.bricks.filter(b => b.isSelected).forEach(b => b.snap(state));
+        this.mobileIndicator?.snap(state);
     }
 
     /** Deselect all bricks */
@@ -285,6 +300,9 @@ export default class BrickHandler extends GameObject {
 
         // Sort
         this.sortRows();
+
+        //Disable mobile indicator
+        this.mobileIndicator!.isActive = false;
     }
 
     /** Add a brick to a row, and create that row if it doesn't exist. */

@@ -138,7 +138,7 @@ export default class Cursor extends GameObject {
       this.cursorIcon.setCursor(CursorIconState.CARRY);
       this.brickHandler.cullBrickStuds();
       this.brickHandler.setSnappedBricks(true);
-      this.brickHandler.setSelectedMinMax();
+      this.brickHandler.setSelectedMinMax(this.spos);
       this.level.sortGO();
       this.state = 2;
     }
