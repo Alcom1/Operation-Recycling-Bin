@@ -45,6 +45,10 @@ export default class Scene {
   draw(ctx) {
     if (this.initialized) {
       this.gameObjects.filter((go) => go.isActive).forEach((go) => this.subDraw(ctx, go, go.draw));
+    }
+  }
+  superDraw(ctx) {
+    if (this.initialized) {
       this.gameObjects.filter((go) => go.isActive).forEach((go) => this.subDraw(ctx, go, go.superDraw));
     }
   }

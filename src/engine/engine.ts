@@ -127,6 +127,7 @@ export default class Engine {
     private updateDrawScenes(scenes : Scene[], dt: number): void {
         scenes.forEach(s => s.update(dt));
         scenes.forEach(s => s.draw(this.ctx));
+        scenes.forEach(s => s.superDraw(this.ctx));
     }
 
     /** Load a scene */

@@ -1,6 +1,6 @@
 import Engine from "engine/engine";
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
-import { BOUNDARY, GMULTX, GMULTY, round } from "engine/utilities/math";
+import { BOUNDARY, GMULTX, GMULTY, round, Z_DEPTH } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 
 export default class MobileIndicator extends GameObject {
@@ -50,15 +50,44 @@ export default class MobileIndicator extends GameObject {
 
         ctx.fillStyle = "#EEE"
         ctx.strokeStyle = "#666"
-        ctx.lineWidth = 3;
-        ctx.translate(GMULTX * this.box.x / 2 + 5, 0);
+        ctx.lineWidth = 2;
+
         ctx.beginPath();
-        ctx.moveTo(-20, -100);
-        ctx.lineTo(20, -100);
-        ctx.lineTo(0, -50);
+        ctx.rect(
+           -GMULTX * 1 + 8, 
+           -GMULTY * (this.box.y + 4.5) - 10,
+            GMULTX * (this.box.x + 2),
+            GMULTY * (this.box.y + 2));
         ctx.closePath();
         ctx.fill();
         ctx.stroke();
+
+        ctx.translate(GMULTX * this.box.x / 2 + 5, 0);
+        ctx.beginPath();
+        ctx.moveTo(20, -101.5);
+        ctx.lineTo(0, -50);
+        ctx.lineTo(-20, -101.5);
+        ctx.fill();
+        ctx.stroke();
+
+        // ctx.beginPath();
+        // ctx.rect(
+        //    -GMULTX * 1 + 8, 
+        //    -GMULTY * (this.box.y + 4.5) - 10,
+        //     GMULTX * (this.box.x + 2),
+        //     GMULTY * (this.box.y + 2));
+        // ctx.closePath();
+        // ctx.fill();
+        // ctx.stroke();
+
+        // ctx.translate(GMULTX * this.box.x / 2 + 5, 0);
+        // ctx.beginPath();
+        // ctx.moveTo(-20, -100);
+        // ctx.lineTo(20, -100);
+        // ctx.lineTo(0, -50);
+        // ctx.closePath();
+        // ctx.fill();
+        // ctx.stroke();
     }
 
     public setMinMax(min: Vect, max: Vect, spos : Vect): void {

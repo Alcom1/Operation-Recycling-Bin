@@ -65,6 +65,7 @@ export default class Engine {
   updateDrawScenes(scenes, dt) {
     scenes.forEach((s) => s.update(dt));
     scenes.forEach((s) => s.draw(this.ctx));
+    scenes.forEach((s) => s.superDraw(this.ctx));
   }
   async loadScene(sceneName, scenes) {
     const sceneResponse = await fetch(`${this.scenePath}${sceneName}.json`);

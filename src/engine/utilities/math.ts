@@ -9,7 +9,7 @@ export const GMULTX = 30;
 /** Vertical multiplier for grid positions */
 export const GMULTY = 36;
 /** Z-index to place objects beneath the cursor */
-export const UNDER_CURSOR_Z_INDEX = 100;
+export const UNDER_CURSOR_Z_INDEX = 1000;
 /** Distance to draw depth */
 export const Z_DEPTH = 22;
 /** Width of the sidepanel UI */

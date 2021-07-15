@@ -1,7 +1,7 @@
 export const PATH_IMG = "assets/img/";
 export const GMULTX = 30;
 export const GMULTY = 36;
-export const UNDER_CURSOR_Z_INDEX = 100;
+export const UNDER_CURSOR_Z_INDEX = 1e3;
 export const Z_DEPTH = 22;
 export const WIDTH_SIDEPANEL = 234;
 export const OPPOSITE_DIRS = [-1, 1];

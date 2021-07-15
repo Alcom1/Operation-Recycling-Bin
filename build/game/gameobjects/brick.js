@@ -62,7 +62,6 @@ export default class Brick extends GameObject {
   }
   superDraw(ctx) {
     if (this.isSelected && this.mobileOffset > 0 && this.engine.mouse.getMouseType() != "mouse") {
-      ctx.globalAlpha = this.isSnapped ? 0.75 : 0.25;
       ctx.drawImage(this.image, 0, -Z_DEPTH - 3 - GMULTY * this.mobileOffset);
     }
   }

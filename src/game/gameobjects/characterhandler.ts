@@ -14,16 +14,17 @@ export default class CharacterHandler extends GameObject {
 
     public getCharacterBoxes(min : Point, max : Point) : Character[] {
 
-        return this.characters.filter(c => 
-            c.isActive && 
+        return this.characters.filter(c => {
+            
+            return c.isActive && 
             colRectRectCornerSize(
                 min.x,
                 max.x,
                 min.y,
                 max.y,
                 c.gpos.x - 1,
-                c.gpos.y,
+                c.gpos.y + 1 - c.height,
                 2,
-                c.height));
+                c.height)});
     }
 }

@@ -54,7 +54,6 @@ export default class BrickStud extends GameObject {
 
         //Draw mobile view
         if(this.isSelected && this.mobileOffset > 0 && this.engine.mouse.getMouseType() != "mouse") {
-            ctx.globalAlpha = this.isSnapped ? 0.75 : 0.25;
             ctx.drawImage(this.image, Z_DEPTH - 13.5, -GMULTY * this.mobileOffset);
         }
     }
