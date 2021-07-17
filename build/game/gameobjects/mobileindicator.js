@@ -6,13 +6,18 @@ export default class MobileIndicator extends GameObject {
     super(engine2, params);
     this.mobileOffset = new Vect(0, 0);
     this.isSnapped = false;
+    this.isFlipped = false;
     this.minBox = new Vect(0, 0);
     this.box = new Vect(0, 0);
+    this.bricks = [];
     this._cursorPosition = new Vect(0, 0);
     this.isActive = false;
   }
   set cursorPosition(value) {
     this._cursorPosition = value;
+  }
+  init(ctx) {
+    this.bricks = this.engine.tag.get("Brick", "Level");
   }
   update(dt) {
     this.spos = this.engine.mouse.getPos().getSub(this.mobileOffset).getClamp({
@@ -28,21 +33,25 @@ export default class MobileIndicator extends GameObject {
         y: round(this.spos.y, GMULTY)
       });
     }
+    this.isFlipped = this.spos.y < GMULTY * (this.box.y + 5);
+    this.bricks.filter((b) => b.isSelected).forEach((b) => b.flipMobile(this.isFlipped));
   }
   draw(ctx) {
     if (this.engine.mouse.getMouseType() == "mouse") {
       return;
     }
+    ctx.translate(GMULTX * this.box.x / 2 + 10, GMULTY * this.box.y / 2 - 15);
+    if (this.isFlipped) {
+      ctx.rotate(Math.PI);
+    }
     ctx.fillStyle = "#EEE";
     ctx.strokeStyle = "#666";
     ctx.lineWidth = 2;
-    ctx.shadowColor = "rgba(0, 0, 0, 0.25)";
+    ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
     ctx.shadowBlur = 25;
-    const offsetX = 9;
-    const offsetA = GMULTX * this.box.x / 2 + offsetX;
     const pos = {
-      x: -GMULTX * 1 + offsetX,
-      y: -GMULTY * (this.box.y + 4.5) - 10
+      x: -GMULTX * (this.box.x * 0.5 + 1),
+      y: -GMULTY * (this.box.y * 1.5 + 4.5) + 5
     };
     const size = {
       x: GMULTX * (this.box.x + 2),
@@ -52,9 +61,9 @@ export default class MobileIndicator extends GameObject {
     ctx.moveTo(pos.x, pos.y);
     ctx.lineTo(pos.x + size.x, pos.y);
     ctx.lineTo(pos.x + size.x, pos.y + size.y);
-    ctx.lineTo(offsetA + 20, pos.y + size.y);
-    ctx.lineTo(offsetA, pos.y + size.y + 50);
-    ctx.lineTo(offsetA - 20, pos.y + size.y);
+    ctx.lineTo(20, pos.y + size.y);
+    ctx.lineTo(0, pos.y + size.y + 50);
+    ctx.lineTo(-20, pos.y + size.y);
     ctx.lineTo(pos.x, pos.y + size.y);
     ctx.closePath();
     ctx.fill();

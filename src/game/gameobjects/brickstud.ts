@@ -1,6 +1,7 @@
 import Engine from "engine/engine";
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import { colorTranslate, getZIndex, GMULTX, GMULTY, UNDER_CURSOR_Z_INDEX, Z_DEPTH } from "engine/utilities/math";
+import Vect from "engine/utilities/vect";
 
 interface BrickStudParams extends GameObjectParams {
     color?: string;
@@ -16,7 +17,8 @@ export default class BrickStud extends GameObject {
     private isSelected : boolean = false;
     private isSnapped : boolean = false;
     public isVisible : boolean = true;
-    public mobileOffset : number = 0;
+    public mobilePreviewSize : Vect = new Vect(0, 0);
+    private isMobileFlipped : boolean = false;
 
     constructor(engine: Engine, params: BrickStudParams) {
         super(engine, params);
@@ -41,20 +43,20 @@ export default class BrickStud extends GameObject {
             
             // Draw the stored image for this stud
             ctx.drawImage(this.image, Z_DEPTH - 13.5, 0);
-
-            //Draw mobile view
-            if(this.isSelected && this.mobileOffset > 0 && this.engine.mouse.getMouseType() != "mouse") {
-                ctx.globalAlpha = this.isSnapped ? 0.75 : 0.25;
-                ctx.drawImage(this.image, Z_DEPTH - 13.5, -GMULTY * this.mobileOffset);
-            }
         }
     }    
     
     public superDraw(ctx: CanvasRenderingContext2D): void {
 
         //Draw mobile view
-        if(this.isSelected && this.mobileOffset > 0 && this.engine.mouse.getMouseType() != "mouse") {
-            ctx.drawImage(this.image, Z_DEPTH - 13.5, -GMULTY * this.mobileOffset);
+        if(this.isSelected && this.engine.mouse.getMouseType() != "mouse") {
+            ctx.drawImage(
+                this.image, 
+                Z_DEPTH - 13.5, 
+                - GMULTY * (
+                    this.isMobileFlipped ? 
+                   -this.mobilePreviewSize.y - 3.2 :
+                    this.mobilePreviewSize.y + 3.5 ));
         }
     }
 
@@ -94,5 +96,11 @@ export default class BrickStud extends GameObject {
         this.isPressed = false;
         this.isSelected = false;
         this.isSnapped = false;
+    }
+
+    /** Set the flipped state for the mobile preview */
+    public flipMobile(isFlipped : boolean) {
+        
+        this.isMobileFlipped = isFlipped;
     }
 }

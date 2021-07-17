@@ -25,7 +25,8 @@ export default class Brick extends GameObject {
     this.studs = [];
     this.minCarry = new Vect(0, 0);
     this.maxCarry = new Vect(0, 0);
-    this.mobileOffset = 0;
+    this.mobilePreviewSize = new Vect(0, 0);
+    this.isMobileFlipped = false;
     this.color = colorTranslate(params.color);
     this.isGrey = !params.color;
     this.width = params.width || 1;
@@ -61,8 +62,8 @@ export default class Brick extends GameObject {
     ctx.drawImage(this.image, 0, -Z_DEPTH - 3);
   }
   superDraw(ctx) {
-    if (this.isSelected && this.mobileOffset > 0 && this.engine.mouse.getMouseType() != "mouse") {
-      ctx.drawImage(this.image, 0, -Z_DEPTH - 3 - GMULTY * this.mobileOffset);
+    if (this.isSelected && this.engine.mouse.getMouseType() != "mouse") {
+      ctx.drawImage(this.image, 0, -Z_DEPTH - 3 - GMULTY * (this.isMobileFlipped ? -this.mobilePreviewSize.y - 3.2 : this.mobilePreviewSize.y + 3.5));
     }
   }
   setToCursor() {
@@ -135,8 +136,12 @@ export default class Brick extends GameObject {
   setMinMax(min, max) {
     this.minCarry = min;
     this.maxCarry = max;
-    this.mobileOffset = 3.5 + max.y - min.y;
-    this.studs.forEach((s) => s.mobileOffset = this.mobileOffset);
+    this.mobilePreviewSize = max.getSub(min);
+    this.studs.forEach((s) => s.mobilePreviewSize = this.mobilePreviewSize);
+  }
+  flipMobile(isFlipped) {
+    this.isMobileFlipped = isFlipped;
+    this.studs.forEach((s) => s.flipMobile(isFlipped));
   }
   drawBrick(ctx) {
     ctx.save();

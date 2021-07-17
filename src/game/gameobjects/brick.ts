@@ -61,13 +61,16 @@ export default class Brick extends GameObject {
     public studs: BrickStud[] = [];
 
     /** Boundary offset for minimum carried position */
-    private minCarry = new Vect(0, 0);
+    private minCarry : Vect = new Vect(0, 0);
 
     /** Boundary offset for maximum carried position */
-    private maxCarry = new Vect(0, 0);
+    private maxCarry : Vect = new Vect(0, 0);
 
     /** Vertical offset for mobile devices*/
-    private mobileOffset : number = 0
+    private mobilePreviewSize : Vect = new Vect(0, 0);
+
+    /** If the mobile preview is flipped */
+    private isMobileFlipped : Boolean = false;
 
     constructor(protected engine: Engine, params: BrickParams) {
         super(engine, params);
@@ -159,8 +162,16 @@ export default class Brick extends GameObject {
     public superDraw(ctx: CanvasRenderingContext2D): void {
 
         //Draw mobile view
-        if(this.isSelected && this.mobileOffset > 0 && this.engine.mouse.getMouseType() != "mouse") {
-            ctx.drawImage(this.image, 0, -Z_DEPTH - 3 - GMULTY * this.mobileOffset);
+        if(this.isSelected && this.engine.mouse.getMouseType() != "mouse") {
+            ctx.drawImage(
+                this.image, 
+                0, 
+                - Z_DEPTH 
+                - 3 
+                - GMULTY * (
+                    this.isMobileFlipped ? 
+                   -this.mobilePreviewSize.y - 3.2 :
+                    this.mobilePreviewSize.y + 3.5 ));
         }
     }
 
@@ -281,8 +292,15 @@ export default class Brick extends GameObject {
         this.minCarry = min;
         this.maxCarry = max;
 
-        this.mobileOffset = 3.5 + max.y - min.y;
-        this.studs.forEach(s => s.mobileOffset = this.mobileOffset);
+        this.mobilePreviewSize = max.getSub(min); //asdf
+        this.studs.forEach(s => s.mobilePreviewSize = this.mobilePreviewSize);
+    }
+
+    /** Set the flipped state for the mobile preview */
+    public flipMobile(isFlipped : boolean) {
+        
+        this.isMobileFlipped = isFlipped;
+        this.studs.forEach(s => s.flipMobile(isFlipped));
     }
 
     /** Build the sprite for this brick */
