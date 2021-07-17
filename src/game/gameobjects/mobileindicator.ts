@@ -1,7 +1,7 @@
 import Engine from "engine/engine";
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import { BOUNDARY, GMULTX, GMULTY, round, Z_DEPTH } from "engine/utilities/math";
-import Vect from "engine/utilities/vect";
+import Vect, { Point }  from "engine/utilities/vect";
 
 export default class MobileIndicator extends GameObject {
 
@@ -13,6 +13,12 @@ export default class MobileIndicator extends GameObject {
 
     /** Boundary offset for maximum carried position */
     private box : Vect = new Vect(0, 0);
+
+    /** */
+    private _cursorPosition : Vect = new Vect(0, 0);
+    public set cursorPosition(value : Vect) {
+        this._cursorPosition = value;
+    }
 
     constructor(engine: Engine, params: GameObjectParams) {
         super(engine, params);
@@ -51,46 +57,37 @@ export default class MobileIndicator extends GameObject {
         ctx.fillStyle = "#EEE"
         ctx.strokeStyle = "#666"
         ctx.lineWidth = 2;
+        ctx.shadowColor = "rgba(0, 0, 0, 0.25)";
+        ctx.shadowBlur = 25;
+
+        const offsetX = 9;                                  //X-offset of the entire indicator
+        const offsetA = GMULTX * this.box.x / 2 + offsetX;  //X-offset of the arrow
+        const pos : Point = {                               //Position of the indicator window
+            x: -GMULTX * 1 + offsetX,
+            y: -GMULTY * (this.box.y + 4.5) - 10
+        };        
+        const size : Point = {                              //Size of the indicator window
+            x: GMULTX * (this.box.x + 2),
+            y: GMULTY * (this.box.y + 2)
+        };
 
         ctx.beginPath();
-        ctx.rect(
-           -GMULTX * 1 + 8, 
-           -GMULTY * (this.box.y + 4.5) - 10,
-            GMULTX * (this.box.x + 2),
-            GMULTY * (this.box.y + 2));
+        ctx.moveTo(pos.x,          pos.y);
+        ctx.lineTo(pos.x + size.x, pos.y);
+        ctx.lineTo(pos.x + size.x, pos.y + size.y);         //pos.y + size.y is literally 100, but whatever
+        //Start arrow
+        ctx.lineTo(offsetA + 20,   pos.y + size.y);
+        ctx.lineTo(offsetA     ,   pos.y + size.y + 50);
+        ctx.lineTo(offsetA - 20,   pos.y + size.y);
+        //End arrow
+        ctx.lineTo(pos.x,          pos.y + size.y);
         ctx.closePath();
         ctx.fill();
+        ctx.shadowColor = "rgba(0, 0, 0, 0)";
         ctx.stroke();
-
-        ctx.translate(GMULTX * this.box.x / 2 + 5, 0);
-        ctx.beginPath();
-        ctx.moveTo(20, -101.5);
-        ctx.lineTo(0, -50);
-        ctx.lineTo(-20, -101.5);
-        ctx.fill();
-        ctx.stroke();
-
-        // ctx.beginPath();
-        // ctx.rect(
-        //    -GMULTX * 1 + 8, 
-        //    -GMULTY * (this.box.y + 4.5) - 10,
-        //     GMULTX * (this.box.x + 2),
-        //     GMULTY * (this.box.y + 2));
-        // ctx.closePath();
-        // ctx.fill();
-        // ctx.stroke();
-
-        // ctx.translate(GMULTX * this.box.x / 2 + 5, 0);
-        // ctx.beginPath();
-        // ctx.moveTo(-20, -100);
-        // ctx.lineTo(20, -100);
-        // ctx.lineTo(0, -50);
-        // ctx.closePath();
-        // ctx.fill();
-        // ctx.stroke();
     }
 
-    public setMinMax(min: Vect, max: Vect, spos : Vect): void {
+    public setMinMax(min: Vect, max: Vect): void {
 
         //Do not activate if a mouse is being used
         this.isActive = true;
@@ -99,7 +96,7 @@ export default class MobileIndicator extends GameObject {
         this.box = max.getSub(min);
 
         //Set the offset of the indicator
-        this.mobileOffset = spos.getSub({
+        this.mobileOffset = this._cursorPosition.getSub({
             x : min.x * GMULTX, //(min.x + max.x) * GMULTX / 2, 
             y : min.y * GMULTY
         });

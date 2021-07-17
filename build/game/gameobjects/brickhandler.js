@@ -120,7 +120,7 @@ export default class BrickHandler extends GameObject {
     const boundaryMin = new Vect(Math.min(...selected.map((b) => b.gpos.x)), Math.min(...selected.map((b) => b.gpos.y)));
     const boundaryMax = new Vect(Math.max(...selected.map((b) => b.gpos.x + b.width)), Math.max(...selected.map((b) => b.gpos.y + 1)));
     selected.forEach((b) => b.setMinMax(boundaryMin, boundaryMax));
-    this.mobileIndicator?.setMinMax(boundaryMin, boundaryMax, spos);
+    this.mobileIndicator?.setMinMax(boundaryMin, boundaryMax);
   }
   setSnappedBricks(state) {
     this.bricks.filter((b) => b.isSelected).forEach((b) => b.snap(state));
@@ -218,6 +218,7 @@ export default class BrickHandler extends GameObject {
   }
   processSelection(selection, pos) {
     selection?.forEach((b) => b.select(pos));
+    this.mobileIndicator.cursorPosition = pos;
     return !!selection;
   }
   recurseBrick(brick1, dirs, checkGrey) {

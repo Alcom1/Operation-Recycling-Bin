@@ -8,7 +8,11 @@ export default class MobileIndicator extends GameObject {
     this.isSnapped = false;
     this.minBox = new Vect(0, 0);
     this.box = new Vect(0, 0);
+    this._cursorPosition = new Vect(0, 0);
     this.isActive = false;
+  }
+  set cursorPosition(value) {
+    this._cursorPosition = value;
   }
   update(dt) {
     this.spos = this.engine.mouse.getPos().getSub(this.mobileOffset).getClamp({
@@ -32,23 +36,35 @@ export default class MobileIndicator extends GameObject {
     ctx.fillStyle = "#EEE";
     ctx.strokeStyle = "#666";
     ctx.lineWidth = 2;
+    ctx.shadowColor = "rgba(0, 0, 0, 0.25)";
+    ctx.shadowBlur = 25;
+    const offsetX = 9;
+    const offsetA = GMULTX * this.box.x / 2 + offsetX;
+    const pos = {
+      x: -GMULTX * 1 + offsetX,
+      y: -GMULTY * (this.box.y + 4.5) - 10
+    };
+    const size = {
+      x: GMULTX * (this.box.x + 2),
+      y: GMULTY * (this.box.y + 2)
+    };
     ctx.beginPath();
-    ctx.rect(-GMULTX * 1 + 8, -GMULTY * (this.box.y + 4.5) - 10, GMULTX * (this.box.x + 2), GMULTY * (this.box.y + 2));
+    ctx.moveTo(pos.x, pos.y);
+    ctx.lineTo(pos.x + size.x, pos.y);
+    ctx.lineTo(pos.x + size.x, pos.y + size.y);
+    ctx.lineTo(offsetA + 20, pos.y + size.y);
+    ctx.lineTo(offsetA, pos.y + size.y + 50);
+    ctx.lineTo(offsetA - 20, pos.y + size.y);
+    ctx.lineTo(pos.x, pos.y + size.y);
     ctx.closePath();
     ctx.fill();
-    ctx.stroke();
-    ctx.translate(GMULTX * this.box.x / 2 + 5, 0);
-    ctx.beginPath();
-    ctx.moveTo(20, -101.5);
-    ctx.lineTo(0, -50);
-    ctx.lineTo(-20, -101.5);
-    ctx.fill();
+    ctx.shadowColor = "rgba(0, 0, 0, 0)";
     ctx.stroke();
   }
-  setMinMax(min, max, spos) {
+  setMinMax(min, max) {
     this.isActive = true;
     this.box = max.getSub(min);
-    this.mobileOffset = spos.getSub({
+    this.mobileOffset = this._cursorPosition.getSub({
       x: min.x * GMULTX,
       y: min.y * GMULTY
     });

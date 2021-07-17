@@ -273,7 +273,7 @@ export default class BrickHandler extends GameObject {
 
         // Set min-max for all selected bricks based on boundary
         selected.forEach(b => b.setMinMax(boundaryMin, boundaryMax));
-        this.mobileIndicator?.setMinMax(boundaryMin, boundaryMax, spos);
+        this.mobileIndicator?.setMinMax(boundaryMin, boundaryMax);
     }
 
     /** Set snapped state of selected bricks */
@@ -484,9 +484,11 @@ export default class BrickHandler extends GameObject {
      * search for floating bricks, return if bricks were selected
      */
     private processSelection(selection: Brick[] | null, pos: Vect) {
-        
+
         // Select bricks
         selection?.forEach(b => b.select(pos));
+
+        this.mobileIndicator!.cursorPosition = pos;
 
         return !!selection;
     }
