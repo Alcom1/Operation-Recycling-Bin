@@ -1,6 +1,6 @@
 import GameObject, {GameObjectParams} from "engine/gameobjects/gameobject";
 import Engine from "engine/engine";
-import { colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX, getZIndex } from "engine/utilities/math";
+import { colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX, getZIndex, MOBILE_PREVIEW_MAX } from "engine/utilities/math";
 import Vect, {Point} from "engine/utilities/vect";
 import BrickStud from "./brickstud";
 
@@ -161,18 +161,22 @@ export default class Brick extends GameObject {
 
     public superDraw(ctx: CanvasRenderingContext2D): void {
 
-        //Draw mobile view
-        if(this.isSelected && this.engine.mouse.getMouseType() != "mouse") {
-            ctx.drawImage(
-                this.image, 
-                0, 
-                - Z_DEPTH 
-                - 3 
-                - GMULTY * (
-                    this.isMobileFlipped ? 
-                   -this.mobilePreviewSize.y - 3.2 :
-                    this.mobilePreviewSize.y + 3.5 ));
+        if (this.engine.mouse.getMouseType() == "mouse" ||
+           !this.isSelected || 
+           !MOBILE_PREVIEW_MAX.getLessOrEqual(this.mobilePreviewSize)) {
+            return;
         }
+
+        //Draw mobile view
+        ctx.drawImage(
+            this.image, 
+            0, 
+            - Z_DEPTH 
+            - 3 
+            - GMULTY * (
+                this.isMobileFlipped ? 
+               -this.mobilePreviewSize.y - 3.2 :
+                this.mobilePreviewSize.y + 3.5));
     }
 
     /** Set the brick to match the cursor position, based on its stored selected position */

@@ -1,6 +1,6 @@
 import Engine from "engine/engine";
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
-import { colorTranslate, getZIndex, GMULTX, GMULTY, UNDER_CURSOR_Z_INDEX, Z_DEPTH } from "engine/utilities/math";
+import { colorTranslate, getZIndex, GMULTX, GMULTY, MOBILE_PREVIEW_MAX, UNDER_CURSOR_Z_INDEX, Z_DEPTH } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 
 interface BrickStudParams extends GameObjectParams {
@@ -48,16 +48,19 @@ export default class BrickStud extends GameObject {
     
     public superDraw(ctx: CanvasRenderingContext2D): void {
 
-        //Draw mobile view
-        if(this.isSelected && this.engine.mouse.getMouseType() != "mouse") {
-            ctx.drawImage(
-                this.image, 
-                Z_DEPTH - 13.5, 
-                - GMULTY * (
-                    this.isMobileFlipped ? 
-                   -this.mobilePreviewSize.y - 3.2 :
-                    this.mobilePreviewSize.y + 3.5 ));
+        if (this.engine.mouse.getMouseType() == "mouse" ||
+           !this.isSelected || 
+           !MOBILE_PREVIEW_MAX.getLessOrEqual(this.mobilePreviewSize)) {
+            return;
         }
+
+        ctx.drawImage(
+            this.image, 
+            Z_DEPTH - 13.5, 
+            - GMULTY * (
+                this.isMobileFlipped ? 
+                -this.mobilePreviewSize.y - 3.2 :
+                this.mobilePreviewSize.y + 3.5 ));
     }
 
 

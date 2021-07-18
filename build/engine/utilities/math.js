@@ -1,3 +1,4 @@
+import Vect from "./vect.js";
 export const PATH_IMG = "assets/img/";
 export const GMULTX = 30;
 export const GMULTY = 36;
@@ -5,6 +6,7 @@ export const UNDER_CURSOR_Z_INDEX = 1e3;
 export const Z_DEPTH = 22;
 export const WIDTH_SIDEPANEL = 234;
 export const OPPOSITE_DIRS = [-1, 1];
+export const MOBILE_PREVIEW_MAX = new Vect(6, 3);
 export const BOUNDARY = Object.freeze({
   minx: 0,
   miny: 2,

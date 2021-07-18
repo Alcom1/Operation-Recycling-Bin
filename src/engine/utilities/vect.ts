@@ -32,6 +32,11 @@ export default class Vect implements Point {
         return vect.x != this.x || vect.y != this.y;
     }
 
+    /** Get if both components of a vector are less than or equal to this one's */
+    public getLessOrEqual(vect: Point) : boolean {
+        return vect.x <= this.x && vect.y <= this.y;
+    }
+
     public add(vect: Point): void {
         this.x += vect.x;
         this.y += vect.y;

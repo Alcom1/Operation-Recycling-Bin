@@ -23,6 +23,9 @@ export default class Vect {
   getDiff(vect) {
     return vect.x != this.x || vect.y != this.y;
   }
+  getLessOrEqual(vect) {
+    return vect.x <= this.x && vect.y <= this.y;
+  }
   add(vect) {
     this.x += vect.x;
     this.y += vect.y;

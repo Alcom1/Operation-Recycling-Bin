@@ -1,5 +1,5 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
-import {BOUNDARY, GMULTX, GMULTY, round} from "../../engine/utilities/math.js";
+import {BOUNDARY, GMULTX, GMULTY, MOBILE_PREVIEW_MAX, round} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
 export default class MobileIndicator extends GameObject {
   constructor(engine2, params) {
@@ -37,7 +37,7 @@ export default class MobileIndicator extends GameObject {
     this.bricks.filter((b) => b.isSelected).forEach((b) => b.flipMobile(this.isFlipped));
   }
   draw(ctx) {
-    if (this.engine.mouse.getMouseType() == "mouse") {
+    if (this.engine.mouse.getMouseType() == "mouse" || !MOBILE_PREVIEW_MAX.getLessOrEqual(this.box)) {
       return;
     }
     ctx.translate(GMULTX * this.box.x / 2 + 10, GMULTY * this.box.y / 2 - 15);

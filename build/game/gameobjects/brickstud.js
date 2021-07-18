@@ -1,5 +1,5 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
-import {colorTranslate, getZIndex, GMULTX, GMULTY, UNDER_CURSOR_Z_INDEX, Z_DEPTH} from "../../engine/utilities/math.js";
+import {colorTranslate, getZIndex, GMULTX, GMULTY, MOBILE_PREVIEW_MAX, UNDER_CURSOR_Z_INDEX, Z_DEPTH} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
 export default class BrickStud extends GameObject {
   constructor(engine2, params) {
@@ -21,9 +21,10 @@ export default class BrickStud extends GameObject {
     }
   }
   superDraw(ctx) {
-    if (this.isSelected && this.engine.mouse.getMouseType() != "mouse") {
-      ctx.drawImage(this.image, Z_DEPTH - 13.5, -GMULTY * (this.isMobileFlipped ? -this.mobilePreviewSize.y - 3.2 : this.mobilePreviewSize.y + 3.5));
+    if (this.engine.mouse.getMouseType() == "mouse" || !this.isSelected || !MOBILE_PREVIEW_MAX.getLessOrEqual(this.mobilePreviewSize)) {
+      return;
     }
+    ctx.drawImage(this.image, Z_DEPTH - 13.5, -GMULTY * (this.isMobileFlipped ? -this.mobilePreviewSize.y - 3.2 : this.mobilePreviewSize.y + 3.5));
   }
   snap(state) {
     if (state) {

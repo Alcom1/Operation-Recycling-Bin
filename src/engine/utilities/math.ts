@@ -16,6 +16,8 @@ export const Z_DEPTH = 22;
 export const WIDTH_SIDEPANEL = 234;
 /** Array of unit and negative unit for opposed functions */
 export const OPPOSITE_DIRS = [-1, 1] as (-1 | 1)[];
+/** Maximum size of a mobile preview */
+export const MOBILE_PREVIEW_MAX = new Vect(6, 3)
 
 /** Environment boundary */
 export const BOUNDARY = Object.freeze({

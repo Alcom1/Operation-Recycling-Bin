@@ -1,5 +1,5 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
-import {colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX, getZIndex} from "../../engine/utilities/math.js";
+import {colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX, getZIndex, MOBILE_PREVIEW_MAX} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
 import BrickStud from "./brickstud.js";
 export default class Brick extends GameObject {
@@ -62,9 +62,10 @@ export default class Brick extends GameObject {
     ctx.drawImage(this.image, 0, -Z_DEPTH - 3);
   }
   superDraw(ctx) {
-    if (this.isSelected && this.engine.mouse.getMouseType() != "mouse") {
-      ctx.drawImage(this.image, 0, -Z_DEPTH - 3 - GMULTY * (this.isMobileFlipped ? -this.mobilePreviewSize.y - 3.2 : this.mobilePreviewSize.y + 3.5));
+    if (this.engine.mouse.getMouseType() == "mouse" || !this.isSelected || !MOBILE_PREVIEW_MAX.getLessOrEqual(this.mobilePreviewSize)) {
+      return;
     }
+    ctx.drawImage(this.image, 0, -Z_DEPTH - 3 - GMULTY * (this.isMobileFlipped ? -this.mobilePreviewSize.y - 3.2 : this.mobilePreviewSize.y + 3.5));
   }
   setToCursor() {
     this.spos = this.engine.mouse.getPos().getSub(this.selectedPos).getClamp({

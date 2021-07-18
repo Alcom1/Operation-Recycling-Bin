@@ -1,6 +1,6 @@
 import Engine from "engine/engine";
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
-import { BOUNDARY, GMULTX, GMULTY, round, Z_DEPTH } from "engine/utilities/math";
+import { BOUNDARY, GMULTX, GMULTY, MOBILE_PREVIEW_MAX, round, Z_DEPTH } from "engine/utilities/math";
 import Vect, { Point }  from "engine/utilities/vect";
 import Brick from "./brick";
 
@@ -19,7 +19,7 @@ export default class MobileIndicator extends GameObject {
     /** Bricks */
     private bricks : Brick[] = [];
 
-    /** */
+    /** Stored cursor position from moment of selection */
     private _cursorPosition : Vect = new Vect(0, 0);
     public set cursorPosition(value : Vect) {
         this._cursorPosition = value;
@@ -39,6 +39,7 @@ export default class MobileIndicator extends GameObject {
     }    
 
     public update(dt: number) {
+
         this.spos = this.engine.mouse.getPos().getSub(this.mobileOffset).getClamp({
             // Clamp above minimum-x position
             x: (BOUNDARY.minx) * GMULTX,
@@ -65,7 +66,8 @@ export default class MobileIndicator extends GameObject {
 
     public draw(ctx: CanvasRenderingContext2D) {
         
-        if(this.engine.mouse.getMouseType() == "mouse") {
+        if (this.engine.mouse.getMouseType() == "mouse" ||
+           !MOBILE_PREVIEW_MAX.getLessOrEqual(this.box)) {
             return;
         }
 
@@ -112,7 +114,7 @@ export default class MobileIndicator extends GameObject {
 
     public setMinMax(min: Vect, max: Vect): void {
 
-        //Do not activate if a mouse is being used
+        //Activate
         this.isActive = true;
 
         //Set box that collides with boundary
@@ -126,6 +128,7 @@ export default class MobileIndicator extends GameObject {
     }
 
     public snap(state : boolean) {
+
         this.isSnapped = state;
     }
 }
