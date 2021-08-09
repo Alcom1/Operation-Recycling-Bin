@@ -25,6 +25,7 @@ export default class BrickHandler extends GameObject {
   init(ctx) {
     this.characterHandler = this.engine.tag.get("CharacterHandler", "LevelInterface")[0];
     this.mobileIndicator = this.engine.tag.get("MobileIndicator", "LevelInterface")[0];
+    this.counter = this.engine.tag.get("Counter", "LevelInterface")[0];
     this.bricks = this.engine.tag.get("Brick", "Level");
     this.bricks.forEach((b) => this.addBrickToRows(b));
     this.sortRows();
@@ -219,6 +220,7 @@ export default class BrickHandler extends GameObject {
   processSelection(selection, pos) {
     selection?.forEach((b) => b.select(pos));
     this.mobileIndicator.cursorPosition = pos;
+    this.counter.incrementCount();
     return !!selection;
   }
   recurseBrick(brick1, dirs, checkGrey) {

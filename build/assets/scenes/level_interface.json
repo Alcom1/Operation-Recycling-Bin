@@ -21,6 +21,9 @@
             "name" : "MobileIndicator"
         },
         {
+            "name" : "Counter"
+        },
+        {
             "name" : "Sprite",
             "image" : "background_menu",
             "zIndex" : -50000

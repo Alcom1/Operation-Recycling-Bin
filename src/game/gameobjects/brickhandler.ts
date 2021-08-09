@@ -3,6 +3,7 @@ import {col1D, GMULTX, GMULTY, colBoundingBoxGrid, colPointRectGrid, colPointPar
 import Vect, { Point } from "engine/utilities/vect";
 import Brick from "./brick";
 import CharacterHandler from "./characterhandler";
+import Counter from "./counter";
 import MobileIndicator from "./mobileindicator";
 
 export enum BrickHandlerState {
@@ -28,6 +29,9 @@ export default class BrickHandler extends GameObject {
 
     /** */
     private characterHandler! : CharacterHandler;
+
+    /** */
+    private counter!: Counter;
 
     /** Rows of bricks */
     private rows: BrickRow[] = [];
@@ -55,12 +59,15 @@ export default class BrickHandler extends GameObject {
         this.characterHandler = this.engine.tag.get(        // Get character handler from scene
             "CharacterHandler", 
             "LevelInterface")[0] as CharacterHandler;
-        this.mobileIndicator = this.engine.tag.get(         // Get mobile indicator handler from scene
+        this.mobileIndicator = this.engine.tag.get(         // Get mobile indicator from scene
             "MobileIndicator", 
             "LevelInterface")[0] as MobileIndicator;
+        this.counter = this.engine.tag.get(                 // Get counter from scene
+            "Counter", 
+            "LevelInterface")[0] as Counter;       
         this.bricks = this.engine.tag.get(                  // Get bricks from scene
             "Brick", 
-            "Level") as Brick[];                            
+            "Level") as Brick[];                     
         this.bricks.forEach(b => this.addBrickToRows(b));   // Add bricks into rows
         this.sortRows();                                    // Sort rows/bricks within rows
 
@@ -489,6 +496,8 @@ export default class BrickHandler extends GameObject {
         selection?.forEach(b => b.select(pos));
 
         this.mobileIndicator!.cursorPosition = pos;
+
+        this.counter.incrementCount();
 
         return !!selection;
     }

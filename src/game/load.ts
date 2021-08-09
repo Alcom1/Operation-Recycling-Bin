@@ -8,6 +8,7 @@ import Character from "./gameobjects/character";
 import CharacterBin from "./gameobjects/characterbin";
 import CharacterBot from "./gameobjects/characterbot";
 import CharacterHandler from "./gameobjects/characterhandler";
+import Counter from "./gameobjects/counter";
 import Cursor from "./gameobjects/cursor";
 import CursorIcon from "./gameobjects/cursoricon";
 import FPSCounter from "./gameobjects/fpscounter";
@@ -35,6 +36,7 @@ window.onload = function() {
             CharacterBot,
             CharacterBin,
             CharacterHandler,
+            Counter,
             Cursor,
             CursorIcon,
             FPSCounter,
