@@ -16,7 +16,7 @@ export default class Button extends GameObject {
     this.bhColorBright = colorAdd(this.bhColor, 48);
     this.size = new Vect(params.size?.x ?? 0, params.size?.y ?? 0);
     this.depth = params.depth || Z_DEPTH / 4;
-    this.font = params.font ?? "16px FiveByFive";
+    this.font = params.font ?? "16px Font04b_08";
     this.color = params.color ?? "#333333";
     this.text = params.text ?? "";
     this.isCenterUI = !!params.isCenterUI;
@@ -86,7 +86,7 @@ export default class Button extends GameObject {
     ctx.textAlign = "center";
     ctx.font = this.font;
     ctx.fillStyle = this.color;
-    ctx.fillText(this.text, this.size.x / 2, this.size.y / 2 - 4);
+    ctx.fillText(this.text, this.size.x / 2, this.size.y / 2);
   }
 }
 //# sourceMappingURL=button.js.map

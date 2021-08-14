@@ -56,7 +56,7 @@ export default class Button extends GameObject {
         this.size = new Vect(params.size?.x ?? 0, params.size?.y ?? 0);
         this.depth = params.depth || Z_DEPTH / 4;
 
-        this.font = params.font ?? "16px FiveByFive";
+        this.font = params.font ?? "16px Font04b_08";
         this.color = params.color ?? "#333333";
         this.text = params.text ?? "";
 
@@ -181,7 +181,7 @@ export default class Button extends GameObject {
         ctx.fillText(
             this.text,                  // Fill button text
             this.size.x / 2, 
-            this.size.y / 2 - 4
+            this.size.y / 2
         );
     }
 }

@@ -12,7 +12,8 @@
             "levels" : {
                 "NextLevel" : "level_3",
                 "PreviousLevel" : "level_1"
-            }
+            },
+            "par" : 5
         },
         {
             "name" : "Sprite",

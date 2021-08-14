@@ -6,6 +6,7 @@ interface LevelSequenceParams extends GameObjectParams {
     color?: string;
     levelName: string;
     levels: {[label: string]: string}
+    par: number;
 }
 
 export default class LevelSequence extends GameObject {
@@ -18,6 +19,7 @@ export default class LevelSequence extends GameObject {
         /** Level name */
         level: string;
     }[];
+    public par: number;
 
     constructor(engine: Engine, params: LevelSequenceParams) {
         super(engine, params);
@@ -31,6 +33,8 @@ export default class LevelSequence extends GameObject {
             label : l[0],
             level : l[1]
         }));
+
+        this.par = params.par;
     }
 
     public draw(ctx: CanvasRenderingContext2D) {

@@ -9,6 +9,7 @@ export default class LevelSequence extends GameObject {
       label: l[0],
       level: l[1]
     }));
+    this.par = params.par;
   }
   draw(ctx) {
     ctx.textBaseline = "top";
