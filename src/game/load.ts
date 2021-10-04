@@ -24,8 +24,7 @@ window.onload = function() {
     new Engine(
         canvas, 
         "assets/scenes/",
-        ["level_interface", "level_1"],
-        ["loading"],
+        "scenes",
         [
             Brick,
             BrickHandler,

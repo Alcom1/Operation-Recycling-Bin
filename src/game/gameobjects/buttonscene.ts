@@ -13,16 +13,19 @@ export default class ButtonScene extends Button {
         // If the current level has a sequence,
         // get the level in the sequence that matches this button's name
         if (levelSequence) {
-            this.sceneName = levelSequence.levels.find(l => l.label === this.text.split(' ').join(''))?.level ?? null;
+            this.sceneName = levelSequence.levels.find(l => 
+                l.label.toLowerCase() === 
+                this.text.split(' ').join('').toLowerCase())?.level ?? null;
         }
     }
 
     protected doButtonAction() {
+
         // Go to new scene if this button has a scene name
         if (this.sceneName) {
             this.engine.killAllScenes();                // Set all scenes to be unloaded
             this.engine.pushScenes(this.sceneName);     // Push this button's scene name to be loaded
-            this.engine.pushScenes("level_interface");  // Push level interface to be loaded
+            this.engine.pushScenes("LevelInterface");  // Push level interface to be loaded
         }
     }
 }

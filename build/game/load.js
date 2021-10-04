@@ -19,7 +19,7 @@ window.onload = function() {
   const canvas = document.querySelector("canvas");
   if (!canvas)
     throw new Error("Can't get canvas");
-  new Engine(canvas, "assets/scenes/", ["level_interface", "level_1"], ["loading"], [
+  new Engine(canvas, "assets/scenes/", "scenes", [
     Brick,
     BrickHandler,
     BrickStud,

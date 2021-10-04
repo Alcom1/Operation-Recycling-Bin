@@ -24,7 +24,7 @@ export default class LevelSequence extends GameObject {
     constructor(engine: Engine, params: LevelSequenceParams) {
         super(engine, params);
 
-        this.font = params.font || "18pt Consolas";
+        this.font = params.font || "24px Font04b_08";
         this.color = params.color || "white";
         this.levelName = params.levelName;
 
@@ -38,6 +38,7 @@ export default class LevelSequence extends GameObject {
     }
 
     public draw(ctx: CanvasRenderingContext2D) {
+
         ctx.textBaseline = "top";
         ctx.textAlign = "right";
         ctx.font = this.font;

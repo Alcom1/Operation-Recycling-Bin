@@ -4,6 +4,7 @@ import { GMULTX, GMULTY } from "engine/utilities/math";
 
 export interface SceneParams {
     name?: string,
+    tag?: string,
     need?: string[],
     zIndex?: number,
     gameObjects?: GameObject[],

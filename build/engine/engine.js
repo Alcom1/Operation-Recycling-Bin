@@ -5,12 +5,13 @@ import TagModule from "./modules/tag.js";
 import Scene from "./scene/scene.js";
 import {clamp} from "./utilities/math.js";
 export default class Engine {
-  constructor(element, scenePathName, startScenes, loadingScenes, gameObjectTypes, width = 1296, height = 864) {
+  constructor(element, scenePathName, startScenes, gameObjectTypes, width = 1296, height = 864) {
     this.width = width;
     this.height = height;
     this.lastTime = 0;
     this.animationID = 0;
-    this.scenes = [];
+    this.sceneDatas = [];
+    this.scenesActive = [];
     this.scenesLoading = [];
     this.pushSceneNames = [];
     this.killSceneNames = [];
@@ -32,60 +33,70 @@ export default class Engine {
     this.mouse.setResolution(this.canvas.width, this.canvas.height);
     this.tag = new TagModule();
     this.registerGameObjects(gameObjectTypes);
-    startScenes.forEach((s) => this.loadScene(s, this.scenes));
-    loadingScenes.forEach((s) => this.loadScene(s, this.scenesLoading));
-    this.frame();
+    this.pushSceneNames = ["LevelInterface", "LEVEL_00"];
+    this.loadScenes(startScenes, this.scenesActive).finally(() => {
+      this.frame();
+    });
   }
-  async frame() {
+  frame() {
     this.animationID = requestAnimationFrame(() => {
       if (this.crashed)
         return;
-      this.frame().catch((e) => {
+      try {
+        this.frame();
+      } catch (e) {
         this.crashed = true;
         throw e;
-      });
+      }
     });
     const dt = this.calculateDeltaTime();
     this.ctx.clearRect(0, 0, this.width, this.height);
     this.unloadScenes(this.killSceneNames);
-    await this.pushSceneNames.map((sn) => this.loadScene(sn, this.scenes));
+    this.pushSceneNames.map((sn) => this.loadScene(sn, this.scenesActive));
     this.pushSceneNames = [];
     if (this.library.getLoaded()) {
       this.initScenes();
-      this.updateDrawScenes(this.scenes, dt);
+      this.updateDrawScenes(this.scenesActive, dt);
     } else {
       this.updateDrawScenes(this.scenesLoading, dt);
     }
     this.mouse.update();
   }
   initScenes() {
-    this.scenesLoading.forEach((s) => s.init(this.ctx, this.scenes));
-    this.scenes.forEach((s) => s.init(this.ctx, this.scenes));
+    this.scenesLoading.forEach((s) => s.init(this.ctx, this.scenesActive));
+    this.scenesActive.forEach((s) => s.init(this.ctx, this.scenesActive));
   }
   updateDrawScenes(scenes, dt) {
     scenes.forEach((s) => s.update(dt));
     scenes.forEach((s) => s.draw(this.ctx));
     scenes.forEach((s) => s.superDraw(this.ctx));
   }
-  async loadScene(sceneName, scenes) {
+  async loadScenes(sceneName, scenes) {
     const sceneResponse = await fetch(`${this.scenePath}${sceneName}.json`);
-    const sceneData = await sceneResponse.json();
-    const scene2 = new Scene(this, sceneData.scene);
-    for (const goData of sceneData.gameObjects) {
-      const GOType = this.gameObjectTypes.get(goData.name);
-      if (!GOType)
-        throw new Error(`GameObject of type ${goData.name} does not exist`);
-      const go = new GOType(this, {...goData, scene: scene2});
-      scene2.pushGO(go);
-      this.tag.pushGO(go, scene2.name);
+    this.sceneDatas = await sceneResponse.json();
+  }
+  loadScene(sceneName, scenes) {
+    const sceneData = this.sceneDatas.find((s) => s.scene.tag == sceneName);
+    if (sceneData) {
+      const scene2 = new Scene(this, sceneData.scene);
+      for (const goData of sceneData.gameObjects) {
+        const GOType = this.gameObjectTypes.get(goData.name);
+        if (!GOType)
+          throw new Error(`GameObject of type ${goData.name} does not exist`);
+        const go = new GOType(this, {...goData, scene: scene2});
+        scene2.pushGO(go);
+        this.tag.pushGO(go, scene2.name);
+      }
+      scene2.sortGO();
+      scenes.push(scene2);
+      scenes.sort((a, b) => a.zIndex - b.zIndex);
+    } else {
+      throw new Error(`Scene with tag ${sceneName} does not exist`);
     }
-    scene2.sortGO();
-    scenes.push(scene2);
-    scenes.sort((a, b) => a.zIndex - b.zIndex);
   }
   unloadScenes(killSceneNames) {
     if (killSceneNames.length > 1) {
-      this.scenes = this.scenes.filter((s) => !this.killSceneNames.includes(s.name));
+      this.scenesActive = this.scenesActive.filter((s) => !this.killSceneNames.includes(s.name));
       this.tag.clear(this.killSceneNames);
       this.killSceneNames = [];
     }
@@ -115,7 +126,7 @@ export default class Engine {
     }
   }
   killAllScenes() {
-    this.killScenes(this.scenes.map((s) => s.name));
+    this.killScenes(this.scenesActive.map((s) => s.name));
   }
   calculateDeltaTime() {
     const now = +new Date();

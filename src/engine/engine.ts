@@ -18,10 +18,17 @@ export default class Engine {
     
     /** Path scenes are located in */
     private scenePath: string;
+    
+    /** All Scenes */
+    private sceneDatas : {
+        scene: SceneParams;
+        gameObjects: GameObjectParams[]
+    }[] = [];
     /** Currently loaded scenes */
-    private scenes: Scene[] = [];
+    private scenesActive: Scene[] = [];
     /** Loading screen scenes */
     private scenesLoading: Scene[] = [];
+
     /** Names of scenes to be added next frame */
     private pushSceneNames: string[] = [];
     /** Names of scenes to be removed next frame */
@@ -41,8 +48,7 @@ export default class Engine {
     constructor(
         element: HTMLCanvasElement,
         scenePathName: string,
-        startScenes: string[],
-        loadingScenes: string[],
+        startScenes: string,
         gameObjectTypes: typeof GameObject[],
         private width: number = 1296,
         private height: number = 864
@@ -67,25 +73,26 @@ export default class Engine {
         this.tag = new TagModule();
 
         // Register available game object types
-        this.registerGameObjects(gameObjectTypes)
+        this.registerGameObjects(gameObjectTypes);
+
+        this.pushSceneNames = ["LevelInterface", "LEVEL_00"];
 
         // Load each starting & loading scene
-        startScenes.forEach(s => this.loadScene(s, this.scenes));
-        loadingScenes.forEach(s => this.loadScene(s, this.scenesLoading));
-        
-        // Start the game loop
-        this.frame();
+        this.loadScenes(startScenes, this.scenesActive).finally(() => { this.frame() });
     }
 
     /** Update loop */
-    private async frame(): Promise<void> {
+    private frame(): void {
+
         this.animationID = requestAnimationFrame(() => {
             // Don't continue throwing errors repeatedly without hope of recovering
             if (this.crashed) return;
-            this.frame().catch(e => {
+            try {
+                this.frame()
+            } catch(e) {
                 this.crashed = true;
                 throw e;
-            });
+            }
         });
         
         // Setup frame
@@ -99,7 +106,7 @@ export default class Engine {
         this.unloadScenes(this.killSceneNames);
 
         // Load each scene name in the push list
-        await this.pushSceneNames.map(sn => this.loadScene(sn, this.scenes));
+        this.pushSceneNames.map(sn => this.loadScene(sn, this.scenesActive));
 
         // Reset push list
         this.pushSceneNames = [];
@@ -107,7 +114,7 @@ export default class Engine {
         // Scene actions
         if(this.library.getLoaded()) {
             this.initScenes();
-            this.updateDrawScenes(this.scenes, dt);
+            this.updateDrawScenes(this.scenesActive, dt);
         }
         else {
             this.updateDrawScenes(this.scenesLoading, dt);
@@ -119,8 +126,8 @@ export default class Engine {
 
     /** Initialize all scenes */
     private initScenes(): void {
-        this.scenesLoading.forEach(s => s.init(this.ctx, this.scenes));
-        this.scenes.forEach(s => s.init(this.ctx, this.scenes));
+        this.scenesLoading.forEach(s => s.init(this.ctx, this.scenesActive));
+        this.scenesActive.forEach(s => s.init(this.ctx, this.scenesActive));
     }
 
     /** Perform both an update and draw */
@@ -130,34 +137,46 @@ export default class Engine {
         scenes.forEach(s => s.superDraw(this.ctx));
     }
 
-    /** Load a scene */
-    private async loadScene(sceneName: string, scenes: Scene[]): Promise<void> {
+    /** Load all scene data */
+    private async loadScenes(sceneName: string, scenes: Scene[]): Promise<void> {
         const sceneResponse = await fetch(`${this.scenePath}${sceneName}.json`);
-        const sceneData: {
-            scene: SceneParams;
-            gameObjects: GameObjectParams[]
-        } = await sceneResponse.json();
-        const scene = new Scene(this, sceneData.scene);
 
-        for (const goData of sceneData.gameObjects) {
-            // Construct the object from its name
-            const GOType = this.gameObjectTypes.get(goData.name);
-            if (!GOType) throw new Error(`GameObject of type ${goData.name} does not exist`);
-            const go = new GOType(this, {...goData, scene});
-            scene.pushGO(go);
-            this.tag.pushGO(go, scene.name);
+        this.sceneDatas = await sceneResponse.json();
+    }
+
+    /** Load a scene */
+    private loadScene(sceneName: string, scenes: Scene[]) {
+
+        const sceneData = this.sceneDatas.find(s => s.scene.tag == sceneName);
+
+        if(sceneData) {
+
+            const scene = new Scene(this, sceneData.scene);
+
+            for (const goData of sceneData.gameObjects) {
+                // Construct the object from its name
+                const GOType = this.gameObjectTypes.get(goData.name);
+                if (!GOType) throw new Error(`GameObject of type ${goData.name} does not exist`);
+                const go = new GOType(this, {...goData, scene});
+                scene.pushGO(go);
+                this.tag.pushGO(go, scene.name);
+            }
+    
+            scene.sortGO();
+            scenes.push(scene);
+            scenes.sort((a, b) => a.zIndex - b.zIndex);
         }
-
-        scene.sortGO();
-        scenes.push(scene);
-        scenes.sort((a, b) => a.zIndex - b.zIndex);
+        else {
+            throw new Error(`Scene with tag ${sceneName} does not exist`);
+        }
     }
 
     /** Unload scenes pending removal */
     private unloadScenes(killSceneNames: string[]): void {
         if (killSceneNames.length > 1) {
+
             // Clear scene names from core
-            this.scenes = this.scenes.filter(s => !this.killSceneNames.includes(s.name)); 
+            this.scenesActive = this.scenesActive.filter(s => !this.killSceneNames.includes(s.name)); 
             this.tag.clear(this.killSceneNames);
             this.killSceneNames = [];
         }
@@ -209,7 +228,7 @@ export default class Engine {
 
     /** Unload all current scenes */
     public killAllScenes(): void {
-        this.killScenes(this.scenes.map(s => s.name));
+        this.killScenes(this.scenesActive.map(s => s.name));
     }
 
     /**
