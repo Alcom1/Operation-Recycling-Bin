@@ -73,15 +73,27 @@ export default class CharacterBot extends Character {
         this.bins.forEach(b => {
             if (b.isActive && 
                 colRectRectSizes(
-                    this.gpos.x - 1,
+                    this.gpos.x,
                     this.gpos.y,
                     2,
                     this.height,
-                    b.gpos.x - 1,
-                    b.gpos.y,
+                    b.gpos.x,
+                    b.gpos.y + 1,
                     2,
-                    b.height)) {
+                    b.height - 1)) {
                 
+                var ary = this.gpos.y;
+                var arh = this.height;
+                var bry = b.gpos.y;
+                var brh = b.height;
+
+                var aminy = ary;
+                var amaxy = ary + arh;
+                var bminy = bry;
+                var bmaxy = bry + brh;
+
+                console.log(aminy, amaxy, bminy, bmaxy, aminy < bmaxy, amaxy > bminy)
+
                 b.deactivate();
                 this.setCurrentGroup(1);
             }

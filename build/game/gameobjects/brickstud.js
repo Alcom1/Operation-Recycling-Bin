@@ -17,7 +17,7 @@ export default class BrickStud extends GameObject {
   draw(ctx) {
     if (this.isVisible) {
       ctx.globalAlpha = this.isSnapped ? 0.75 : this.isSelected ? 0.5 : this.isPressed ? 0.75 : 1;
-      ctx.drawImage(this.image, Z_DEPTH - 13.5, 0);
+      ctx.drawImage(this.image, Z_DEPTH - 13, 0);
     }
   }
   superDraw(ctx) {

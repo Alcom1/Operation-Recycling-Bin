@@ -42,7 +42,7 @@ export default class BrickStud extends GameObject {
                 1.0;                    // Otherwise opaque if not selected or pressed
             
             // Draw the stored image for this stud
-            ctx.drawImage(this.image, Z_DEPTH - 13.5, 0);
+            ctx.drawImage(this.image, Z_DEPTH - 13, 0);
         }
     }    
     
