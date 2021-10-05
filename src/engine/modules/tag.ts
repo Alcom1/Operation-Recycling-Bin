@@ -1,13 +1,13 @@
 import GameObject from "engine/gameobjects/gameobject";
 
-interface Tag {
+interface TagGroup {
     tag: string;
     tagObjects: GameObject[];
 }
 
 interface TaggedScene {
     name: string;
-    tags: Tag[];
+    tags: TagGroup[];
 }
 
 /** Module that handles tags and game objects grouped by tag. */
@@ -26,12 +26,14 @@ export default class TagModule {
 
         // Store new scene or push gameObject to existing scene  
         if(curr == null) {
-            this.scenes.push({
-                name : sceneName,
-                tags : [{
-                    tag : gameObject.tag,
-                    tagObjects : [gameObject]
-                }]
+            gameObject.tags.forEach(tag => {
+                this.scenes.push({
+                    name : sceneName,
+                    tags : [{
+                        tag : tag,
+                        tagObjects : [gameObject]
+                    }]
+                });
             });
         }
         else {
@@ -40,15 +42,17 @@ export default class TagModule {
     }
 
     /** Push a game object to the tag */
-    private pushGOToGroup(gameObject: GameObject, tags: Tag[]): void {
+    private pushGOToGroup(gameObject: GameObject, tagGroups: TagGroup[]): void {
         // Get tag with game object's name
-        var curr = tags.find(gos => gos.tag == gameObject.tag);
+        var curr = tagGroups.find(tg => gameObject.tags.some(t => t == tg.tag));
 
         // Store new tag or push gameObject to existing tag
         if (curr == null) {
-            tags.push({
-                tag : gameObject.tag,
-                tagObjects : [gameObject]
+            gameObject.tags.forEach(tag => {
+                tagGroups.push({
+                    tag : tag,
+                    tagObjects : [gameObject]
+                });
             });
         } else {
             curr.tagObjects.push(gameObject);

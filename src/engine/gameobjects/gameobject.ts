@@ -8,7 +8,7 @@ export interface GameObjectParams {
     zIndex?: number;
     scene: Scene;
     name: string;
-    tag?: string;
+    tags?: [string];
 }
 
 /** Base game object */
@@ -18,7 +18,7 @@ export default class GameObject {
     /** Sub-position */
     public spos: Vect;
     public zIndex: number;
-    public tag: string;
+    public tags: string[];
     public parent: Scene;
     public isActive: Boolean = true;
 
@@ -26,7 +26,7 @@ export default class GameObject {
         this.gpos = new Vect(params.position?.x ?? 0, params.position?.y ?? 0);
         this.spos = new Vect(params.subPosition?.x ?? 0, params.subPosition?.y ?? 0);
         this.zIndex = params.zIndex ?? 0;
-        this.tag = params.tag ?? params.name;
+        this.tags = params.tags ?? [params.name];
         this.parent = params.scene;
     }
 

@@ -187,7 +187,7 @@ export default class BrickHandler extends GameObject {
     }
 
     /** Check collisons for a vertically-looping range and return a bitmask */
-    public checkCollisionSuper(pos: Vect, start: number, final: number, height: number, dir: number): number {
+    public checkCollisionRange(pos: Vect, start: number, final: number, height: number, dir: number): number {
 
         let collisions = 0;
 

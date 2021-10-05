@@ -8,23 +8,27 @@ export default class TagModule {
   pushGO(gameObject, sceneName) {
     var curr = this.scenes.find((sg) => sg.name == sceneName);
     if (curr == null) {
-      this.scenes.push({
-        name: sceneName,
-        tags: [{
-          tag: gameObject.tag,
-          tagObjects: [gameObject]
-        }]
+      gameObject.tags.forEach((tag) => {
+        this.scenes.push({
+          name: sceneName,
+          tags: [{
+            tag,
+            tagObjects: [gameObject]
+          }]
+        });
       });
     } else {
       this.pushGOToGroup(gameObject, curr.tags);
     }
   }
-  pushGOToGroup(gameObject, tags) {
-    var curr = tags.find((gos) => gos.tag == gameObject.tag);
+  pushGOToGroup(gameObject, tagGroups) {
+    var curr = tagGroups.find((tg) => gameObject.tags.some((t) => t == tg.tag));
     if (curr == null) {
-      tags.push({
-        tag: gameObject.tag,
-        tagObjects: [gameObject]
+      gameObject.tags.forEach((tag) => {
+        tagGroups.push({
+          tag,
+          tagObjects: [gameObject]
+        });
       });
     } else {
       curr.tagObjects.push(gameObject);

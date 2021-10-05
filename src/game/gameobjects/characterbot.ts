@@ -100,7 +100,7 @@ export default class CharacterBot extends Character {
         })
 
         //Collision bitmask
-        let cbm = this.brickHandler.checkCollisionSuper(
+        let cbm = this.brickHandler.checkCollisionRange(
             this.gpos.getSub({x: this.move.x > 0 ? 1 : 0, y : 5}),  //Position
             5,                                                      // n + 1
             15,                                                     //(n + 3) * 2 + 1

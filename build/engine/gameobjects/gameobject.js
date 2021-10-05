@@ -6,7 +6,7 @@ export default class GameObject {
     this.gpos = new Vect(params.position?.x ?? 0, params.position?.y ?? 0);
     this.spos = new Vect(params.subPosition?.x ?? 0, params.subPosition?.y ?? 0);
     this.zIndex = params.zIndex ?? 0;
-    this.tag = params.tag ?? params.name;
+    this.tags = params.tags ?? [params.name];
     this.parent = params.scene;
   }
   init(ctx, scenes) {

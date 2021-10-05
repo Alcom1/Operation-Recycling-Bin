@@ -27,7 +27,7 @@ export default class Cursor extends GameObject {
 
     private isUpdateForced = false;
 
-    public brickHandler!: BrickHandler;
+    private brickHandler!: BrickHandler;
 
     private cursorIcon!: CursorIcon;
 

@@ -44,6 +44,8 @@ export default class Character extends GameObject {
 
     constructor(engine: Engine, params: CharacterParams) {
         super(engine, params);
+
+        this.tags.push("Character");        //All characters need to share a tag
         
         this.speed = params.speed ?? 1;     //Default speed
         this.move = new Vect(1, 0);         //Default move directions
