@@ -8,6 +8,7 @@ export default class Character extends GameObject {
     this.underBricks = [];
     this.spriteGroupIndex = 0;
     this.spriteGroups = [[]];
+    this.tags.push("Character");
     this.speed = params.speed ?? 1;
     this.move = new Vect(1, 0);
     this._height = params.height ?? 2;

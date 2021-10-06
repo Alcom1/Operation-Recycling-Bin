@@ -43,20 +43,21 @@ export default class TagModule {
 
     /** Push a game object to the tag */
     private pushGOToGroup(gameObject: GameObject, tagGroups: TagGroup[]): void {
-        // Get tag with game object's name
-        var curr = tagGroups.find(tg => gameObject.tags.some(t => t == tg.tag));
+        
+        gameObject.tags.forEach(tag => {
+            // Get tag with game object's name
+            var curr = tagGroups.find(tg => tag == tg.tag);
 
-        // Store new tag or push gameObject to existing tag
-        if (curr == null) {
-            gameObject.tags.forEach(tag => {
+            // Store new tag or push gameObject to existing tag
+            if (curr == null) {
                 tagGroups.push({
                     tag : tag,
                     tagObjects : [gameObject]
                 });
-            });
-        } else {
-            curr.tagObjects.push(gameObject);
-        }
+            } else {
+                curr.tagObjects.push(gameObject);
+            }
+        });
     }
 
     /** Returns all game objects for the given tag(s) and scene name */

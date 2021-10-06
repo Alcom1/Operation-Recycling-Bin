@@ -22,17 +22,17 @@ export default class TagModule {
     }
   }
   pushGOToGroup(gameObject, tagGroups) {
-    var curr = tagGroups.find((tg) => gameObject.tags.some((t) => t == tg.tag));
-    if (curr == null) {
-      gameObject.tags.forEach((tag) => {
+    gameObject.tags.forEach((tag) => {
+      var curr = tagGroups.find((tg) => tag == tg.tag);
+      if (curr == null) {
         tagGroups.push({
           tag,
           tagObjects: [gameObject]
         });
-      });
-    } else {
-      curr.tagObjects.push(gameObject);
-    }
+      } else {
+        curr.tagObjects.push(gameObject);
+      }
+    });
   }
   get(tag, sceneName) {
     return this.scenes.find((sg) => sg.name == sceneName)?.tags.filter((gos) => Array.isArray(tag) ? tag.includes(gos.tag) : gos.tag == tag)?.flatMap((t) => t.tagObjects) ?? [];
