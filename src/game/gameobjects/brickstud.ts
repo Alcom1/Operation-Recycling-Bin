@@ -86,7 +86,7 @@ export default class BrickStud extends GameObject {
         this.isPressed = true;
     }
 
-    // Setup this stud for selecting
+    /** Setup this stud for selecting */ 
     public select(): void {
         this.isSelected = true;
         this.zIndex = UNDER_CURSOR_Z_INDEX;

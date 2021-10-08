@@ -1,12 +1,10 @@
-import GameObject from "../../engine/gameobjects/gameobject.js";
-import {colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX, getZIndex, MOBILE_PREVIEW_MAX} from "../../engine/utilities/math.js";
-import Vect from "../../engine/utilities/vect.js";
+import {col1D, GMULTX, GMULTY, Z_DEPTH} from "../../engine/utilities/math.js";
+import BrickBase from "./brickbase.js";
 import BrickStud from "./brickstud.js";
-export default class Brick extends GameObject {
+export default class Brick extends BrickBase {
   constructor(engine2, params) {
     super(engine2, params);
-    this.engine = engine2;
-    this.image = new Image();
+    this.studs = [];
     this.brickSprites = new Map();
     this.brickSpriteKeys = new Map([
       ["l", false],
@@ -14,23 +12,6 @@ export default class Brick extends GameObject {
       ["r", false],
       ["h", true]
     ]);
-    this.isStatic = false;
-    this.isPressed = false;
-    this.isSelected = false;
-    this.isSnapped = false;
-    this.selectedPos = new Vect(0, 0);
-    this.isGrounded = false;
-    this.isChecked = false;
-    this.pressure = 0;
-    this.studs = [];
-    this.minCarry = new Vect(0, 0);
-    this.maxCarry = new Vect(0, 0);
-    this.mobilePreviewSize = new Vect(0, 0);
-    this.isMobileFlipped = false;
-    this.color = colorTranslate(params.color);
-    this.isGrey = !params.color;
-    this.width = params.width || 1;
-    this.zIndex = getZIndex(this.gpos, this.width * 10);
     for (let i = 0; i < this.width; i++) {
       const stud = new BrickStud(this.engine, {
         ...params,
@@ -52,96 +33,55 @@ export default class Brick extends GameObject {
     var imageName = `BRICK.${this.width}.${this.color}`;
     this.image = this.engine.library.getImageWithSrc(imageName, this.engine.baker.bake((ctx) => this.drawBrick(ctx), this.width * GMULTX + Z_DEPTH + 3, GMULTY + Z_DEPTH + 3, imageName));
   }
-  update(dt) {
-    if (this.isSelected) {
-      this.setToCursor();
-    }
-  }
-  draw(ctx) {
-    ctx.globalAlpha = this.isSnapped ? 0.75 : this.isSelected ? 0.4 : this.isPressed ? 0.75 : 1;
-    ctx.drawImage(this.image, 0, -Z_DEPTH - 3);
-  }
-  superDraw(ctx) {
-    if (this.engine.mouse.getMouseType() == "mouse" || !this.isSelected || !MOBILE_PREVIEW_MAX.getLessOrEqual(this.mobilePreviewSize)) {
-      return;
-    }
-    ctx.drawImage(this.image, 0, -Z_DEPTH - 3 - GMULTY * (this.isMobileFlipped ? -this.mobilePreviewSize.y - 3.2 : this.mobilePreviewSize.y + 3.5));
-  }
-  setToCursor() {
-    this.spos = this.engine.mouse.getPos().getSub(this.selectedPos).getClamp({
-      x: (BOUNDARY.minx - this.minCarry.x) * GMULTX,
-      y: (BOUNDARY.miny - this.minCarry.y) * GMULTY
-    }, {
-      x: (BOUNDARY.maxx - this.maxCarry.x) * GMULTX,
-      y: (BOUNDARY.maxy - this.maxCarry.y) * GMULTY
-    });
-    if (this.isSnapped) {
-      this.spos.set({
-        x: round(this.spos.x, GMULTX),
-        y: round(this.spos.y, GMULTY)
-      });
-    }
-    this.resetStuds();
-  }
   press() {
+    super.press();
     if (!this.isStatic) {
-      this.isPressed = true;
       this.studs.forEach((s) => s.press());
     }
   }
   select(pos) {
-    this.isSelected = true;
-    this.isChecked = true;
-    this.selectedPos.set(pos);
-    this.zIndex = UNDER_CURSOR_Z_INDEX;
+    super.select(pos);
     this.studs.forEach((s) => s.select());
   }
   deselect() {
-    if (this.isSelected) {
-      this.gpos.set(this.gpos.x + Math.round(this.spos.x / GMULTX), this.gpos.y + Math.round(this.spos.y / GMULTY));
-    }
-    this.isPressed = false;
-    this.isSelected = false;
-    this.isSnapped = false;
-    this.isChecked = false;
-    this.spos.set(0, 0);
-    this.selectedPos.set(0, 0);
-    this.zIndex = getZIndex(this.gpos, this.width * 10);
+    super.deselect();
     this.resetStuds();
-    this.studs.forEach((s) => s.deselect());
+  }
+  setToCursor() {
+    super.setToCursor();
+    this.resetStuds();
   }
   snap(state) {
+    super.snap(state);
     this.studs.forEach((s) => s.snap(state));
-    if (state) {
-      this.isSnapped = true;
-      this.zIndex = getZIndex(this.gpos.getAdd({
-        x: Math.round(this.spos.x / GMULTX),
-        y: Math.round(this.spos.y / GMULTY)
-      }), this.width * 10);
-    } else {
-      this.isSnapped = false;
-      this.zIndex = UNDER_CURSOR_Z_INDEX;
-      this.setToCursor();
-    }
   }
-  clearRecursion() {
-    this.isGrounded = false;
-    this.isChecked = false;
+  hideStuds(rowBricks) {
+    this.studs.forEach((s) => {
+      s.isVisible = true;
+      for (const brick of rowBricks) {
+        if (!brick.isSelected && !brick.isPressed && col1D(brick.gpos.x - 1, brick.gpos.x + brick.width, s.gpos.x, s.gpos.x)) {
+          s.isVisible = false;
+          break;
+        }
+      }
+    });
+  }
+  showStuds() {
+    this.studs.forEach((s) => s.isVisible = true);
   }
   resetStuds() {
     for (const [idx, stud] of this.studs.entries()) {
       stud.gpos.set(this.gpos.x + idx, this.gpos.y - 1);
       stud.spos.set(this.spos);
+      stud.deselect();
     }
   }
   setMinMax(min, max) {
-    this.minCarry = min;
-    this.maxCarry = max;
-    this.mobilePreviewSize = max.getSub(min);
+    super.setMinMax(min, max);
     this.studs.forEach((s) => s.mobilePreviewSize = this.mobilePreviewSize);
   }
   flipMobile(isFlipped) {
-    this.isMobileFlipped = isFlipped;
+    super.flipMobile(isFlipped);
     this.studs.forEach((s) => s.flipMobile(isFlipped));
   }
   drawBrick(ctx) {

@@ -75,7 +75,7 @@ export default class Engine {
         // Register available game object types
         this.registerGameObjects(gameObjectTypes);
 
-        this.pushSceneNames = ["LevelInterface", "LEVEL_00"];
+        this.pushSceneNames = ["LevelInterface", "LEVEL_53"];
 
         // Load each starting & loading scene
         this.loadScenes(startScenes, this.scenesActive).finally(() => { this.frame() });

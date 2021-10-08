@@ -83,7 +83,6 @@
       }
     ]
   },
-
   {
     "scene": {
       "name": "Level",
@@ -3637,6 +3636,20 @@
         }
       },
       {
+        "name": "BrickPlate",
+        "position": {
+          "x": 25,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 15,
+          "y": 23
+        }
+      },
+      {
         "width": 2,
         "name": "Brick",
         "position": {
@@ -3770,6 +3783,13 @@
         "name": "Brick",
         "position": {
           "x": 4,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 5,
           "y": 23
         }
       },
@@ -6205,6 +6225,34 @@
         }
       },
       {
+        "name": "BrickPlate",
+        "position": {
+          "x": 6,
+          "y": 20
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 12,
+          "y": 20
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 18,
+          "y": 20
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 24,
+          "y": 20
+        }
+      },
+      {
         "width": 2,
         "name": "Brick",
         "position": {
@@ -7086,6 +7134,13 @@
         "name": "Brick",
         "position": {
           "x": 27,
+          "y": 12
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 16,
           "y": 12
         }
       },
@@ -10647,10 +10702,24 @@
         }
       },
       {
+        "name": "BrickPlate",
+        "position": {
+          "x": 8,
+          "y": 22
+        }
+      },
+      {
         "width": 8,
         "name": "Brick",
         "position": {
           "x": 27,
+          "y": 22
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 23,
           "y": 22
         }
       },
@@ -11191,6 +11260,13 @@
         }
       },
       {
+        "name": "BrickPlate",
+        "position": {
+          "x": 8,
+          "y": 9
+        }
+      },
+      {
         "width": 4,
         "name": "Brick",
         "position": {
@@ -11371,6 +11447,13 @@
         "position": {
           "x": 2,
           "y": 16
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 8,
+          "y": 17
         }
       },
       {
@@ -11873,6 +11956,20 @@
     },
     "gameObjects": [
       {
+        "name": "BrickPlate",
+        "position": {
+          "x": 26,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 3,
+          "y": 23
+        }
+      },
+      {
         "width": 3,
         "name": "Brick",
         "position": {
@@ -11947,6 +12044,13 @@
         "position": {
           "x": 13,
           "y": 22
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 15,
+          "y": 23
         }
       },
       {
@@ -12177,6 +12281,34 @@
         "position": {
           "x": 6,
           "y": 16
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 8,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 12,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 23,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 19,
+          "y": 23
         }
       },
       {
@@ -14452,6 +14584,13 @@
         }
       },
       {
+        "name": "BrickPlate",
+        "position": {
+          "x": 11,
+          "y": 23
+        }
+      },
+      {
         "width": 8,
         "name": "Brick",
         "position": {
@@ -15897,6 +16036,27 @@
         }
       },
       {
+        "name": "BrickPlate",
+        "position": {
+          "x": 5,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 13,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 21,
+          "y": 23
+        }
+      },
+      {
         "width": 4,
         "color": "blue",
         "name": "Brick",
@@ -16292,10 +16452,52 @@
     },
     "gameObjects": [
       {
+        "name": "BrickPlate",
+        "position": {
+          "x": 4,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 8,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 12,
+          "y": 23
+        }
+      },
+      {
         "width": 2,
         "name": "Brick",
         "position": {
           "x": 16,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 18,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 22,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 26,
           "y": 23
         }
       },
@@ -18300,6 +18502,20 @@
         }
       },
       {
+        "name": "BrickPlate",
+        "position": {
+          "x": 19,
+          "y": 18
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 23,
+          "y": 18
+        }
+      },
+      {
         "name": "CharacterBot",
         "position": {
           "x": 6,
@@ -18336,6 +18552,27 @@
       "zIndex": 0
     },
     "gameObjects": [
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 11,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 15,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 19,
+          "y": 23
+        }
+      },
       {
         "width": 3,
         "name": "Brick",
@@ -19491,6 +19728,48 @@
         }
       },
       {
+        "name": "BrickPlate",
+        "position": {
+          "x": 0,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 6,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 12,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 18,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 24,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 30,
+          "y": 23
+        }
+      },
+      {
         "name": "CharacterBin",
         "position": {
           "x": 16,
@@ -19928,6 +20207,41 @@
         }
       },
       {
+        "name": "BrickPlate",
+        "position": {
+          "x": 22,
+          "y": 8
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 18,
+          "y": 8
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 14,
+          "y": 8
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 10,
+          "y": 8
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 6,
+          "y": 8
+        }
+      },
+      {
         "width": 1,
         "name": "Brick",
         "position": {
@@ -20141,6 +20455,13 @@
         "position": {
           "x": 33,
           "y": 3
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 30,
+          "y": 23
         }
       },
       {
@@ -20647,6 +20968,13 @@
         }
       },
       {
+        "name": "BrickPlate",
+        "position": {
+          "x": 3,
+          "y": 23
+        }
+      },
+      {
         "width": 2,
         "name": "Brick",
         "position": {
@@ -20796,6 +21124,13 @@
         }
       },
       {
+        "name": "BrickPlate",
+        "position": {
+          "x": 21,
+          "y": 7
+        }
+      },
+      {
         "width": 4,
         "name": "Brick",
         "position": {
@@ -20934,6 +21269,76 @@
         "position": {
           "x": 18,
           "y": 6
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 0,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 16,
+          "y": 14
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 4,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 9,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 13,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 18,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 22,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 27,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 31,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 13,
+          "y": 21
         }
       },
       {
@@ -21175,6 +21580,13 @@
         }
       },
       {
+        "name": "BrickPlate",
+        "position": {
+          "x": 29,
+          "y": 23
+        }
+      },
+      {
         "width": 3,
         "name": "Brick",
         "position": {
@@ -21260,6 +21672,13 @@
         "position": {
           "x": 0,
           "y": 9
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 5,
+          "y": 16
         }
       },
       {
@@ -22531,9 +22950,23 @@
         }
       },
       {
+        "name": "BrickPlate",
+        "position": {
+          "x": 26,
+          "y": 22
+        }
+      },
+      {
         "name": "CharacterBot",
         "position": {
           "x": 34,
+          "y": 22
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 5,
           "y": 22
         }
       },
@@ -23417,6 +23850,13 @@
         }
       },
       {
+        "name": "BrickPlate",
+        "position": {
+          "x": 5,
+          "y": 23
+        }
+      },
+      {
         "width": 3,
         "name": "Brick",
         "position": {
@@ -23447,6 +23887,13 @@
         "position": {
           "x": 3,
           "y": 22
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 26,
+          "y": 23
         }
       },
       {
@@ -23868,6 +24315,34 @@
         "name": "Brick",
         "position": {
           "x": 0,
+          "y": 19
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 4,
+          "y": 19
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 8,
+          "y": 19
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 12,
+          "y": 19
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 16,
           "y": 19
         }
       },
@@ -24489,6 +24964,41 @@
         "position": {
           "x": 2,
           "y": 6
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 0,
+          "y": 7
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 7,
+          "y": 7
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 31,
+          "y": 7
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 24,
+          "y": 7
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 15,
+          "y": 7
         }
       },
       {
@@ -25398,6 +25908,27 @@
         }
       },
       {
+        "name": "BrickPlate",
+        "position": {
+          "x": 17,
+          "y": 6
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 21,
+          "y": 6
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 25,
+          "y": 6
+        }
+      },
+      {
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
@@ -25487,6 +26018,27 @@
         "name": "Brick",
         "position": {
           "x": 4,
+          "y": 17
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 11,
+          "y": 17
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 17,
+          "y": 17
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 23,
           "y": 17
         }
       },
@@ -25617,6 +26169,20 @@
         }
       },
       {
+        "name": "BrickPlate",
+        "position": {
+          "x": 20,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 30,
+          "y": 23
+        }
+      },
+      {
         "width": 1,
         "name": "Brick",
         "position": {
@@ -25652,6 +26218,27 @@
         "name": "Brick",
         "position": {
           "x": 0,
+          "y": 6
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 4,
+          "y": 6
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 8,
+          "y": 6
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 12,
           "y": 6
         }
       },
@@ -25695,6 +26282,27 @@
         }
       },
       {
+        "name": "BrickPlate",
+        "position": {
+          "x": 4,
+          "y": 11
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 8,
+          "y": 11
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 12,
+          "y": 11
+        }
+      },
+      {
         "width": 4,
         "name": "Brick",
         "position": {
@@ -25730,6 +26338,27 @@
         "name": "Brick",
         "position": {
           "x": 0,
+          "y": 16
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 4,
+          "y": 16
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 8,
+          "y": 16
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 12,
           "y": 16
         }
       },
@@ -25850,6 +26479,20 @@
       "zIndex": 0
     },
     "gameObjects": [
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 23,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 27,
+          "y": 23
+        }
+      },
       {
         "width": 4,
         "name": "Brick",
@@ -26204,6 +26847,13 @@
         }
       },
       {
+        "name": "BrickPlate",
+        "position": {
+          "x": 16,
+          "y": 23
+        }
+      },
+      {
         "width": 1,
         "name": "Brick",
         "position": {
@@ -26491,6 +27141,13 @@
         }
       },
       {
+        "name": "BrickPlate",
+        "position": {
+          "x": 8,
+          "y": 23
+        }
+      },
+      {
         "name": "CharacterBin",
         "position": {
           "x": 2,
@@ -26510,6 +27167,13 @@
         "name": "Brick",
         "position": {
           "x": 12,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickPlate",
+        "position": {
+          "x": 19,
           "y": 23
         }
       },

@@ -66,7 +66,7 @@ export default class BrickHandler extends GameObject {
             "Counter", 
             "LevelInterface")[0] as Counter;       
         this.bricks = this.engine.tag.get(                  // Get bricks from scene
-            "Brick", 
+            "BrickBase", 
             "Level") as Brick[];                     
         this.bricks.forEach(b => this.addBrickToRows(b));   // Add bricks into rows
         this.sortRows();                                    // Sort rows/bricks within rows
@@ -160,7 +160,7 @@ export default class BrickHandler extends GameObject {
         }
 
         // CHARACTER - CHECK Check if any characters are in the current selection bounding box
-        for(const c of this.characterHandler.getCharacterBoxes(min, max)) {
+        for(const c of this.characterHandler.getCollisionBoxes(min, max)) {
 
             // For each individual brick in the selection
             for (const b of this.bricks.filter(b => b.isSelected)) {
@@ -234,32 +234,15 @@ export default class BrickHandler extends GameObject {
 
     /** Disable studs that are covered */
     public cullBrickStuds(): void {
-        
-        // For each stud in unselected bricks
-        for (const stud of this.bricks.filter(b => !b.isSelected).flatMap(b => b.studs)) {
 
-            stud.isVisible = true;          // Unhide stud before rechecking its hidden status
+        this.bricks.filter(b => !b.isSelected && b instanceof Brick).forEach(b => {
 
-            // For each brick in this stud's row
-            for (const brick of this.rows.find(r => r.row == stud.gpos.y)?.bricks || []) {
-
-                if (!brick.isSelected &&    // Don't cull selected bricks
-                    !brick.isPressed &&     // Don't cull pressed bricks
-                    col1D(                  // Only cull bricks overlapping with this stud
-                        brick.gpos.x - 1, 
-                        brick.gpos.x + brick.width, 
-                        stud.gpos.x, 
-                        stud.gpos.x
-                    )) {
-
-                    stud.isVisible = false;
-                    break;                  // Stop all checks once the stud is hidden
-                }
-            }
-        }
+            //Hide studs based on above row
+            b.hideStuds(this.rows.find(r => r.row == b.gpos.y - 1)?.bricks || [])
+        });
 
         // Always show studs for selected bricks
-        this.bricks.filter(b => b.isSelected).flatMap(b => b.studs).forEach(s => s.isVisible = true);
+        this.bricks.filter(b => b.isSelected && b instanceof Brick).forEach(b => b.showStuds());
     }
 
     /** Set the minimum and maximum position for selected bricks */

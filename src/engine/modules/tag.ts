@@ -21,19 +21,21 @@ export default class TagModule {
 
     /** Push a game object to the scene */
     public pushGO(gameObject: GameObject, sceneName: string): void {
+
         // Get scene with name
         var curr = this.scenes.find(sg => sg.name == sceneName );
 
         // Store new scene or push gameObject to existing scene  
         if(curr == null) {
-            gameObject.tags.forEach(tag => {
-                this.scenes.push({
-                    name : sceneName,
-                    tags : [{
+            
+            this.scenes.push({
+                name : sceneName,
+                tags : gameObject.tags.map(tag => { 
+                    return {
                         tag : tag,
                         tagObjects : [gameObject]
-                    }]
-                });
+                    }
+                })
             });
         }
         else {

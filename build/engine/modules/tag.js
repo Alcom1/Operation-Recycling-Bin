@@ -8,14 +8,14 @@ export default class TagModule {
   pushGO(gameObject, sceneName) {
     var curr = this.scenes.find((sg) => sg.name == sceneName);
     if (curr == null) {
-      gameObject.tags.forEach((tag) => {
-        this.scenes.push({
-          name: sceneName,
-          tags: [{
+      this.scenes.push({
+        name: sceneName,
+        tags: gameObject.tags.map((tag) => {
+          return {
             tag,
             tagObjects: [gameObject]
-          }]
-        });
+          };
+        })
       });
     } else {
       this.pushGOToGroup(gameObject, curr.tags);

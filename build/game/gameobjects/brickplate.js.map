@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["C:\\Users\\Alcom\\Desktop\\Dev\\Git\\Operation Recycling Bin\\src\\game\\gameobjects\\brickplate.ts"],
+  "sourcesContent": ["import Engine from \"engine/engine\";\r\nimport { GameObjectParams } from \"engine/gameobjects/gameobject\";\r\nimport BrickBase from \"./brickbase\";\r\n\r\nexport default class BrickPlate extends BrickBase {\r\n\r\n    constructor(engine: Engine, params: GameObjectParams) {\r\n        super(engine, {...params, ...{ width : 4 }});\r\n\r\n        this.image = this.engine.library.getImage(\"brick_plate\");\r\n    }\r\n}"],
+  "mappings": "AAEA;AAFA,wCAIwC;AAAA,EAEpC,YAAY;AACR,UAAM,SAAQ,IAAI,WAAW,CAAE,OAAQ;AAEvC,SAAK,QAAQ,KAAK,OAAO,QAAQ,SAAS;AAAA;AAAA;",
+  "names": []
+}

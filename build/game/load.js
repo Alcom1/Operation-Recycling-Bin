@@ -1,6 +1,7 @@
 import Engine from "../engine/engine.js";
 import Brick from "./gameobjects/brick.js";
 import BrickHandler from "./gameobjects/brickhandler.js";
+import BrickPlate from "./gameobjects/brickplate.js";
 import BrickStud from "./gameobjects/brickstud.js";
 import Button from "./gameobjects/button.js";
 import ButtonScene from "./gameobjects/buttonscene.js";
@@ -22,6 +23,7 @@ window.onload = function() {
   new Engine(canvas, "assets/scenes/", "scenes", [
     Brick,
     BrickHandler,
+    BrickPlate,
     BrickStud,
     Button,
     ButtonScene,

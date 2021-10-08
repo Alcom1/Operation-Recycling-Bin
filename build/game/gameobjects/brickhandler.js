@@ -1,6 +1,7 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
 import {col1D, GMULTX, GMULTY, colBoundingBoxGrid, colPointRectGrid, colPointParHGrid, colPointParVGrid, OPPOSITE_DIRS, colRectRectCornerSize} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
+import Brick from "./brick.js";
 export var BrickHandlerState;
 (function(BrickHandlerState2) {
   BrickHandlerState2[BrickHandlerState2["NONE"] = 0] = "NONE";
@@ -26,7 +27,7 @@ export default class BrickHandler extends GameObject {
     this.characterHandler = this.engine.tag.get("CharacterHandler", "LevelInterface")[0];
     this.mobileIndicator = this.engine.tag.get("MobileIndicator", "LevelInterface")[0];
     this.counter = this.engine.tag.get("Counter", "LevelInterface")[0];
-    this.bricks = this.engine.tag.get("Brick", "Level");
+    this.bricks = this.engine.tag.get("BrickBase", "Level");
     this.bricks.forEach((b) => this.addBrickToRows(b));
     this.sortRows();
     this.rows.forEach((r) => r.bricks.forEach((b1, i) => {
@@ -73,7 +74,7 @@ export default class BrickHandler extends GameObject {
     if (colBoundingBoxGrid(min, max)) {
       return false;
     }
-    for (const c of this.characterHandler.getCharacterBoxes(min, max)) {
+    for (const c of this.characterHandler.getCollisionBoxes(min, max)) {
       for (const b of this.bricks.filter((b2) => b2.isSelected)) {
         if (colRectRectCornerSize(c.gpos.x - 1, c.gpos.x + 1, c.gpos.y + 1 - c.height, c.gpos.y + 1, b.gpos.x + Math.round(b.spos.x / GMULTX), b.gpos.y + Math.round(b.spos.y / GMULTY), b.width, 1)) {
           return false;
@@ -105,16 +106,10 @@ export default class BrickHandler extends GameObject {
     return bricks;
   }
   cullBrickStuds() {
-    for (const stud of this.bricks.filter((b) => !b.isSelected).flatMap((b) => b.studs)) {
-      stud.isVisible = true;
-      for (const brick2 of this.rows.find((r) => r.row == stud.gpos.y)?.bricks || []) {
-        if (!brick2.isSelected && !brick2.isPressed && col1D(brick2.gpos.x - 1, brick2.gpos.x + brick2.width, stud.gpos.x, stud.gpos.x)) {
-          stud.isVisible = false;
-          break;
-        }
-      }
-    }
-    this.bricks.filter((b) => b.isSelected).flatMap((b) => b.studs).forEach((s) => s.isVisible = true);
+    this.bricks.filter((b) => !b.isSelected && b instanceof Brick).forEach((b) => {
+      b.hideStuds(this.rows.find((r) => r.row == b.gpos.y - 1)?.bricks || []);
+    });
+    this.bricks.filter((b) => b.isSelected && b instanceof Brick).forEach((b) => b.showStuds());
   }
   setSelectedMinMax(spos) {
     const selected = this.bricks.filter((b) => b.isSelected);

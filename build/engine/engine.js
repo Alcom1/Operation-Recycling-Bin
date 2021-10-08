@@ -33,7 +33,7 @@ export default class Engine {
     this.mouse.setResolution(this.canvas.width, this.canvas.height);
     this.tag = new TagModule();
     this.registerGameObjects(gameObjectTypes);
-    this.pushSceneNames = ["LevelInterface", "LEVEL_00"];
+    this.pushSceneNames = ["LevelInterface", "LEVEL_53"];
     this.loadScenes(startScenes, this.scenesActive).finally(() => {
       this.frame();
     });

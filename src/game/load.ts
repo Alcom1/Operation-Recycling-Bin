@@ -1,6 +1,7 @@
 import Engine from "engine/engine";
 import Brick from "game/gameobjects/brick";
 import BrickHandler from "game/gameobjects/brickhandler";
+import BrickPlate from "./gameobjects/brickplate";
 import BrickStud from "./gameobjects/brickstud";
 import Button from "./gameobjects/button";
 import ButtonScene from "./gameobjects/buttonscene";
@@ -28,6 +29,7 @@ window.onload = function() {
         [
             Brick,
             BrickHandler,
+            BrickPlate,
             BrickStud,
             Button,
             ButtonScene,
