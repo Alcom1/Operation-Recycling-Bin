@@ -167,14 +167,13 @@ export default class BrickHandler extends GameObject {
 
                 // Check collision between each selected brick and the character
                 if (colRectRectCornerSize(
-                    c.gpos.x - 1,
-                    c.gpos.x + 1,
-                    c.gpos.y + 1 - c.height,
-                    c.gpos.y + 1,
-                    b.gpos.x + Math.round(b.spos.x / GMULTX),
-                    b.gpos.y + Math.round(b.spos.y / GMULTY),
-                    b.width,
-                    1)) {
+                    c.gpos.getAdd({x : -1, y : 1 - c.height}),
+                    c.gpos.getAdd({x :  1, y : 1}),
+                    b.gpos.getAdd({ 
+                        x : Math.round(b.spos.x / GMULTX),
+                        y : Math.round(b.spos.y / GMULTY)
+                    }),
+                    {x : b.width, y : 1})) {
 
                     return false;
                 }

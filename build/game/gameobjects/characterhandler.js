@@ -6,11 +6,8 @@ export default class CharacterHandler extends GameObject {
     this.obstacles = this.engine.tag.get(["BrickBase"], "Level").filter((b) => !b.tags.includes("Brick"));
   }
   getCollisionBoxes(min, max) {
-    this.characters.filter((c) => {
-      return c.isActive && colRectRectCornerSize(min.x, max.x, min.y, max.y, c.gpos.x - 1, c.gpos.y + 1 - c.height, 2, c.height);
-    });
     return this.characters.filter((c) => {
-      return c.isActive && colRectRectCornerSize(min.x, max.x, min.y, max.y, c.gpos.x - 1, c.gpos.y + 1 - c.height, 2, c.height);
+      return c.isActive && colRectRectCornerSize(min, max, c.gpos.getAdd({x: -1, y: 1 - c.height}), {x: 2, y: c.height});
     });
   }
 }

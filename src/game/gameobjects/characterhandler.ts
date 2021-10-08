@@ -17,19 +17,6 @@ export default class CharacterHandler extends GameObject {
 
     public getCollisionBoxes(min : Point, max : Point) : Character[] {
 
-        this.characters.filter(c => {
-            
-            return c.isActive && 
-            colRectRectCornerSize(
-                min.x,
-                max.x,
-                min.y,
-                max.y,
-                c.gpos.x - 1,
-                c.gpos.y + 1 - c.height,
-                2,
-                c.height)});
-
         // c.gpos.x - 1,
         // c.gpos.x + 1,
         // c.gpos.y + 1 - c.height,
@@ -39,13 +26,10 @@ export default class CharacterHandler extends GameObject {
             
             return c.isActive && 
             colRectRectCornerSize(
-                min.x,
-                max.x,
-                min.y,
-                max.y,
-                c.gpos.x - 1,
-                c.gpos.y + 1 - c.height,
-                2,
-                c.height)});
+                min,
+                max,
+                c.gpos.getAdd({x : -1, y : 1 - c.height}), 
+                {x : 2, y : c.height})
+            });
     }
 }

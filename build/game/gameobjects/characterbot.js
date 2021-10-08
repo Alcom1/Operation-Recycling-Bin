@@ -53,7 +53,7 @@ export default class CharacterBot extends Character {
   }
   handleCollision() {
     this.bins.forEach((b) => {
-      if (b.isActive && colRectRectSizes(this.gpos.x, this.gpos.y, 2, this.height, b.gpos.x, b.gpos.y + 1, 2, b.height - 1)) {
+      if (b.isActive && colRectRectSizes(this.gpos, {x: 2, y: this.height}, b.gpos.getAdd({x: 0, y: 1}), {x: 2, y: b.height - 1})) {
         var ary = this.gpos.y;
         var arh = this.height;
         var bry = b.gpos.y;

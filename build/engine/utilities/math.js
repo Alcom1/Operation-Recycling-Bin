@@ -36,14 +36,14 @@ export function colBoundingBoxGrid(min, max) {
 export function colPointRect(px, py, rx, ry, rw, rh) {
   return px >= rx && py >= ry && px < rx + rw && py < ry + rh;
 }
-export function colRectRectSizes(arx, ary, arw, arh, brx, bry, brw, brh) {
-  return colRectRectCorners(arx, arx + arw, ary, ary + arh, brx, brx + brw, bry, bry + brh);
+export function colRectRectSizes(apos, adim, bpos, bdim) {
+  return colRectRectCorners(apos, apos.getAdd(adim), bpos, bpos.getAdd(bdim));
 }
-export function colRectRectCornerSize(aminx, amaxx, aminy, amaxy, brx, bry, brw, brh) {
-  return colRectRectCorners(aminx, amaxx, aminy, amaxy, brx, brx + brw, bry, bry + brh);
+export function colRectRectCornerSize(amin, amax, bpos, bdim) {
+  return colRectRectCorners(amin, amax, bpos, bpos.getAdd(bdim));
 }
-export function colRectRectCorners(aminx, amaxx, aminy, amaxy, bminx, bmaxx, bminy, bmaxy) {
-  return aminx < bmaxx && amaxx > bminx && aminy < bmaxy && amaxy > bminy;
+export function colRectRectCorners(amin, amax, bmin, bmax) {
+  return amin.x < bmax.x && amax.x > bmin.x && amin.y < bmax.y && amax.y > bmin.y;
 }
 export function colPointRectGrid(px, py, rx, ry, rw) {
   return colPointRect(px, py, rx * GMULTX, ry * GMULTY, rw * GMULTX, GMULTY);

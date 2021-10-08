@@ -83,64 +83,44 @@ export function colPointRect(px: number, py: number, rx: number, ry: number, rw:
 
 /** Rectangle-rectangle collision with two size rectangles */
 export function colRectRectSizes(
-    arx : number,
-    ary : number,
-    arw : number,
-    arh : number,
-    brx : number,
-    bry : number,
-    brw : number,
-    brh : number) : boolean {
+    apos : Vect,
+    adim : Point,
+    bpos : Vect,
+    bdim : Point) : boolean {
 
     return colRectRectCorners(
-        arx,
-        arx + arw,
-        ary,
-        ary + arh,
-        brx,
-        brx + brw,
-        bry,
-        bry + brh)
+        apos,
+        apos.getAdd(adim),
+        bpos,
+        bpos.getAdd(bdim))
 }
 
 /** Rectangle-rectangle collision with a corner and size rectangle */
 export function colRectRectCornerSize(
-    aminx : number,
-    amaxx : number,
-    aminy : number,
-    amaxy : number,
-    brx : number,
-    bry : number,
-    brw : number,
-    brh : number) : boolean {
+    amin : Point,
+    amax : Point,
+    bpos : Vect,
+    bdim : Point) : boolean {
 
     return colRectRectCorners(
-        aminx,
-        amaxx,
-        aminy,
-        amaxy,
-        brx,
-        brx + brw,
-        bry,
-        bry + brh)
+        amin,
+        amax,
+        bpos,
+        bpos.getAdd(bdim))
 }
 
 /** Rectangle-rectangle collision with two corner rectangles */
-export function colRectRectCorners(
-    aminx : number,
-    amaxx : number,
-    aminy : number,
-    amaxy : number,
-    bminx : number,
-    bmaxx : number,
-    bminy : number,
-    bmaxy : number) : boolean {
+export function colRectRectCorners(    
+    amin : Point,
+    amax : Point,
+    bmin : Point,
+    bmax : Point) : boolean {
 
     return (
-        aminx < bmaxx &&
-        amaxx > bminx &&
-        aminy < bmaxy &&
-        amaxy > bminy);
+        amin.x < bmax.x &&
+        amax.x > bmin.x &&
+        amin.y < bmax.y &&
+        amax.y > bmin.y);
 }
 
 /** Point-rectangle collision but with grid coordinates */
