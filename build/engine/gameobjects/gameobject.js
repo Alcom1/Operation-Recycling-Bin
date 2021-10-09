@@ -14,6 +14,9 @@ export default class GameObject {
   compare(gameObject) {
     return gameObject.gpos.x == this.gpos.x && gameObject.gpos.y == this.gpos.y;
   }
+  hasTag(tag) {
+    return this.tags.some((t) => t === tag);
+  }
   update(dt) {
   }
   draw(ctx) {

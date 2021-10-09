@@ -1,14 +1,38 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
-import {colRectRectCornerSize} from "../../engine/utilities/math.js";
+import {colRectRectCorners} from "../../engine/utilities/math.js";
 export default class CharacterHandler extends GameObject {
   init(ctx) {
     this.characters = this.engine.tag.get(["CharacterBin", "CharacterBot"], "Level");
-    this.obstacles = this.engine.tag.get(["BrickBase"], "Level").filter((b) => !b.tags.includes("Brick"));
+    this.obstacles = this.engine.tag.get(["Brick"], "Level").filter((b) => !b.tags.includes("BrickNormal"));
   }
   getCollisionBoxes(min, max) {
-    return this.characters.filter((c) => {
-      return c.isActive && colRectRectCornerSize(min, max, c.gpos.getAdd({x: -1, y: 1 - c.height}), {x: 2, y: c.height});
+    return this.getCBsFromCharacters(min, max).concat(this.getCBsFromObstacles(min, max));
+  }
+  getCBsFromObstacles(min, max) {
+    const ret = [];
+    this.obstacles.forEach((obstacle) => {
+      const c = {
+        min: obstacle.gpos.getAdd({x: 0, y: -1}),
+        max: obstacle.gpos.getAdd({x: obstacle.width, y: 2})
+      };
+      if (colRectRectCorners(min, max, c.min, c.max)) {
+        ret.push(c);
+      }
     });
+    return ret;
+  }
+  getCBsFromCharacters(min, max) {
+    const ret = [];
+    this.characters.filter((c) => c.isActive).forEach((character2) => {
+      const c = {
+        min: character2.gpos.getAdd({x: -1, y: 1 - character2.height}),
+        max: character2.gpos.getAdd({x: 1, y: 1})
+      };
+      if (colRectRectCorners(min, max, c.min, c.max)) {
+        ret.push(c);
+      }
+    });
+    return ret;
   }
 }
 //# sourceMappingURL=characterhandler.js.map

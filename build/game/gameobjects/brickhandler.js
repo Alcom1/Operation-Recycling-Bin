@@ -1,7 +1,6 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
 import {col1D, GMULTX, GMULTY, colBoundingBoxGrid, colPointRectGrid, colPointParHGrid, colPointParVGrid, OPPOSITE_DIRS, colRectRectCornerSize} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
-import Brick from "./bricknormal.js";
 export var BrickHandlerState;
 (function(BrickHandlerState2) {
   BrickHandlerState2[BrickHandlerState2["NONE"] = 0] = "NONE";
@@ -76,7 +75,7 @@ export default class BrickHandler extends GameObject {
     }
     for (const c of this.characterHandler.getCollisionBoxes(min, max)) {
       for (const b of this.bricks.filter((b2) => b2.isSelected)) {
-        if (colRectRectCornerSize(c.gpos.getAdd({x: -1, y: 1 - c.height}), c.gpos.getAdd({x: 1, y: 1}), b.gpos.getAdd({
+        if (colRectRectCornerSize(c.min, c.max, b.gpos.getAdd({
           x: Math.round(b.spos.x / GMULTX),
           y: Math.round(b.spos.y / GMULTY)
         }), {x: b.width, y: 1})) {
@@ -109,10 +108,10 @@ export default class BrickHandler extends GameObject {
     return bricks;
   }
   cullBrickStuds() {
-    this.bricks.filter((b) => !b.isSelected && b instanceof Brick).forEach((b) => {
-      b.hideStuds(this.rows.find((r) => r.row == b.gpos.y - 1)?.bricks || []);
+    this.bricks.filter((b) => !b.isSelected && b.hasTag("BrickNormal")).forEach((b) => {
+      b.hideStuds(this.rows.find((r) => r.row == b.gpos.y - 1)?.bricks.filter((b2) => b2.hasTag("BrickNormal")) || []);
     });
-    this.bricks.filter((b) => b.isSelected && b instanceof Brick).forEach((b) => b.showStuds());
+    this.bricks.filter((b) => b.isSelected && b.hasTag("BrickNormal")).forEach((b) => b.showStuds());
   }
   setSelectedMinMax(spos) {
     const selected = this.bricks.filter((b) => b.isSelected);

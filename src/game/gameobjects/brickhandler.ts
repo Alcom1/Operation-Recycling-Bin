@@ -167,8 +167,8 @@ export default class BrickHandler extends GameObject {
 
                 // Check collision between each selected brick and the character
                 if (colRectRectCornerSize(
-                    c.gpos.getAdd({x : -1, y : 1 - c.height}),
-                    c.gpos.getAdd({x :  1, y : 1}),
+                    c.min,
+                    c.max,
                     b.gpos.getAdd({ 
                         x : Math.round(b.spos.x / GMULTX),
                         y : Math.round(b.spos.y / GMULTY)
@@ -234,14 +234,14 @@ export default class BrickHandler extends GameObject {
     /** Disable studs that are covered */
     public cullBrickStuds(): void {
 
-        this.bricks.filter(b => !b.isSelected && b instanceof Brick).forEach(b => {
+        this.bricks.filter(b => !b.isSelected && b.hasTag("BrickNormal")).forEach(b => {
 
             //Hide studs based on above row
-            b.hideStuds(this.rows.find(r => r.row == b.gpos.y - 1)?.bricks || [])
+            b.hideStuds(this.rows.find(r => r.row == b.gpos.y - 1)?.bricks.filter(b => b.hasTag("BrickNormal")) || [])
         });
 
         // Always show studs for selected bricks
-        this.bricks.filter(b => b.isSelected && b instanceof Brick).forEach(b => b.showStuds());
+        this.bricks.filter(b => b.isSelected && b.hasTag("BrickNormal")).forEach(b => b.showStuds());
     }
 
     /** Set the minimum and maximum position for selected bricks */

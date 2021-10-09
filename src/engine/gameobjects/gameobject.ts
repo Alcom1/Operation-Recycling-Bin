@@ -51,6 +51,14 @@ export default class GameObject {
      * Game object update
      * @param dt Delta time
      */
+    hasTag(tag: string): boolean {
+        return this.tags.some(t => t === tag);
+    }
+
+    /**
+     * Game object update
+     * @param dt Delta time
+     */
     update(dt: number): void {}
 
     /**
