@@ -1,18 +1,18 @@
 import GameObject from "engine/gameobjects/gameobject";
 import { colRectRectCornerSize } from "engine/utilities/math";
 import { Point } from "engine/utilities/vect";
-import BrickBase from "./brickbase";
+import Brick from "./brick";
 import Character from "./character";
 
 export default class CharacterHandler extends GameObject {
 
     private characters!: Character[];
-    private obstacles!: BrickBase[];
+    private obstacles!: Brick[];
 
     public init(ctx: CanvasRenderingContext2D) {
         
         this.characters = this.engine.tag.get(["CharacterBin", "CharacterBot"], "Level") as Character[];
-        this.obstacles = this.engine.tag.get(["BrickBase"], "Level").filter(b => !b.tags.includes("Brick")) as BrickBase[];
+        this.obstacles = this.engine.tag.get(["BrickBase"], "Level").filter(b => !b.tags.includes("Brick")) as Brick[];
     }
 
     public getCollisionBoxes(min : Point, max : Point) : Character[] {

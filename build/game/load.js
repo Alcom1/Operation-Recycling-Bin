@@ -1,8 +1,7 @@
 import Engine from "../engine/engine.js";
-import Brick from "./gameobjects/brick.js";
 import BrickHandler from "./gameobjects/brickhandler.js";
 import BrickPlate from "./gameobjects/brickplate.js";
-import BrickStud from "./gameobjects/brickstud.js";
+import Stud from "./gameobjects/stud.js";
 import Button from "./gameobjects/button.js";
 import ButtonScene from "./gameobjects/buttonscene.js";
 import Character from "./gameobjects/character.js";
@@ -16,15 +15,15 @@ import FPSCounter from "./gameobjects/fpscounter.js";
 import LevelSequence from "./gameobjects/levelsequence.js";
 import MobileIndicator from "./gameobjects/mobileindicator.js";
 import Sprite from "./gameobjects/sprite.js";
+import BrickNormal from "./gameobjects/bricknormal.js";
 window.onload = function() {
   const canvas = document.querySelector("canvas");
   if (!canvas)
     throw new Error("Can't get canvas");
   new Engine(canvas, "assets/scenes/", "scenes", [
-    Brick,
     BrickHandler,
     BrickPlate,
-    BrickStud,
+    BrickNormal,
     Button,
     ButtonScene,
     Character,
@@ -37,7 +36,8 @@ window.onload = function() {
     FPSCounter,
     MobileIndicator,
     LevelSequence,
-    Sprite
+    Sprite,
+    Stud
   ]);
 };
 //# sourceMappingURL=load.js.map

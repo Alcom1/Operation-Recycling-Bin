@@ -2,7 +2,7 @@ import Engine from "engine/engine";
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import { BOUNDARY, GMULTX, GMULTY, MOBILE_PREVIEW_MAX, round, Z_DEPTH } from "engine/utilities/math";
 import Vect, { Point }  from "engine/utilities/vect";
-import Brick from "./brick";
+import Brick from "./bricknormal";
 
 export default class MobileIndicator extends GameObject {
 

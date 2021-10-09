@@ -1,7 +1,7 @@
 import GameObject from "engine/gameobjects/gameobject";
 import {col1D, GMULTX, GMULTY, colBoundingBoxGrid, colPointRectGrid, colPointParHGrid, colPointParVGrid, OPPOSITE_DIRS, colRectRectCornerSize} from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
-import Brick from "./brick";
+import Brick from "./bricknormal";
 import CharacterHandler from "./characterhandler";
 import Counter from "./counter";
 import MobileIndicator from "./mobileindicator";
@@ -66,7 +66,7 @@ export default class BrickHandler extends GameObject {
             "Counter", 
             "LevelInterface")[0] as Counter;       
         this.bricks = this.engine.tag.get(                  // Get bricks from scene
-            "BrickBase", 
+            "Brick", 
             "Level") as Brick[];                     
         this.bricks.forEach(b => this.addBrickToRows(b));   // Add bricks into rows
         this.sortRows();                                    // Sort rows/bricks within rows

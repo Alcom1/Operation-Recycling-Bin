@@ -1,7 +1,7 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
 import {col1D, GMULTX, GMULTY, colBoundingBoxGrid, colPointRectGrid, colPointParHGrid, colPointParVGrid, OPPOSITE_DIRS, colRectRectCornerSize} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
-import Brick from "./brick.js";
+import Brick from "./bricknormal.js";
 export var BrickHandlerState;
 (function(BrickHandlerState2) {
   BrickHandlerState2[BrickHandlerState2["NONE"] = 0] = "NONE";
@@ -27,7 +27,7 @@ export default class BrickHandler extends GameObject {
     this.characterHandler = this.engine.tag.get("CharacterHandler", "LevelInterface")[0];
     this.mobileIndicator = this.engine.tag.get("MobileIndicator", "LevelInterface")[0];
     this.counter = this.engine.tag.get("Counter", "LevelInterface")[0];
-    this.bricks = this.engine.tag.get("BrickBase", "Level");
+    this.bricks = this.engine.tag.get("Brick", "Level");
     this.bricks.forEach((b) => this.addBrickToRows(b));
     this.sortRows();
     this.rows.forEach((r) => r.bricks.forEach((b1, i) => {
@@ -91,8 +91,8 @@ export default class BrickHandler extends GameObject {
     for (let i = start; i < final; i++) {
       let y = i % height;
       let x = Math.floor(i / height) % 2;
-      for (const brick2 of this.rows.find((r) => r.row == pos.y + y + 1)?.bricks.filter((b) => !b.isSelected) || []) {
-        if (col1D(brick2.gpos.x - 1, brick2.gpos.x + brick2.width, pos.x + x * dir, pos.x + x * dir)) {
+      for (const brick of this.rows.find((r) => r.row == pos.y + y + 1)?.bricks.filter((b) => !b.isSelected) || []) {
+        if (col1D(brick.gpos.x - 1, brick.gpos.x + brick.width, pos.x + x * dir, pos.x + x * dir)) {
           collisions += 1 << i - start;
         }
       }
@@ -101,9 +101,9 @@ export default class BrickHandler extends GameObject {
   }
   checkCollisionRow(pos, width) {
     let bricks = [];
-    for (const brick2 of this.rows.find((r) => r.row == pos.y)?.bricks.filter((b) => !b.isSelected) || []) {
-      if (col1D(brick2.gpos.x, brick2.gpos.x + brick2.width, pos.x, pos.x + width)) {
-        bricks.push(brick2);
+    for (const brick of this.rows.find((r) => r.row == pos.y)?.bricks.filter((b) => !b.isSelected) || []) {
+      if (col1D(brick.gpos.x, brick.gpos.x + brick.width, pos.x, pos.x + width)) {
+        bricks.push(brick);
       }
     }
     return bricks;
@@ -137,15 +137,15 @@ export default class BrickHandler extends GameObject {
     this.sortRows();
     this.mobileIndicator.isActive = false;
   }
-  addBrickToRows(brick2) {
-    const currRow = this.rows.find((r) => r.row == brick2.gpos.y);
+  addBrickToRows(brick) {
+    const currRow = this.rows.find((r) => r.row == brick.gpos.y);
     if (currRow == null) {
       this.rows.push({
-        row: brick2.gpos.y,
-        bricks: [brick2]
+        row: brick.gpos.y,
+        bricks: [brick]
       });
     } else {
-      currRow.bricks.push(brick2);
+      currRow.bricks.push(brick);
     }
   }
   sortRows() {
@@ -156,27 +156,27 @@ export default class BrickHandler extends GameObject {
     return this.checkBricks(pos, (b, p) => this.hoverBrick(b, p)) || 0;
   }
   checkBricks(pos, func) {
-    for (const brick3 of this.bricks) {
-      if (colPointRectGrid(pos.x, pos.y, brick3.gpos.x, brick3.gpos.y, brick3.width)) {
-        return func(brick3, pos);
+    for (const brick2 of this.bricks) {
+      if (colPointRectGrid(pos.x, pos.y, brick2.gpos.x, brick2.gpos.y, brick2.width)) {
+        return func(brick2, pos);
       }
     }
-    for (var brick2 of this.bricks) {
-      if (colPointParHGrid(pos.x, pos.y, brick2.gpos.x, brick2.gpos.y, brick2.width) || colPointParVGrid(pos.x, pos.y, brick2.gpos.x, brick2.gpos.y, brick2.width)) {
-        return func(brick2, pos);
+    for (var brick of this.bricks) {
+      if (colPointParHGrid(pos.x, pos.y, brick.gpos.x, brick.gpos.y, brick.width) || colPointParVGrid(pos.x, pos.y, brick.gpos.x, brick.gpos.y, brick.width)) {
+        return func(brick, pos);
       }
     }
     return null;
   }
-  hoverBrick(brick2, pos) {
-    if (this.selectedBrick != null && this.selectedBrick.compare(brick2) && !this.isPressured) {
+  hoverBrick(brick, pos) {
+    if (this.selectedBrick != null && this.selectedBrick.compare(brick) && !this.isPressured) {
       return 4;
     }
     this.isPressured = false;
-    this.selectedBrick = brick2;
+    this.selectedBrick = brick;
     this.selections = [];
     for (const dir of OPPOSITE_DIRS) {
-      let selectionNew = this.recurseBrick(brick2, [dir], true) ?? [];
+      let selectionNew = this.recurseBrick(brick, [dir], true) ?? [];
       if (selectionNew.length > 0) {
         let floats = this.getFloatingBricks();
         if (floats.every((b) => b.pressure == 0)) {
@@ -189,16 +189,16 @@ export default class BrickHandler extends GameObject {
   }
   getFloatingBricks() {
     var ret = [];
-    for (const brick2 of this.bricksGrey) {
-      if (!brick2.isChecked) {
-        this.recurseBrick(brick2, OPPOSITE_DIRS, false)?.forEach((c) => c.isGrounded = true);
+    for (const brick of this.bricksGrey) {
+      if (!brick.isChecked) {
+        this.recurseBrick(brick, OPPOSITE_DIRS, false)?.forEach((c) => c.isGrounded = true);
       }
     }
-    for (const brick2 of this.bricks) {
-      if (!brick2.isGrounded && !brick2.isSelected) {
-        ret.push(brick2);
+    for (const brick of this.bricks) {
+      if (!brick.isGrounded && !brick.isSelected) {
+        ret.push(brick);
       }
-      brick2.clearRecursion();
+      brick.clearRecursion();
     }
     return ret;
   }

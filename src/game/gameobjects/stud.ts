@@ -3,12 +3,12 @@ import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import { colorTranslate, getZIndex, GMULTX, GMULTY, MOBILE_PREVIEW_MAX, UNDER_CURSOR_Z_INDEX, Z_DEPTH } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 
-interface BrickStudParams extends GameObjectParams {
+interface StudParams extends GameObjectParams {
     color?: string;
 }
 
 /** Series of studs for a brick */
-export default class BrickStud extends GameObject {
+export default class Stud extends GameObject {
     color: string;
 
     image : HTMLImageElement;
@@ -20,7 +20,7 @@ export default class BrickStud extends GameObject {
     public mobilePreviewSize : Vect = new Vect(0, 0);
     private isMobileFlipped : boolean = false;
 
-    constructor(engine: Engine, params: BrickStudParams) {
+    constructor(engine: Engine, params: StudParams) {
         super(engine, params);
 
         this.color = colorTranslate(params.color);

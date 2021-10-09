@@ -1,8 +1,8 @@
 import Engine from "engine/engine";
 import { GameObjectParams } from "engine/gameobjects/gameobject";
-import BrickBase from "./brickbase";
+import Brick from "./brick";
 
-export default class BrickPlate extends BrickBase {
+export default class BrickPlate extends Brick {
 
     constructor(engine: Engine, params: GameObjectParams) {
         super(engine, {...params, ...{ width : 4 }});

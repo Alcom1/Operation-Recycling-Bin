@@ -1,8 +1,8 @@
 import Engine from "engine/engine";
-import Brick from "game/gameobjects/brick";
+import Brick from "game/gameobjects/bricknormal";
 import BrickHandler from "game/gameobjects/brickhandler";
 import BrickPlate from "./gameobjects/brickplate";
-import BrickStud from "./gameobjects/brickstud";
+import Stud from "./gameobjects/stud";
 import Button from "./gameobjects/button";
 import ButtonScene from "./gameobjects/buttonscene";
 import Character from "./gameobjects/character";
@@ -16,6 +16,7 @@ import FPSCounter from "./gameobjects/fpscounter";
 import LevelSequence from "./gameobjects/levelsequence";
 import MobileIndicator from "./gameobjects/mobileindicator";
 import Sprite from "./gameobjects/sprite";
+import BrickNormal from "game/gameobjects/bricknormal";
 
 //Load
 window.onload = function() {
@@ -27,10 +28,9 @@ window.onload = function() {
         "assets/scenes/",
         "scenes",
         [
-            Brick,
             BrickHandler,
             BrickPlate,
-            BrickStud,
+            BrickNormal,
             Button,
             ButtonScene,
             Character,
@@ -43,7 +43,8 @@ window.onload = function() {
             FPSCounter,
             MobileIndicator,
             LevelSequence,
-            Sprite
+            Sprite,
+            Stud
         ]
     );    
 }

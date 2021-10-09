@@ -4,7 +4,7 @@ import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import { GMULTX } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 import BrickHandler from "./brickhandler";
-import Brick from "./brick";
+import Brick from "./bricknormal";
 import SpriteAnimated, { SpriteAnimatedParams } from "./spriteanimated";
 
 export interface CharacterParams extends GameObjectParams {
