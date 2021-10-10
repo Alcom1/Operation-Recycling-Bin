@@ -5,25 +5,14 @@ import { GMULTX } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 import BrickHandler from "./brickhandler";
 import Brick from "./bricknormal";
-import SpriteAnimated, { SpriteAnimatedParams } from "./spriteanimated";
+import SpriteAnimated, { OffsetImageParams, SpriteAnimatedParams } from "./spriteanimated";
 
 export interface CharacterParams extends GameObjectParams {
     height? : number;
     speed? : number;
-    images : CharacterImageParams[];
-    animFrames : number;
-    animCount : number;
-}
-
-export interface CharacterImageParams {
-    name : string;
-    extension : string;
-    offset : number;
-}
-
-export interface CharacterImage {
-    image : HTMLImageElement;
-    offset : number;
+    images : OffsetImageParams[];
+    frameCount : number;
+    animsCount : number;
 }
 
 export default class Character extends GameObject {
@@ -58,9 +47,9 @@ export default class Character extends GameObject {
             //Generate segment
             const segment = new SpriteAnimated(this.engine, {
                 ...params, 
-                order : i, 
+                sliceIndex : i, 
                 offset : -GMULTX,
-                width : GMULTX 
+                frameWidth : GMULTX 
             } as SpriteAnimatedParams);
             this.spriteGroupCurr.push(segment);
             
@@ -99,7 +88,7 @@ export default class Character extends GameObject {
             this.handleCollision();
             this.handleBricks();
 
-            this.spriteGroupCurr.forEach(s => s.updateSprite(this.gpos));
+            this.spriteGroupCurr.forEach(s => s.updateSprite(this.gpos.getAdd({x : -1, y : 0})));
             this.level.sortGO();
 
             this.checkCollision = false;
@@ -165,7 +154,7 @@ export default class Character extends GameObject {
         this.spriteGroupIndex = index;
         this.spriteGroups.forEach((sg, i) => sg.forEach(s => {
             s.isActive = i == index;
-            s.updateSprite(this.gpos);
+            s.updateSprite(this.gpos.getAdd({x : -1, y : 0}));
         }));
     }
 

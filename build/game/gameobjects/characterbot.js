@@ -1,18 +1,18 @@
 import Character from "./character.js";
-import {BOUNDARY, GMULTX, bitStack, colRectRectSizes} from "../../engine/utilities/math.js";
+import {BOUNDARY, bitStack, colRectRectSizes} from "../../engine/utilities/math.js";
 import SpriteAnimated from "./spriteanimated.js";
 const characterBotOverride = Object.freeze({
   height: 4,
   speed: 2.5,
   images: [
-    {name: "char_bot_left", offset: 36},
-    {name: "char_bot_right", offset: 14}
+    {name: "char_bot_left", offsetX: 36},
+    {name: "char_bot_right", offsetX: 14}
   ],
   imagesMisc: [
-    {name: "char_bot_bin", offset: 0}
+    {name: "char_bot_bin", offsetX: 0}
   ],
-  animFrames: 10,
-  animCount: 2
+  frameCount: 10,
+  animsCount: 2
 });
 const cbc = Object.freeze({
   flor: bitStack([0, 7]),
@@ -31,11 +31,10 @@ export default class CharacterBot extends Character {
     this.spriteGroups[newIndex].push(new SpriteAnimated(this.engine, {
       ...params,
       images: params.imagesMisc,
-      order: 0,
-      offset: -GMULTX,
-      width: 126,
-      animFrames: 12,
-      animCount: 1,
+      sliceIndex: 0,
+      frameWidth: 126,
+      frameCount: 12,
+      animsCount: 1,
       speed: 1
     }));
     this.parent.pushGO(this.spriteGroups[newIndex][0]);
@@ -62,7 +61,6 @@ export default class CharacterBot extends Character {
         var amaxy = ary + arh;
         var bminy = bry;
         var bmaxy = bry + brh;
-        console.log(aminy, amaxy, bminy, bmaxy, aminy < bmaxy, amaxy > bminy);
         b.deactivate();
         this.setCurrentGroup(1);
       }
