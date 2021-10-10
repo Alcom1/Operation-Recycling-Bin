@@ -4,44 +4,44 @@ export default class SpriteAnimated extends GameObject {
   constructor(engine2, params) {
     super(engine2, params);
     this.images = [];
-    this.animWidth = 0;
-    this.animHeight = 0;
-    this.animTrack = 0;
+    this.fullSize = {x: 0, y: 0};
+    this.animsIndex = 0;
     this.timer = 0;
-    this.index = 1;
-    this.order = params.order;
-    this.width = params.width;
-    this.offset = params.offset;
+    this.imageIndex = 1;
     this.speed = params.speed ?? 1;
+    this.frameWidth = params.frameWidth;
     switch (params.images.length) {
       case 0:
         break;
       case 1:
-        this.index = 0;
-        this.images[0] = this.getCharacterImage(params.images[0]);
+        this.imageIndex = 0;
+        this.images[0] = this.getImage(params.images[0]);
       case 2:
         OPPOSITE_DIRS.forEach((d) => {
           const index = Math.max(d, 0);
           if (params.images[index]) {
-            this.images[d] = this.getCharacterImage(params.images[index]);
+            this.images[d] = this.getImage(params.images[index]);
           }
         });
       default:
-        params.images.forEach((i) => this.images.push(this.getCharacterImage(i)));
+        params.images.forEach((i) => this.images.push(this.getImage(i)));
     }
-    this.animFrames = params.animFrames;
-    this.animCount = params.animCount;
+    this.frameCount = params.frameCount;
+    this.animsCount = params.animsCount;
+    this.sliceIndex = params.sliceIndex;
     this.setZIndex();
   }
-  getCharacterImage(params) {
+  getImage(params) {
     return {
       image: this.engine.library.getImage(params.name, params.extension),
-      offset: params.offset ?? 0
+      offsetX: params.offsetX ?? 0
     };
   }
   init(ctx) {
-    this.animWidth = this.images[this.index].image.width / this.animFrames;
-    this.animHeight = this.images[this.index].image.height;
+    this.fullSize = {
+      x: this.images[this.imageIndex].image.width / this.frameCount,
+      y: this.images[this.imageIndex].image.height
+    };
   }
   update(dt) {
     this.timer += dt;
@@ -49,19 +49,19 @@ export default class SpriteAnimated extends GameObject {
   updateSprite(gpos) {
     this.timer = 0;
     this.gpos = gpos;
-    this.animTrack = ++this.animTrack % this.animCount;
+    this.animsIndex = ++this.animsIndex % this.animsCount;
     this.setZIndex();
   }
   setZIndex() {
-    this.zIndex = getZIndex(this.gpos, 300 - (this.order < 2 ? 0 : 295));
+    this.zIndex = getZIndex(this.gpos, 310 - (this.sliceIndex < 2 ? 0 : 295));
   }
   setImageIndex(index) {
-    this.index = index;
+    this.imageIndex = index;
   }
   draw(ctx) {
-    const width = this.width ?? 0;
-    const image = this.images[this.index];
-    ctx.drawImage(image.image, width * this.order + image.offset + floor((this.animTrack + Math.min(this.timer * this.speed, 1 - Number.EPSILON)) * this.animWidth * this.animFrames / this.animCount, this.animWidth), 0, width, this.animHeight, width * this.order + this.offset, GMULTY - this.animHeight, width, this.animHeight);
+    const width = this.frameWidth ?? 0;
+    const image = this.images[this.imageIndex];
+    ctx.drawImage(image.image, width * this.sliceIndex + image.offsetX + floor((this.animsIndex + Math.min(this.timer * this.speed, 1 - Number.EPSILON)) * this.fullSize.x * this.frameCount / this.animsCount, this.fullSize.x), 0, width, this.fullSize.y, width * this.sliceIndex, GMULTY - this.fullSize.y, width, this.fullSize.y);
   }
 }
 //# sourceMappingURL=spriteanimated.js.map
