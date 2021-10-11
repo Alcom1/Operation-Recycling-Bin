@@ -2,7 +2,7 @@ import Engine from "engine/engine";
 import Character, { CharacterParams } from "./character";
 import { BOUNDARY, GMULTX, GMULTY, bitStack, colRectRectSizes} from "engine/utilities/math";
 import Scene from "engine/scene/scene";
-import SpriteAnimated, { OffsetImageParams, SpriteAnimatedParams } from "./spriteanimated";
+import Animation, { OffsetImageParams, AnimationParams } from "./animation";
 import CharacterBin from "./characterbin";
 
 export interface CharacterBotParams extends CharacterParams {
@@ -39,7 +39,7 @@ export default class CharacterBot extends Character {
         super(engine, Object.assign(params, characterBotOverride));
 
         var newIndex = this.spriteGroups.push([]) - 1;
-        this.spriteGroups[newIndex].push(new SpriteAnimated(this.engine, {
+        this.spriteGroups[newIndex].push(new Animation(this.engine, {
             ...params, 
             images : params.imagesMisc,
             sliceIndex : 0,
@@ -47,7 +47,7 @@ export default class CharacterBot extends Character {
             frameCount : 12,
             animsCount : 1,
             speed : 1
-        } as SpriteAnimatedParams));
+        } as AnimationParams));
         this.parent.pushGO(this.spriteGroups[newIndex][0]);
     }
 

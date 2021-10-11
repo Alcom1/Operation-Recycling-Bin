@@ -23,11 +23,6 @@ export default class CharacterHandler extends GameObject {
 
     public getCollisionBoxes(min : Point, max : Point) : CollisionBox[] {
 
-        // c.gpos.x - 1,
-        // c.gpos.x + 1,
-        // c.gpos.y + 1 - c.height,
-        // c.gpos.y + 1,
-
         return this.getCBsFromCharacters(min, max).concat(
                this.getCBsFromObstacles(min, max));
     }

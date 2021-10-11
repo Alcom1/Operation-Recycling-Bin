@@ -5,7 +5,7 @@ import { GMULTX } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 import BrickHandler from "./brickhandler";
 import Brick from "./bricknormal";
-import SpriteAnimated, { OffsetImageParams, SpriteAnimatedParams } from "./spriteanimated";
+import Animation, { OffsetImageParams, AnimationParams } from "./animation";
 
 export interface CharacterParams extends GameObjectParams {
     height? : number;
@@ -27,8 +27,8 @@ export default class Character extends GameObject {
     protected checkCollision: boolean;
 
     protected spriteGroupIndex = 0;
-    protected spriteGroups: SpriteAnimated[][] = [[]];
-    protected get spriteGroupCurr() : SpriteAnimated[] { return this.spriteGroups[this.spriteGroupIndex] }
+    protected spriteGroups: Animation[][] = [[]];
+    protected get spriteGroupCurr() : Animation[] { return this.spriteGroups[this.spriteGroupIndex] }
     protected get isNormalMovment() : boolean { return this.spriteGroupIndex == 0 }
 
     constructor(engine: Engine, params: CharacterParams) {
@@ -41,16 +41,15 @@ export default class Character extends GameObject {
         this._height = params.height ?? 2;  //Default height for a character
         this.checkCollision = true;
 
-        //Spawn sprite groups
-        for(let i = -1; i < 4; i++) {
+        //Spawn 3 animations, the sprite is sliced vertically into 2x wide segments for proper z-indexing
+        for(let i = -1; i <= 1; i ++) {
 
             //Generate segment
-            const segment = new SpriteAnimated(this.engine, {
+            const segment = new Animation(this.engine, {
                 ...params, 
-                sliceIndex : i, 
-                offset : -GMULTX,
-                frameWidth : GMULTX 
-            } as SpriteAnimatedParams);
+                sliceIndex : i,
+                frameWidth : GMULTX * 2 
+            } as AnimationParams);
             this.spriteGroupCurr.push(segment);
             
             // Add segment game object to scene

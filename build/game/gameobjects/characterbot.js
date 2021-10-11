@@ -1,6 +1,6 @@
 import Character from "./character.js";
 import {BOUNDARY, bitStack, colRectRectSizes} from "../../engine/utilities/math.js";
-import SpriteAnimated from "./spriteanimated.js";
+import Animation from "./animation.js";
 const characterBotOverride = Object.freeze({
   height: 4,
   speed: 2.5,
@@ -28,7 +28,7 @@ export default class CharacterBot extends Character {
     this.timer = 0;
     this.bins = [];
     var newIndex = this.spriteGroups.push([]) - 1;
-    this.spriteGroups[newIndex].push(new SpriteAnimated(this.engine, {
+    this.spriteGroups[newIndex].push(new Animation(this.engine, {
       ...params,
       images: params.imagesMisc,
       sliceIndex: 0,

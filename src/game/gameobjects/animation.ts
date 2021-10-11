@@ -14,7 +14,7 @@ export interface OffsetImage {
     offsetX : number;
 }
 
-export interface SpriteAnimatedParams extends GameObjectParams {
+export interface AnimationParams extends GameObjectParams {
 
     images : OffsetImageParams[];
     speed? : number;
@@ -26,7 +26,7 @@ export interface SpriteAnimatedParams extends GameObjectParams {
 }
 
 /** Single image gameobject */
-export default class SpriteAnimated extends GameObject {
+export default class Animation extends GameObject {
 
     //Set in constructor
     private images : OffsetImage[] = [];
@@ -44,7 +44,7 @@ export default class SpriteAnimated extends GameObject {
     private imageIndex: number = 0;
     private animsIndex : number = 0;
 
-    constructor(engine : Engine, params : SpriteAnimatedParams) {
+    constructor(engine : Engine, params : AnimationParams) {
         super(engine, params);
 
         this.speed = params.speed ?? 1;
@@ -114,9 +114,10 @@ export default class SpriteAnimated extends GameObject {
     }
 
     private setZIndex() {
+        
         this.zIndex = getZIndex(
             this.gpos,
-            310 - (this.sliceIndex < 2 ? 0 : 295));
+            310 - (this.sliceIndex < 1 ? 0 : 295)); //Magic z-indexing numbers
     }
 
     public setImageIndex(index : number) {
@@ -159,7 +160,7 @@ export default class SpriteAnimated extends GameObject {
         // ctx.strokeStyle = "#F00"
         // ctx.lineWidth = 4;
         // ctx.strokeRect(
-        //     width * this.sliceIndex + this.offsetX, 
+        //     width * this.sliceIndex, 
         //     GMULTY, 
         //     width, 
         //    -this.fullSize.y);

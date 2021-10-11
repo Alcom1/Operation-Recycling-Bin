@@ -1,6 +1,5 @@
 import Engine from "engine/engine";
 import Character, { CharacterParams } from "./character";
-import Scene from "engine/scene/scene";
 
 const characterBinOverride = Object.freeze({
     height: 3,
