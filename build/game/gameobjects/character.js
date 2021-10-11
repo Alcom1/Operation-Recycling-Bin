@@ -17,7 +17,8 @@ export default class Character extends GameObject {
       const segment = new Animation(this.engine, {
         ...params,
         sliceIndex: i,
-        frameWidth: GMULTX * 2
+        frameWidth: GMULTX * 2,
+        gposOffset: {x: -1, y: 0}
       });
       this.spriteGroupCurr.push(segment);
       this.parent.pushGO(segment);
@@ -49,7 +50,7 @@ export default class Character extends GameObject {
     if (this.checkCollision) {
       this.handleCollision();
       this.handleBricks();
-      this.spriteGroupCurr.forEach((s) => s.updateSprite(this.gpos.getAdd({x: -1, y: 0})));
+      this.spriteGroupCurr.forEach((s) => s.updateSprite(this.gpos));
       this.level.sortGO();
       this.checkCollision = false;
     }
@@ -83,7 +84,7 @@ export default class Character extends GameObject {
     this.spriteGroupIndex = index;
     this.spriteGroups.forEach((sg, i) => sg.forEach((s) => {
       s.isActive = i == index;
-      s.updateSprite(this.gpos.getAdd({x: -1, y: 0}));
+      s.updateSprite(this.gpos);
     }));
   }
   deactivate() {

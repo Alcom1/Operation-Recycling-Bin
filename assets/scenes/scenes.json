@@ -29,7 +29,7 @@
         "name": "BrickHandler"
       },
       {
-        "name": "CharacterHandler"
+        "name": "CollisionHandler"
       },
       {
         "name": "Cursor"

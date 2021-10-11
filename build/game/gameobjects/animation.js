@@ -10,6 +10,7 @@ export default class Animation extends GameObject {
     this.animsIndex = 0;
     this.speed = params.speed ?? 1;
     this.frameWidth = params.frameWidth;
+    this.gposOffset = params.gposOffset ?? {x: 0, y: 0};
     switch (params.images.length) {
       case 0:
         break;
@@ -48,7 +49,7 @@ export default class Animation extends GameObject {
   }
   updateSprite(gpos) {
     this.timer = 0;
-    this.gpos = gpos;
+    this.gpos = gpos.getAdd(this.gposOffset);
     this.animsIndex = ++this.animsIndex % this.animsCount;
     this.setZIndex();
   }

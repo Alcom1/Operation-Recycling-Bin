@@ -23,7 +23,7 @@ export default class BrickHandler extends GameObject {
     return this.bricks.filter((b) => b.isGrey == true);
   }
   init(ctx) {
-    this.characterHandler = this.engine.tag.get("CharacterHandler", "LevelInterface")[0];
+    this.collisionHandler = this.engine.tag.get("CollisionHandler", "LevelInterface")[0];
     this.mobileIndicator = this.engine.tag.get("MobileIndicator", "LevelInterface")[0];
     this.counter = this.engine.tag.get("Counter", "LevelInterface")[0];
     this.bricks = this.engine.tag.get("Brick", "Level");
@@ -73,7 +73,7 @@ export default class BrickHandler extends GameObject {
     if (colBoundingBoxGrid(min, max)) {
       return false;
     }
-    for (const c of this.characterHandler.getCollisionBoxes(min, max)) {
+    for (const c of this.collisionHandler.getCollisionBoxes(min, max)) {
       for (const b of this.bricks.filter((b2) => b2.isSelected)) {
         if (colRectRectCornerSize(c.min, c.max, b.gpos.getAdd({
           x: Math.round(b.spos.x / GMULTX),

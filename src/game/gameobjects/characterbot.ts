@@ -44,6 +44,7 @@ export default class CharacterBot extends Character {
             images : params.imagesMisc,
             sliceIndex : 0,
             frameWidth : 126,
+            gposOffset : { x : -1, y : 0},
             frameCount : 12,
             animsCount : 1,
             speed : 1

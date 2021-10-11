@@ -9,8 +9,7 @@ interface CollisionBox {
     max: Point
 }
 
-
-export default class CharacterHandler extends GameObject {
+export default class CollisionHandler extends GameObject {
 
     private characters!: Character[];
     private obstacles!: Brick[];

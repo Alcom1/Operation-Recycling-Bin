@@ -19,6 +19,7 @@ export interface AnimationParams extends GameObjectParams {
     images : OffsetImageParams[];
     speed? : number;
     frameWidth? : number;
+    gposOffset? : Point;
 
     frameCount : number;
     animsCount : number;
@@ -29,6 +30,7 @@ export interface AnimationParams extends GameObjectParams {
 export default class Animation extends GameObject {
 
     //Set in constructor
+    private gposOffset : Point;
     private images : OffsetImage[] = [];
     private speed : number;
     private frameWidth? : number;
@@ -49,6 +51,7 @@ export default class Animation extends GameObject {
 
         this.speed = params.speed ?? 1;
         this.frameWidth = params.frameWidth;
+        this.gposOffset = params.gposOffset ?? { x : 0, y : 0 }
 
         switch(params.images.length){
 
@@ -108,7 +111,7 @@ export default class Animation extends GameObject {
     public updateSprite(gpos : Vect) {
 
         this.timer = 0;
-        this.gpos = gpos;
+        this.gpos = gpos.getAdd(this.gposOffset);
         this.animsIndex = ++this.animsIndex % this.animsCount;
         this.setZIndex();
     }

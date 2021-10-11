@@ -8,7 +8,7 @@ import ButtonScene from "./gameobjects/buttonscene";
 import Character from "./gameobjects/character";
 import CharacterBin from "./gameobjects/characterbin";
 import CharacterBot from "./gameobjects/characterbot";
-import CharacterHandler from "./gameobjects/characterhandler";
+import CollisionHandler from "./gameobjects/collisionhandler";
 import Counter from "./gameobjects/counter";
 import Cursor from "./gameobjects/cursor";
 import CursorIcon from "./gameobjects/cursoricon";
@@ -36,7 +36,7 @@ window.onload = function() {
             Character,
             CharacterBot,
             CharacterBin,
-            CharacterHandler,
+            CollisionHandler,
             Counter,
             Cursor,
             CursorIcon,

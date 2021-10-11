@@ -2,7 +2,7 @@ import GameObject from "engine/gameobjects/gameobject";
 import {col1D, GMULTX, GMULTY, colBoundingBoxGrid, colPointRectGrid, colPointParHGrid, colPointParVGrid, OPPOSITE_DIRS, colRectRectCornerSize} from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 import Brick from "./bricknormal";
-import CharacterHandler from "./characterhandler";
+import CollisionHandler from "./collisionhandler";
 import Counter from "./counter";
 import MobileIndicator from "./mobileindicator";
 
@@ -28,7 +28,7 @@ interface BrickRow {
 export default class BrickHandler extends GameObject {
 
     /** */
-    private characterHandler! : CharacterHandler;
+    private collisionHandler! : CollisionHandler;
 
     /** */
     private counter!: Counter;
@@ -56,9 +56,9 @@ export default class BrickHandler extends GameObject {
 
     public init(ctx: CanvasRenderingContext2D) {
         
-        this.characterHandler = this.engine.tag.get(        // Get character handler from scene
-            "CharacterHandler", 
-            "LevelInterface")[0] as CharacterHandler;
+        this.collisionHandler = this.engine.tag.get(        // Get character handler from scene
+            "CollisionHandler", 
+            "LevelInterface")[0] as CollisionHandler;
         this.mobileIndicator = this.engine.tag.get(         // Get mobile indicator from scene
             "MobileIndicator", 
             "LevelInterface")[0] as MobileIndicator;
@@ -160,7 +160,7 @@ export default class BrickHandler extends GameObject {
         }
 
         // CHARACTER - CHECK Check if any characters are in the current selection bounding box
-        for(const c of this.characterHandler.getCollisionBoxes(min, max)) {
+        for(const c of this.collisionHandler.getCollisionBoxes(min, max)) {
 
             // For each individual brick in the selection
             for (const b of this.bricks.filter(b => b.isSelected)) {
