@@ -8,9 +8,17 @@ const characterBotOverride = Object.freeze({
     {name: "char_bot_left", offsetX: 36},
     {name: "char_bot_right", offsetX: 14}
   ],
-  imagesMisc: [
-    {name: "char_bot_bin", offsetX: 0}
-  ],
+  imagesMisc: [{
+    images: [{name: "char_bot_bin", offsetX: 0}],
+    frameWidth: 126,
+    gposOffset: {x: -1, y: 0},
+    frameCount: 12
+  }, {
+    images: [{name: "char_bot_explosion", offsetX: 0}],
+    frameWidth: 200,
+    gposOffset: {x: -3, y: 0},
+    frameCount: 16
+  }],
   frameCount: 10,
   animsCount: 2
 });
@@ -27,18 +35,16 @@ export default class CharacterBot extends Character {
     super(engine2, Object.assign(params, characterBotOverride));
     this.timer = 0;
     this.bins = [];
-    var newIndex = this.spriteGroups.push([]) - 1;
-    this.spriteGroups[newIndex].push(new Animation(this.engine, {
-      ...params,
-      images: params.imagesMisc,
-      sliceIndex: 0,
-      frameWidth: 126,
-      gposOffset: {x: -1, y: 0},
-      frameCount: 12,
-      animsCount: 1,
-      speed: 1
-    }));
-    this.parent.pushGO(this.spriteGroups[newIndex][0]);
+    params.imagesMisc.forEach((i) => {
+      var newIndex = this.spriteGroups.push([]) - 1;
+      this.spriteGroups[newIndex].push(new Animation(this.engine, {
+        images: i.images,
+        frameWidth: i.frameWidth,
+        gposOffset: i.gposOffset,
+        frameCount: i.frameCount
+      }));
+      this.parent.pushGO(this.spriteGroups[newIndex][0]);
+    });
   }
   init(ctx, scenes) {
     super.init(ctx, scenes);
@@ -47,8 +53,15 @@ export default class CharacterBot extends Character {
   handleUniqueMovmeent(dt) {
     this.timer += dt;
     if (this.timer > 1) {
-      this.timer = 0;
-      this.setCurrentGroup(0);
+      switch (this.spriteGroupIndex) {
+        case 1:
+          this.timer = 0;
+          this.setCurrentGroup(0);
+          break;
+        case 2:
+          this.isActive = false;
+          break;
+      }
     }
   }
   handleCollision() {
@@ -86,6 +99,18 @@ export default class CharacterBot extends Character {
       } else {
         this.reverse();
       }
+    }
+  }
+  getColliders() {
+    return [{
+      mask: 1,
+      min: this.gpos.getAdd({x: -1, y: 1 - this.height}),
+      max: this.gpos.getAdd({x: 2, y: 1})
+    }];
+  }
+  resolveCollision() {
+    if (this.isNormalMovment) {
+      this.setCurrentGroup(2);
     }
   }
 }

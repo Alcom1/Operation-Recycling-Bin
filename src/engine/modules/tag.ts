@@ -23,7 +23,7 @@ export default class TagModule {
     public pushGO(gameObject: GameObject, sceneName: string): void {
 
         // Get scene with name
-        var curr = this.scenes.find(sg => sg.name == sceneName );
+        const curr = this.scenes.find(sg => sg.name == sceneName );
 
         // Store new scene or push gameObject to existing scene  
         if(curr == null) {
@@ -48,7 +48,7 @@ export default class TagModule {
         
         gameObject.tags.forEach(tag => {
             // Get tag with game object's name
-            var curr = tagGroups.find(tg => tag == tg.tag);
+            const curr = tagGroups.find(tg => tag == tg.tag);
 
             // Store new tag or push gameObject to existing tag
             if (curr == null) {

@@ -1,4 +1,5 @@
 import BakerModule from "./modules/baker.js";
+import CollisionModule from "./modules/collision.js";
 import LibraryModule from "./modules/library.js";
 import MouseModule from "./modules/mouse.js";
 import TagModule from "./modules/tag.js";
@@ -28,6 +29,7 @@ export default class Engine {
       throw new Error("Unable to acquire WebGL context");
     this.ctx = ctx;
     this.baker = new BakerModule(this.canvas);
+    this.collision = new CollisionModule();
     this.library = new LibraryModule();
     this.mouse = new MouseModule(this.canvas);
     this.mouse.setResolution(this.canvas.width, this.canvas.height);
@@ -63,6 +65,7 @@ export default class Engine {
     this.mouse.update();
   }
   initScenes() {
+    this.collision.update();
     this.scenesLoading.forEach((s) => s.init(this.ctx, this.scenesActive));
     this.scenesActive.forEach((s) => s.init(this.ctx, this.scenesActive));
   }
@@ -98,6 +101,7 @@ export default class Engine {
     if (killSceneNames.length > 1) {
       this.scenesActive = this.scenesActive.filter((s) => !this.killSceneNames.includes(s.name));
       this.tag.clear(this.killSceneNames);
+      this.collision.clear(this.killSceneNames);
       this.killSceneNames = [];
     }
   }

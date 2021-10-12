@@ -28,8 +28,8 @@ export default class Animation extends GameObject {
         params.images.forEach((i) => this.images.push(this.getImage(i)));
     }
     this.frameCount = params.frameCount;
-    this.animsCount = params.animsCount;
-    this.sliceIndex = params.sliceIndex;
+    this.animsCount = params.animsCount ?? 1;
+    this.sliceIndex = params.sliceIndex ?? 0;
     this.setZIndex();
   }
   getImage(params) {

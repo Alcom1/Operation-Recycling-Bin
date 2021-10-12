@@ -3,6 +3,12 @@ import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import { floor, getZIndex, GMULTY, OPPOSITE_DIRS } from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 
+export interface OffsetImageExpandedParams {
+    name : string;
+    extension : string;
+    offsetX : number;
+}
+
 export interface OffsetImageParams {
     name : string;
     extension : string;
@@ -22,8 +28,8 @@ export interface AnimationParams extends GameObjectParams {
     gposOffset? : Point;
 
     frameCount : number;
-    animsCount : number;
-    sliceIndex : number;
+    animsCount? : number;
+    sliceIndex? : number;
 }
 
 /** Single image gameobject */
@@ -79,8 +85,8 @@ export default class Animation extends GameObject {
         }
 
         this.frameCount = params.frameCount;
-        this.animsCount = params.animsCount;
-        this.sliceIndex = params.sliceIndex;
+        this.animsCount = params.animsCount ?? 1;
+        this.sliceIndex = params.sliceIndex ?? 0;
 
         this.setZIndex();
     }

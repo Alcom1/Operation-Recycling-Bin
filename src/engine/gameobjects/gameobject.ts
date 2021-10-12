@@ -1,6 +1,7 @@
 import Vect, { Point } from "engine/utilities/vect";
 import Scene from "engine/scene/scene";
 import Engine from "engine/engine";
+import { Collider } from "engine/modules/collision";
 
 export interface GameObjectParams {
     position?: Point;
@@ -13,6 +14,7 @@ export interface GameObjectParams {
 
 /** Base game object */
 export default class GameObject {
+
     /** Grid position */
     public gpos: Vect;
     /** Sub-position */
@@ -35,14 +37,14 @@ export default class GameObject {
      * @param ctx
      * @param scenes
      */
-    init(ctx: CanvasRenderingContext2D, scenes: Scene[]): void {}
+    public init(ctx: CanvasRenderingContext2D, scenes: Scene[]): void {}
 
     /**
      * Compare two objects, return true if they are the same
      * @param gameObject GameObject to compare against
      * @returns Whether or not the game objects are the same
      */
-    compare(gameObject: GameObject): boolean {
+    public compare(gameObject: GameObject): boolean {
         //Default compare uses grid positions
         return gameObject.gpos.x == this.gpos.x && gameObject.gpos.y == this.gpos.y;
     }
@@ -51,25 +53,39 @@ export default class GameObject {
      * Game object update
      * @param dt Delta time
      */
-    hasTag(tag: string): boolean {
+    public hasTag(tag: string): boolean {
         return this.tags.some(t => t === tag);
+    }
+
+    /**
+     * Get all colliders for this game object
+     */
+    public getColliders() : Collider[] {
+        return [];
+    }
+
+    /**
+     * Get all colliders for this game object
+     */
+    public resolveCollision(other : GameObject) {
+
     }
 
     /**
      * Game object update
      * @param dt Delta time
      */
-    update(dt: number): void {}
+    public update(dt: number): void {}
 
     /**
      * Game object draw
      * @param ctx
      */
-    draw(ctx: CanvasRenderingContext2D): void {}
+    public draw(ctx: CanvasRenderingContext2D): void {}
 
     /**
      * Latter game object draw
      * @param ctx
      */
-    superDraw(ctx: CanvasRenderingContext2D): void {}
+    public superDraw(ctx: CanvasRenderingContext2D): void {}
 }

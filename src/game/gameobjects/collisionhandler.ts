@@ -23,10 +23,10 @@ export default class CollisionHandler extends GameObject {
     public getCollisionBoxes(min : Point, max : Point) : CollisionBox[] {
 
         return this.getCBsFromCharacters(min, max).concat(
-               this.getCBsFromObstacles(min, max));
+               this.getCBsFromObstacles(min, max, 1, 2));
     }
 
-    private getCBsFromObstacles(min : Point, max : Point) : CollisionBox[] {
+    private getCBsFromObstacles(min : Point, max : Point, yUp : number, yDown : number) : CollisionBox[] {
 
         const ret : CollisionBox[] = [];
 
@@ -35,8 +35,8 @@ export default class CollisionHandler extends GameObject {
 
             //Get collider for that obstacle
             const c = { 
-                min : obstacle.gpos.getAdd({ x : 0,              y : -1}), 
-                max : obstacle.gpos.getAdd({ x : obstacle.width, y :  2}) 
+                min : obstacle.gpos.getAdd({ x : 0,              y : -yUp}),
+                max : obstacle.gpos.getAdd({ x : obstacle.width, y :  yDown}) 
             }
 
             //If that collider is in the given bounding box, it will be returned

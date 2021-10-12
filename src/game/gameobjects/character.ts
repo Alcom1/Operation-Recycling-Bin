@@ -49,7 +49,7 @@ export default class Character extends GameObject {
                 ...params, 
                 sliceIndex : i,
                 frameWidth : GMULTX * 2,
-                gposOffset : { x : -1, y : 0}
+                gposOffset : { x : -1, y : 0 }
             } as AnimationParams);
             this.spriteGroupCurr.push(segment);
             
@@ -149,7 +149,7 @@ export default class Character extends GameObject {
 
     //Set current & active group based on the group index
     protected setCurrentGroup(index? : number) {
-
+        
         index = index ?? this.spriteGroupIndex;
         this.spriteGroupIndex = index;
         this.spriteGroups.forEach((sg, i) => sg.forEach(s => {

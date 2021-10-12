@@ -6,7 +6,7 @@ export default class TagModule {
     return this.scenes.some((s) => s.name == sceneName);
   }
   pushGO(gameObject, sceneName) {
-    var curr = this.scenes.find((sg) => sg.name == sceneName);
+    const curr = this.scenes.find((sg) => sg.name == sceneName);
     if (curr == null) {
       this.scenes.push({
         name: sceneName,
@@ -23,7 +23,7 @@ export default class TagModule {
   }
   pushGOToGroup(gameObject, tagGroups) {
     gameObject.tags.forEach((tag) => {
-      var curr = tagGroups.find((tg) => tag == tg.tag);
+      const curr = tagGroups.find((tg) => tag == tg.tag);
       if (curr == null) {
         tagGroups.push({
           tag,
