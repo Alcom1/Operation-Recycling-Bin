@@ -6,7 +6,7 @@ import TagModule from "./modules/tag.js";
 import Scene from "./scene/scene.js";
 import {clamp} from "./utilities/math.js";
 export default class Engine {
-  constructor(element, scenePathName, startScenes, gameObjectTypes, width = 1296, height = 864) {
+  constructor(element, scenePathName, sceneSource, startScenes, gameObjectTypes, width = 1296, height = 864) {
     this.width = width;
     this.height = height;
     this.lastTime = 0;
@@ -35,8 +35,8 @@ export default class Engine {
     this.mouse.setResolution(this.canvas.width, this.canvas.height);
     this.tag = new TagModule();
     this.registerGameObjects(gameObjectTypes);
-    this.pushSceneNames = ["LevelInterface", "LEVEL_53"];
-    this.loadScenes(startScenes, this.scenesActive).finally(() => {
+    this.pushSceneNames = startScenes;
+    this.loadScenes(sceneSource, this.scenesActive).finally(() => {
       this.frame();
     });
   }

@@ -1,5 +1,5 @@
 import Character from "./character.js";
-import {BOUNDARY, bitStack, colRectRectSizes} from "../../engine/utilities/math.js";
+import {BOUNDARY, bitStack} from "../../engine/utilities/math.js";
 import Animation from "./animation.js";
 const characterBotOverride = Object.freeze({
   height: 4,
@@ -58,27 +58,13 @@ export default class CharacterBot extends Character {
           this.timer = 0;
           this.setCurrentGroup(0);
           break;
-        case 2:
+        default:
           this.isActive = false;
           break;
       }
     }
   }
   handleCollision() {
-    this.bins.forEach((b) => {
-      if (b.isActive && colRectRectSizes(this.gpos, {x: 2, y: this.height}, b.gpos.getAdd({x: 0, y: 1}), {x: 2, y: b.height - 1})) {
-        var ary = this.gpos.y;
-        var arh = this.height;
-        var bry = b.gpos.y;
-        var brh = b.height;
-        var aminy = ary;
-        var amaxy = ary + arh;
-        var bminy = bry;
-        var bmaxy = bry + brh;
-        b.deactivate();
-        this.setCurrentGroup(1);
-      }
-    });
     let cbm = this.brickHandler.checkCollisionRange(this.gpos.getSub({x: this.move.x > 0 ? 1 : 0, y: 5}), 5, 15, 7, this.move.x);
     if (this.gpos.x - 1 < BOUNDARY.minx || this.gpos.x + 1 > BOUNDARY.maxx) {
       this.reverse();
@@ -103,13 +89,19 @@ export default class CharacterBot extends Character {
   }
   getColliders() {
     return [{
-      mask: 1,
+      mask: 7,
       min: this.gpos.getAdd({x: -1, y: 1 - this.height}),
-      max: this.gpos.getAdd({x: 2, y: 1})
+      max: this.gpos.getAdd({x: 1, y: 1})
+    }, {
+      mask: 0,
+      min: this.gpos.getAdd({x: -1, y: 1 - this.height}),
+      max: this.gpos.getAdd({x: 1, y: 1})
     }];
   }
-  resolveCollision() {
-    if (this.isNormalMovment) {
+  resolveCollision(mask) {
+    if (mask & 2) {
+      this.setCurrentGroup(1);
+    } else if (mask & 4 && this.isNormalMovment) {
       this.setCurrentGroup(2);
     }
   }

@@ -74,13 +74,13 @@ export default class CharacterBot extends Character {
         if(this.timer > 1) {
 
             switch(this.spriteGroupIndex) {
+                
                 case 1 :
-
                     this.timer = 0;
                     this.setCurrentGroup(0);
                     break;
-                case 2 :
 
+                default :
                     this.isActive = false;
                     break;
             }
@@ -88,29 +88,6 @@ export default class CharacterBot extends Character {
     }
 
     protected handleCollision() {
-
-        this.bins.forEach(b => {
-            if (b.isActive && 
-                colRectRectSizes(
-                    this.gpos,
-                    {x : 2, y : this.height},
-                    b.gpos.getAdd({x : 0, y : 1}), 
-                    {x : 2, y : b.height - 1})) {
-                
-                var ary = this.gpos.y;
-                var arh = this.height;
-                var bry = b.gpos.y;
-                var brh = b.height;
-
-                var aminy = ary;
-                var amaxy = ary + arh;
-                var bminy = bry;
-                var bmaxy = bry + brh;
-
-                b.deactivate();
-                this.setCurrentGroup(1);
-            }
-        })
 
         //Collision bitmask
         let cbm = this.brickHandler.checkCollisionRange(
@@ -173,18 +150,25 @@ export default class CharacterBot extends Character {
 
     //
     public getColliders() : Collider[] {
+        
         return [{ 
-            mask : 1,
+            mask : 0b111,   //All collisions
             min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
-            max : this.gpos.getAdd({ x :  2, y : 1}) 
+            max : this.gpos.getAdd({ x :  1, y : 1}) 
+        },{ 
+            mask : 0,       //Passive
+            min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
+            max : this.gpos.getAdd({ x :  1, y : 1}) 
         }];
     }
 
     //Explode
-    public resolveCollision() {
+    public resolveCollision(mask : number) {
 
-        if (this.isNormalMovment) {
-
+        if (mask & 0b010) {
+            this.setCurrentGroup(1);
+        }
+        else if (mask & 0b100 && this.isNormalMovment) {
             this.setCurrentGroup(2);
         }
     }

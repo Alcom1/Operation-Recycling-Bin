@@ -29,9 +29,6 @@
         "name": "BrickHandler"
       },
       {
-        "name": "CollisionHandler"
-      },
-      {
         "name": "Cursor"
       },
       {

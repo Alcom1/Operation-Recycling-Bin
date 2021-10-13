@@ -20,7 +20,7 @@ export default class GameObject {
   getColliders() {
     return [];
   }
-  resolveCollision(other) {
+  resolveCollision(mask) {
   }
   update(dt) {
   }

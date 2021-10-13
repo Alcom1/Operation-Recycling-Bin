@@ -50,7 +50,8 @@ export default class Engine {
     constructor(
         element: HTMLCanvasElement,
         scenePathName: string,
-        startScenes: string,
+        sceneSource: string,
+        startScenes: string[],
         gameObjectTypes: typeof GameObject[],
         private width: number = 1296,
         private height: number = 864
@@ -78,10 +79,11 @@ export default class Engine {
         // Register available game object types
         this.registerGameObjects(gameObjectTypes);
 
-        this.pushSceneNames = ["LevelInterface", "LEVEL_53"];
+        // Establish starting scenes
+        this.pushSceneNames = startScenes;
 
         // Load each starting & loading scene
-        this.loadScenes(startScenes, this.scenesActive).finally(() => { this.frame() });
+        this.loadScenes(sceneSource, this.scenesActive).finally(() => { this.frame() });
     }
 
     /** Update loop */

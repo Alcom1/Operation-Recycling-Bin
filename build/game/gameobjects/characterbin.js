@@ -12,5 +12,21 @@ export default class CharacterBin extends Character {
   constructor(engine2, params) {
     super(engine2, Object.assign(params, characterBinOverride));
   }
+  getColliders() {
+    return [{
+      mask: 2,
+      min: this.gpos.getAdd({x: -1, y: 1 - this.height}),
+      max: this.gpos.getAdd({x: 1, y: 1})
+    }, {
+      mask: 0,
+      min: this.gpos.getAdd({x: -1, y: 1 - this.height}),
+      max: this.gpos.getAdd({x: 1, y: 1})
+    }];
+  }
+  resolveCollision(mask) {
+    if (mask & 2) {
+      this.deactivate();
+    }
+  }
 }
 //# sourceMappingURL=characterbin.js.map

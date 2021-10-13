@@ -1,5 +1,4 @@
 import Engine from "engine/engine";
-import Brick from "game/gameobjects/bricknormal";
 import BrickHandler from "game/gameobjects/brickhandler";
 import BrickPlate from "./gameobjects/brickplate";
 import Stud from "./gameobjects/stud";
@@ -8,7 +7,6 @@ import ButtonScene from "./gameobjects/buttonscene";
 import Character from "./gameobjects/character";
 import CharacterBin from "./gameobjects/characterbin";
 import CharacterBot from "./gameobjects/characterbot";
-import CollisionHandler from "./gameobjects/collisionhandler";
 import Counter from "./gameobjects/counter";
 import Cursor from "./gameobjects/cursor";
 import CursorIcon from "./gameobjects/cursoricon";
@@ -27,6 +25,7 @@ window.onload = function() {
         canvas, 
         "assets/scenes/",
         "scenes",
+        ["LevelInterface", "LEVEL_05"],
         [
             BrickHandler,
             BrickPlate,
@@ -36,7 +35,6 @@ window.onload = function() {
             Character,
             CharacterBot,
             CharacterBin,
-            CollisionHandler,
             Counter,
             Cursor,
             CursorIcon,

@@ -16,8 +16,8 @@ interface GameObjectCollider {
 
 interface CollidersScene {
     name: string;
-    maskMax : number;
     gameObjects: GameObject[];
+    passObjects: GameObject[];  //Passive game objects that don't interact with each other
 }
 
 /** Module that handles tags and game objects grouped by tag. */
@@ -25,36 +25,49 @@ export default class CollisionModule {
 
     private scenes : CollidersScene[] = [];
 
-    public pushGOs(sceneName : string, gameObjects : GameObject[]) {
+    public pushGOs(sceneName : string, sceneObjects : GameObject[]) {
 
-        var max = 0;
-        const collidables = gameObjects.filter(g => {
-            const curr = g.getColliders();
-            curr.forEach(c => max = Math.max(max, c.mask));
-            return curr.length > 0;
+        const gameObjects : GameObject[] = [];
+        const passObjects : GameObject[] = [];
+
+        //Assign all game objects with colliders in this scene as passive or normal.
+        sceneObjects.forEach(go => {
+
+            const colliders = go.getColliders();
+
+            if(colliders.some(c => c.mask == 0)) {
+                passObjects.push(go);
+            }
+            if(colliders.some(c => c.mask > 0)) {
+                gameObjects.push(go);
+            }
         });
 
-        this.scenes.push({
-            name : sceneName,
-            maskMax : max.toString(2).length,
-            gameObjects: collidables
-        });
+        //Only add scene if it has collidables
+        if(gameObjects.length > 0 || passObjects.length > 0) {
+
+            this.scenes.push({
+                name : sceneName,
+                gameObjects: gameObjects,
+                passObjects: passObjects
+            });
+        }
     }
 
     public update() {
 
         this.scenes.forEach(s => {
 
-            const gocs : GameObjectCollider[] = s.gameObjects.map(go => {
+            //Get all active game objects with colliders
+            const gocs : GameObjectCollider[] = s.gameObjects.filter(go => go.isActive).map(go => {
                 return {
                     colliders : go.getColliders(),
                     gameObject : go
                 }
             });
 
-            const length = gocs.length;
-
-            for(var j = 0; j < length; j++) {
+            //Stair loop for collisions
+            for(var j = 0; j < gocs.length; j++) {
                 for(var i = 0; i < j; i++) {
                     this.compareGOColliders(gocs[i], gocs[j]);
                 }
@@ -62,16 +75,33 @@ export default class CollisionModule {
         });
     }
 
+    public collidePassive(min : Point, max : Point) : Collider[] {
+        return this.getPassiveColliders().filter(c => colRectRectCorners(c.min, c.max, min, max))
+    }
+
+    private getPassiveColliders() : Collider[] {
+
+        return this.scenes
+            .map(s => s.passObjects)
+            .flat()
+            .map(go => {
+                return go.isActive ? go.getColliders().filter(c => c.mask == 0) : [];
+            })
+            .flat();
+    }
+
+    //Compare all colliders between two game objects
     private compareGOColliders(goc1 : GameObjectCollider, goc2 : GameObjectCollider) {
         goc1.colliders.forEach(c1 => 
         goc2.colliders.forEach(c2 => 
             this.compareGOPair(c1, c2, goc1.gameObject, goc2.gameObject)));
     }
 
+    //Check & resolve collision between two colliders
     private compareGOPair(c1 : Collider, c2 : Collider, g1 : GameObject, g2 : GameObject) {
         if((c1.mask & c2.mask) && this.compareColliders(c1, c2)) {
-            g1.resolveCollision(g2);
-            g2.resolveCollision(g1);
+            g1.resolveCollision(c1.mask & c2.mask);
+            g2.resolveCollision(c1.mask & c2.mask);
         }
     }
 

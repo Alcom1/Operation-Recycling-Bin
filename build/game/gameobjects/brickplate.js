@@ -6,9 +6,13 @@ export default class BrickPlate extends Brick {
   }
   getColliders() {
     return [{
-      mask: 1,
+      mask: 4,
+      min: this.gpos.getAdd({x: 1, y: -1}),
+      max: this.gpos.getAdd({x: this.width - 1, y: 0})
+    }, {
+      mask: 0,
       min: this.gpos.getAdd({x: 0, y: -1}),
-      max: this.gpos.getAdd({x: this.width, y: 0})
+      max: this.gpos.getAdd({x: this.width, y: 2})
     }];
   }
 }

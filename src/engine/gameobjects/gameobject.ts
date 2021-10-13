@@ -37,7 +37,7 @@ export default class GameObject {
      * @param ctx
      * @param scenes
      */
-    public init(ctx: CanvasRenderingContext2D, scenes: Scene[]): void {}
+    public init(ctx: CanvasRenderingContext2D, scenes: Scene[]) {}
 
     /**
      * Compare two objects, return true if they are the same
@@ -65,9 +65,9 @@ export default class GameObject {
     }
 
     /**
-     * Get all colliders for this game object
+     * Resolve collision for this game object
      */
-    public resolveCollision(other : GameObject) {
+    public resolveCollision(mask : number) {
 
     }
 
@@ -75,17 +75,17 @@ export default class GameObject {
      * Game object update
      * @param dt Delta time
      */
-    public update(dt: number): void {}
+    public update(dt: number) {}
 
     /**
      * Game object draw
      * @param ctx
      */
-    public draw(ctx: CanvasRenderingContext2D): void {}
+    public draw(ctx: CanvasRenderingContext2D) {}
 
     /**
      * Latter game object draw
      * @param ctx
      */
-    public superDraw(ctx: CanvasRenderingContext2D): void {}
+    public superDraw(ctx: CanvasRenderingContext2D) {}
 }
