@@ -1,6 +1,6 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
 import {floor, getZIndex, GMULTY, OPPOSITE_DIRS} from "../../engine/utilities/math.js";
-export default class Animation extends GameObject {
+export default class Animat extends GameObject {
   constructor(engine2, params) {
     super(engine2, params);
     this.images = [];
@@ -9,7 +9,8 @@ export default class Animation extends GameObject {
     this.imageIndex = 0;
     this.animsIndex = 0;
     this.speed = params.speed ?? 1;
-    this.frameWidth = params.frameWidth;
+    this.loop = params.loop ?? true;
+    this.framesSize = params.framesSize;
     this.gposOffset = params.gposOffset ?? {x: 0, y: 0};
     switch (params.images.length) {
       case 0:
@@ -29,7 +30,7 @@ export default class Animation extends GameObject {
     }
     this.frameCount = params.frameCount;
     this.animsCount = params.animsCount ?? 1;
-    this.sliceIndex = params.sliceIndex ?? 0;
+    this.sliceIndex = params.sliceIndex;
     this.setZIndex();
   }
   getImage(params) {
@@ -40,12 +41,17 @@ export default class Animation extends GameObject {
   }
   init(ctx) {
     this.fullSize = {
-      x: this.images[this.imageIndex].image.width / this.frameCount,
+      x: this.images[this.imageIndex].image.width,
       y: this.images[this.imageIndex].image.height
     };
   }
   update(dt) {
-    this.timer += dt;
+    if (this.speed > 0) {
+      this.timer += dt;
+      if (this.loop && this.timer > 1 / this.speed) {
+        this.timer = 0;
+      }
+    }
   }
   updateSprite(gpos) {
     this.timer = 0;
@@ -54,15 +60,16 @@ export default class Animation extends GameObject {
     this.setZIndex();
   }
   setZIndex() {
-    this.zIndex = getZIndex(this.gpos, 310 - (this.sliceIndex < 1 ? 0 : 295));
+    this.zIndex = getZIndex(this.gpos, 310 - ((this.sliceIndex ?? 1) < 1 ? 0 : 295));
   }
   setImageIndex(index) {
     this.imageIndex = index;
   }
   draw(ctx) {
-    const width = this.frameWidth ?? 0;
+    const width = this.framesSize ?? 0;
     const image = this.images[this.imageIndex];
-    ctx.drawImage(image.image, width * this.sliceIndex + image.offsetX + floor((this.animsIndex + Math.min(this.timer * this.speed, 1 - Number.EPSILON)) * this.fullSize.x * this.frameCount / this.animsCount, this.fullSize.x), 0, width, this.fullSize.y, width * this.sliceIndex, GMULTY - this.fullSize.y, width, this.fullSize.y);
+    const widthSlice = width * (this.sliceIndex ?? 0);
+    ctx.drawImage(image.image, widthSlice + image.offsetX + floor((this.animsIndex + Math.min(this.timer * this.speed, 1 - Number.EPSILON)) * this.fullSize.x / this.animsCount, this.fullSize.x / this.frameCount), 0, width, this.fullSize.y, widthSlice, GMULTY - this.fullSize.y, width, this.fullSize.y);
   }
 }
 //# sourceMappingURL=animation.js.map

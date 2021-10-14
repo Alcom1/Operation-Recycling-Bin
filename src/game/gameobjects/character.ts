@@ -1,11 +1,11 @@
 import Engine from "engine/engine";
 import Scene from "engine/scene/scene";
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
-import { GMULTX, GMULTY } from "engine/utilities/math";
+import { getZIndex, GMULTX, GMULTY } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 import BrickHandler from "./brickhandler";
 import Brick from "./bricknormal";
-import Animation, { OffsetImageParams, AnimationParams } from "./animation";
+import Animat, { OffsetImageParams, AnimationParams } from "./animation";
 
 export interface CharacterParams extends GameObjectParams {
     height? : number;
@@ -27,8 +27,8 @@ export default class Character extends GameObject {
     protected checkCollision: boolean;
 
     protected spriteGroupIndex = 0;
-    protected spriteGroups: Animation[][] = [[]];
-    protected get spriteGroupCurr() : Animation[] { return this.spriteGroups[this.spriteGroupIndex] }
+    protected spriteGroups: Animat[][] = [[]];
+    protected get spriteGroupCurr() : Animat[] { return this.spriteGroups[this.spriteGroupIndex] }
     protected get isNormalMovment() : boolean { return this.spriteGroupIndex == 0 }
 
     constructor(engine: Engine, params: CharacterParams) {
@@ -45,10 +45,10 @@ export default class Character extends GameObject {
         for(let i = -1; i <= 1; i ++) {
 
             //Generate segment
-            const segment = new Animation(this.engine, {
+            const segment = new Animat(this.engine, {
                 ...params, 
                 sliceIndex : i,
-                frameWidth : GMULTX * 2,
+                framesSize : GMULTX * 2,
                 gposOffset : { x : -1, y : 0 }
             } as AnimationParams);
             this.spriteGroupCurr.push(segment);

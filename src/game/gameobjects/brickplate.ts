@@ -1,6 +1,7 @@
 import Engine from "engine/engine";
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import { Collider } from "engine/modules/collision";
+import Animat, { AnimationParams } from "./animation";
 import Brick from "./brick";
 
 export default class BrickPlate extends Brick {
@@ -9,8 +10,21 @@ export default class BrickPlate extends Brick {
         super(engine, {...params, ...{ width : 4 }});
 
         this.image = this.engine.library.getImage("brick_plate");
-    }    
-    
+
+        //this.parent.pushGO(
+        this.parent.pushGO(new Animat(this.engine, {
+            ...params,
+            zIndex : this.zIndex,
+            images : [{ name : "brick_plate_hot_h", offsetX : 0 }],
+            speed : 2,
+            framesSize : 142, //55,
+            frameCount : 7
+        } as AnimationParams));
+    }
+
+    public draw() {
+        //draw nothing
+    }
 
     public getColliders() : Collider[] {
         return [{ 

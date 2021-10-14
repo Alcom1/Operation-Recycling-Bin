@@ -1,6 +1,6 @@
 import Character from "./character.js";
 import {BOUNDARY, bitStack} from "../../engine/utilities/math.js";
-import Animation from "./animation.js";
+import Animat from "./animation.js";
 const characterBotOverride = Object.freeze({
   height: 4,
   speed: 2.5,
@@ -15,9 +15,10 @@ const characterBotOverride = Object.freeze({
     frameCount: 12
   }, {
     images: [{name: "char_bot_explosion", offsetX: 0}],
-    frameWidth: 200,
+    framesSize: 200,
     gposOffset: {x: -3, y: 0},
-    frameCount: 16
+    frameCount: 16,
+    loop: false
   }],
   frameCount: 10,
   animsCount: 2
@@ -37,11 +38,12 @@ export default class CharacterBot extends Character {
     this.bins = [];
     params.imagesMisc.forEach((i) => {
       var newIndex = this.spriteGroups.push([]) - 1;
-      this.spriteGroups[newIndex].push(new Animation(this.engine, {
+      this.spriteGroups[newIndex].push(new Animat(this.engine, {
         images: i.images,
-        frameWidth: i.frameWidth,
+        framesSize: i.framesSize,
         gposOffset: i.gposOffset,
-        frameCount: i.frameCount
+        frameCount: i.frameCount,
+        loop: i.loop
       }));
       this.parent.pushGO(this.spriteGroups[newIndex][0]);
     });

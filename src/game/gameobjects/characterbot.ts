@@ -2,7 +2,7 @@ import Engine from "engine/engine";
 import Character, { CharacterParams } from "./character";
 import { BOUNDARY, GMULTX, GMULTY, bitStack, colRectRectSizes} from "engine/utilities/math";
 import Scene from "engine/scene/scene";
-import Animation, { OffsetImageParams, AnimationParams } from "./animation";
+import Animat, { AnimationParams } from "./animation";
 import CharacterBin from "./characterbin";
 import { Collider } from "engine/modules/collision";
 
@@ -23,9 +23,10 @@ const characterBotOverride = Object.freeze({
         frameCount : 12
     },{
         images : [{ name : "char_bot_explosion", offsetX : 0 }],
-        frameWidth : 200,
+        framesSize : 200,
         gposOffset : { x : -3, y : 0},
-        frameCount : 16
+        frameCount : 16,
+        loop : false
     }],
     frameCount : 10,
     animsCount : 2
@@ -51,11 +52,12 @@ export default class CharacterBot extends Character {
         params.imagesMisc.forEach(i => {
 
             var newIndex = this.spriteGroups.push([]) - 1;
-            this.spriteGroups[newIndex].push(new Animation(this.engine, {
+            this.spriteGroups[newIndex].push(new Animat(this.engine, {
                 images : i.images,
-                frameWidth : i.frameWidth,
+                framesSize : i.framesSize,
                 gposOffset : i.gposOffset,
-                frameCount : i.frameCount
+                frameCount : i.frameCount,
+                loop : i.loop
             } as AnimationParams));
             this.parent.pushGO(this.spriteGroups[newIndex][0]);
         });

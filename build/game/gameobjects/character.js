@@ -1,7 +1,7 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
 import {GMULTX} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
-import Animation from "./animation.js";
+import Animat from "./animation.js";
 export default class Character extends GameObject {
   constructor(engine2, params) {
     super(engine2, params);
@@ -14,10 +14,10 @@ export default class Character extends GameObject {
     this._height = params.height ?? 2;
     this.checkCollision = true;
     for (let i = -1; i <= 1; i++) {
-      const segment = new Animation(this.engine, {
+      const segment = new Animat(this.engine, {
         ...params,
         sliceIndex: i,
-        frameWidth: GMULTX * 2,
+        framesSize: GMULTX * 2,
         gposOffset: {x: -1, y: 0}
       });
       this.spriteGroupCurr.push(segment);

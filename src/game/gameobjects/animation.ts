@@ -11,7 +11,7 @@ export interface OffsetImageExpandedParams {
 
 export interface OffsetImageParams {
     name : string;
-    extension : string;
+    extension? : string;
     offsetX : number;
 }
 
@@ -24,7 +24,8 @@ export interface AnimationParams extends GameObjectParams {
 
     images : OffsetImageParams[];
     speed? : number;
-    frameWidth? : number;
+    loop? : boolean;
+    framesSize? : number;
     gposOffset? : Point;
 
     frameCount : number;
@@ -32,17 +33,18 @@ export interface AnimationParams extends GameObjectParams {
     sliceIndex? : number;
 }
 
-/** Single image gameobject */
-export default class Animation extends GameObject {
+/** Animated image gameobject */
+export default class Animat extends GameObject {
 
     //Set in constructor
     private gposOffset : Point;
     private images : OffsetImage[] = [];
     private speed : number;
-    private frameWidth? : number;
+    private loop : boolean;
+    private framesSize? : number;
     private frameCount : number;
     private animsCount : number;
-    private sliceIndex : number;
+    private sliceIndex? : number;
 
     //Set in init
     private fullSize : Point = { x : 0, y : 0 };
@@ -56,7 +58,8 @@ export default class Animation extends GameObject {
         super(engine, params);
 
         this.speed = params.speed ?? 1;
-        this.frameWidth = params.frameWidth;
+        this.loop = params.loop ?? true;
+        this.framesSize = params.framesSize;
         this.gposOffset = params.gposOffset ?? { x : 0, y : 0 }
 
         switch(params.images.length){
@@ -86,7 +89,8 @@ export default class Animation extends GameObject {
 
         this.frameCount = params.frameCount;
         this.animsCount = params.animsCount ?? 1;
-        this.sliceIndex = params.sliceIndex ?? 0;
+        this.sliceIndex = params.sliceIndex;
+
 
         this.setZIndex();
     }
@@ -103,15 +107,23 @@ export default class Animation extends GameObject {
     public init(ctx : CanvasRenderingContext2D) {
 
         this.fullSize = {
-            x : this.images[this.imageIndex].image.width / this.frameCount,
+            x : this.images[this.imageIndex].image.width,
             y : this.images[this.imageIndex].image.height
         }
     }
 
     public update(dt: number) {
 
-        //Increment timer by delta-time
-        this.timer += dt;
+        //For all moving animations
+        if(this.speed > 0) {
+
+            //Increment timer by delta-time
+            this.timer += dt;
+    
+            if(this.loop && this.timer > 1 / this.speed) {
+                this.timer = 0;
+            }
+        }
     }
 
     public updateSprite(gpos : Vect) {
@@ -126,7 +138,7 @@ export default class Animation extends GameObject {
         
         this.zIndex = getZIndex(
             this.gpos,
-            310 - (this.sliceIndex < 1 ? 0 : 295)); //Magic z-indexing numbers
+            310 - ((this.sliceIndex ?? 1) < 1 ? 0 : 295))   //Magic Z-index handling
     }
 
     public setImageIndex(index : number) {
@@ -135,32 +147,31 @@ export default class Animation extends GameObject {
 
     public draw(ctx : CanvasRenderingContext2D) {
 
-        const width = this.frameWidth ?? 0;
+        const width = this.framesSize ?? 0;
         const image = this.images[this.imageIndex];
+        const widthSlice = width * (this.sliceIndex ?? 0);
 
         ctx.drawImage(
             //Greater image
             image.image,                    
 
             //Slice position & size 
-            width * this.sliceIndex +       //Move segment forward based on which slice this is.
-            image.offsetX +                  //Move segment forward based on the X-offset of the current image  
+            widthSlice +                    //Move segment forward based on which slice this is.
+            image.offsetX +                 //Move segment forward based on the X-offset of the current image  
             floor((                         //Move segment forward to the current animation and current frame
                 this.animsIndex +           //Move segment forward to the current animation
                 Math.min(                   //Get current frame based on the timer and speed of the animation
                     this.timer *        
                     this.speed,         
                     1 - Number.EPSILON)) *  //Subtract epsilon to prevent grabbing the next frame at max value
-                this.fullSize.x *            
-                this.frameCount /           
-                this.animsCount,             
-                this.fullSize.x),
+                this.fullSize.x / this.animsCount,             
+                this.fullSize.x / this.frameCount),
             0,  
             width,  
             this.fullSize.y,    
 
             //Greater image position & size
-            width * this.sliceIndex,    //Move slice forward based on which slice this is
+            widthSlice,                     //Move segment forward based on which slice this is
             GMULTY - this.fullSize.y,
             width,
             this.fullSize.y);
