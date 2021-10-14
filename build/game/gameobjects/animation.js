@@ -9,7 +9,8 @@ export default class Animat extends GameObject {
     this.imageIndex = 0;
     this.animsIndex = 0;
     this.speed = params.speed ?? 1;
-    this.loop = params.loop ?? true;
+    this.isLoop = params.isLoop ?? true;
+    this.isVert = params.isVert ?? false;
     this.framesSize = params.framesSize;
     this.gposOffset = params.gposOffset ?? {x: 0, y: 0};
     switch (params.images.length) {
@@ -48,7 +49,7 @@ export default class Animat extends GameObject {
   update(dt) {
     if (this.speed > 0) {
       this.timer += dt;
-      if (this.loop && this.timer > 1 / this.speed) {
+      if (this.isLoop && this.timer > 1 / this.speed) {
         this.timer -= 1 / this.speed;
       }
     }
@@ -74,11 +75,21 @@ export default class Animat extends GameObject {
   setImageIndex(index) {
     this.imageIndex = index;
   }
+  getAnimationOffset(checkVert) {
+    if (checkVert == this.isVert) {
+      const fullSize = this.isVert ? this.fullSize.y : this.fullSize.x;
+      return floor((this.animsIndex + Math.min(this.timer * this.speed, 1 - Number.EPSILON)) * fullSize / this.animsCount, fullSize / this.frameCount);
+    } else {
+      return 0;
+    }
+  }
   draw(ctx) {
-    const width = this.framesSize ?? 0;
+    const size = this.framesSize ?? 0;
     const image = this.images[this.imageIndex];
-    const widthSlice = width * (this.sliceIndex ?? 0);
-    ctx.drawImage(image.image, widthSlice + image.offsetX + floor((this.animsIndex + Math.min(this.timer * this.speed, 1 - Number.EPSILON)) * this.fullSize.x / this.animsCount, this.fullSize.x / this.frameCount), 0, width, this.fullSize.y, widthSlice, GMULTY - this.fullSize.y, width, this.fullSize.y);
+    const widthSlice = size * (this.sliceIndex ?? 0);
+    const oppoSize = this.isVert ? this.fullSize.x : this.fullSize.y;
+    debugger;
+    ctx.drawImage(image.image, widthSlice + image.offsetX + this.getAnimationOffset(false), this.getAnimationOffset(true), this.isVert ? oppoSize : size, this.isVert ? size : oppoSize, widthSlice, this.isVert ? 0 : GMULTY - this.fullSize.y, this.isVert ? oppoSize : size, this.isVert ? size : oppoSize);
   }
 }
 //# sourceMappingURL=animation.js.map

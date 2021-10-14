@@ -6,12 +6,13 @@ export default class BrickPlate extends Brick {
     this.image = this.engine.library.getImage("brick_plate");
     this.parent.pushGO(new Animat(this.engine, {
       ...params,
-      subPosition: {x: 0, y: -6},
+      subPosition: {x: 0, y: -25},
       zIndex: this.zIndex,
-      images: [{name: "brick_plate_hot_h", offsetX: 0}],
+      images: [{name: "brick_plate_hot", offsetX: 0}],
       speed: 2,
-      framesSize: 142,
-      frameCount: 7
+      framesSize: 55,
+      frameCount: 7,
+      isVert: true
     }));
   }
   draw() {

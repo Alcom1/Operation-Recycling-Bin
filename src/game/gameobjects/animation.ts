@@ -24,7 +24,8 @@ export interface AnimationParams extends GameObjectParams {
 
     images : OffsetImageParams[];
     speed? : number;
-    loop? : boolean;
+    isLoop? : boolean;
+    isVert? : boolean;
     framesSize? : number;
     gposOffset? : Point;
 
@@ -40,7 +41,8 @@ export default class Animat extends GameObject {
     private gposOffset : Point;
     private images : OffsetImage[] = [];
     private speed : number;
-    private loop : boolean;
+    private isLoop : boolean;
+    private isVert : boolean;
     private framesSize? : number;
     private frameCount : number;
     private animsCount : number;
@@ -58,7 +60,8 @@ export default class Animat extends GameObject {
         super(engine, params);
 
         this.speed = params.speed ?? 1;
-        this.loop = params.loop ?? true;
+        this.isLoop = params.isLoop ?? true;
+        this.isVert = params.isVert ?? false;
         this.framesSize = params.framesSize;
         this.gposOffset = params.gposOffset ?? { x : 0, y : 0 }
 
@@ -120,8 +123,9 @@ export default class Animat extends GameObject {
             //Increment timer by delta-time
             this.timer += dt;
     
-            if(this.loop && this.timer > 1 / this.speed) {
-                this.timer -= 1 / this.speed;
+            if(this.isLoop && this.timer > 1 / this.speed) {
+
+                this.timer -= 1 / this.speed;   //May cause frame skipping
             }
         }
     }
@@ -144,13 +148,13 @@ export default class Animat extends GameObject {
     //Magic Z-index handling (it keeps getting worse!)
     private getSliceModifier() : number {
 
-        if(this.sliceIndex == null) {
+        if(this.sliceIndex == null) {   //No slicing
             return 40;
         }
-        else if(this.sliceIndex < 1) {
+        else if(this.sliceIndex < 1) {  //Rear slice that should be in front of studs & bricks
             return 310;
         }
-        else {
+        else {                          //Forward slice that should be behind bricks
             return 29;
         }
     }
@@ -159,11 +163,35 @@ export default class Animat extends GameObject {
         this.imageIndex = index;
     }
 
+    private getAnimationOffset(checkVert : boolean) : number {
+
+        //If the animation direction matches the checked direction, return an animation offset, 0 otherwise.
+        if(checkVert == this.isVert) {
+
+            const fullSize = this.isVert ? this.fullSize.y : this.fullSize.x;
+
+            return floor((                  //Move segment forward to the current animation and current frame
+                this.animsIndex +           //Move segment forward to the current animation
+                Math.min(                   //Get current frame based on the timer and speed of the animation
+                    this.timer *        
+                    this.speed,         
+                    1 - Number.EPSILON)) *  //Subtract epsilon to prevent grabbing the next frame at max value
+                fullSize / this.animsCount,             
+                fullSize / this.frameCount)
+        }
+        else {
+            return 0;
+        }
+    }
+
     public draw(ctx : CanvasRenderingContext2D) {
 
-        const width = this.framesSize ?? 0;
+        const size = this.framesSize ?? 0;
         const image = this.images[this.imageIndex];
-        const widthSlice = width * (this.sliceIndex ?? 0);
+        const widthSlice = size * (this.sliceIndex ?? 0);
+        const oppoSize = this.isVert ? this.fullSize.x : this.fullSize.y;
+
+        debugger;
 
         ctx.drawImage(
             //Greater image
@@ -172,23 +200,16 @@ export default class Animat extends GameObject {
             //Slice position & size 
             widthSlice +                    //Move segment forward based on which slice this is.
             image.offsetX +                 //Move segment forward based on the X-offset of the current image  
-            floor((                         //Move segment forward to the current animation and current frame
-                this.animsIndex +           //Move segment forward to the current animation
-                Math.min(                   //Get current frame based on the timer and speed of the animation
-                    this.timer *        
-                    this.speed,         
-                    1 - Number.EPSILON)) *  //Subtract epsilon to prevent grabbing the next frame at max value
-                this.fullSize.x / this.animsCount,             
-                this.fullSize.x / this.frameCount),
-            0,  
-            width,  
-            this.fullSize.y,    
+            this.getAnimationOffset(false),
+            this.getAnimationOffset(true),  
+            this.isVert ? oppoSize : size,  
+            this.isVert ? size : oppoSize,    
 
             //Greater image position & size
-            widthSlice,                     //Move segment forward based on which slice this is
-            GMULTY - this.fullSize.y,
-            width,
-            this.fullSize.y);
+            widthSlice,                     //Move segment forward based on which slice this is. Unused(?) for vertical animations.
+            this.isVert ? 0 : GMULTY - this.fullSize.y,
+            this.isVert ? oppoSize : size,  
+            this.isVert ? size : oppoSize);
 
         // ctx.globalAlpha = 0.5;
         // ctx.strokeStyle = "#F00"

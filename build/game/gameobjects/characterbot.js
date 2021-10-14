@@ -18,7 +18,7 @@ const characterBotOverride = Object.freeze({
     framesSize: 200,
     gposOffset: {x: -3, y: 0},
     frameCount: 16,
-    loop: false
+    isLoop: false
   }],
   frameCount: 10,
   animsCount: 2
@@ -43,7 +43,7 @@ export default class CharacterBot extends Character {
         framesSize: i.framesSize,
         gposOffset: i.gposOffset,
         frameCount: i.frameCount,
-        loop: i.loop
+        isLoop: i.isLoop
       }));
       this.parent.pushGO(this.spriteGroups[newIndex][0]);
     });
