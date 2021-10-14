@@ -18,7 +18,7 @@ const characterBotOverride = Object.freeze({
         { name : "char_bot_right", offsetX : 14}],
     imagesMisc : [{
         images : [{ name : "char_bot_bin", offsetX : 0 }],
-        frameWidth : 126,
+        framesSize : 126,
         gposOffset : { x : -1, y : 0},
         frameCount : 12
     },{

@@ -49,7 +49,7 @@ export default class Animat extends GameObject {
     if (this.speed > 0) {
       this.timer += dt;
       if (this.loop && this.timer > 1 / this.speed) {
-        this.timer = 0;
+        this.timer -= 1 / this.speed;
       }
     }
   }
@@ -60,7 +60,16 @@ export default class Animat extends GameObject {
     this.setZIndex();
   }
   setZIndex() {
-    this.zIndex = getZIndex(this.gpos, 310 - ((this.sliceIndex ?? 1) < 1 ? 0 : 270));
+    this.zIndex = getZIndex(this.gpos, this.getSliceModifier());
+  }
+  getSliceModifier() {
+    if (this.sliceIndex == null) {
+      return 40;
+    } else if (this.sliceIndex < 1) {
+      return 310;
+    } else {
+      return 29;
+    }
   }
   setImageIndex(index) {
     this.imageIndex = index;
