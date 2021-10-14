@@ -62,7 +62,7 @@ export default class Animat extends GameObject {
         this.framesSize = params.framesSize;
         this.gposOffset = params.gposOffset ?? { x : 0, y : 0 }
 
-        switch(params.images.length){
+        switch(params.images.length) {
 
             //No images (why?)
             case 0:
@@ -138,7 +138,7 @@ export default class Animat extends GameObject {
         
         this.zIndex = getZIndex(
             this.gpos,
-            310 - ((this.sliceIndex ?? 1) < 1 ? 0 : 295))   //Magic Z-index handling
+            310 - ((this.sliceIndex ?? 1) < 1 ? 0 : 270))   //Magic Z-index handling
     }
 
     public setImageIndex(index : number) {

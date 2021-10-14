@@ -60,7 +60,7 @@ export default class Animat extends GameObject {
     this.setZIndex();
   }
   setZIndex() {
-    this.zIndex = getZIndex(this.gpos, 310 - ((this.sliceIndex ?? 1) < 1 ? 0 : 295));
+    this.zIndex = getZIndex(this.gpos, 310 - ((this.sliceIndex ?? 1) < 1 ? 0 : 270));
   }
   setImageIndex(index) {
     this.imageIndex = index;
