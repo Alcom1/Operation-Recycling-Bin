@@ -2,17 +2,26 @@ import Engine from "engine/engine";
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import { Collider } from "engine/modules/collision";
 import Animat, { AnimationParams } from "./animation";
-import Brick from "./brick";
+import Brick, { BrickParams } from "./brick";
+
+export interface BrickPlateParams extends BrickParams {
+    isOn: boolean;
+}
+
 
 export default class BrickPlate extends Brick {
 
-    constructor(engine: Engine, params: GameObjectParams) {
+    private isOn : boolean;
+    private animation: Animat;
+
+    constructor(engine: Engine, params: BrickPlateParams) {
         super(engine, {...params, ...{ width : 4 }});
 
+        this.isOn = params.isOn;
         this.image = this.engine.library.getImage("brick_plate");
 
         //this.parent.pushGO(
-        this.parent.pushGO(new Animat(this.engine, {
+        this.animation = this.parent.pushGO(new Animat(this.engine, {
             ...params,
             subPosition : { x : 0, y : -25 },                       //For some reason, this animation appears super low by default.
             zModifier : 40,                                         //Z-index modifier of a 4-width brick
@@ -21,24 +30,28 @@ export default class BrickPlate extends Brick {
             framesSize : 55,
             frameCount : 7,
             isVert : true                                           //Hotplate animation frames are stacked vertically
-        } as AnimationParams));
+        } as AnimationParams)) as Animat;
+
+        this.animation.isActive == this.isOn;
     }
     
     //draw nothing
-    public draw() {
-        
+    public draw(ctx : CanvasRenderingContext2D) {
+        if(!this.isOn) {
+            super.draw(ctx);
+        }
     }
 
     //Get hazard and passive colliders of this brick.
     public getColliders() : Collider[] {
         return [{ 
-            mask : 0b100,   //Hazard
-            min : this.gpos.getAdd({ x : 1,              y : -1}),
-            max : this.gpos.getAdd({ x : this.width - 1, y :  0}) 
-        },{ 
-            mask : 0,       //Passive
+            mask : 0,               //Passive
             min : this.gpos.getAdd({ x : 0,              y : -1}),
             max : this.gpos.getAdd({ x : this.width,     y :  2}) 
-        }];
+        }].concat(this.isOn ? [{    //Only return hazard hitbox if this plate is on.
+            mask : 0b100,           //Hazard
+            min : this.gpos.getAdd({ x : 1,              y : -1}),
+            max : this.gpos.getAdd({ x : this.width - 1, y :  0}) 
+        }] : []);
     }
 }

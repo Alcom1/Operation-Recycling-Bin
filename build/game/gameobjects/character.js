@@ -14,16 +14,14 @@ export default class Character extends GameObject {
     this._height = params.height ?? 2;
     this.checkCollision = true;
     for (let i = -1; i <= 1; i++) {
-      const segment = new Animat(this.engine, {
+      this.spriteGroupCurr.push(this.parent.pushGO(new Animat(this.engine, {
         ...params,
         isLoop: false,
         zModifier: i < 1 ? 300 : 29,
         sliceIndex: i,
         framesSize: GMULTX * 2,
         gposOffset: {x: -1, y: 0}
-      });
-      this.spriteGroupCurr.push(segment);
-      this.parent.pushGO(segment);
+      })));
     }
   }
   get height() {

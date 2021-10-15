@@ -26,6 +26,7 @@ export default class Scene {
   pushGO(gameObject) {
     gameObject.parent = this;
     this.gameObjects.push(gameObject);
+    return gameObject;
   }
   sortGO() {
     this.gameObjects.sort((a, b) => a.zIndex - b.zIndex);

@@ -53,10 +53,11 @@ export default class Scene {
         }
     }
 
-    public pushGO(gameObject: GameObject) {
+    public pushGO(gameObject: GameObject) : GameObject {
         // Establish parent scene before pushing
         gameObject.parent = this;
         this.gameObjects.push(gameObject);
+        return gameObject;
     }
 
     public sortGO() {

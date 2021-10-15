@@ -43,20 +43,16 @@ export default class Character extends GameObject {
 
         //Spawn 3 animations, the sprite is sliced vertically into 2x wide segments for proper z-indexing
         for(let i = -1; i <= 1; i ++) {
-
-            //Generate segment
-            const segment = new Animat(this.engine, {
-                ...params, 
-                isLoop : false,                 //Remove looping to prevent stuttering. Loops are handled manually
-                zModifier : i < 1 ? 300 : 29,   //Z-modifier for different slices
-                sliceIndex : i,                 //This animation is sliced
-                framesSize : GMULTX * 2,        //2x wide slices
-                gposOffset : { x : -1, y : 0 }  //Move back by 1. Animations are centered around this character
-            } as AnimationParams);
             
             // Add segment to scene and this character
-            this.spriteGroupCurr.push(segment);
-            this.parent.pushGO(segment);
+            this.spriteGroupCurr.push(this.parent.pushGO(new Animat(this.engine, {
+                    ...params, 
+                    isLoop : false,                 //Remove looping to prevent stuttering. Loops are handled manually
+                    zModifier : i < 1 ? 300 : 29,   //Z-modifier for different slices
+                    sliceIndex : i,                 //This animation is sliced
+                    framesSize : GMULTX * 2,        //2x wide slices
+                    gposOffset : { x : -1, y : 0 }  //Move back by 1. Animations are centered around this character
+                } as AnimationParams)) as Animat);
         }
     }
 

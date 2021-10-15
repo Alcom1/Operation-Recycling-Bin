@@ -2142,7 +2142,7 @@
         }
       },
       {
-        "width": 4,
+        "width": 3,
         "color": "green",
         "name": "BrickNormal",
         "position": {
@@ -2165,6 +2165,15 @@
         "name": "BrickNormal",
         "position": {
           "x": 27,
+          "y": 6
+        }
+      },
+      {
+        "width": 1,
+        "color": "green",
+        "name": "BrickNormal",
+        "position": {
+          "x": 22,
           "y": 6
         }
       },
@@ -3633,6 +3642,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 25,
@@ -3640,6 +3650,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 15,
@@ -3784,6 +3795,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 5,
@@ -6222,6 +6234,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 6,
@@ -6229,6 +6242,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 12,
@@ -6236,6 +6250,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 18,
@@ -6243,6 +6258,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 24,
@@ -7135,6 +7151,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 16,
@@ -10699,6 +10716,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 8,
@@ -10714,6 +10732,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 23,
@@ -11257,6 +11276,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 8,
@@ -11447,6 +11467,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 8,
@@ -11953,6 +11974,7 @@
     },
     "gameObjects": [
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 26,
@@ -11960,6 +11982,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 3,
@@ -12044,6 +12067,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 15,
@@ -12281,6 +12305,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 8,
@@ -12288,6 +12313,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 12,
@@ -12295,6 +12321,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 23,
@@ -12302,6 +12329,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 19,
@@ -14581,6 +14609,7 @@
         }
       },
       {
+        "isOn": false,
         "name": "BrickPlate",
         "position": {
           "x": 11,
@@ -16033,6 +16062,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 5,
@@ -16040,6 +16070,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 13,
@@ -16047,6 +16078,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 21,
@@ -16449,6 +16481,7 @@
     },
     "gameObjects": [
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 4,
@@ -16456,6 +16489,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 8,
@@ -16463,6 +16497,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 12,
@@ -16478,6 +16513,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 18,
@@ -16485,6 +16521,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 22,
@@ -16492,6 +16529,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 26,
@@ -18499,6 +18537,7 @@
         }
       },
       {
+        "isOn": false,
         "name": "BrickPlate",
         "position": {
           "x": 19,
@@ -18506,6 +18545,7 @@
         }
       },
       {
+        "isOn": false,
         "name": "BrickPlate",
         "position": {
           "x": 23,
@@ -18550,6 +18590,7 @@
     },
     "gameObjects": [
       {
+        "isOn": false,
         "name": "BrickPlate",
         "position": {
           "x": 11,
@@ -18557,6 +18598,7 @@
         }
       },
       {
+        "isOn": false,
         "name": "BrickPlate",
         "position": {
           "x": 15,
@@ -18564,6 +18606,7 @@
         }
       },
       {
+        "isOn": false,
         "name": "BrickPlate",
         "position": {
           "x": 19,
@@ -19725,6 +19768,7 @@
         }
       },
       {
+        "isOn": false,
         "name": "BrickPlate",
         "position": {
           "x": 0,
@@ -19732,6 +19776,7 @@
         }
       },
       {
+        "isOn": false,
         "name": "BrickPlate",
         "position": {
           "x": 6,
@@ -19739,6 +19784,7 @@
         }
       },
       {
+        "isOn": false,
         "name": "BrickPlate",
         "position": {
           "x": 12,
@@ -19746,6 +19792,7 @@
         }
       },
       {
+        "isOn": false,
         "name": "BrickPlate",
         "position": {
           "x": 18,
@@ -19753,6 +19800,7 @@
         }
       },
       {
+        "isOn": false,
         "name": "BrickPlate",
         "position": {
           "x": 24,
@@ -19760,6 +19808,7 @@
         }
       },
       {
+        "isOn": false,
         "name": "BrickPlate",
         "position": {
           "x": 30,
@@ -20204,6 +20253,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 22,
@@ -20211,6 +20261,7 @@
         }
       },
       {
+        "isOn": false,
         "name": "BrickPlate",
         "position": {
           "x": 18,
@@ -20218,6 +20269,7 @@
         }
       },
       {
+        "isOn": false,
         "name": "BrickPlate",
         "position": {
           "x": 14,
@@ -20225,6 +20277,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 10,
@@ -20232,6 +20285,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 6,
@@ -20455,6 +20509,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 30,
@@ -20965,6 +21020,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 3,
@@ -21121,6 +21177,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 21,
@@ -21269,6 +21326,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 0,
@@ -21276,6 +21334,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 16,
@@ -21283,6 +21342,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 4,
@@ -21290,6 +21350,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 9,
@@ -21297,6 +21358,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 13,
@@ -21304,6 +21366,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 18,
@@ -21311,6 +21374,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 22,
@@ -21318,6 +21382,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 27,
@@ -21325,6 +21390,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 31,
@@ -21332,6 +21398,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 13,
@@ -21564,7 +21631,7 @@
       {
         "name": "CharacterBot",
         "position": {
-          "x": 10,
+          "x": 3,
           "y": 22
         }
       },
@@ -21577,6 +21644,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 29,
@@ -21672,6 +21740,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 5,
@@ -21791,6 +21860,42 @@
         "position": {
           "x": 20,
           "y": 22
+        }
+      },
+      {
+        "width": 2,
+        "color": "green",
+        "name": "BrickNormal",
+        "position": {
+          "x": 13,
+          "y": 22
+        }
+      },
+      {
+        "width": 2,
+        "color": "green",
+        "name": "BrickNormal",
+        "position": {
+          "x": 13,
+          "y": 21
+        }
+      },
+      {
+        "width": 2,
+        "color": "green",
+        "name": "BrickNormal",
+        "position": {
+          "x": 11,
+          "y": 22
+        }
+      },
+      {
+        "width": 2,
+        "color": "green",
+        "name": "BrickNormal",
+        "position": {
+          "x": 11,
+          "y": 21
         }
       },
       {
@@ -22911,6 +23016,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 26,
@@ -22925,6 +23031,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 5,
@@ -23811,6 +23918,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 5,
@@ -23851,6 +23959,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 26,
@@ -24280,6 +24389,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 4,
@@ -24287,6 +24397,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 8,
@@ -24294,6 +24405,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 12,
@@ -24301,6 +24413,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 16,
@@ -24928,6 +25041,7 @@
         }
       },
       {
+        "isOn": false,
         "name": "BrickPlate",
         "position": {
           "x": 0,
@@ -24935,6 +25049,7 @@
         }
       },
       {
+        "isOn": false,
         "name": "BrickPlate",
         "position": {
           "x": 7,
@@ -24942,6 +25057,7 @@
         }
       },
       {
+        "isOn": false,
         "name": "BrickPlate",
         "position": {
           "x": 31,
@@ -24949,6 +25065,7 @@
         }
       },
       {
+        "isOn": false,
         "name": "BrickPlate",
         "position": {
           "x": 24,
@@ -24956,6 +25073,7 @@
         }
       },
       {
+        "isOn": false,
         "name": "BrickPlate",
         "position": {
           "x": 15,
@@ -25869,6 +25987,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 17,
@@ -25876,6 +25995,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 21,
@@ -25883,6 +26003,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 25,
@@ -25983,6 +26104,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 11,
@@ -25990,6 +26112,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 17,
@@ -25997,6 +26120,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 23,
@@ -26130,6 +26254,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 20,
@@ -26137,6 +26262,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 30,
@@ -26183,6 +26309,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 4,
@@ -26190,6 +26317,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 8,
@@ -26197,6 +26325,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 12,
@@ -26243,6 +26372,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 4,
@@ -26250,6 +26380,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 8,
@@ -26257,6 +26388,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 12,
@@ -26303,6 +26435,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 4,
@@ -26310,6 +26443,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 8,
@@ -26317,6 +26451,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 12,
@@ -26441,6 +26576,7 @@
     },
     "gameObjects": [
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 23,
@@ -26448,6 +26584,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 27,
@@ -26808,6 +26945,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 16,
@@ -27102,6 +27240,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 8,
@@ -27132,6 +27271,7 @@
         }
       },
       {
+        "isOn": true,
         "name": "BrickPlate",
         "position": {
           "x": 19,
