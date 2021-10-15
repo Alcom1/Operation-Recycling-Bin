@@ -55,7 +55,7 @@ export default class Animat extends GameObject {
       }
     }
   }
-  updateSprite(gpos) {
+  resetSprite(gpos) {
     this.timer = 0;
     this.gpos = gpos.getAdd(this.gposOffset);
     this.animsIndex = ++this.animsIndex % this.animsCount;
@@ -67,6 +67,13 @@ export default class Animat extends GameObject {
   setImageIndex(index) {
     this.imageIndex = index;
   }
+  draw(ctx) {
+    const size = this.framesSize ?? 0;
+    const image = this.images[this.imageIndex];
+    const widthSlice = size * (this.sliceIndex ?? 0);
+    const oppoSize = this.isVert ? this.fullSize.x : this.fullSize.y;
+    ctx.drawImage(image.image, widthSlice + image.offsetX + this.getAnimationOffset(false), this.getAnimationOffset(true), this.isVert ? oppoSize : size, this.isVert ? size : oppoSize, widthSlice, this.isVert ? 0 : GMULTY - this.fullSize.y, this.isVert ? oppoSize : size, this.isVert ? size : oppoSize);
+  }
   getAnimationOffset(checkVert) {
     if (checkVert == this.isVert) {
       const fullSize = this.isVert ? this.fullSize.y : this.fullSize.x;
@@ -74,13 +81,6 @@ export default class Animat extends GameObject {
     } else {
       return 0;
     }
-  }
-  draw(ctx) {
-    const size = this.framesSize ?? 0;
-    const image = this.images[this.imageIndex];
-    const widthSlice = size * (this.sliceIndex ?? 0);
-    const oppoSize = this.isVert ? this.fullSize.x : this.fullSize.y;
-    ctx.drawImage(image.image, widthSlice + image.offsetX + this.getAnimationOffset(false), this.getAnimationOffset(true), this.isVert ? oppoSize : size, this.isVert ? size : oppoSize, widthSlice, this.isVert ? 0 : GMULTY - this.fullSize.y, this.isVert ? oppoSize : size, this.isVert ? size : oppoSize);
   }
 }
 //# sourceMappingURL=animation.js.map

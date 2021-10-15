@@ -47,12 +47,12 @@ export default class Character extends GameObject {
     if (this.isNormalMovment) {
       this.handleNormalMovement(dt);
     } else {
-      this.handleUniqueMovmeent(dt);
+      this.handleUniqueMovment(dt);
     }
     if (this.checkCollision) {
       this.handleCollision();
       this.handleBricks();
-      this.spriteGroupCurr.forEach((s) => s.updateSprite(this.gpos));
+      this.spriteGroupCurr.forEach((s) => s.resetSprite(this.gpos));
       this.level.sortGO();
       this.checkCollision = false;
     }
@@ -66,7 +66,7 @@ export default class Character extends GameObject {
       this.checkCollision = true;
     }
   }
-  handleUniqueMovmeent(dt) {
+  handleUniqueMovment(dt) {
   }
   handleBricks() {
     this.underBricks.forEach((b) => b.pressure -= 1);
@@ -86,7 +86,7 @@ export default class Character extends GameObject {
     this.spriteGroupIndex = index;
     this.spriteGroups.forEach((sg, i) => sg.forEach((s) => {
       s.isActive = i == index;
-      s.updateSprite(this.gpos);
+      s.resetSprite(this.gpos);
     }));
   }
   deactivate() {

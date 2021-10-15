@@ -8,7 +8,9 @@ const characterBotOverride = Object.freeze({
     {name: "char_bot_left", offsetX: 36},
     {name: "char_bot_right", offsetX: 14}
   ],
-  imagesMisc: [{
+  frameCount: 10,
+  animsCount: 2,
+  animsMisc: [{
     images: [{name: "char_bot_bin", offsetX: 0}],
     framesSize: 126,
     gposOffset: {x: -1, y: 0},
@@ -19,9 +21,7 @@ const characterBotOverride = Object.freeze({
     gposOffset: {x: -3, y: 0},
     frameCount: 16,
     isLoop: false
-  }],
-  frameCount: 10,
-  animsCount: 2
+  }]
 });
 const cbc = Object.freeze({
   flor: bitStack([0, 7]),
@@ -35,8 +35,7 @@ export default class CharacterBot extends Character {
   constructor(engine2, params) {
     super(engine2, Object.assign(params, characterBotOverride));
     this.timer = 0;
-    this.bins = [];
-    params.imagesMisc.forEach((i) => {
+    params.animsMisc.forEach((i) => {
       var newIndex = this.spriteGroups.push([]) - 1;
       this.spriteGroups[newIndex].push(new Animat(this.engine, {
         images: i.images,
@@ -48,11 +47,7 @@ export default class CharacterBot extends Character {
       this.parent.pushGO(this.spriteGroups[newIndex][0]);
     });
   }
-  init(ctx, scenes) {
-    super.init(ctx, scenes);
-    this.bins = this.engine.tag.get("CharacterBin", "Level");
-  }
-  handleUniqueMovmeent(dt) {
+  handleUniqueMovment(dt) {
     this.timer += dt;
     if (this.timer > 1) {
       switch (this.spriteGroupIndex) {

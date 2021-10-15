@@ -47,15 +47,15 @@ export default class Character extends GameObject {
             //Generate segment
             const segment = new Animat(this.engine, {
                 ...params, 
-                isLoop : false,
-                zModifier : i < 1 ? 300 : 29,
-                sliceIndex : i,
-                framesSize : GMULTX * 2,
-                gposOffset : { x : -1, y : 0 }
+                isLoop : false,                 //Remove looping to prevent stuttering. Loops are handled manually
+                zModifier : i < 1 ? 300 : 29,   //Z-modifier for different slices
+                sliceIndex : i,                 //This animation is sliced
+                framesSize : GMULTX * 2,        //2x wide slices
+                gposOffset : { x : -1, y : 0 }  //Move back by 1. Animations are centered around this character
             } as AnimationParams);
-            this.spriteGroupCurr.push(segment);
             
-            // Add segment game object to scene
+            // Add segment to scene and this character
+            this.spriteGroupCurr.push(segment);
             this.parent.pushGO(segment);
         }
     }
@@ -81,7 +81,7 @@ export default class Character extends GameObject {
             this.handleNormalMovement(dt);
         }
         else {
-            this.handleUniqueMovmeent(dt);
+            this.handleUniqueMovment(dt);
         }
 
         //Handle collision, set zIndices for new position
@@ -90,7 +90,7 @@ export default class Character extends GameObject {
             this.handleCollision();
             this.handleBricks();
 
-            this.spriteGroupCurr.forEach(s => s.updateSprite(this.gpos));
+            this.spriteGroupCurr.forEach(s => s.resetSprite(this.gpos));
             this.level.sortGO();
 
             this.checkCollision = false;
@@ -116,7 +116,7 @@ export default class Character extends GameObject {
     }
 
     //Do nothing - override
-    protected handleUniqueMovmeent(dt: number) {
+    protected handleUniqueMovment(dt: number) {
 
     }
 
@@ -156,7 +156,7 @@ export default class Character extends GameObject {
         this.spriteGroupIndex = index;
         this.spriteGroups.forEach((sg, i) => sg.forEach(s => {
             s.isActive = i == index;
-            s.updateSprite(this.gpos);
+            s.resetSprite(this.gpos);
         }));
     }
 

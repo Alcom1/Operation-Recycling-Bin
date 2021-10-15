@@ -14,20 +14,22 @@ export default class BrickPlate extends Brick {
         //this.parent.pushGO(
         this.parent.pushGO(new Animat(this.engine, {
             ...params,
-            subPosition : { x : 0, y : -25 },
-            zModifier : 40,
-            images : [{ name : "brick_plate_hot", offsetX : 0 }],
-            speed : 2,
+            subPosition : { x : 0, y : -25 },                       //For some reason, this animation appears super low by default.
+            zModifier : 40,                                         //Z-index modifier of a 4-width brick
+            images : [{ name : "brick_plate_hot", offsetX : 0 }],   //Single hotplate animation image
+            speed : 2,                                              //Hotplate animation is weirdly fast
             framesSize : 55,
             frameCount : 7,
-            isVert : true
+            isVert : true                                           //Hotplate animation frames are stacked vertically
         } as AnimationParams));
     }
-
+    
+    //draw nothing
     public draw() {
-        //draw nothing
+        
     }
 
+    //Get hazard and passive colliders of this brick.
     public getColliders() : Collider[] {
         return [{ 
             mask : 0b100,   //Hazard
