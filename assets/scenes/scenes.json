@@ -21564,7 +21564,7 @@
       {
         "name": "CharacterBot",
         "position": {
-          "x": 3,
+          "x": 10,
           "y": 22
         }
       },
@@ -21791,42 +21791,6 @@
         "position": {
           "x": 20,
           "y": 22
-        }
-      },
-      {
-        "width": 2,
-        "color": "green",
-        "name": "BrickNormal",
-        "position": {
-          "x": 13,
-          "y": 22
-        }
-      },
-      {
-        "width": 2,
-        "color": "green",
-        "name": "BrickNormal",
-        "position": {
-          "x": 13,
-          "y": 21
-        }
-      },
-      {
-        "width": 2,
-        "color": "green",
-        "name": "BrickNormal",
-        "position": {
-          "x": 11,
-          "y": 22
-        }
-      },
-      {
-        "width": 2,
-        "color": "green",
-        "name": "BrickNormal",
-        "position": {
-          "x": 11,
-          "y": 21
         }
       },
       {

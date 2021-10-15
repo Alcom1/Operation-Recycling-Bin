@@ -17,6 +17,7 @@ export default class Character extends GameObject {
       const segment = new Animat(this.engine, {
         ...params,
         isLoop: false,
+        zModifier: i < 1 ? 300 : 29,
         sliceIndex: i,
         framesSize: GMULTX * 2,
         gposOffset: {x: -1, y: 0}

@@ -28,6 +28,7 @@ export interface AnimationParams extends GameObjectParams {
     isVert? : boolean;
     framesSize? : number;
     gposOffset? : Point;
+    zModifier? : number;
 
     frameCount : number;
     animsCount? : number;
@@ -39,6 +40,7 @@ export default class Animat extends GameObject {
 
     //Set in constructor
     private gposOffset : Point;
+    private zModifier : number;
     private images : OffsetImage[] = [];
     private speed : number;
     private isLoop : boolean;
@@ -64,6 +66,7 @@ export default class Animat extends GameObject {
         this.isVert = params.isVert ?? false;
         this.framesSize = params.framesSize;
         this.gposOffset = params.gposOffset ?? { x : 0, y : 0 }
+        this.zModifier = params.zModifier ?? 300;
 
         switch(params.images.length) {
 
@@ -142,21 +145,7 @@ export default class Animat extends GameObject {
 
         this.zIndex = getZIndex(
             this.gpos,
-            this.getSliceModifier())   
-    }
-
-    //Magic Z-index handling (it keeps getting worse!)
-    private getSliceModifier() : number {
-
-        if(this.sliceIndex == null) {   //No slicing
-            return 40;
-        }
-        else if(this.sliceIndex < 1) {  //Rear slice that should be in front of studs & bricks
-            return 310;
-        }
-        else {                          //Forward slice that should be behind bricks
-            return 29;
-        }
+            this.zModifier)
     }
 
     public setImageIndex(index : number) {
@@ -190,8 +179,6 @@ export default class Animat extends GameObject {
         const image = this.images[this.imageIndex];
         const widthSlice = size * (this.sliceIndex ?? 0);
         const oppoSize = this.isVert ? this.fullSize.x : this.fullSize.y;
-
-        debugger;
 
         ctx.drawImage(
             //Greater image

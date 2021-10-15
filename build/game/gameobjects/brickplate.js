@@ -7,7 +7,7 @@ export default class BrickPlate extends Brick {
     this.parent.pushGO(new Animat(this.engine, {
       ...params,
       subPosition: {x: 0, y: -25},
-      zIndex: this.zIndex,
+      zModifier: 40,
       images: [{name: "brick_plate_hot", offsetX: 0}],
       speed: 2,
       framesSize: 55,

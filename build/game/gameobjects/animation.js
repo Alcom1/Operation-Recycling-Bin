@@ -13,6 +13,7 @@ export default class Animat extends GameObject {
     this.isVert = params.isVert ?? false;
     this.framesSize = params.framesSize;
     this.gposOffset = params.gposOffset ?? {x: 0, y: 0};
+    this.zModifier = params.zModifier ?? 300;
     switch (params.images.length) {
       case 0:
         break;
@@ -61,16 +62,7 @@ export default class Animat extends GameObject {
     this.setZIndex();
   }
   setZIndex() {
-    this.zIndex = getZIndex(this.gpos, this.getSliceModifier());
-  }
-  getSliceModifier() {
-    if (this.sliceIndex == null) {
-      return 40;
-    } else if (this.sliceIndex < 1) {
-      return 310;
-    } else {
-      return 29;
-    }
+    this.zIndex = getZIndex(this.gpos, this.zModifier);
   }
   setImageIndex(index) {
     this.imageIndex = index;
@@ -88,7 +80,6 @@ export default class Animat extends GameObject {
     const image = this.images[this.imageIndex];
     const widthSlice = size * (this.sliceIndex ?? 0);
     const oppoSize = this.isVert ? this.fullSize.x : this.fullSize.y;
-    debugger;
     ctx.drawImage(image.image, widthSlice + image.offsetX + this.getAnimationOffset(false), this.getAnimationOffset(true), this.isVert ? oppoSize : size, this.isVert ? size : oppoSize, widthSlice, this.isVert ? 0 : GMULTY - this.fullSize.y, this.isVert ? oppoSize : size, this.isVert ? size : oppoSize);
   }
 }
