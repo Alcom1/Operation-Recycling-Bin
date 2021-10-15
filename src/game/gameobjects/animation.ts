@@ -1,6 +1,6 @@
 import Engine from "engine/engine";
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
-import { floor, getZIndex, GMULTY, OPPOSITE_DIRS } from "engine/utilities/math";
+import { floor, getZIndex, GMULTX, GMULTY, OPPOSITE_DIRS } from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 
 export interface OffsetImageExpandedParams {
@@ -68,6 +68,8 @@ export default class Animat extends GameObject {
         this.gposOffset = params.gposOffset ?? { x : 0, y : 0 }
         this.zModifier = params.zModifier ?? 300;
 
+        debugger;
+
         switch(params.images.length) {
 
             //No images (why?)
@@ -77,6 +79,7 @@ export default class Animat extends GameObject {
             //Single images
             case 1:
                 this.images[0] = this.getImage(params.images[0]);
+                break;
             
             //Pair of images with opposing directions
             case 2:
@@ -87,6 +90,7 @@ export default class Animat extends GameObject {
                         this.images[d] = this.getImage(params.images[index]);
                     }
                 });
+                break;
 
             //Many images
             default:

@@ -14,11 +14,13 @@ export default class Animat extends GameObject {
     this.framesSize = params.framesSize;
     this.gposOffset = params.gposOffset ?? {x: 0, y: 0};
     this.zModifier = params.zModifier ?? 300;
+    debugger;
     switch (params.images.length) {
       case 0:
         break;
       case 1:
         this.images[0] = this.getImage(params.images[0]);
+        break;
       case 2:
         this.imageIndex = 1;
         OPPOSITE_DIRS.forEach((d) => {
@@ -27,6 +29,7 @@ export default class Animat extends GameObject {
             this.images[d] = this.getImage(params.images[index]);
           }
         });
+        break;
       default:
         params.images.forEach((i) => this.images.push(this.getImage(i)));
     }

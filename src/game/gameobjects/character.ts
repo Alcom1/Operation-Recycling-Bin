@@ -154,6 +154,7 @@ export default class Character extends GameObject {
             s.isActive = i == index;
             s.resetSprite(this.gpos);
         }));
+        this.level.sortGO();
     }
 
     //Deactivate this gameObject
