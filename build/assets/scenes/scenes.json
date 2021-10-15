@@ -2142,7 +2142,7 @@
         }
       },
       {
-        "width": 3,
+        "width": 4,
         "color": "green",
         "name": "BrickNormal",
         "position": {
@@ -2165,15 +2165,6 @@
         "name": "BrickNormal",
         "position": {
           "x": 27,
-          "y": 6
-        }
-      },
-      {
-        "width": 1,
-        "color": "green",
-        "name": "BrickNormal",
-        "position": {
-          "x": 22,
           "y": 6
         }
       },
