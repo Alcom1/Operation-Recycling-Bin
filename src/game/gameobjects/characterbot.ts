@@ -26,11 +26,13 @@ const characterBotOverride = Object.freeze({
         images : [{ name : "char_bot_bin", offsetX : 0 }],
         framesSize : 126,
         gposOffset : { x : -1, y : 0},
+        zModifier : 150,
         frameCount : 12
     },{             //Bot explosion animation
         images : [{ name : "char_bot_explosion", offsetX : 0 }],
         framesSize : 200,
         gposOffset : { x : -3, y : 0},
+        zModifier : 600,
         frameCount : 16,
         isLoop : false
     }]
@@ -62,6 +64,7 @@ export default class CharacterBot extends Character {
                 images : i.images,
                 framesSize : i.framesSize,
                 gposOffset : i.gposOffset,
+                zModifier : i.zModifier,
                 frameCount : i.frameCount,
                 isLoop : i.isLoop
             } as AnimationParams));
