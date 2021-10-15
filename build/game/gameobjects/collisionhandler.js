@@ -6,14 +6,14 @@ export default class CollisionHandler extends GameObject {
     this.obstacles = this.engine.tag.get(["Brick"], "Level").filter((b) => !b.tags.includes("BrickNormal"));
   }
   getCollisionBoxes(min, max) {
-    return this.getCBsFromCharacters(min, max).concat(this.getCBsFromObstacles(min, max));
+    return this.getCBsFromCharacters(min, max).concat(this.getCBsFromObstacles(min, max, 1, 2));
   }
-  getCBsFromObstacles(min, max) {
+  getCBsFromObstacles(min, max, yUp, yDown) {
     const ret = [];
     this.obstacles.forEach((obstacle) => {
       const c = {
-        min: obstacle.gpos.getAdd({x: 0, y: -1}),
-        max: obstacle.gpos.getAdd({x: obstacle.width, y: 2})
+        min: obstacle.gpos.getAdd({x: 0, y: -yUp}),
+        max: obstacle.gpos.getAdd({x: obstacle.width, y: yDown})
       };
       if (colRectRectCorners(min, max, c.min, c.max)) {
         ret.push(c);

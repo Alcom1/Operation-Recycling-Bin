@@ -1,6 +1,6 @@
 import Character from "./character.js";
-import {BOUNDARY, bitStack, colRectRectSizes} from "../../engine/utilities/math.js";
-import Animation from "./animation.js";
+import {BOUNDARY, bitStack} from "../../engine/utilities/math.js";
+import Animat from "./animation.js";
 const characterBotOverride = Object.freeze({
   height: 4,
   speed: 2.5,
@@ -8,11 +8,22 @@ const characterBotOverride = Object.freeze({
     {name: "char_bot_left", offsetX: 36},
     {name: "char_bot_right", offsetX: 14}
   ],
-  imagesMisc: [
-    {name: "char_bot_bin", offsetX: 0}
-  ],
   frameCount: 10,
-  animsCount: 2
+  animsCount: 2,
+  animsMisc: [{
+    images: [{name: "char_bot_bin", offsetX: 0}],
+    framesSize: 126,
+    gposOffset: {x: -1, y: 0},
+    zModifier: 150,
+    frameCount: 12
+  }, {
+    images: [{name: "char_bot_explosion", offsetX: 0}],
+    framesSize: 200,
+    gposOffset: {x: -3, y: 0},
+    zModifier: 600,
+    frameCount: 16,
+    isLoop: false
+  }]
 });
 const cbc = Object.freeze({
   flor: bitStack([0, 7]),
@@ -26,46 +37,34 @@ export default class CharacterBot extends Character {
   constructor(engine2, params) {
     super(engine2, Object.assign(params, characterBotOverride));
     this.timer = 0;
-    this.bins = [];
-    var newIndex = this.spriteGroups.push([]) - 1;
-    this.spriteGroups[newIndex].push(new Animation(this.engine, {
-      ...params,
-      images: params.imagesMisc,
-      sliceIndex: 0,
-      frameWidth: 126,
-      gposOffset: {x: -1, y: 0},
-      frameCount: 12,
-      animsCount: 1,
-      speed: 1
-    }));
-    this.parent.pushGO(this.spriteGroups[newIndex][0]);
+    params.animsMisc.forEach((i) => {
+      var newIndex = this.spriteGroups.push([]) - 1;
+      this.spriteGroups[newIndex].push(new Animat(this.engine, {
+        images: i.images,
+        framesSize: i.framesSize,
+        gposOffset: i.gposOffset,
+        zModifier: i.zModifier,
+        frameCount: i.frameCount,
+        isLoop: i.isLoop
+      }));
+      this.parent.pushGO(this.spriteGroups[newIndex][0]);
+    });
   }
-  init(ctx, scenes) {
-    super.init(ctx, scenes);
-    this.bins = this.engine.tag.get("CharacterBin", "Level");
-  }
-  handleUniqueMovmeent(dt) {
+  handleUniqueMovment(dt) {
     this.timer += dt;
     if (this.timer > 1) {
-      this.timer = 0;
-      this.setCurrentGroup(0);
+      switch (this.spriteGroupIndex) {
+        case 1:
+          this.timer = 0;
+          this.setCurrentGroup(0);
+          break;
+        default:
+          this.isActive = false;
+          break;
+      }
     }
   }
   handleCollision() {
-    this.bins.forEach((b) => {
-      if (b.isActive && colRectRectSizes(this.gpos, {x: 2, y: this.height}, b.gpos.getAdd({x: 0, y: 1}), {x: 2, y: b.height - 1})) {
-        var ary = this.gpos.y;
-        var arh = this.height;
-        var bry = b.gpos.y;
-        var brh = b.height;
-        var aminy = ary;
-        var amaxy = ary + arh;
-        var bminy = bry;
-        var bmaxy = bry + brh;
-        b.deactivate();
-        this.setCurrentGroup(1);
-      }
-    });
     let cbm = this.brickHandler.checkCollisionRange(this.gpos.getSub({x: this.move.x > 0 ? 1 : 0, y: 5}), 5, 15, 7, this.move.x);
     if (this.gpos.x - 1 < BOUNDARY.minx || this.gpos.x + 1 > BOUNDARY.maxx) {
       this.reverse();
@@ -86,6 +85,24 @@ export default class CharacterBot extends Character {
       } else {
         this.reverse();
       }
+    }
+  }
+  getColliders() {
+    return [{
+      mask: 7,
+      min: this.gpos.getAdd({x: -1, y: 1 - this.height}),
+      max: this.gpos.getAdd({x: 1, y: 1})
+    }, {
+      mask: 0,
+      min: this.gpos.getAdd({x: -1, y: 1 - this.height}),
+      max: this.gpos.getAdd({x: 1, y: 1})
+    }];
+  }
+  resolveCollision(mask) {
+    if (mask & 2) {
+      this.setCurrentGroup(1);
+    } else if (mask & 4 && this.isNormalMovment) {
+      this.setCurrentGroup(2);
     }
   }
 }

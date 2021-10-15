@@ -1,11 +1,11 @@
 import Engine from "engine/engine";
 import Scene from "engine/scene/scene";
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
-import { GMULTX } from "engine/utilities/math";
+import { getZIndex, GMULTX, GMULTY } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 import BrickHandler from "./brickhandler";
 import Brick from "./bricknormal";
-import Animation, { OffsetImageParams, AnimationParams } from "./animation";
+import Animat, { OffsetImageParams, AnimationParams } from "./animation";
 
 export interface CharacterParams extends GameObjectParams {
     height? : number;
@@ -27,8 +27,8 @@ export default class Character extends GameObject {
     protected checkCollision: boolean;
 
     protected spriteGroupIndex = 0;
-    protected spriteGroups: Animation[][] = [[]];
-    protected get spriteGroupCurr() : Animation[] { return this.spriteGroups[this.spriteGroupIndex] }
+    protected spriteGroups: Animat[][] = [[]];
+    protected get spriteGroupCurr() : Animat[] { return this.spriteGroups[this.spriteGroupIndex] }
     protected get isNormalMovment() : boolean { return this.spriteGroupIndex == 0 }
 
     constructor(engine: Engine, params: CharacterParams) {
@@ -43,18 +43,16 @@ export default class Character extends GameObject {
 
         //Spawn 3 animations, the sprite is sliced vertically into 2x wide segments for proper z-indexing
         for(let i = -1; i <= 1; i ++) {
-
-            //Generate segment
-            const segment = new Animation(this.engine, {
-                ...params, 
-                sliceIndex : i,
-                frameWidth : GMULTX * 2,
-                gposOffset : { x : -1, y : 0}
-            } as AnimationParams);
-            this.spriteGroupCurr.push(segment);
             
-            // Add segment game object to scene
-            this.parent.pushGO(segment);
+            // Add segment to scene and this character
+            this.spriteGroupCurr.push(this.parent.pushGO(new Animat(this.engine, {
+                    ...params, 
+                    isLoop : false,                 //Remove looping to prevent stuttering. Loops are handled manually
+                    zModifier : i < 1 ? 300 : 29,   //Z-modifier for different slices
+                    sliceIndex : i,                 //This animation is sliced
+                    framesSize : GMULTX * 2,        //2x wide slices
+                    gposOffset : { x : -1, y : 0 }  //Move back by 1. Animations are centered around this character
+                } as AnimationParams)) as Animat);
         }
     }
 
@@ -79,7 +77,7 @@ export default class Character extends GameObject {
             this.handleNormalMovement(dt);
         }
         else {
-            this.handleUniqueMovmeent(dt);
+            this.handleUniqueMovment(dt);
         }
 
         //Handle collision, set zIndices for new position
@@ -88,7 +86,7 @@ export default class Character extends GameObject {
             this.handleCollision();
             this.handleBricks();
 
-            this.spriteGroupCurr.forEach(s => s.updateSprite(this.gpos));
+            this.spriteGroupCurr.forEach(s => s.resetSprite(this.gpos));
             this.level.sortGO();
 
             this.checkCollision = false;
@@ -114,7 +112,7 @@ export default class Character extends GameObject {
     }
 
     //Do nothing - override
-    protected handleUniqueMovmeent(dt: number) {
+    protected handleUniqueMovment(dt: number) {
 
     }
 
@@ -149,12 +147,12 @@ export default class Character extends GameObject {
 
     //Set current & active group based on the group index
     protected setCurrentGroup(index? : number) {
-
+        
         index = index ?? this.spriteGroupIndex;
         this.spriteGroupIndex = index;
         this.spriteGroups.forEach((sg, i) => sg.forEach(s => {
             s.isActive = i == index;
-            s.updateSprite(this.gpos);
+            s.resetSprite(this.gpos);
         }));
     }
 

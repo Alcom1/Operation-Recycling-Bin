@@ -1,7 +1,7 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
 import {GMULTX} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
-import Animation from "./animation.js";
+import Animat from "./animation.js";
 export default class Character extends GameObject {
   constructor(engine2, params) {
     super(engine2, params);
@@ -14,14 +14,14 @@ export default class Character extends GameObject {
     this._height = params.height ?? 2;
     this.checkCollision = true;
     for (let i = -1; i <= 1; i++) {
-      const segment = new Animation(this.engine, {
+      this.spriteGroupCurr.push(this.parent.pushGO(new Animat(this.engine, {
         ...params,
+        isLoop: false,
+        zModifier: i < 1 ? 300 : 29,
         sliceIndex: i,
-        frameWidth: GMULTX * 2,
+        framesSize: GMULTX * 2,
         gposOffset: {x: -1, y: 0}
-      });
-      this.spriteGroupCurr.push(segment);
-      this.parent.pushGO(segment);
+      })));
     }
   }
   get height() {
@@ -45,12 +45,12 @@ export default class Character extends GameObject {
     if (this.isNormalMovment) {
       this.handleNormalMovement(dt);
     } else {
-      this.handleUniqueMovmeent(dt);
+      this.handleUniqueMovment(dt);
     }
     if (this.checkCollision) {
       this.handleCollision();
       this.handleBricks();
-      this.spriteGroupCurr.forEach((s) => s.updateSprite(this.gpos));
+      this.spriteGroupCurr.forEach((s) => s.resetSprite(this.gpos));
       this.level.sortGO();
       this.checkCollision = false;
     }
@@ -64,7 +64,7 @@ export default class Character extends GameObject {
       this.checkCollision = true;
     }
   }
-  handleUniqueMovmeent(dt) {
+  handleUniqueMovment(dt) {
   }
   handleBricks() {
     this.underBricks.forEach((b) => b.pressure -= 1);
@@ -84,7 +84,7 @@ export default class Character extends GameObject {
     this.spriteGroupIndex = index;
     this.spriteGroups.forEach((sg, i) => sg.forEach((s) => {
       s.isActive = i == index;
-      s.updateSprite(this.gpos);
+      s.resetSprite(this.gpos);
     }));
   }
   deactivate() {

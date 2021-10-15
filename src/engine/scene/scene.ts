@@ -47,18 +47,17 @@ export default class Scene {
                 this.gameObjects.forEach(go =>  go.init(ctx, scenes));
             ctx.restore();
 
+            this.engine.collision.pushGOs(this.name, this.gameObjects);
+
             this.initialized = true;
         }
     }
 
-    public clear() {
-        this.gameObjects = []
-    }
-
-    public pushGO(gameObject: GameObject) {
+    public pushGO(gameObject: GameObject) : GameObject {
         // Establish parent scene before pushing
         gameObject.parent = this;
         this.gameObjects.push(gameObject);
+        return gameObject;
     }
 
     public sortGO() {

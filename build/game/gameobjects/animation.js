@@ -1,6 +1,6 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
 import {floor, getZIndex, GMULTY, OPPOSITE_DIRS} from "../../engine/utilities/math.js";
-export default class Animation extends GameObject {
+export default class Animat extends GameObject {
   constructor(engine2, params) {
     super(engine2, params);
     this.images = [];
@@ -9,8 +9,11 @@ export default class Animation extends GameObject {
     this.imageIndex = 0;
     this.animsIndex = 0;
     this.speed = params.speed ?? 1;
-    this.frameWidth = params.frameWidth;
+    this.isLoop = params.isLoop ?? true;
+    this.isVert = params.isVert ?? false;
+    this.framesSize = params.framesSize;
     this.gposOffset = params.gposOffset ?? {x: 0, y: 0};
+    this.zModifier = params.zModifier ?? 300;
     switch (params.images.length) {
       case 0:
         break;
@@ -28,7 +31,7 @@ export default class Animation extends GameObject {
         params.images.forEach((i) => this.images.push(this.getImage(i)));
     }
     this.frameCount = params.frameCount;
-    this.animsCount = params.animsCount;
+    this.animsCount = params.animsCount ?? 1;
     this.sliceIndex = params.sliceIndex;
     this.setZIndex();
   }
@@ -40,29 +43,44 @@ export default class Animation extends GameObject {
   }
   init(ctx) {
     this.fullSize = {
-      x: this.images[this.imageIndex].image.width / this.frameCount,
+      x: this.images[this.imageIndex].image.width,
       y: this.images[this.imageIndex].image.height
     };
   }
   update(dt) {
-    this.timer += dt;
+    if (this.speed > 0) {
+      this.timer += dt;
+      if (this.isLoop && this.timer > 1 / this.speed) {
+        this.timer -= 1 / this.speed;
+      }
+    }
   }
-  updateSprite(gpos) {
+  resetSprite(gpos) {
     this.timer = 0;
     this.gpos = gpos.getAdd(this.gposOffset);
     this.animsIndex = ++this.animsIndex % this.animsCount;
     this.setZIndex();
   }
   setZIndex() {
-    this.zIndex = getZIndex(this.gpos, 310 - (this.sliceIndex < 1 ? 0 : 295));
+    this.zIndex = getZIndex(this.gpos, this.zModifier);
   }
   setImageIndex(index) {
     this.imageIndex = index;
   }
   draw(ctx) {
-    const width = this.frameWidth ?? 0;
+    const size = this.framesSize ?? 0;
     const image = this.images[this.imageIndex];
-    ctx.drawImage(image.image, width * this.sliceIndex + image.offsetX + floor((this.animsIndex + Math.min(this.timer * this.speed, 1 - Number.EPSILON)) * this.fullSize.x * this.frameCount / this.animsCount, this.fullSize.x), 0, width, this.fullSize.y, width * this.sliceIndex, GMULTY - this.fullSize.y, width, this.fullSize.y);
+    const widthSlice = size * (this.sliceIndex ?? 0);
+    const oppoSize = this.isVert ? this.fullSize.x : this.fullSize.y;
+    ctx.drawImage(image.image, widthSlice + image.offsetX + this.getAnimationOffset(false), this.getAnimationOffset(true), this.isVert ? oppoSize : size, this.isVert ? size : oppoSize, widthSlice, this.isVert ? 0 : GMULTY - this.fullSize.y, this.isVert ? oppoSize : size, this.isVert ? size : oppoSize);
+  }
+  getAnimationOffset(checkVert) {
+    if (checkVert == this.isVert) {
+      const fullSize = this.isVert ? this.fullSize.y : this.fullSize.x;
+      return floor((this.animsIndex + Math.min(this.timer * this.speed, 1 - Number.EPSILON)) * fullSize / this.animsCount, fullSize / this.frameCount);
+    } else {
+      return 0;
+    }
   }
 }
 //# sourceMappingURL=animation.js.map

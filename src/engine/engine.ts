@@ -1,5 +1,6 @@
 import GameObject, {GameObjectParams} from "./gameobjects/gameobject";
 import BakerModule from "./modules/baker";
+import CollisionModule from "./modules/collision";
 import LibraryModule from "./modules/library";
 import MouseModule from "./modules/mouse";
 import TagModule from "./modules/tag";
@@ -41,6 +42,7 @@ export default class Engine {
 
     //Modules
     public baker: BakerModule;
+    public collision: CollisionModule;
     public library: LibraryModule;
     public mouse: MouseModule;
     public tag: TagModule;
@@ -48,7 +50,8 @@ export default class Engine {
     constructor(
         element: HTMLCanvasElement,
         scenePathName: string,
-        startScenes: string,
+        sceneSource: string,
+        startScenes: string[],
         gameObjectTypes: typeof GameObject[],
         private width: number = 1296,
         private height: number = 864
@@ -67,6 +70,7 @@ export default class Engine {
 
         // Set up modules
         this.baker = new BakerModule(this.canvas);
+        this.collision = new CollisionModule();
         this.library = new LibraryModule();
         this.mouse = new MouseModule(this.canvas);
         this.mouse.setResolution(this.canvas.width, this.canvas.height);
@@ -75,10 +79,11 @@ export default class Engine {
         // Register available game object types
         this.registerGameObjects(gameObjectTypes);
 
-        this.pushSceneNames = ["LevelInterface", "LEVEL_53"];
+        // Establish starting scenes
+        this.pushSceneNames = startScenes;
 
         // Load each starting & loading scene
-        this.loadScenes(startScenes, this.scenesActive).finally(() => { this.frame() });
+        this.loadScenes(sceneSource, this.scenesActive).finally(() => { this.frame() });
     }
 
     /** Update loop */
@@ -126,6 +131,7 @@ export default class Engine {
 
     /** Initialize all scenes */
     private initScenes(): void {
+        this.collision.update();
         this.scenesLoading.forEach(s => s.init(this.ctx, this.scenesActive));
         this.scenesActive.forEach(s => s.init(this.ctx, this.scenesActive));
     }
@@ -178,6 +184,7 @@ export default class Engine {
             // Clear scene names from core
             this.scenesActive = this.scenesActive.filter(s => !this.killSceneNames.includes(s.name)); 
             this.tag.clear(this.killSceneNames);
+            this.collision.clear(this.killSceneNames);
             this.killSceneNames = [];
         }
     }

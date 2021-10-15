@@ -7,7 +7,6 @@ import ButtonScene from "./gameobjects/buttonscene.js";
 import Character from "./gameobjects/character.js";
 import CharacterBin from "./gameobjects/characterbin.js";
 import CharacterBot from "./gameobjects/characterbot.js";
-import CollisionHandler from "./gameobjects/collisionhandler.js";
 import Counter from "./gameobjects/counter.js";
 import Cursor from "./gameobjects/cursor.js";
 import CursorIcon from "./gameobjects/cursoricon.js";
@@ -20,7 +19,7 @@ window.onload = function() {
   const canvas = document.querySelector("canvas");
   if (!canvas)
     throw new Error("Can't get canvas");
-  new Engine(canvas, "assets/scenes/", "scenes", [
+  new Engine(canvas, "assets/scenes/", "scenes", ["LevelInterface", "LEVEL_05"], [
     BrickHandler,
     BrickPlate,
     BrickNormal,
@@ -29,7 +28,6 @@ window.onload = function() {
     Character,
     CharacterBot,
     CharacterBin,
-    CollisionHandler,
     Counter,
     Cursor,
     CursorIcon,

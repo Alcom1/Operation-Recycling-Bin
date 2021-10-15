@@ -17,6 +17,11 @@ export default class GameObject {
   hasTag(tag) {
     return this.tags.some((t) => t === tag);
   }
+  getColliders() {
+    return [];
+  }
+  resolveCollision(mask) {
+  }
   update(dt) {
   }
   draw(ctx) {

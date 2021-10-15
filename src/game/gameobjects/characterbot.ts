@@ -2,25 +2,43 @@ import Engine from "engine/engine";
 import Character, { CharacterParams } from "./character";
 import { BOUNDARY, GMULTX, GMULTY, bitStack, colRectRectSizes} from "engine/utilities/math";
 import Scene from "engine/scene/scene";
-import Animation, { OffsetImageParams, AnimationParams } from "./animation";
+import Animat, { AnimationParams } from "./animation";
 import CharacterBin from "./characterbin";
+import { Collider } from "engine/modules/collision";
 
 export interface CharacterBotParams extends CharacterParams {
-    imagesMisc : OffsetImageParams[];
+    animsMisc : AnimationParams[];
 }
 
+//Bot parameters
 const characterBotOverride = Object.freeze({
-    height: 4,
-    speed : 2.5,
-    images : [
+    //Main parameters
+    height: 4,      //Bot is this tall
+    speed : 2.5,    //Bot moves fast
+    images : [      //Bot has left & right animations
         { name : "char_bot_left", offsetX : 36 },
         { name : "char_bot_right", offsetX : 14}],
-    imagesMisc : [
-        { name : "char_bot_bin", offsetX : 0 }],
     frameCount : 10,
-    animsCount : 2
+    animsCount : 2,
+
+    //Misc animation parameters
+    animsMisc : [{ //Bot-bin interaction animation
+        images : [{ name : "char_bot_bin", offsetX : 0 }],
+        framesSize : 126,
+        gposOffset : { x : -1, y : 0},
+        zModifier : 150,
+        frameCount : 12
+    },{             //Bot explosion animation
+        images : [{ name : "char_bot_explosion", offsetX : 0 }],
+        framesSize : 200,
+        gposOffset : { x : -3, y : 0},
+        zModifier : 600,
+        frameCount : 16,
+        isLoop : false
+    }]
 });
 
+//Collision bitmasks for bot-brick collisions
 const cbc = Object.freeze({
     flor : bitStack([0, 7]),
     down : bitStack([1, 8]),
@@ -33,65 +51,51 @@ const cbc = Object.freeze({
 export default class CharacterBot extends Character {
 
     private timer : number = 0;
-    private bins : CharacterBin[] = [];
 
     constructor(engine: Engine, params: CharacterBotParams) {
         super(engine, Object.assign(params, characterBotOverride));
 
-        var newIndex = this.spriteGroups.push([]) - 1;
-        this.spriteGroups[newIndex].push(new Animation(this.engine, {
-            ...params, 
-            images : params.imagesMisc,
-            sliceIndex : 0,
-            frameWidth : 126,
-            gposOffset : { x : -1, y : 0},
-            frameCount : 12,
-            animsCount : 1,
-            speed : 1
-        } as AnimationParams));
-        this.parent.pushGO(this.spriteGroups[newIndex][0]);
+        //Setup miscellaneous animations.
+        params.animsMisc.forEach(i => {
+
+            //Build a new animation, store it here and in the scene
+            var newIndex = this.spriteGroups.push([]) - 1;
+            this.spriteGroups[newIndex].push(new Animat(this.engine, {
+                images : i.images,
+                framesSize : i.framesSize,
+                gposOffset : i.gposOffset,
+                zModifier : i.zModifier,
+                frameCount : i.frameCount,
+                isLoop : i.isLoop
+            } as AnimationParams));
+            this.parent.pushGO(this.spriteGroups[newIndex][0]);
+        });
     }
 
-    public init(ctx: CanvasRenderingContext2D, scenes: Scene[]): void {
-        super.init(ctx, scenes);
-
-        this.bins = this.engine.tag.get("CharacterBin", "Level") as Character[];
-    }
-
-    protected handleUniqueMovmeent(dt : number) {
+    //Special movement
+    protected handleUniqueMovment(dt : number) {
 
         this.timer += dt;
 
+        //Go to new state. Every special animation is 1 second?
         if(this.timer > 1) {
-            this.timer = 0;
-            this.setCurrentGroup(0);
+
+            switch(this.spriteGroupIndex) {
+                
+                case 1 :
+                    this.timer = 0;
+                    this.setCurrentGroup(0);
+                    break;
+
+                default :
+                    this.isActive = false;
+                    break;
+            }
         }
     }
 
+    //Check and resolve brick collisions
     protected handleCollision() {
-
-        this.bins.forEach(b => {
-            if (b.isActive && 
-                colRectRectSizes(
-                    this.gpos,
-                    {x : 2, y : this.height},
-                    b.gpos.getAdd({x : 0, y : 1}), 
-                    {x : 2, y : b.height - 1})) {
-                
-                var ary = this.gpos.y;
-                var arh = this.height;
-                var bry = b.gpos.y;
-                var brh = b.height;
-
-                var aminy = ary;
-                var amaxy = ary + arh;
-                var bminy = bry;
-                var bmaxy = bry + brh;
-
-                b.deactivate();
-                this.setCurrentGroup(1);
-            }
-        })
 
         //Collision bitmask
         let cbm = this.brickHandler.checkCollisionRange(
@@ -108,8 +112,6 @@ export default class CharacterBot extends Character {
         //         qq += i + " ";
         //     }
         // }
-
-        // console.log(qq);
         
         //WALL BOUNDARY
         if(
@@ -151,6 +153,31 @@ export default class CharacterBot extends Character {
             else {
                 this.reverse();
             }
+        }
+    }
+
+    //Colliders for non-brick collisions
+    public getColliders() : Collider[] {
+        
+        return [{ 
+            mask : 0b111,   //All collisions
+            min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
+            max : this.gpos.getAdd({ x :  1, y : 1}) 
+        },{ 
+            mask : 0,       //Passive
+            min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
+            max : this.gpos.getAdd({ x :  1, y : 1}) 
+        }];
+    }
+
+    //Explode
+    public resolveCollision(mask : number) {
+
+        if (mask & 0b010) {
+            this.setCurrentGroup(1);
+        }
+        else if (mask & 0b100 && this.isNormalMovment) {
+            this.setCurrentGroup(2);
         }
     }
 }
