@@ -14,7 +14,6 @@ export default class Animat extends GameObject {
     this.framesSize = params.framesSize;
     this.gposOffset = params.gposOffset ?? {x: 0, y: 0};
     this.zModifier = params.zModifier ?? 300;
-    debugger;
     switch (params.images.length) {
       case 0:
         break;

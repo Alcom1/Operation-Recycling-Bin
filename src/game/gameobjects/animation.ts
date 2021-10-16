@@ -68,8 +68,6 @@ export default class Animat extends GameObject {
         this.gposOffset = params.gposOffset ?? { x : 0, y : 0 }
         this.zModifier = params.zModifier ?? 300;
 
-        debugger;
-
         switch(params.images.length) {
 
             //No images (why?)

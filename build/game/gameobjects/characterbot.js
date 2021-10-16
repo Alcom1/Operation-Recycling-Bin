@@ -38,7 +38,6 @@ export default class CharacterBot extends Character {
     super(engine2, Object.assign(params, characterBotOverride));
     this.timer = 0;
     params.animsMisc.forEach((i) => {
-      debugger;
       var newIndex = this.spriteGroups.push([]) - 1;
       this.spriteGroups[newIndex].push(new Animat(this.engine, {
         ...params,
@@ -51,7 +50,6 @@ export default class CharacterBot extends Character {
         animsCount: i.animsCount,
         isLoop: i.isLoop
       }));
-      console.log(this.spriteGroups[newIndex][0]);
       this.parent.pushGO(this.spriteGroups[newIndex][0]);
     });
   }

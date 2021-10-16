@@ -58,8 +58,6 @@ export default class CharacterBot extends Character {
         //Setup miscellaneous animations.
         params.animsMisc.forEach(i => {
 
-            debugger;
-
             //Build a new animation, store it here and in the scene
             var newIndex = this.spriteGroups.push([]) - 1;
             this.spriteGroups[newIndex].push(new Animat(this.engine, {
@@ -73,7 +71,6 @@ export default class CharacterBot extends Character {
                 animsCount : i.animsCount,
                 isLoop : i.isLoop
             } as AnimationParams));
-            console.log(this.spriteGroups[newIndex][0]);
             this.parent.pushGO(this.spriteGroups[newIndex][0]);
         });
     }
