@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["C:\\Users\\Alcom\\Desktop\\Dev\\Git\\Operation Recycling Bin\\src\\game\\gameobjects\\brickplatefan.ts"],
+  "sourcesContent": ["import Engine from \"engine/engine\";\r\nimport Animat, { AnimationParams } from \"./animation\";\r\nimport BrickPlate, { BrickPlateParams } from \"./brickplate\";\r\n\r\nconst brickPlateFanOverride = Object.freeze({\r\n    images : [\"brick_plate\", \"brick_plate_fan\"]\r\n});\r\n\r\nexport default class BrickPlateFan extends BrickPlate {\r\n\r\n    constructor(engine: Engine, params: BrickPlateParams) {\r\n        super(engine, Object.assign(params, brickPlateFanOverride));\r\n    }\r\n}"],
+  "mappings": "AAEA;AAEA,MAAM,wBAAwB,OAAO,OAAO;AAAA,EACxC,QAAS,CAAC,eAAe;AAAA;AAL7B,2CAQ2C;AAAA,EAEvC;AACI,UAAM,SAAQ,OAAO,OAAO,QAAQ;AAAA;AAAA;",
+  "names": []
+}

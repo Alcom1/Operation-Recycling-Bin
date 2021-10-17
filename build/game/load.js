@@ -1,6 +1,5 @@
 import Engine from "../engine/engine.js";
 import BrickHandler from "./gameobjects/brickhandler.js";
-import BrickPlate from "./gameobjects/brickplate.js";
 import Stud from "./gameobjects/stud.js";
 import Button from "./gameobjects/button.js";
 import ButtonScene from "./gameobjects/buttonscene.js";
@@ -15,13 +14,16 @@ import LevelSequence from "./gameobjects/levelsequence.js";
 import MobileIndicator from "./gameobjects/mobileindicator.js";
 import Sprite from "./gameobjects/sprite.js";
 import BrickNormal from "./gameobjects/bricknormal.js";
+import BrickPlateHot from "./gameobjects/brickplatehot.js";
+import BrickPlateFan from "./gameobjects/brickplatefan.js";
 window.onload = function() {
   const canvas = document.querySelector("canvas");
   if (!canvas)
     throw new Error("Can't get canvas");
-  new Engine(canvas, "assets/scenes/", "scenes", ["LevelInterface", "LEVEL_05"], [
+  new Engine(canvas, "assets/scenes/", "scenes", ["LevelInterface", "LEVEL_26"], [
     BrickHandler,
-    BrickPlate,
+    BrickPlateFan,
+    BrickPlateHot,
     BrickNormal,
     Button,
     ButtonScene,

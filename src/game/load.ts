@@ -1,6 +1,5 @@
 import Engine from "engine/engine";
 import BrickHandler from "game/gameobjects/brickhandler";
-import BrickPlate from "./gameobjects/brickplate";
 import Stud from "./gameobjects/stud";
 import Button from "./gameobjects/button";
 import ButtonScene from "./gameobjects/buttonscene";
@@ -15,6 +14,8 @@ import LevelSequence from "./gameobjects/levelsequence";
 import MobileIndicator from "./gameobjects/mobileindicator";
 import Sprite from "./gameobjects/sprite";
 import BrickNormal from "game/gameobjects/bricknormal";
+import BrickPlateHot from "./gameobjects/brickplatehot";
+import BrickPlateFan from "./gameobjects/brickplatefan";
 
 //Load
 window.onload = function() {
@@ -25,10 +26,11 @@ window.onload = function() {
         canvas, 
         "assets/scenes/",
         "scenes",
-        ["LevelInterface", "LEVEL_05"],
+        ["LevelInterface", "LEVEL_26"],
         [
             BrickHandler,
-            BrickPlate,
+            BrickPlateFan,
+            BrickPlateHot,
             BrickNormal,
             Button,
             ButtonScene,
