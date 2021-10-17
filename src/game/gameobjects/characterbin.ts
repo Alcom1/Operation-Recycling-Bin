@@ -5,7 +5,7 @@ import Character, { CharacterParams } from "./character";
 const characterBinOverride = Object.freeze({
     height: 3,                                      //Bins are this tall
     speed : 0,                                      //Bins aren't animated
-    images : [{ name : "char_bin", offsetX : 0}],   //Bin image
+    images : [{ name : "char_bin", offsetX : -9}],   //Bin image
     frameCount : 1,
     animsCount : 1
 });
