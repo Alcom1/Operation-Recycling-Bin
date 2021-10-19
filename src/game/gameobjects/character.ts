@@ -26,10 +26,10 @@ export default class Character extends GameObject {
     private underBricks: Brick[] = [];
     protected checkCollision: boolean;
 
-    protected spriteGroupIndex = 0;
-    protected spriteGroups: Animat[][] = [[]];
-    protected get spriteGroupCurr() : Animat[] { return this.spriteGroups[this.spriteGroupIndex] }
-    protected get isNormalMovment() : boolean { return this.spriteGroupIndex == 0 }
+    protected animatGroupsIndex = 0;
+    protected animatGroups: Animat[][] = [[]];
+    protected get animatGroupCurr() : Animat[] { return this.animatGroups[this.animatGroupsIndex] }
+    protected get isNormalMovment() : boolean { return this.animatGroupsIndex == 0 }
 
     constructor(engine: Engine, params: CharacterParams) {
         super(engine, params);
@@ -45,7 +45,7 @@ export default class Character extends GameObject {
         for(let i = -1; i <= 1; i ++) {
             
             // Add segment to scene and this character
-            this.spriteGroupCurr.push(this.parent.pushGO(new Animat(this.engine, {
+            this.animatGroupCurr.push(this.parent.pushGO(new Animat(this.engine, {
                     ...params, 
                     isLoop : false,                 //Remove looping to prevent stuttering. Loops are handled manually
                     zModifier : i < 1 ? 300 : 29,   //Z-modifier for different slices
@@ -86,7 +86,7 @@ export default class Character extends GameObject {
             this.handleCollision();
             this.handleBricks();
 
-            this.spriteGroupCurr.forEach(s => s.resetSprite(this.gpos));
+            this.animatGroupCurr.forEach(s => s.resetSprite(this.gpos));
             this.level.sortGO();
 
             this.checkCollision = false;
@@ -142,17 +142,19 @@ export default class Character extends GameObject {
 
         this.move.x *= -1;
         this.gpos.x += this.move.x;
-        this.spriteGroups[0].forEach(x => x.setImageIndex(this.move.x));
+        this.animatGroups[0].forEach(x => x.setImageIndex(this.move.x));
     }
 
     //Set current & active group based on the group index
     protected setCurrentGroup(index? : number) {
         
-        index = index ?? this.spriteGroupIndex;
-        this.spriteGroupIndex = index;
-        this.spriteGroups.forEach((sg, i) => sg.forEach(s => {
+        index = index ?? this.animatGroupsIndex;
+        this.animatGroupsIndex = index;
+        this.animatGroups.forEach((sg, i) => sg.forEach(s => {
             s.isActive = i == index;
-            s.resetSprite(this.gpos);
+            s.spos = { x : 0, y : 0} as Vect;   //Reset subposition
+            s.resetSprite(this.gpos);           //Make sure all sprites are in the character's position after set
+            s.unPause();                        //Make sure no sprites are paused after set
         }));
         this.level.sortGO();
     }
@@ -160,7 +162,7 @@ export default class Character extends GameObject {
     //Deactivate this gameObject
     public deactivate() {
         this.isActive = false;
-        this.spriteGroups.forEach(sg => sg.forEach(s => s.isActive = false));
+        this.animatGroups.forEach(sg => sg.forEach(s => s.isActive = false));
         this.underBricks.forEach(b => b.pressure -= 1);
         this.underBricks = [];
     }

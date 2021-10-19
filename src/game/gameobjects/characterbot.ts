@@ -1,13 +1,17 @@
 import Engine from "engine/engine";
 import Character, { CharacterParams } from "./character";
-import { BOUNDARY, GMULTX, GMULTY, bitStack, colRectRectSizes} from "engine/utilities/math";
+import { BOUNDARY, bitStack, colRectRectSizes, GMULTY, GMULTX} from "engine/utilities/math";
 import Scene from "engine/scene/scene";
 import Animat, { AnimationParams } from "./animation";
 import CharacterBin from "./characterbin";
 import { Collider } from "engine/modules/collision";
 
 export interface CharacterBotParams extends CharacterParams {
-    animsMisc : AnimationParams[];
+    animsMisc : AnimationInputParams[];
+}
+
+export interface AnimationInputParams extends AnimationParams {
+    isSliced? : boolean;
 }
 
 //Bot parameters
@@ -35,6 +39,17 @@ const characterBotOverride = Object.freeze({
         zModifier : 600,
         frameCount : 16,
         isLoop : false
+    },{             //Bot up animation
+        images : [  //Flying has left & right animations
+            { name : "char_bot_fly_left", offsetX : 36 },
+            { name : "char_bot_fly_right", offsetX : 14 }],
+        speed : 2.5,    //Bot moves fast
+        gposOffset : { x : -1, y : 0},
+        zModifier : 600,
+        frameCount : 10,
+        animsCount : 2,
+        isLoop : true,
+        isSliced : true
     }]
 });
 
@@ -51,27 +66,34 @@ const cbc = Object.freeze({
 export default class CharacterBot extends Character {
 
     private timer : number = 0;
+    protected get isNormalMovment() : boolean { return this.animatGroupsIndex == 0 }
 
     constructor(engine: Engine, params: CharacterBotParams) {
         super(engine, Object.assign(params, characterBotOverride));
 
         //Setup miscellaneous animations.
-        params.animsMisc.forEach(i => {
+        params.animsMisc.forEach(m => {
 
             //Build a new animation, store it here and in the scene
-            var newIndex = this.spriteGroups.push([]) - 1;
-            this.spriteGroups[newIndex].push(new Animat(this.engine, {
-                ...params,
-                speed : i.speed,
-                images : i.images,
-                framesSize : i.framesSize,
-                gposOffset : i.gposOffset,
-                zModifier : i.zModifier,
-                frameCount : i.frameCount,
-                animsCount : i.animsCount,
-                isLoop : i.isLoop
-            } as AnimationParams));
-            this.parent.pushGO(this.spriteGroups[newIndex][0]);
+            var newIndex = this.animatGroups.push([]) - 1;
+
+            //3 slices if sliced, 1 otherwise
+            for(let i = -1; i <= (m.isSliced ? 1 : -1); i ++) {
+
+                this.animatGroups[newIndex].push(new Animat(this.engine, {
+                    ...params,
+                    speed :      m.speed,
+                    images :     m.images,
+                    sliceIndex : m.isSliced ? i : null,
+                    framesSize : m.isSliced ? GMULTX * 2 : m.framesSize,
+                    gposOffset : m.gposOffset,
+                    zModifier :  m.isSliced ? (i < 1 ? 300 : 29) : m.zModifier,
+                    frameCount : m.frameCount,
+                    animsCount : m.animsCount,
+                    isLoop :     m.isLoop
+                } as AnimationParams));
+            }
+            this.animatGroups[newIndex].forEach(a => this.parent.pushGO(a));
         });
     }
 
@@ -80,14 +102,42 @@ export default class CharacterBot extends Character {
 
         this.timer += dt;
 
-        //Go to new state. Every special animation is 1 second?
-        if(this.timer > 1) {
+        switch(this.animatGroupsIndex) {
 
-            switch(this.spriteGroupIndex) {
+            case 3 : 
+                this.spos.y -= dt * 400;
+        
+                if(this.getCollisionUpward()) {
+        
+                    if(this.spos.y < -GMULTY) {
+        
+                        this.spos.y += GMULTY;
+                        this.gpos.y -= 1;
+                        this.animatGroupCurr.forEach(a => a.gpos.y -= 1);
+                    }
+        
+                    this.animatGroupCurr.forEach(a => a.spos = this.spos);
+                }
+                else {
+                    this.spos.y = 0;
+                    this.animatGroupCurr.forEach(a => a.spos.y = 0);
+                }
+                break;
+        }
+
+        //Go to new state. Every special animation is 1 second?
+        if(this.timer > this.animatGroupCurr[0].length) {
+
+            switch(this.animatGroupsIndex) {
                 
                 case 1 :
                     this.timer = 0;
                     this.setCurrentGroup(0);
+                    break;
+
+                case 3 :
+                    this.timer = 0;
+                    this.animatGroupCurr.forEach(a => a.resetSprite());
                     break;
 
                 default :
@@ -97,16 +147,36 @@ export default class CharacterBot extends Character {
         }
     }
 
+    private getCollisionUpward() : boolean {
+
+        if(this.gpos.y <= this.height + 1) {
+            return false;
+        }
+
+        return !this.brickHandler.checkCollisionRange(
+            this.gpos.getSub({
+                x : 1,
+                y : 1 + this.height
+            }), //Position
+            0,  //START
+            2,  //FINAL
+            1,  //HEIGHT
+            1); //Direction
+    }
+
     //Check and resolve brick collisions
     protected handleCollision() {
 
         //Collision bitmask
-        let cbm = this.brickHandler.checkCollisionRange(
-            this.gpos.getSub({x: this.move.x > 0 ? 1 : 0, y : 5}),  //Position
-            5,                                                      // n + 1
-            15,                                                     //(n + 3) * 2 + 1
-            7,                                                      // n + 3
-            this.move.x);                                           //Direction
+        const cbm = this.brickHandler.checkCollisionRange(
+            this.gpos.getSub({
+                x : this.move.x > 0 ? 1 : 0, 
+                y : 1 + this.height
+            }),             //Position
+            5,              //START : n + 1
+            15,             //FINAL : (n + 3) * 2 + 1
+            7,              //HEIGHT: n + 3
+            this.move.x);   //Direction
 
         // var qq = ""
 
@@ -163,7 +233,7 @@ export default class CharacterBot extends Character {
     public getColliders() : Collider[] {
         
         return [{ 
-            mask : 0b111,   //All collisions
+            mask : 0b1111,   //All collisions
             min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
             max : this.gpos.getAdd({ x :  1, y : 1}) 
         },{ 
@@ -176,11 +246,17 @@ export default class CharacterBot extends Character {
     //Explode
     public resolveCollision(mask : number) {
 
+        //Eat
         if (mask & 0b010) {
             this.setCurrentGroup(1);
         }
+        //Hazard
         else if (mask & 0b100 && this.isNormalMovment) {
             this.setCurrentGroup(2);
+        }
+        //Up
+        else if (mask & 0b1000 && this.animatGroupsIndex != 3) {
+            this.setCurrentGroup(3);
         }
     }
 }

@@ -1,5 +1,5 @@
 import Character from "./character.js";
-import {BOUNDARY, bitStack} from "../../engine/utilities/math.js";
+import {BOUNDARY, bitStack, GMULTY, GMULTX} from "../../engine/utilities/math.js";
 import Animat from "./animation.js";
 const characterBotOverride = Object.freeze({
   height: 4,
@@ -23,6 +23,18 @@ const characterBotOverride = Object.freeze({
     zModifier: 600,
     frameCount: 16,
     isLoop: false
+  }, {
+    images: [
+      {name: "char_bot_fly_left", offsetX: 36},
+      {name: "char_bot_fly_right", offsetX: 14}
+    ],
+    speed: 2.5,
+    gposOffset: {x: -1, y: 0},
+    zModifier: 600,
+    frameCount: 10,
+    animsCount: 2,
+    isLoop: true,
+    isSliced: true
   }]
 });
 const cbc = Object.freeze({
@@ -37,29 +49,55 @@ export default class CharacterBot extends Character {
   constructor(engine2, params) {
     super(engine2, Object.assign(params, characterBotOverride));
     this.timer = 0;
-    params.animsMisc.forEach((i) => {
-      var newIndex = this.spriteGroups.push([]) - 1;
-      this.spriteGroups[newIndex].push(new Animat(this.engine, {
-        ...params,
-        speed: i.speed,
-        images: i.images,
-        framesSize: i.framesSize,
-        gposOffset: i.gposOffset,
-        zModifier: i.zModifier,
-        frameCount: i.frameCount,
-        animsCount: i.animsCount,
-        isLoop: i.isLoop
-      }));
-      this.parent.pushGO(this.spriteGroups[newIndex][0]);
+    params.animsMisc.forEach((m) => {
+      var newIndex = this.animatGroups.push([]) - 1;
+      for (let i = -1; i <= (m.isSliced ? 1 : -1); i++) {
+        this.animatGroups[newIndex].push(new Animat(this.engine, {
+          ...params,
+          speed: m.speed,
+          images: m.images,
+          sliceIndex: m.isSliced ? i : null,
+          framesSize: m.isSliced ? GMULTX * 2 : m.framesSize,
+          gposOffset: m.gposOffset,
+          zModifier: m.isSliced ? i < 1 ? 300 : 29 : m.zModifier,
+          frameCount: m.frameCount,
+          animsCount: m.animsCount,
+          isLoop: m.isLoop
+        }));
+      }
+      this.animatGroups[newIndex].forEach((a) => this.parent.pushGO(a));
     });
+  }
+  get isNormalMovment() {
+    return this.animatGroupsIndex == 0;
   }
   handleUniqueMovment(dt) {
     this.timer += dt;
-    if (this.timer > 1) {
-      switch (this.spriteGroupIndex) {
+    switch (this.animatGroupsIndex) {
+      case 3:
+        this.spos.y -= dt * 400;
+        if (this.getCollisionUpward()) {
+          if (this.spos.y < -GMULTY) {
+            this.spos.y += GMULTY;
+            this.gpos.y -= 1;
+            this.animatGroupCurr.forEach((a) => a.gpos.y -= 1);
+          }
+          this.animatGroupCurr.forEach((a) => a.spos = this.spos);
+        } else {
+          this.spos.y = 0;
+          this.animatGroupCurr.forEach((a) => a.spos.y = 0);
+        }
+        break;
+    }
+    if (this.timer > this.animatGroupCurr[0].length) {
+      switch (this.animatGroupsIndex) {
         case 1:
           this.timer = 0;
           this.setCurrentGroup(0);
+          break;
+        case 3:
+          this.timer = 0;
+          this.animatGroupCurr.forEach((a) => a.resetSprite());
           break;
         default:
           this.isActive = false;
@@ -67,8 +105,20 @@ export default class CharacterBot extends Character {
       }
     }
   }
+  getCollisionUpward() {
+    if (this.gpos.y <= this.height + 1) {
+      return false;
+    }
+    return !this.brickHandler.checkCollisionRange(this.gpos.getSub({
+      x: 1,
+      y: 1 + this.height
+    }), 0, 2, 1, 1);
+  }
   handleCollision() {
-    let cbm = this.brickHandler.checkCollisionRange(this.gpos.getSub({x: this.move.x > 0 ? 1 : 0, y: 5}), 5, 15, 7, this.move.x);
+    const cbm = this.brickHandler.checkCollisionRange(this.gpos.getSub({
+      x: this.move.x > 0 ? 1 : 0,
+      y: 1 + this.height
+    }), 5, 15, 7, this.move.x);
     if (this.gpos.x - 1 < BOUNDARY.minx || this.gpos.x + 1 > BOUNDARY.maxx) {
       this.reverse();
     } else {
@@ -92,7 +142,7 @@ export default class CharacterBot extends Character {
   }
   getColliders() {
     return [{
-      mask: 7,
+      mask: 15,
       min: this.gpos.getAdd({x: -1, y: 1 - this.height}),
       max: this.gpos.getAdd({x: 1, y: 1})
     }, {
@@ -106,6 +156,8 @@ export default class CharacterBot extends Character {
       this.setCurrentGroup(1);
     } else if (mask & 4 && this.isNormalMovment) {
       this.setCurrentGroup(2);
+    } else if (mask & 8 && this.animatGroupsIndex != 3) {
+      this.setCurrentGroup(3);
     }
   }
 }

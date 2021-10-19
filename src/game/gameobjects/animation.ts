@@ -21,7 +21,6 @@ export interface OffsetImage {
 }
 
 export interface AnimationParams extends GameObjectParams {
-
     images : OffsetImageParams[];
     speed? : number;
     isLoop? : boolean;
@@ -43,7 +42,7 @@ export default class Animat extends GameObject {
     private zModifier : number;                     //Modifier value added to the zIndex
     private images : OffsetImage[] = [];            //Animation images with a horizontal offset
     private speed : number;                         //Speed of the animation
-    private isLoop : boolean;                       //If this animation is looped
+    public  isLoop : boolean;                       //If this animation is looped
     private isVert : boolean;                       //If this animation is arranged vertically
     private framesSize? : number;                   //The Horizontal/Vertical size of each frame
     private frameCount : number;                    //The Quantity of frames for this animation
@@ -54,9 +53,13 @@ export default class Animat extends GameObject {
     private fullSize : Point = { x : 0, y : 0 };    //The full dimensions of this animation's images
 
     //Set here
+    private isPaused : boolean = false;
     private timer : number = 0;                     //Timer to track frames
     private imageIndex: number = 0;                 //Index of the current image
     private animsIndex : number = 0;                //Index of the current animation
+
+    //get
+    public get length() : number { return 1 / this.speed; }
 
     constructor(engine : Engine, params : AnimationParams) {
         super(engine, params);
@@ -127,7 +130,7 @@ export default class Animat extends GameObject {
     public update(dt: number) {
 
         //For all moving animations
-        if(this.speed > 0) {
+        if(this.speed > 0 && !this.isPaused) {
 
             //Increment timer by delta-time
             this.timer += dt;
@@ -139,11 +142,21 @@ export default class Animat extends GameObject {
         }
     }
 
+    //Pause this sprite
+    public pause() {
+        this.isPaused = true;
+    }
+
+    //Unpase this sprite
+    public unPause() {
+        this.isPaused = false;
+    }
+
     //Reset the sprite. Reset its timer, update its position, current animation, and z-index.
-    public resetSprite(gpos : Vect) {
+    public resetSprite(gpos? : Vect) {
 
         this.timer = 0;
-        this.gpos = gpos.getAdd(this.gposOffset);
+        if(gpos) { this.gpos = gpos.getAdd(this.gposOffset); }
         this.animsIndex = ++this.animsIndex % this.animsCount;
         this.setZIndex();
     }
@@ -186,6 +199,15 @@ export default class Animat extends GameObject {
             this.isVert ? 0 : GMULTY - this.fullSize.y,
             this.isVert ? oppoSize : size,  
             this.isVert ? size : oppoSize);
+
+        // ctx.globalAlpha = 0.5;
+        // ctx.strokeStyle = "#F00"
+        // ctx.lineWidth = 4;
+        // ctx.strokeRect(
+        //     widthSlice, 
+        //     this.isVert ? 0 : GMULTY, 
+        //     this.isVert ? oppoSize : size, 
+        //     this.isVert ? size : -oppoSize);
     }
 
     private getAnimationOffset(checkVert : boolean) : number {
