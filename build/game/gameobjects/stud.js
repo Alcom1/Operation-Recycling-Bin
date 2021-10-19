@@ -11,7 +11,6 @@ export default class Stud extends GameObject {
     this.mobilePreviewSize = new Vect(0, 0);
     this.isMobileFlipped = false;
     this.color = colorTranslate(params.color);
-    this.zIndex = getZIndex(this.gpos, 1);
     this.image = this.engine.library.getImage(`stud_${this.color.replace("#", "").toLowerCase()}`);
   }
   draw(ctx) {
@@ -26,16 +25,24 @@ export default class Stud extends GameObject {
     }
     ctx.drawImage(this.image, Z_DEPTH - 13.5, -GMULTY * (this.isMobileFlipped ? -this.mobilePreviewSize.y - 3.2 : this.mobilePreviewSize.y + 3.5));
   }
-  snap(state) {
-    if (state) {
-      this.isSnapped = true;
-      this.zIndex = getZIndex(this.gpos.getAdd({
+  getGOZIndex() {
+    if (this.isSnapped) {
+      return getZIndex(this.gpos.getAdd({
         x: Math.round(this.spos.x / GMULTX),
         y: Math.round(this.spos.y / GMULTY)
       }), 1);
+    }
+    if (this.isSelected) {
+      return UNDER_CURSOR_Z_INDEX;
+    } else {
+      return getZIndex(this.gpos, 1);
+    }
+  }
+  snap(state) {
+    if (state) {
+      this.isSnapped = true;
     } else {
       this.isSnapped = false;
-      this.zIndex = UNDER_CURSOR_Z_INDEX;
     }
   }
   press() {
@@ -43,10 +50,8 @@ export default class Stud extends GameObject {
   }
   select() {
     this.isSelected = true;
-    this.zIndex = UNDER_CURSOR_Z_INDEX;
   }
   deselect() {
-    this.zIndex = getZIndex(this.gpos, 1);
     this.isPressed = false;
     this.isSelected = false;
     this.isSnapped = false;

@@ -67,8 +67,6 @@ export default class Brick extends GameObject {
         this.tags.push("Brick");
 
         this.width = params.width || 1;
-        // Z-sort vertically and then horizontally.
-        this.zIndex = getZIndex(this.gpos, this.width * 10);
     }
 
     public update(dt: number): void {
@@ -112,6 +110,28 @@ export default class Brick extends GameObject {
                 this.mobilePreviewSize.y + 3.5));
     }
 
+    /** Get z-index for draw sorting */
+    public getGOZIndex() : number {
+
+        // Set z-index to draw this brick in its snapped position
+        if(this.isSnapped) {
+            return getZIndex(
+                this.gpos.getAdd({
+                    x : Math.round(this.spos.x / GMULTX),
+                    y : Math.round(this.spos.y / GMULTY)
+                }),
+                this.width * 10);
+        }        
+        // Set z-index to draw this brick under the cursor
+        if(this.isSelected) {
+            return UNDER_CURSOR_Z_INDEX;
+        }
+        //Normal z-index
+        else {
+            return getZIndex(this.gpos, this.width * 10);
+        }
+    }
+
     /** Setup this brick for pressing */
     public press(): void {
 
@@ -130,8 +150,6 @@ export default class Brick extends GameObject {
         this.isChecked = true;
         // Store mouse's current position for relative calculations later
         this.selectedPos.set(pos);
-        // Set z-index to draw this brick under the cursor
-        this.zIndex = UNDER_CURSOR_Z_INDEX;
     }
 
     /** Clear this brick's selection states */
@@ -153,7 +171,6 @@ export default class Brick extends GameObject {
         this.isChecked = false; //Fixed bug where selections dragged offscreen wouldn't clear correctly.
         this.spos.set(0, 0);
         this.selectedPos.set(0, 0);
-        this.zIndex = getZIndex(this.gpos, this.width * 10);
         // Reset studs to match the final brick position
     }
 
@@ -189,15 +206,8 @@ export default class Brick extends GameObject {
         // Snap or unsnap based on the given state
         if (state) {
             this.isSnapped = true;
-            this.zIndex = getZIndex(this.gpos.getAdd({
-                x : Math.round(this.spos.x / GMULTX),
-                y : Math.round(this.spos.y / GMULTY)
-            }),
-            this.width * 10);
         } else {
             this.isSnapped = false;
-            // Set Z-index for dragging
-            this.zIndex = UNDER_CURSOR_Z_INDEX;
             // Reposition for unsnapped state to fix 1-frame jump on pickup
             this.setToCursor();
         }

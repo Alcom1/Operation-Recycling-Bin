@@ -5,6 +5,7 @@ export default class Animat extends GameObject {
     super(engine2, params);
     this.images = [];
     this.fullSize = {x: 0, y: 0};
+    this.zModifierPub = 0;
     this.isPaused = false;
     this.timer = 0;
     this.imageIndex = 0;
@@ -36,7 +37,6 @@ export default class Animat extends GameObject {
     this.frameCount = params.frameCount;
     this.animsCount = params.animsCount ?? 1;
     this.sliceIndex = params.sliceIndex;
-    this.setZIndex();
   }
   get length() {
     return 1 / this.speed;
@@ -73,10 +73,9 @@ export default class Animat extends GameObject {
       this.gpos = gpos.getAdd(this.gposOffset);
     }
     this.animsIndex = ++this.animsIndex % this.animsCount;
-    this.setZIndex();
   }
-  setZIndex() {
-    this.zIndex = getZIndex(this.gpos, this.zModifier);
+  getGOZIndex() {
+    return getZIndex(this.gpos, this.zModifier + this.zModifierPub);
   }
   setImageIndex(index) {
     this.imageIndex = index;

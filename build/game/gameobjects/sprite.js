@@ -1,5 +1,5 @@
-import GameObject from "../../engine/gameobjects/gameobject.js";
-export default class Sprite extends GameObject {
+import ZGameObject from "./zgameobject.js";
+export default class Sprite extends ZGameObject {
   constructor(engine2, params) {
     super(engine2, params);
     this.image = this.engine.library.getImage(params.image, params.extension);

@@ -53,6 +53,7 @@ export default class Animat extends GameObject {
     private fullSize : Point = { x : 0, y : 0 };    //The full dimensions of this animation's images
 
     //Set here
+    public  zModifierPub : number = 0;              //Public z-modifier
     private isPaused : boolean = false;
     private timer : number = 0;                     //Timer to track frames
     private imageIndex: number = 0;                 //Index of the current image
@@ -101,9 +102,6 @@ export default class Animat extends GameObject {
         this.frameCount = params.frameCount;
         this.animsCount = params.animsCount ?? 1;
         this.sliceIndex = params.sliceIndex;
-
-
-        this.setZIndex();
     }
 
     //Retrieve an image from the library
@@ -158,15 +156,14 @@ export default class Animat extends GameObject {
         this.timer = 0;
         if(gpos) { this.gpos = gpos.getAdd(this.gposOffset); }
         this.animsIndex = ++this.animsIndex % this.animsCount;
-        this.setZIndex();
     }
 
-    //Set the z-index of this sprite based on its current position and modifier
-    public setZIndex() {
+    //Get z-index for draw sorting
+    public getGOZIndex() : number {
 
-        this.zIndex = getZIndex(
+        return getZIndex(
             this.gpos,
-            this.zModifier)
+            this.zModifier + this.zModifierPub)
     }
 
     //Set the image index, swapping the image for this animation.

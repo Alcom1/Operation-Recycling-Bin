@@ -25,8 +25,6 @@ export default class Stud extends GameObject {
 
         this.color = colorTranslate(params.color);
 
-        this.zIndex = getZIndex(this.gpos, 1);
-
         this.image = this.engine.library.getImage(`stud_${this.color.replace("#", "").toLowerCase()}`);
     }
 
@@ -63,21 +61,35 @@ export default class Stud extends GameObject {
                 this.mobilePreviewSize.y + 3.5 ));
     }
 
+    /** Get z-index for draw sorting */
+    public getGOZIndex() : number {
+
+        // Set z-index to draw this brick in its snapped position
+        if(this.isSnapped) {
+            return getZIndex(
+                this.gpos.getAdd({
+                    x : Math.round(this.spos.x / GMULTX),
+                    y : Math.round(this.spos.y / GMULTY)
+                }),
+                1);
+        }        
+        // Set z-index to draw this brick under the cursor
+        if(this.isSelected) {
+            return UNDER_CURSOR_Z_INDEX;
+        }
+        //Normal z-index
+        else {
+            return getZIndex(this.gpos, 1);
+        }
+    }
 
     /** Set this stud's snap state */
     public snap(state: boolean): void {
         if (state) {
             this.isSnapped = true;
-            this.zIndex = getZIndex(this.gpos.getAdd({
-                x : Math.round(this.spos.x / GMULTX),
-                y : Math.round(this.spos.y / GMULTY)
-            }),
-            1);
         }
         else {
             this.isSnapped = false;
-            // Set Z-index for dragging
-            this.zIndex = UNDER_CURSOR_Z_INDEX;
         }
     }
 
@@ -89,13 +101,10 @@ export default class Stud extends GameObject {
     /** Setup this stud for selecting */ 
     public select(): void {
         this.isSelected = true;
-        this.zIndex = UNDER_CURSOR_Z_INDEX;
     }
 
     /** Reset this stud's z-index */
     public deselect(): void {
-        this.zIndex = getZIndex(this.gpos, 1);
-        
         this.isPressed = false;
         this.isSelected = false;
         this.isSnapped = false;

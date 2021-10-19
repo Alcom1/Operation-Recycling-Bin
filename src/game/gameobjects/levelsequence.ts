@@ -1,7 +1,7 @@
 import Engine from "engine/engine";
-import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
+import ZGameObject, { ZGameObjectParams } from "./zgameobject";
 
-interface LevelSequenceParams extends GameObjectParams {
+interface LevelSequenceParams extends ZGameObjectParams {
     font?: string;
     color?: string;
     levelName: string;
@@ -9,7 +9,7 @@ interface LevelSequenceParams extends GameObjectParams {
     par: number;
 }
 
-export default class LevelSequence extends GameObject {
+export default class LevelSequence extends ZGameObject {
     private font: string;
     private color: string;
     private levelName: string;

@@ -81,21 +81,17 @@ export default class CharacterBot extends Character {
             this.spos.y += GMULTY;
             this.gpos.y -= 1;
             this.animatGroupCurr.forEach((a) => {
-              var off = this.getCollisionUpward() ? 2 : 0;
-              a.gpos.y -= off + 1;
-              a.setZIndex();
-              a.gpos.y += off;
+              a.gpos.y -= 1;
+              a.zModifierPub = this.getCollisionUpward() ? 200 : 0;
             });
-            this.parent.sortGO();
           }
           this.animatGroupCurr.forEach((a) => a.spos = this.spos);
         } else {
           this.spos.y = -6;
           this.animatGroupCurr.forEach((a) => {
+            a.zModifierPub = 0;
             a.spos.y = -6;
-            a.setZIndex();
           });
-          this.parent.sortGO();
         }
         break;
     }

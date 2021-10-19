@@ -61,10 +61,6 @@ export default class Scene {
         return gameObject;
     }
 
-    public sortGO() {
-        this.isSortNext = true;
-    }
-
     public update(dt: number) {
 
         //Update all game objects
@@ -74,13 +70,8 @@ export default class Scene {
             });
         }
 
-        //Sort if we are sorting this frame
-        if(this.isSortNext) {
-            this.isSortNext = false;
-            
-            //Sort game objects by z-index.
-            this.gameObjects.sort((a, b) => a.zIndex - b.zIndex);
-        }
+        //Sort all game objects for drawing - unconditionally
+        this.gameObjects.sort((a, b) => a.getGOZIndex() - b.getGOZIndex());
     }
 
     public draw(ctx: CanvasRenderingContext2D) {

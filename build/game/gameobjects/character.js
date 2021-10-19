@@ -51,7 +51,6 @@ export default class Character extends GameObject {
       this.handleCollision();
       this.handleBricks();
       this.animatGroupCurr.forEach((s) => s.resetSprite(this.gpos));
-      this.level.sortGO();
       this.checkCollision = false;
     }
   }
@@ -88,7 +87,6 @@ export default class Character extends GameObject {
       s.resetSprite(this.gpos);
       s.unPause();
     }));
-    this.level.sortGO();
   }
   deactivate() {
     this.isActive = false;
