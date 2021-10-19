@@ -17,6 +17,7 @@ export default class Scene {
     public zIndex: number;
     private gameObjects: GameObject[];
     private initialized: boolean;
+    private isSortNext: boolean = false;
 
     constructor(
         private engine: Engine,
@@ -61,15 +62,24 @@ export default class Scene {
     }
 
     public sortGO() {
-        //Sort game objects by z-index.
-        this.gameObjects.sort((a, b) => a.zIndex - b.zIndex);
+        this.isSortNext = true;
     }
 
     public update(dt: number) {
+
+        //Update all game objects
         if(this.initialized) {
             this.gameObjects.forEach(go => { if(!go.isActive) { return; }
                 go.update(dt)
             });
+        }
+
+        //Sort if we are sorting this frame
+        if(this.isSortNext) {
+            this.isSortNext = false;
+            
+            //Sort game objects by z-index.
+            this.gameObjects.sort((a, b) => a.zIndex - b.zIndex);
         }
     }
 

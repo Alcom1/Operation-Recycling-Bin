@@ -109,18 +109,30 @@ export default class CharacterBot extends Character {
         
                 if(this.getCollisionUpward()) {
         
-                    if(this.spos.y < -GMULTY) {
+                    if(this.spos.y < -GMULTY - 6) {
         
                         this.spos.y += GMULTY;
                         this.gpos.y -= 1;
-                        this.animatGroupCurr.forEach(a => a.gpos.y -= 1);
+
+                        //Hacky solution to put stuff under the bot as it goes up.
+                        this.animatGroupCurr.forEach(a => {
+                            var off = this.getCollisionUpward() ? 2 : 0;
+                            a.gpos.y -= off + 1;
+                            a.setZIndex();
+                            a.gpos.y += off;
+                        });
+                        this.parent.sortGO();
                     }
         
                     this.animatGroupCurr.forEach(a => a.spos = this.spos);
                 }
                 else {
-                    this.spos.y = 0;
-                    this.animatGroupCurr.forEach(a => a.spos.y = 0);
+                    this.spos.y = -6;
+                    this.animatGroupCurr.forEach(a => {
+                        a.spos.y = -6;
+                        a.setZIndex();
+                    });
+                    this.parent.sortGO();
                 }
                 break;
         }

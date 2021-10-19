@@ -162,7 +162,7 @@ export default class Animat extends GameObject {
     }
 
     //Set the z-index of this sprite based on its current position and modifier
-    private setZIndex() {
+    public setZIndex() {
 
         this.zIndex = getZIndex(
             this.gpos,

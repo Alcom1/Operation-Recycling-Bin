@@ -8,6 +8,7 @@ export default class Scene {
     initialized = false
   }) {
     this.engine = engine2;
+    this.isSortNext = false;
     this.name = name;
     this.need = need;
     this.zIndex = zIndex;
@@ -29,7 +30,7 @@ export default class Scene {
     return gameObject;
   }
   sortGO() {
-    this.gameObjects.sort((a, b) => a.zIndex - b.zIndex);
+    this.isSortNext = true;
   }
   update(dt) {
     if (this.initialized) {
@@ -39,6 +40,10 @@ export default class Scene {
         }
         go.update(dt);
       });
+    }
+    if (this.isSortNext) {
+      this.isSortNext = false;
+      this.gameObjects.sort((a, b) => a.zIndex - b.zIndex);
     }
   }
   draw(ctx) {
