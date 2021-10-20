@@ -161,7 +161,7 @@ export default class CharacterBot extends Character {
                 //Update animations to match
                 this.animatGroupCurr.forEach(a => {
                     a.gpos.y -= dir;
-                    a.zModifierPub = this.getCollisionVetical(dir) ? dir * 200 : 0; //Z-index fix
+                    a.zModifierPub = dir > 0 && this.getCollisionVetical(dir) ? 200 : 0; //Z-index fix
                 });
             }
 
@@ -299,6 +299,7 @@ export default class CharacterBot extends Character {
         //Up
         else if (mask & 0b1000) {
             if(this.animatGroupsIndex != 3) {
+                this.handleBricks(true);
                 this.setCurrentGroup(3);
             }
             this.isFlight = true;

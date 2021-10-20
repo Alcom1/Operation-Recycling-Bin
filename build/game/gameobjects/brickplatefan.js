@@ -17,7 +17,7 @@ export default class BrickPlateFan extends BrickPlate {
       return {
         mask: 8,
         min: {x: this.gpos.x + i + 1, y: b},
-        max: this.gpos.getAdd({x: this.width - 1, y: 0})
+        max: this.gpos.getAdd({x: i + 2, y: 0})
       };
     }) : []);
   }

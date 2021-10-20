@@ -65,11 +65,16 @@ export default class Character extends GameObject {
   }
   handleSpecialMovement(dt) {
   }
-  handleBricks() {
+  handleBricks(isClear = false) {
     this.underBricks.forEach((b) => b.pressure -= 1);
-    this.underBricks = this.brickHandler.checkCollisionRow(this.gpos.getAdd({x: -1, y: 1}), 2);
-    this.underBricks.forEach((b) => b.pressure += 1);
-    this.brickHandler.isPressured = true;
+    if (isClear) {
+      this.underBricks = [];
+      this.brickHandler.isPressured = true;
+    } else {
+      this.underBricks = this.brickHandler.checkCollisionRow(this.gpos.getAdd({x: -1, y: 1}), 2);
+      this.underBricks.forEach((b) => b.pressure += 1);
+      this.brickHandler.isPressured = true;
+    }
   }
   handleCollision() {
   }

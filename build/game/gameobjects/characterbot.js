@@ -105,7 +105,7 @@ export default class CharacterBot extends Character {
         this.spos.y += dir * GMULTY;
         this.animatGroupCurr.forEach((a) => {
           a.gpos.y -= dir;
-          a.zModifierPub = this.getCollisionVetical(dir) ? dir * 200 : 0;
+          a.zModifierPub = dir > 0 && this.getCollisionVetical(dir) ? 200 : 0;
         });
       }
       this.animatGroupCurr.forEach((a) => a.spos = this.spos);
@@ -174,6 +174,7 @@ export default class CharacterBot extends Character {
       this.setCurrentGroup(2);
     } else if (mask & 8) {
       if (this.animatGroupsIndex != 3) {
+        this.handleBricks(true);
         this.setCurrentGroup(3);
       }
       this.isFlight = true;

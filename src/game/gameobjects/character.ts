@@ -116,19 +116,27 @@ export default class Character extends GameObject {
     }
 
     //Manage bricks underneath this character, set pressure
-    private handleBricks() {
+    protected handleBricks(isClear : boolean = false) {
 
         //Reset pressures
         this.underBricks.forEach(b => b.pressure -= 1);
 
-        //Get new set of bricks for pressures
-        this.underBricks = this.brickHandler.checkCollisionRow(
-            this.gpos.getAdd({x : -1, y : 1}), 
-            2);
-
-        //Set new pressures
-        this.underBricks.forEach(b => b.pressure += 1);
-        this.brickHandler.isPressured = true;
+        //Reset underbricks if we are clearing unconditionally.
+        if(isClear) {
+            this.underBricks = [];
+            this.brickHandler.isPressured = true;
+        }
+        //Otherwise, get a new set.
+        else {
+            //Get new set of bricks for pressures
+            this.underBricks = this.brickHandler.checkCollisionRow(
+                this.gpos.getAdd({x : -1, y : 1}), 
+                2);
+    
+            //Set new pressures
+            this.underBricks.forEach(b => b.pressure += 1);
+            this.brickHandler.isPressured = true;
+        }
     }
 
     //Do nothing - override
