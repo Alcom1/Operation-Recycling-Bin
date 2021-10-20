@@ -84,7 +84,7 @@ export default class BrickHandler extends GameObject {
     }
     return adjacents[-1] != adjacents[1];
   }
-  checkCollisionRange(pos, start, final, height, dir) {
+  checkCollisionRange(pos, start, final, height, dir = 1) {
     let collisions = 0;
     for (let i = start; i < final; i++) {
       let y = i % height;

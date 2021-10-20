@@ -65,8 +65,10 @@ const cbc = Object.freeze({
 
 export default class CharacterBot extends Character {
 
-    private timer : number = 0;
-    protected get isNormalMovment() : boolean { return this.animatGroupsIndex == 0 }
+    private timer : number = 0;         //Timer to track duration of special movements
+    private ceilSubOffset = -6;         //Offset for up/down movement
+    private verticalSpeed = 500;
+    private isFlight : boolean = false;
 
     constructor(engine: Engine, params: CharacterBotParams) {
         super(engine, Object.assign(params, characterBotOverride));
@@ -98,56 +100,42 @@ export default class CharacterBot extends Character {
     }
 
     //Special movement
-    protected handleUniqueMovment(dt : number) {
+    protected handleSpecialMovement(dt : number) {
 
-        this.timer += dt;
+        this.timer += dt;   //Update timer
 
+        //Perform special movement
         switch(this.animatGroupsIndex) {
 
+            //Vertical movement. flight state will have been set to true by collision
             case 3 : 
-                this.spos.y -= dt * 400;
-        
-                if(this.getCollisionUpward()) {
-        
-                    if(this.spos.y < -GMULTY - 6) {
-        
-                        this.spos.y += GMULTY;
-                        this.gpos.y -= 1;
-
-                        //Hacky solution to put stuff under the bot as it goes up.
-                        this.animatGroupCurr.forEach(a => {
-                            a.gpos.y -= 1;
-                            a.zModifierPub = this.getCollisionUpward() ? 200 : 0;
-                        });
-                    }
-        
-                    this.animatGroupCurr.forEach(a => a.spos = this.spos);
-                }
-                else {
-                    this.spos.y = -6;
-                    this.animatGroupCurr.forEach(a => {
-                        a.zModifierPub = 0;
-                        a.spos.y = -6;
-                    });
-                }
+                this.moveVertical(dt, this.isFlight ? 1 : -1);
+                this.isFlight = false;  //Unset for next collision check
+                break;
+            
+            //Default is do nothing
+            default :
                 break;
         }
 
-        //Go to new state. Every special animation is 1 second?
+        //If the current animation has ended
         if(this.timer > this.animatGroupCurr[0].length) {
 
             switch(this.animatGroupsIndex) {
                 
+                //End bot-bin animation
                 case 1 :
                     this.timer = 0;
                     this.setCurrentGroup(0);
                     break;
 
+                //Reset up/down animation
                 case 3 :
                     this.timer = 0;
                     this.animatGroupCurr.forEach(a => a.resetSprite());
                     break;
 
+                //Default to deactivating this character
                 default :
                     this.isActive = false;
                     break;
@@ -155,16 +143,62 @@ export default class CharacterBot extends Character {
         }
     }
 
-    private getCollisionUpward() : boolean {
+    //Vertical motion
+    private moveVertical(dt: number, dir: number = 1) {
 
-        if(this.gpos.y <= this.height + 1) {
+        //Set subposition to move vertically
+        this.spos.y -= dir * dt * this.verticalSpeed;
+        
+        //If the direction has no obstacles
+        if(this.getCollisionVetical(dir)) {
+
+            //If travelled to a new grid position, reset to it.
+            if(dir * this.spos.y < -GMULTY + this.ceilSubOffset) {
+
+                this.gpos.y -= dir;             //Go up or down to new grid position
+                this.spos.y += dir * GMULTY;    //Reset subposition to match new grid position
+
+                //Update animations to match
+                this.animatGroupCurr.forEach(a => {
+                    a.gpos.y -= dir;
+                    a.zModifierPub = this.getCollisionVetical(dir) ? dir * 200 : 0; //Z-index fix
+                });
+            }
+
+            //Update animations to match
+            this.animatGroupCurr.forEach(a => a.spos = this.spos);
+        }
+        //If there is an obstacle
+        else {
+
+            //If going upwards, continue to collide with ceiling
+            if(dir > 0) {
+                this.spos.y = this.ceilSubOffset;
+                this.animatGroupCurr.forEach(a => {
+                    a.zModifierPub = 0;
+                    a.spos.y = this.ceilSubOffset;
+                });
+            }
+            //If going downwards, reset to walking
+            else {
+                this.setCurrentGroup(0);
+            }
+        }
+    }
+
+    //Return true if the given vertical direction is free of bricks
+    private getCollisionVetical(dir : number) : boolean {
+
+        //If moving upward and hit the ceiling, return false
+        if(dir > 0 && this.gpos.y <= this.height + 1) {
             return false;
         }
 
+        //Check for bricks in travelling direction
         return !this.brickHandler.checkCollisionRange(
             this.gpos.getSub({
                 x : 1,
-                y : 1 + this.height
+                y : dir > 0 ? 1 + this.height : 0
             }), //Position
             0,  //START
             2,  //FINAL
@@ -263,8 +297,11 @@ export default class CharacterBot extends Character {
             this.setCurrentGroup(2);
         }
         //Up
-        else if (mask & 0b1000 && this.animatGroupsIndex != 3) {
-            this.setCurrentGroup(3);
+        else if (mask & 0b1000) {
+            if(this.animatGroupsIndex != 3) {
+                this.setCurrentGroup(3);
+            }
+            this.isFlight = true;
         }
     }
 }

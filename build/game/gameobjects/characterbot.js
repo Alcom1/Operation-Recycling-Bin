@@ -49,6 +49,9 @@ export default class CharacterBot extends Character {
   constructor(engine2, params) {
     super(engine2, Object.assign(params, characterBotOverride));
     this.timer = 0;
+    this.ceilSubOffset = -6;
+    this.verticalSpeed = 500;
+    this.isFlight = false;
     params.animsMisc.forEach((m) => {
       var newIndex = this.animatGroups.push([]) - 1;
       for (let i = -1; i <= (m.isSliced ? 1 : -1); i++) {
@@ -68,31 +71,14 @@ export default class CharacterBot extends Character {
       this.animatGroups[newIndex].forEach((a) => this.parent.pushGO(a));
     });
   }
-  get isNormalMovment() {
-    return this.animatGroupsIndex == 0;
-  }
-  handleUniqueMovment(dt) {
+  handleSpecialMovement(dt) {
     this.timer += dt;
     switch (this.animatGroupsIndex) {
       case 3:
-        this.spos.y -= dt * 400;
-        if (this.getCollisionUpward()) {
-          if (this.spos.y < -GMULTY - 6) {
-            this.spos.y += GMULTY;
-            this.gpos.y -= 1;
-            this.animatGroupCurr.forEach((a) => {
-              a.gpos.y -= 1;
-              a.zModifierPub = this.getCollisionUpward() ? 200 : 0;
-            });
-          }
-          this.animatGroupCurr.forEach((a) => a.spos = this.spos);
-        } else {
-          this.spos.y = -6;
-          this.animatGroupCurr.forEach((a) => {
-            a.zModifierPub = 0;
-            a.spos.y = -6;
-          });
-        }
+        this.moveVertical(dt, this.isFlight ? 1 : -1);
+        this.isFlight = false;
+        break;
+      default:
         break;
     }
     if (this.timer > this.animatGroupCurr[0].length) {
@@ -111,13 +97,37 @@ export default class CharacterBot extends Character {
       }
     }
   }
-  getCollisionUpward() {
-    if (this.gpos.y <= this.height + 1) {
+  moveVertical(dt, dir = 1) {
+    this.spos.y -= dir * dt * this.verticalSpeed;
+    if (this.getCollisionVetical(dir)) {
+      if (dir * this.spos.y < -GMULTY + this.ceilSubOffset) {
+        this.gpos.y -= dir;
+        this.spos.y += dir * GMULTY;
+        this.animatGroupCurr.forEach((a) => {
+          a.gpos.y -= dir;
+          a.zModifierPub = this.getCollisionVetical(dir) ? dir * 200 : 0;
+        });
+      }
+      this.animatGroupCurr.forEach((a) => a.spos = this.spos);
+    } else {
+      if (dir > 0) {
+        this.spos.y = this.ceilSubOffset;
+        this.animatGroupCurr.forEach((a) => {
+          a.zModifierPub = 0;
+          a.spos.y = this.ceilSubOffset;
+        });
+      } else {
+        this.setCurrentGroup(0);
+      }
+    }
+  }
+  getCollisionVetical(dir) {
+    if (dir > 0 && this.gpos.y <= this.height + 1) {
       return false;
     }
     return !this.brickHandler.checkCollisionRange(this.gpos.getSub({
       x: 1,
-      y: 1 + this.height
+      y: dir > 0 ? 1 + this.height : 0
     }), 0, 2, 1, 1);
   }
   handleCollision() {
@@ -162,8 +172,11 @@ export default class CharacterBot extends Character {
       this.setCurrentGroup(1);
     } else if (mask & 4 && this.isNormalMovment) {
       this.setCurrentGroup(2);
-    } else if (mask & 8 && this.animatGroupsIndex != 3) {
-      this.setCurrentGroup(3);
+    } else if (mask & 8) {
+      if (this.animatGroupsIndex != 3) {
+        this.setCurrentGroup(3);
+      }
+      this.isFlight = true;
     }
   }
 }

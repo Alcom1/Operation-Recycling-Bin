@@ -77,7 +77,7 @@ export default class Character extends GameObject {
             this.handleNormalMovement(dt);
         }
         else {
-            this.handleUniqueMovment(dt);
+            this.handleSpecialMovement(dt);
         }
 
         //Handle collision, set zIndices for new position
@@ -111,7 +111,7 @@ export default class Character extends GameObject {
     }
 
     //Do nothing - override
-    protected handleUniqueMovment(dt: number) {
+    protected handleSpecialMovement(dt: number) {
 
     }
 

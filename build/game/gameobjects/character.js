@@ -45,7 +45,7 @@ export default class Character extends GameObject {
     if (this.isNormalMovment) {
       this.handleNormalMovement(dt);
     } else {
-      this.handleUniqueMovment(dt);
+      this.handleSpecialMovement(dt);
     }
     if (this.checkCollision) {
       this.handleCollision();
@@ -63,7 +63,7 @@ export default class Character extends GameObject {
       this.checkCollision = true;
     }
   }
-  handleUniqueMovment(dt) {
+  handleSpecialMovement(dt) {
   }
   handleBricks() {
     this.underBricks.forEach((b) => b.pressure -= 1);
