@@ -204,11 +204,10 @@ export default class Brick extends GameObject {
     public snap(state: boolean): void {
 
         // Snap or unsnap based on the given state
-        if (state) {
-            this.isSnapped = true;
-        } else {
-            this.isSnapped = false;
-            // Reposition for unsnapped state to fix 1-frame jump on pickup
+        this.isSnapped = state;
+
+        // Reposition for unsnapped state to fix 1-frame jump on pickup
+        if(!this.isSnapped) {            
             this.setToCursor();
         }
     }

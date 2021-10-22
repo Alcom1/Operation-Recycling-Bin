@@ -181,6 +181,7 @@ export default class CharacterBot extends Character {
             }
             //If going downwards, reset to walking
             else {
+                this.timer = 0;
                 this.setCurrentGroup(0);
             }
         }

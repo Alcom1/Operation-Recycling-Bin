@@ -117,6 +117,7 @@ export default class CharacterBot extends Character {
           a.spos.y = this.ceilSubOffset;
         });
       } else {
+        this.timer = 0;
         this.setCurrentGroup(0);
       }
     }

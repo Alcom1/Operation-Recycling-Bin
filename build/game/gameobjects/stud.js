@@ -39,11 +39,7 @@ export default class Stud extends GameObject {
     }
   }
   snap(state) {
-    if (state) {
-      this.isSnapped = true;
-    } else {
-      this.isSnapped = false;
-    }
+    this.isSnapped = state;
   }
   press() {
     this.isPressed = true;

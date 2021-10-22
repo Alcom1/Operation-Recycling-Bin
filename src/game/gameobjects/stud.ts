@@ -85,12 +85,8 @@ export default class Stud extends GameObject {
 
     /** Set this stud's snap state */
     public snap(state: boolean): void {
-        if (state) {
-            this.isSnapped = true;
-        }
-        else {
-            this.isSnapped = false;
-        }
+        
+        this.isSnapped = state;
     }
 
     /** Setup this stud for pressing */

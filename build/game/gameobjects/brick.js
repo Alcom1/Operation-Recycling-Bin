@@ -88,10 +88,8 @@ export default class Brick extends GameObject {
     }
   }
   snap(state) {
-    if (state) {
-      this.isSnapped = true;
-    } else {
-      this.isSnapped = false;
+    this.isSnapped = state;
+    if (!this.isSnapped) {
       this.setToCursor();
     }
   }
