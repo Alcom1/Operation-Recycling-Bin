@@ -178,6 +178,7 @@ export default class CharacterBot extends Character {
         this.handleBricks(true);
         this.setCurrentGroup(3);
         this.animatGroupCurr.forEach((x) => x.setImageIndex(this.move.x));
+        this.spos.x = 0;
       }
       this.isFlight = true;
     }

@@ -220,14 +220,6 @@ export default class CharacterBot extends Character {
             15,             //FINAL : (n + 3) * 2 + 1
             7,              //HEIGHT: n + 3
             this.move.x);   //Direction
-
-        // var qq = ""
-
-        // for(let i = 0; i < 8; i++) {
-        //     if(cbm & 1 << i) {
-        //         qq += i + " ";
-        //     }
-        // }
         
         //WALL BOUNDARY
         if(
@@ -300,9 +292,11 @@ export default class CharacterBot extends Character {
         //Up
         else if (mask & 0b1000) {
             if(this.animatGroupsIndex != 3) {
-                this.handleBricks(true);
-                this.setCurrentGroup(3);
-                this.animatGroupCurr.forEach(x => x.setImageIndex(this.move.x));
+                this.handleBricks(true);            //Bricks should not be pressured by a floating character
+                this.setCurrentGroup(3);            //Play floating animation
+                this.animatGroupCurr.forEach(x =>   //Match facing direction
+                    x.setImageIndex(this.move.x));
+                this.spos.x = 0;                    //Force grid alignment
             }
             this.isFlight = true;
         }
