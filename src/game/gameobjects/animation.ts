@@ -54,7 +54,7 @@ export default class Animat extends GameObject {
 
     //Set here
     public  zModifierPub : number = 0;              //Public z-modifier
-    private isPaused : boolean = false;
+    public  isVisible : boolean = true;             //If this animation is visible
     private timer : number = 0;                     //Timer to track frames
     private imageIndex: number = 0;                 //Index of the current image
     private animsIndex : number = 0;                //Index of the current animation
@@ -128,7 +128,7 @@ export default class Animat extends GameObject {
     public update(dt: number) {
 
         //For all moving animations
-        if(this.speed > 0 && !this.isPaused) {
+        if(this.speed > 0) {
 
             //Increment timer by delta-time
             this.timer += dt;
@@ -140,18 +140,8 @@ export default class Animat extends GameObject {
         }
     }
 
-    //Pause this sprite
-    public pause() {
-        this.isPaused = true;
-    }
-
-    //Unpase this sprite
-    public unPause() {
-        this.isPaused = false;
-    }
-
-    //Reset the sprite. Reset its timer, update its position, current animation, and z-index.
-    public resetSprite(gpos? : Vect) {
+    //Reset timer, update position, and switch current animation.
+    public reset(gpos? : Vect) {
 
         this.timer = 0;
         if(gpos) { this.gpos = gpos.getAdd(this.gposOffset); }
@@ -173,6 +163,11 @@ export default class Animat extends GameObject {
 
     //Draw this animation
     public draw(ctx : CanvasRenderingContext2D) {
+
+        //Stop if this animation is not visible
+        if(!this.isVisible) {
+            return;
+        }
 
         const size = this.framesSize ?? 0;                                  //Size (horizontal or vertical) of this frame
         const image = this.images[this.imageIndex];                         //Current image

@@ -132,7 +132,7 @@ export default class CharacterBot extends Character {
                 //Reset up/down animation
                 case 3 :
                     this.timer = 0;
-                    this.animatGroupCurr.forEach(a => a.resetSprite());
+                    this.animatGroupCurr.forEach(a => a.reset());
                     break;
 
                 //Default to deactivating this character
@@ -302,6 +302,7 @@ export default class CharacterBot extends Character {
             if(this.animatGroupsIndex != 3) {
                 this.handleBricks(true);
                 this.setCurrentGroup(3);
+                this.animatGroupCurr.forEach(x => x.setImageIndex(this.move.x));
             }
             this.isFlight = true;
         }

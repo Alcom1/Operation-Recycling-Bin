@@ -1,3 +1,4 @@
+import Animat from "./animation.js";
 import BrickPlate from "./brickplate.js";
 const brickPlateFanOverride = Object.freeze({
   images: ["brick_plate", "brick_plate_fan"]
@@ -5,15 +6,45 @@ const brickPlateFanOverride = Object.freeze({
 export default class BrickPlateFan extends BrickPlate {
   constructor(engine2, params) {
     super(engine2, Object.assign(params, brickPlateFanOverride));
+    this.animations = [];
+    this.beams = [];
+    for (let j = this.gpos.y - 1; j > 0; j--) {
+      [0, 1].forEach((i) => {
+        this.animations.push(this.parent.pushGO(new Animat(this.engine, {
+          ...params,
+          position: {x: this.gpos.x + i + 1, y: j},
+          subPosition: {x: 4, y: 0},
+          zModifier: 1e4,
+          images: [{name: "part_wind", offsetX: 0}],
+          speed: 4,
+          framesSize: 30,
+          frameCount: 2,
+          isLoop: true
+        })));
+      });
+    }
   }
   init() {
     this.brickHandler = this.engine.tag.get("BrickHandler", "LevelInterface")[0];
+    this.setBeams();
+  }
+  update() {
+    this.beams.forEach((y, x) => {
+      this.animations.forEach((a) => {
+        if (a.gpos.x == this.gpos.x + x + 1) {
+          a.isVisible = a.gpos.y >= y;
+        }
+      });
+    });
+  }
+  setBeams() {
+    this.beams = [1, 2].map((i) => {
+      return this.brickHandler.checkCollisionRange({x: this.gpos.x + i, y: -1}, 0, this.gpos.y - 1, this.gpos.y - 1).toString(2).length;
+    });
   }
   getColliders() {
-    var beams = [1, 2].map((i) => {
-      return this.brickHandler.checkCollisionRange({x: this.gpos.x + i, y: 0}, 0, this.gpos.y - 1, this.gpos.y - 1).toString(2).length;
-    });
-    return super.getColliders().concat(this.isOn ? beams.map((b, i) => {
+    this.setBeams();
+    return super.getColliders().concat(this.isOn ? this.beams.map((b, i) => {
       return {
         mask: 8,
         min: {x: this.gpos.x + i + 1, y: b},

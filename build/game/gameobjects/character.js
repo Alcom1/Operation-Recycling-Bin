@@ -50,7 +50,7 @@ export default class Character extends GameObject {
     if (this.checkCollision) {
       this.handleCollision();
       this.handleBricks();
-      this.animatGroupCurr.forEach((s) => s.resetSprite(this.gpos));
+      this.animatGroupCurr.forEach((s) => s.reset(this.gpos));
       this.checkCollision = false;
     }
   }
@@ -89,8 +89,7 @@ export default class Character extends GameObject {
     this.animatGroups.forEach((sg, i) => sg.forEach((s) => {
       s.isActive = i == index;
       s.spos = {x: 0, y: 0};
-      s.resetSprite(this.gpos);
-      s.unPause();
+      s.reset(this.gpos);
     }));
   }
   deactivate() {

@@ -6,7 +6,7 @@ export default class Animat extends GameObject {
     this.images = [];
     this.fullSize = {x: 0, y: 0};
     this.zModifierPub = 0;
-    this.isPaused = false;
+    this.isVisible = true;
     this.timer = 0;
     this.imageIndex = 0;
     this.animsIndex = 0;
@@ -54,20 +54,14 @@ export default class Animat extends GameObject {
     };
   }
   update(dt) {
-    if (this.speed > 0 && !this.isPaused) {
+    if (this.speed > 0) {
       this.timer += dt;
       if (this.isLoop && this.timer > 1 / this.speed) {
         this.timer -= 1 / this.speed;
       }
     }
   }
-  pause() {
-    this.isPaused = true;
-  }
-  unPause() {
-    this.isPaused = false;
-  }
-  resetSprite(gpos) {
+  reset(gpos) {
     this.timer = 0;
     if (gpos) {
       this.gpos = gpos.getAdd(this.gposOffset);
@@ -81,6 +75,9 @@ export default class Animat extends GameObject {
     this.imageIndex = index;
   }
   draw(ctx) {
+    if (!this.isVisible) {
+      return;
+    }
     const size = this.framesSize ?? 0;
     const image = this.images[this.imageIndex];
     const widthSlice = size * (this.sliceIndex ?? 0);

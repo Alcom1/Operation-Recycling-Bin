@@ -86,7 +86,7 @@ export default class Character extends GameObject {
             this.handleCollision();
             this.handleBricks();
 
-            this.animatGroupCurr.forEach(s => s.resetSprite(this.gpos));
+            this.animatGroupCurr.forEach(s => s.reset(this.gpos));
 
             this.checkCollision = false;
         }
@@ -160,8 +160,7 @@ export default class Character extends GameObject {
         this.animatGroups.forEach((sg, i) => sg.forEach(s => {
             s.isActive = i == index;
             s.spos = { x : 0, y : 0} as Vect;   //Reset subposition
-            s.resetSprite(this.gpos);           //Make sure all sprites are in the character's position after set
-            s.unPause();                        //Make sure no sprites are paused after set
+            s.reset(this.gpos);           //Make sure all sprites are in the character's position after set
         }));
     }
 
