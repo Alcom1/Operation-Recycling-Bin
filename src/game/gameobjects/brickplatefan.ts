@@ -4,6 +4,7 @@ import { Z_DEPTH } from "engine/utilities/math";
 import Animat, { AnimationParams } from "./animation";
 import BrickHandler from "./brickhandler";
 import BrickPlate, { BrickPlateParams } from "./brickplate";
+import Character from "./character";
 
 const brickPlateFanOverride = Object.freeze({
     images : ["brick_plate", "brick_plate_fan"]
@@ -14,6 +15,7 @@ export default class BrickPlateFan extends BrickPlate {
     private brickHandler!: BrickHandler;
     private animations: Animat[] = [];
     private beams: number[] = [];
+    private characters: Character[] = [];
 
     constructor(engine: Engine, params: BrickPlateParams) {
         super(engine, Object.assign(params, brickPlateFanOverride));
@@ -44,6 +46,11 @@ export default class BrickPlateFan extends BrickPlate {
             "BrickHandler", 
             "LevelInterface")[0] as BrickHandler;
 
+        //Get characters to stop wind
+        this.characters = this.engine.tag.get(
+            "Character", 
+            "Level") as Character[];
+
         //Set the beams for drawing the animations
         this.setBeams();
     }
@@ -64,14 +71,30 @@ export default class BrickPlateFan extends BrickPlate {
     //Set wind beams
     private setBeams() {
 
-        //Set wind beams
-        this.beams = [1, 2].map(i => {
+        //2 beams per fan
+        this.beams = [1, 2] 
+        //Collide wind beams with bricks
+        .map(i => {
             return this.brickHandler.checkCollisionRange(            
                 { x : this.gpos.x + i, y : -1 },        //Position
                 0,                                      //START
                 this.gpos.y - 1,                        //FINAL
                 this.gpos.y - 1).toString(2).length;    //HEIGHT
-        });
+        })
+        //Collide wind beams with characters
+        .map((b, i) => {
+
+            let ret = b;
+
+            //Collide with each character
+            this.characters.forEach(c => {
+                if([1,2].some(x => x == c.gpos.x - this.gpos.x - i)) {
+                    ret = Math.max(ret, c.gpos.y - c.height + 2);   //Stop beam underneath characters
+                }
+            });
+
+            return ret;
+        })
     }
 
     //Get hazard and passive colliders of this brick.

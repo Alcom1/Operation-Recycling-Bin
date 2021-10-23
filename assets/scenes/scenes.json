@@ -27087,6 +27087,20 @@
         }
       },
       {
+        "name": "CharacterBin",
+        "position": {
+          "x": 1,
+          "y": 6
+        }
+      },
+      {
+        "name": "CharacterBin",
+        "position": {
+          "x": 34,
+          "y": 6
+        }
+      },
+      {
         "width": 1,
         "name": "BrickNormal",
         "position": {
