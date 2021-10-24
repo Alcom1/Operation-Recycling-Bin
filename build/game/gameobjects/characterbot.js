@@ -117,6 +117,7 @@ export default class CharacterBot extends Character {
         });
       } else {
         this.timer = 0;
+        this.handleBricks();
         this.setCurrentGroup(0);
       }
     }
