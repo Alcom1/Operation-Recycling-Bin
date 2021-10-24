@@ -88,7 +88,8 @@ export default class BrickPlateFan extends BrickPlate {
 
             //Collide with each character
             this.characters.forEach(c => {
-                if([1,2].some(x => x == c.gpos.x - this.gpos.x - i)) {
+                if (c.gpos.y <= this.gpos.y &&
+                    [1,2].some(x => x == c.gpos.x - this.gpos.x - i)) {
                     ret = Math.max(ret, c.gpos.y - c.height + 3);   //Stop beam underneath characters
                 }
             });
