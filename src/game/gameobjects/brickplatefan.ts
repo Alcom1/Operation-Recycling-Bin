@@ -27,12 +27,12 @@ export default class BrickPlateFan extends BrickPlate {
                 this.animations.push(this.parent.pushGO(new Animat(this.engine, {
                     ...params,
                     position : {x : this.gpos.x + i + 1, y : j},
-                    subPosition : { x : Z_DEPTH / 2 - 2, y : -Z_DEPTH / 2 }, 
+                    subPosition : { x : Z_DEPTH / 2 - 2, y : -Z_DEPTH / 2 + 2 }, 
                     zModifier : 1,                                      
                     images : [{ name : "part_wind", offsetX : 0 }],
-                    speed : 4,                                           
+                    speed : 2,                                           
                     framesSize : 30,
-                    frameCount : 2,
+                    frameCount : 6,
                     isLoop : true                                        
                 } as AnimationParams)) as Animat);
             })
