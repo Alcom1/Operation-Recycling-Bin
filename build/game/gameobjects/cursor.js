@@ -53,7 +53,6 @@ export default class Cursor extends GameObject {
         case 2:
           this.snapState = this.brickHandler.checkCollisionSelection();
           this.brickHandler.setSnappedBricks(this.snapState);
-          this.level.sortGO();
           break;
       }
     }
@@ -77,7 +76,6 @@ export default class Cursor extends GameObject {
           if (this.snapState) {
             this.brickHandler.cullBrickStuds();
           }
-          this.level.sortGO();
           this.isUpdateForced = true;
           this.resetState();
         }
@@ -139,7 +137,6 @@ export default class Cursor extends GameObject {
       this.brickHandler.cullBrickStuds();
       this.brickHandler.setSnappedBricks(true);
       this.brickHandler.setSelectedMinMax(this.spos);
-      this.level.sortGO();
       this.state = 2;
     }
   }

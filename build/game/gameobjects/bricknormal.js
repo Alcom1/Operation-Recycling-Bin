@@ -45,11 +45,11 @@ export default class BrickNormal extends Brick {
   }
   deselect() {
     super.deselect();
-    this.resetStuds();
+    this.resetStuds(true);
   }
   setToCursor() {
     super.setToCursor();
-    this.resetStuds();
+    this.resetStuds(false);
   }
   snap(state) {
     super.snap(state);
@@ -69,11 +69,13 @@ export default class BrickNormal extends Brick {
   showStuds() {
     this.studs.forEach((s) => s.isVisible = true);
   }
-  resetStuds() {
+  resetStuds(isDeselect) {
     for (const [idx, stud2] of this.studs.entries()) {
       stud2.gpos.set(this.gpos.x + idx, this.gpos.y - 1);
       stud2.spos.set(this.spos);
-      stud2.deselect();
+      if (isDeselect) {
+        stud2.deselect();
+      }
     }
   }
   setMinMax(min, max) {

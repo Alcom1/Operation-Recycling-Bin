@@ -22,7 +22,6 @@ export default class Brick extends GameObject {
     this.isGrey = !params.color;
     this.tags.push("Brick");
     this.width = params.width || 1;
-    this.zIndex = getZIndex(this.gpos, this.width * 10);
   }
   update(dt) {
     if (this.isSelected) {
@@ -39,6 +38,19 @@ export default class Brick extends GameObject {
     }
     ctx.drawImage(this.image, 0, -Z_DEPTH - 3 - GMULTY * (this.isMobileFlipped ? -this.mobilePreviewSize.y - 3.2 : this.mobilePreviewSize.y + 3.5));
   }
+  getGOZIndex() {
+    if (this.isSnapped) {
+      return getZIndex(this.gpos.getAdd({
+        x: Math.round(this.spos.x / GMULTX),
+        y: Math.round(this.spos.y / GMULTY)
+      }), this.width * 10);
+    }
+    if (this.isSelected) {
+      return UNDER_CURSOR_Z_INDEX;
+    } else {
+      return getZIndex(this.gpos, this.width * 10);
+    }
+  }
   press() {
     if (!this.isStatic) {
       this.isPressed = true;
@@ -48,7 +60,6 @@ export default class Brick extends GameObject {
     this.isSelected = true;
     this.isChecked = true;
     this.selectedPos.set(pos);
-    this.zIndex = UNDER_CURSOR_Z_INDEX;
   }
   deselect() {
     if (this.isSelected) {
@@ -60,7 +71,6 @@ export default class Brick extends GameObject {
     this.isChecked = false;
     this.spos.set(0, 0);
     this.selectedPos.set(0, 0);
-    this.zIndex = getZIndex(this.gpos, this.width * 10);
   }
   setToCursor() {
     this.spos = this.engine.mouse.getPos().getSub(this.selectedPos).getClamp({
@@ -78,15 +88,8 @@ export default class Brick extends GameObject {
     }
   }
   snap(state) {
-    if (state) {
-      this.isSnapped = true;
-      this.zIndex = getZIndex(this.gpos.getAdd({
-        x: Math.round(this.spos.x / GMULTX),
-        y: Math.round(this.spos.y / GMULTY)
-      }), this.width * 10);
-    } else {
-      this.isSnapped = false;
-      this.zIndex = UNDER_CURSOR_Z_INDEX;
+    this.isSnapped = state;
+    if (!this.isSnapped) {
       this.setToCursor();
     }
   }

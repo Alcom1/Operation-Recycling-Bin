@@ -6,15 +6,15 @@ export default class Character extends GameObject {
   constructor(engine2, params) {
     super(engine2, params);
     this.underBricks = [];
-    this.spriteGroupIndex = 0;
-    this.spriteGroups = [[]];
+    this.animatGroupsIndex = 0;
+    this.animatGroups = [[]];
     this.tags.push("Character");
     this.speed = params.speed ?? 1;
     this.move = new Vect(1, 0);
     this._height = params.height ?? 2;
     this.checkCollision = true;
     for (let i = -1; i <= 1; i++) {
-      this.spriteGroupCurr.push(this.parent.pushGO(new Animat(this.engine, {
+      this.animatGroupCurr.push(this.parent.pushGO(new Animat(this.engine, {
         ...params,
         isLoop: false,
         zModifier: i < 1 ? 300 : 29,
@@ -27,11 +27,11 @@ export default class Character extends GameObject {
   get height() {
     return this._height;
   }
-  get spriteGroupCurr() {
-    return this.spriteGroups[this.spriteGroupIndex];
+  get animatGroupCurr() {
+    return this.animatGroups[this.animatGroupsIndex];
   }
   get isNormalMovment() {
-    return this.spriteGroupIndex == 0;
+    return this.animatGroupsIndex == 0;
   }
   init(ctx, scenes) {
     const level = scenes.find((s) => s.name == "Level");
@@ -45,13 +45,12 @@ export default class Character extends GameObject {
     if (this.isNormalMovment) {
       this.handleNormalMovement(dt);
     } else {
-      this.handleUniqueMovment(dt);
+      this.handleSpecialMovement(dt);
     }
     if (this.checkCollision) {
       this.handleCollision();
       this.handleBricks();
-      this.spriteGroupCurr.forEach((s) => s.resetSprite(this.gpos));
-      this.level.sortGO();
+      this.animatGroupCurr.forEach((s) => s.reset(this.gpos));
       this.checkCollision = false;
     }
   }
@@ -64,33 +63,38 @@ export default class Character extends GameObject {
       this.checkCollision = true;
     }
   }
-  handleUniqueMovment(dt) {
+  handleSpecialMovement(dt) {
   }
-  handleBricks() {
+  handleBricks(isClear = false) {
     this.underBricks.forEach((b) => b.pressure -= 1);
-    this.underBricks = this.brickHandler.checkCollisionRow(this.gpos.getAdd({x: -1, y: 1}), 2);
-    this.underBricks.forEach((b) => b.pressure += 1);
-    this.brickHandler.isPressured = true;
+    if (isClear) {
+      this.underBricks = [];
+      this.brickHandler.isPressured = true;
+    } else {
+      this.underBricks = this.brickHandler.checkCollisionRow(this.gpos.getAdd({x: -1, y: 1}), 2);
+      this.underBricks.forEach((b) => b.pressure += 1);
+      this.brickHandler.isPressured = true;
+    }
   }
   handleCollision() {
   }
   reverse() {
     this.move.x *= -1;
     this.gpos.x += this.move.x;
-    this.spriteGroups[0].forEach((x) => x.setImageIndex(this.move.x));
+    this.animatGroups[0].forEach((x) => x.setImageIndex(this.move.x));
   }
   setCurrentGroup(index) {
-    index = index ?? this.spriteGroupIndex;
-    this.spriteGroupIndex = index;
-    this.spriteGroups.forEach((sg, i) => sg.forEach((s) => {
+    index = index ?? this.animatGroupsIndex;
+    this.animatGroupsIndex = index;
+    this.animatGroups.forEach((sg, i) => sg.forEach((s) => {
       s.isActive = i == index;
-      s.resetSprite(this.gpos);
+      s.spos = {x: 0, y: 0};
+      s.reset(this.gpos);
     }));
-    this.level.sortGO();
   }
   deactivate() {
     this.isActive = false;
-    this.spriteGroups.forEach((sg) => sg.forEach((s) => s.isActive = false));
+    this.animatGroups.forEach((sg) => sg.forEach((s) => s.isActive = false));
     this.underBricks.forEach((b) => b.pressure -= 1);
     this.underBricks = [];
   }

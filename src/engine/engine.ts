@@ -167,8 +167,7 @@ export default class Engine {
                 scene.pushGO(go);
                 this.tag.pushGO(go, scene.name);
             }
-    
-            scene.sortGO();
+            
             scenes.push(scene);
             scenes.sort((a, b) => a.zIndex - b.zIndex);
         }

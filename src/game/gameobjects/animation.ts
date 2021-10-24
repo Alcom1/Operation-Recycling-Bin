@@ -21,7 +21,6 @@ export interface OffsetImage {
 }
 
 export interface AnimationParams extends GameObjectParams {
-
     images : OffsetImageParams[];
     speed? : number;
     isLoop? : boolean;
@@ -43,7 +42,7 @@ export default class Animat extends GameObject {
     private zModifier : number;                     //Modifier value added to the zIndex
     private images : OffsetImage[] = [];            //Animation images with a horizontal offset
     private speed : number;                         //Speed of the animation
-    private isLoop : boolean;                       //If this animation is looped
+    public  isLoop : boolean;                       //If this animation is looped
     private isVert : boolean;                       //If this animation is arranged vertically
     private framesSize? : number;                   //The Horizontal/Vertical size of each frame
     private frameCount : number;                    //The Quantity of frames for this animation
@@ -54,9 +53,14 @@ export default class Animat extends GameObject {
     private fullSize : Point = { x : 0, y : 0 };    //The full dimensions of this animation's images
 
     //Set here
+    public  zModifierPub : number = 0;              //Public z-modifier
+    public  isVisible : boolean = true;             //If this animation is visible
     private timer : number = 0;                     //Timer to track frames
     private imageIndex: number = 0;                 //Index of the current image
     private animsIndex : number = 0;                //Index of the current animation
+
+    //get
+    public get length() : number { return 1 / this.speed; }
 
     constructor(engine : Engine, params : AnimationParams) {
         super(engine, params);
@@ -98,9 +102,6 @@ export default class Animat extends GameObject {
         this.frameCount = params.frameCount;
         this.animsCount = params.animsCount ?? 1;
         this.sliceIndex = params.sliceIndex;
-
-
-        this.setZIndex();
     }
 
     //Retrieve an image from the library
@@ -139,21 +140,20 @@ export default class Animat extends GameObject {
         }
     }
 
-    //Reset the sprite. Reset its timer, update its position, current animation, and z-index.
-    public resetSprite(gpos : Vect) {
+    //Reset timer, update position, and switch current animation.
+    public reset(gpos? : Vect) {
 
         this.timer = 0;
-        this.gpos = gpos.getAdd(this.gposOffset);
+        if(gpos) { this.gpos = gpos.getAdd(this.gposOffset); }
         this.animsIndex = ++this.animsIndex % this.animsCount;
-        this.setZIndex();
     }
 
-    //Set the z-index of this sprite based on its current position and modifier
-    private setZIndex() {
+    //Get z-index for draw sorting
+    public getGOZIndex() : number {
 
-        this.zIndex = getZIndex(
+        return getZIndex(
             this.gpos,
-            this.zModifier)
+            this.zModifier + this.zModifierPub)
     }
 
     //Set the image index, swapping the image for this animation.
@@ -163,6 +163,11 @@ export default class Animat extends GameObject {
 
     //Draw this animation
     public draw(ctx : CanvasRenderingContext2D) {
+
+        //Stop if this animation is not visible
+        if(!this.isVisible) {
+            return;
+        }
 
         const size = this.framesSize ?? 0;                                  //Size (horizontal or vertical) of this frame
         const image = this.images[this.imageIndex];                         //Current image
@@ -186,6 +191,15 @@ export default class Animat extends GameObject {
             this.isVert ? 0 : GMULTY - this.fullSize.y,
             this.isVert ? oppoSize : size,  
             this.isVert ? size : oppoSize);
+
+        // ctx.globalAlpha = 0.5;
+        // ctx.strokeStyle = "#F00"
+        // ctx.lineWidth = 4;
+        // ctx.strokeRect(
+        //     widthSlice, 
+        //     this.isVert ? 0 : GMULTY, 
+        //     this.isVert ? oppoSize : size, 
+        //     this.isVert ? size : -oppoSize);
     }
 
     private getAnimationOffset(checkVert : boolean) : number {

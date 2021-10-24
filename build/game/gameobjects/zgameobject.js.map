@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["C:\\Users\\Alcom\\Desktop\\Dev\\Git\\Operation Recycling Bin\\src\\game\\gameobjects\\zgameobject.ts"],
+  "sourcesContent": ["import Engine from \"engine/engine\";\r\nimport GameObject, { GameObjectParams } from \"engine/gameobjects/gameobject\";\r\n\r\nexport interface ZGameObjectParams extends GameObjectParams {\r\n    zIndex: number;\r\n}\r\n\r\n/** Game object with a static z-index */\r\nexport default class ZGameObject extends GameObject {\r\n\r\n    private zIndex : number;\r\n\r\n    constructor(engine: Engine, params: ZGameObjectParams) {\r\n        super(engine, params);\r\n\r\n        this.zIndex = params.zIndex;\r\n    }\r\n\r\n    public getGOZIndex() : number {\r\n        return this.zIndex;\r\n    }\r\n}"],
+  "mappings": "AACA;AADA,yCAQyC;AAAA,EAIrC,YAAY;AACR,UAAM,SAAQ;AAEd,SAAK,SAAS,OAAO;AAAA;AAAA,EAGlB;AACH,WAAO,KAAK;AAAA;AAAA;",
+  "names": []
+}

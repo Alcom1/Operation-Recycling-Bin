@@ -54,8 +54,10 @@ export default class CollisionModule {
         }
     }
 
+    //Update - check and trigger collisions for all game objects in all scenes
     public update() {
 
+        //Trigger collisions for each scene. Scenes don't interact with each other.
         this.scenes.forEach(s => {
 
             //Get all active game objects with colliders
@@ -75,10 +77,13 @@ export default class CollisionModule {
         });
     }
 
+    //Get passive colliders that are within the given box
     public collidePassive(min : Point, max : Point) : Collider[] {
+
         return this.getPassiveColliders().filter(c => colRectRectCorners(c.min, c.max, min, max))
     }
 
+    //Get passive colliders (mask == 0)
     private getPassiveColliders() : Collider[] {
 
         return this.scenes
@@ -105,10 +110,12 @@ export default class CollisionModule {
         }
     }
 
+    //Compare two colliders, check if they overlap
     private compareColliders(c1 : Collider, c2 : Collider) : boolean {
         return colRectRectCorners(c1.min, c1.max, c2.min, c2.max)
     }
 
+    //Remove scene reference from colliders
     public clear(sceneNames: string[]) {
         this.scenes = this.scenes.filter(sg => !sceneNames.some(sn => sg.name == sn));
     }

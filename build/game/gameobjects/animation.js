@@ -5,6 +5,8 @@ export default class Animat extends GameObject {
     super(engine2, params);
     this.images = [];
     this.fullSize = {x: 0, y: 0};
+    this.zModifierPub = 0;
+    this.isVisible = true;
     this.timer = 0;
     this.imageIndex = 0;
     this.animsIndex = 0;
@@ -35,7 +37,9 @@ export default class Animat extends GameObject {
     this.frameCount = params.frameCount;
     this.animsCount = params.animsCount ?? 1;
     this.sliceIndex = params.sliceIndex;
-    this.setZIndex();
+  }
+  get length() {
+    return 1 / this.speed;
   }
   getImage(params) {
     return {
@@ -57,19 +61,23 @@ export default class Animat extends GameObject {
       }
     }
   }
-  resetSprite(gpos) {
+  reset(gpos) {
     this.timer = 0;
-    this.gpos = gpos.getAdd(this.gposOffset);
+    if (gpos) {
+      this.gpos = gpos.getAdd(this.gposOffset);
+    }
     this.animsIndex = ++this.animsIndex % this.animsCount;
-    this.setZIndex();
   }
-  setZIndex() {
-    this.zIndex = getZIndex(this.gpos, this.zModifier);
+  getGOZIndex() {
+    return getZIndex(this.gpos, this.zModifier + this.zModifierPub);
   }
   setImageIndex(index) {
     this.imageIndex = index;
   }
   draw(ctx) {
+    if (!this.isVisible) {
+      return;
+    }
     const size = this.framesSize ?? 0;
     const image = this.images[this.imageIndex];
     const widthSlice = size * (this.sliceIndex ?? 0);

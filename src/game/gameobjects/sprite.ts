@@ -1,13 +1,13 @@
 import Engine from "engine/engine";
-import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
+import ZGameObject, { ZGameObjectParams } from "./zgameobject";
 
-interface SpriteParams extends GameObjectParams {
+interface SpriteParams extends ZGameObjectParams {
     image: string;
     extension?: string;
 }
 
 /** Single image gameobject */
-export default class Sprite extends GameObject {
+export default class Sprite extends ZGameObject {
 
     private image : HTMLImageElement;
 

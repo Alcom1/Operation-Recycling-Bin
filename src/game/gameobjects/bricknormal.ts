@@ -90,7 +90,7 @@ export default class BrickNormal extends Brick {
     public deselect(): void {
         super.deselect();
 
-        this.resetStuds();
+        this.resetStuds(true);
     }
 
     /** Set the brick to match the cursor position, based on its stored selected position */
@@ -98,7 +98,7 @@ export default class BrickNormal extends Brick {
         super.setToCursor();
 
         // Set studs to match the position of this brick while selected.
-        this.resetStuds();
+        this.resetStuds(false);
     }
 
     /** Snap this brick to the grid based on the given state */
@@ -141,7 +141,7 @@ export default class BrickNormal extends Brick {
     }
  
     /** Reset studs to match the position of this brick */
-    private resetStuds(): void {
+    private resetStuds(isDeselect : boolean): void {
 
         for (const [idx, stud] of this.studs.entries()) {
 
@@ -150,7 +150,9 @@ export default class BrickNormal extends Brick {
             // Set stud sub pos to match this brick
             stud.spos.set(this.spos);
             // Deselect this stud
-            stud.deselect();
+            if(isDeselect) {
+                stud.deselect();
+            }
         }
     }
 

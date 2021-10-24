@@ -83,7 +83,6 @@ export default class Cursor extends GameObject {
                 case CursorState.CARRY:
                     this.snapState = this.brickHandler.checkCollisionSelection();
                     this.brickHandler.setSnappedBricks(this.snapState);
-                    this.level.sortGO();
                     break;
             }
         }
@@ -126,9 +125,6 @@ export default class Cursor extends GameObject {
                     if (this.snapState) {
                         this.brickHandler.cullBrickStuds();
                     }
-
-                    //Sort for new brick z-indices
-                    this.level.sortGO();
 
                     this.isUpdateForced = true;
                     this.resetState();
@@ -225,7 +221,6 @@ export default class Cursor extends GameObject {
             this.brickHandler.setSnappedBricks(true);       // Carried bricks should start as 
             this.brickHandler.setSelectedMinMax(this.spos); // Set minimum and maximum position of carried bricks
 
-            this.level.sortGO();                            // Sort for new brick z-indices
             this.state = CursorState.CARRY;                 // Set state to NONE stateStart carrying if we selected some bricks
         }
     }
