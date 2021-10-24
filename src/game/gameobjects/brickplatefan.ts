@@ -28,7 +28,7 @@ export default class BrickPlateFan extends BrickPlate {
                     ...params,
                     position : {x : this.gpos.x + i + 1, y : j},
                     subPosition : { x : Z_DEPTH / 2 - 2, y : -Z_DEPTH / 2 }, 
-                    zModifier : 20,                                      
+                    zModifier : 1,                                      
                     images : [{ name : "part_wind", offsetX : 0 }],
                     speed : 4,                                           
                     framesSize : 30,
