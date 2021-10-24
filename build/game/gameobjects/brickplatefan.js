@@ -47,7 +47,7 @@ export default class BrickPlateFan extends BrickPlate {
       let ret = b;
       this.characters.forEach((c) => {
         if ([1, 2].some((x) => x == c.gpos.x - this.gpos.x - i)) {
-          ret = Math.max(ret, c.gpos.y - c.height + 2);
+          ret = Math.max(ret, c.gpos.y - c.height + 3);
         }
       });
       return ret;

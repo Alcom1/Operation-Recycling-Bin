@@ -45,7 +45,6 @@ const characterBotOverride = Object.freeze({
             { name : "char_bot_fly_right", offsetX : 14 }],
         speed : 2.5,    //Bot moves fast
         gposOffset : { x : -1, y : 0},
-        zModifier : 600,
         frameCount : 10,
         animsCount : 2,
         isLoop : true,

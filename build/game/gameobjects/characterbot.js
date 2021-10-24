@@ -30,7 +30,6 @@ const characterBotOverride = Object.freeze({
     ],
     speed: 2.5,
     gposOffset: {x: -1, y: 0},
-    zModifier: 600,
     frameCount: 10,
     animsCount: 2,
     isLoop: true,

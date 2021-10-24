@@ -28,7 +28,7 @@ export default class BrickPlateFan extends BrickPlate {
                     ...params,
                     position : {x : this.gpos.x + i + 1, y : j},
                     subPosition : { x : Z_DEPTH / 2 - 2, y : -Z_DEPTH / 2 }, 
-                    zModifier : 1,                                      
+                    zModifier : 20,                                      
                     images : [{ name : "part_wind", offsetX : 0 }],
                     speed : 4,                                           
                     framesSize : 30,
@@ -89,7 +89,7 @@ export default class BrickPlateFan extends BrickPlate {
             //Collide with each character
             this.characters.forEach(c => {
                 if([1,2].some(x => x == c.gpos.x - this.gpos.x - i)) {
-                    ret = Math.max(ret, c.gpos.y - c.height + 2);   //Stop beam underneath characters
+                    ret = Math.max(ret, c.gpos.y - c.height + 3);   //Stop beam underneath characters
                 }
             });
 
