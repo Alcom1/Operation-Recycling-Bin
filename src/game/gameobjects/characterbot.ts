@@ -275,7 +275,7 @@ export default class CharacterBot extends Character {
     public getColliders() : Collider[] {
         
         return [{ 
-            mask : 0b1111,   //All collisions
+            mask : 0b11111, //All collisions
             min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
             max : this.gpos.getAdd({ x :  1, y : 1}) 
         },{ 
@@ -306,6 +306,11 @@ export default class CharacterBot extends Character {
                 this.spos.x = 0;                    //Force grid alignment
             }
             this.isFlight = true;
+        }
+        //Armor
+        else if (mask & 0b10000) {
+            this.isArmor = true;
+            this.resetImageIndex();
         }
     }
 }

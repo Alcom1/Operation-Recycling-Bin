@@ -2,7 +2,8 @@ import {Z_DEPTH} from "../../engine/utilities/math.js";
 import Animat from "./animation.js";
 import BrickPlate from "./brickplate.js";
 const brickPlateFanOverride = Object.freeze({
-  images: ["brick_plate", "brick_plate_fan"]
+  images: ["brick_plate", "brick_plate_fan"],
+  width: 4
 });
 export default class BrickPlateFan extends BrickPlate {
   constructor(engine2, params) {

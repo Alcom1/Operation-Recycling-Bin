@@ -7,7 +7,8 @@ import BrickPlate, { BrickPlateParams } from "./brickplate";
 import Character from "./character";
 
 const brickPlateFanOverride = Object.freeze({
-    images : ["brick_plate", "brick_plate_fan"]
+    images : ["brick_plate", "brick_plate_fan"],
+    width : 4
 });
 
 export default class BrickPlateFan extends BrickPlate {

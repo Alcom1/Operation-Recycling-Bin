@@ -10,10 +10,10 @@ export interface BrickPlateParams extends BrickParams {
 export default class BrickPlate extends Brick {
 
     protected isOn : boolean;
-    private images : HTMLImageElement[];
+    protected images : HTMLImageElement[];
 
     constructor(engine: Engine, params: BrickPlateParams) {
-        super(engine, Object.assign(params, { width : 4 }));
+        super(engine, Object.assign(params));
 
         this.images = params.images.map(i => i ? this.engine.library.getImage(i) : {} as HTMLImageElement);
 

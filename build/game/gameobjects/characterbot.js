@@ -165,7 +165,7 @@ export default class CharacterBot extends Character {
   }
   getColliders() {
     return [{
-      mask: 15,
+      mask: 31,
       min: this.gpos.getAdd({x: -1, y: 1 - this.height}),
       max: this.gpos.getAdd({x: 1, y: 1})
     }, {
@@ -187,6 +187,9 @@ export default class CharacterBot extends Character {
         this.spos.x = 0;
       }
       this.isFlight = true;
+    } else if (mask & 16) {
+      this.isArmor = true;
+      this.resetImageIndex();
     }
   }
 }

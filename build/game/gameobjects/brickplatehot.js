@@ -1,7 +1,8 @@
 import Animat from "./animation.js";
 import BrickPlate from "./brickplate.js";
 const brickPlateHotOverride = Object.freeze({
-  images: ["brick_plate", "brick_plate_hot"]
+  images: ["brick_plate", "brick_plate_hot"],
+  width: 4
 });
 export default class BrickPlateHot extends BrickPlate {
   constructor(engine2, params) {

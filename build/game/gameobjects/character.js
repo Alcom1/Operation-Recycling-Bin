@@ -84,6 +84,9 @@ export default class Character extends GameObject {
   reverse() {
     this.move.x *= -1;
     this.gpos.x += this.move.x;
+    this.resetImageIndex();
+  }
+  resetImageIndex() {
     this.animatGroups[0].forEach((x) => x.setImageIndex(this.normalMoveIndex));
   }
   setCurrentGroup(index) {

@@ -23966,6 +23966,13 @@
         }
       },
       {
+        "name": "BrickSuper",
+        "position": {
+          "x": 31,
+          "y": 17
+        }
+      },
+      {
         "width": 2,
         "name": "BrickNormal",
         "position": {
@@ -23978,6 +23985,13 @@
         "name": "BrickNormal",
         "position": {
           "x": 0,
+          "y": 17
+        }
+      },
+      {
+        "name": "BrickSuper",
+        "position": {
+          "x": 2,
           "y": 17
         }
       },
@@ -24065,6 +24079,13 @@
         "name": "BrickNormal",
         "position": {
           "x": 10,
+          "y": 11
+        }
+      },
+      {
+        "name": "BrickSuper",
+        "position": {
+          "x": 8,
           "y": 11
         }
       },
@@ -26095,6 +26116,13 @@
         }
       },
       {
+        "name": "BrickSuper",
+        "position": {
+          "x": 7,
+          "y": 17
+        }
+      },
+      {
         "isOn": true,
         "name": "BrickPlateHot",
         "position": {
@@ -26646,6 +26674,13 @@
         }
       },
       {
+        "name": "BrickSuper",
+        "position": {
+          "x": 1,
+          "y": 23
+        }
+      },
+      {
         "width": 2,
         "name": "BrickNormal",
         "position": {
@@ -26879,6 +26914,13 @@
         "name": "BrickNormal",
         "position": {
           "x": 32,
+          "y": 8
+        }
+      },
+      {
+        "name": "BrickSuper",
+        "position": {
+          "x": 30,
           "y": 8
         }
       },
