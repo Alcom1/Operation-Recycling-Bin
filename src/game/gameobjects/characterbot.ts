@@ -21,7 +21,9 @@ const characterBotOverride = Object.freeze({
     speed : 2.5,    //Bot moves fast
     images : [      //Bot has left & right animations
         { name : "char_bot_left", offsetX : 36 },
-        { name : "char_bot_right", offsetX : 14}],
+        { name : "char_bot_right", offsetX : 14},
+        { name : "char_bot_left_armor", offsetX : 36 },
+        { name : "char_bot_right_armor", offsetX : 14}],
     frameCount : 10,
     animsCount : 2,
 
@@ -68,6 +70,11 @@ export default class CharacterBot extends Character {
     private ceilSubOffset = -6;         //Offset for up/down movement
     private verticalSpeed = 500;
     private isFlight : boolean = false;
+    private isArmor : boolean = false;
+
+    protected get normalMoveIndex() : number { 
+        return this.move.x * (this.isArmor ? 2 : 1)
+    }
 
     constructor(engine: Engine, params: CharacterBotParams) {
         super(engine, Object.assign(params, characterBotOverride));
@@ -286,7 +293,7 @@ export default class CharacterBot extends Character {
             this.setCurrentGroup(1);
         }
         //Hazard
-        else if (mask & 0b100 && this.isNormalMovment) {
+        else if (mask & 0b100 && this.isNormalMovment && !this.isArmor) {
             this.setCurrentGroup(2);
         }
         //Up

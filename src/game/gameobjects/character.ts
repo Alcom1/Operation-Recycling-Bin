@@ -30,6 +30,7 @@ export default class Character extends GameObject {
     protected animatGroups: Animat[][] = [[]];
     protected get animatGroupCurr() : Animat[] { return this.animatGroups[this.animatGroupsIndex] }
     protected get isNormalMovment() : boolean { return this.animatGroupsIndex == 0 }
+    protected get normalMoveIndex() : number { return this.move.x }
 
     constructor(engine: Engine, params: CharacterParams) {
         super(engine, params);
@@ -149,7 +150,7 @@ export default class Character extends GameObject {
 
         this.move.x *= -1;
         this.gpos.x += this.move.x;
-        this.animatGroups[0].forEach(x => x.setImageIndex(this.move.x));
+        this.animatGroups[0].forEach(x => x.setImageIndex(this.normalMoveIndex));
     }
 
     //Set current & active group based on the group index

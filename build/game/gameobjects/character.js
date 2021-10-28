@@ -33,6 +33,9 @@ export default class Character extends GameObject {
   get isNormalMovment() {
     return this.animatGroupsIndex == 0;
   }
+  get normalMoveIndex() {
+    return this.move.x;
+  }
   init(ctx, scenes) {
     const level = scenes.find((s) => s.name == "Level");
     if (!level)
@@ -81,7 +84,7 @@ export default class Character extends GameObject {
   reverse() {
     this.move.x *= -1;
     this.gpos.x += this.move.x;
-    this.animatGroups[0].forEach((x) => x.setImageIndex(this.move.x));
+    this.animatGroups[0].forEach((x) => x.setImageIndex(this.normalMoveIndex));
   }
   setCurrentGroup(index) {
     index = index ?? this.animatGroupsIndex;

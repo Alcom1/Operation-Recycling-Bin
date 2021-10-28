@@ -96,7 +96,10 @@ export default class Animat extends GameObject {
 
             //Many images
             default:
-                params.images.forEach(i => this.images.push(this.getImage(i)));
+                this.imageIndex = 1;
+                params.images.forEach((x, i) => {
+                    this.images[OPPOSITE_DIRS[i % 2] * Math.ceil((i + 1) / 2)] = this.getImage(x);
+                });
         }
 
         this.frameCount = params.frameCount;

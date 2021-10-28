@@ -6,7 +6,9 @@ const characterBotOverride = Object.freeze({
   speed: 2.5,
   images: [
     {name: "char_bot_left", offsetX: 36},
-    {name: "char_bot_right", offsetX: 14}
+    {name: "char_bot_right", offsetX: 14},
+    {name: "char_bot_left_armor", offsetX: 36},
+    {name: "char_bot_right_armor", offsetX: 14}
   ],
   frameCount: 10,
   animsCount: 2,
@@ -51,6 +53,7 @@ export default class CharacterBot extends Character {
     this.ceilSubOffset = -6;
     this.verticalSpeed = 500;
     this.isFlight = false;
+    this.isArmor = false;
     params.animsMisc.forEach((m) => {
       var newIndex = this.animatGroups.push([]) - 1;
       for (let i = -1; i <= (m.isSliced ? 1 : -1); i++) {
@@ -69,6 +72,9 @@ export default class CharacterBot extends Character {
       }
       this.animatGroups[newIndex].forEach((a) => this.parent.pushGO(a));
     });
+  }
+  get normalMoveIndex() {
+    return this.move.x * (this.isArmor ? 2 : 1);
   }
   handleSpecialMovement(dt) {
     this.timer += dt;
@@ -171,7 +177,7 @@ export default class CharacterBot extends Character {
   resolveCollision(mask) {
     if (mask & 2) {
       this.setCurrentGroup(1);
-    } else if (mask & 4 && this.isNormalMovment) {
+    } else if (mask & 4 && this.isNormalMovment && !this.isArmor) {
       this.setCurrentGroup(2);
     } else if (mask & 8) {
       if (this.animatGroupsIndex != 3) {
