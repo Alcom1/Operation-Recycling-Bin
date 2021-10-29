@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["C:\\Users\\Alcom\\Desktop\\Dev\\Git\\Operation Recycling Bin\\src\\game\\gameobjects\\sprite.ts"],
-  "sourcesContent": ["import Engine from \"engine/engine\";\r\nimport ZGameObject, { ZGameObjectParams } from \"./zgameobject\";\r\n\r\ninterface SpriteParams extends ZGameObjectParams {\r\n    image: string;\r\n    extension?: string;\r\n}\r\n\r\n/** Single image gameobject */\r\nexport default class Sprite extends ZGameObject {\r\n\r\n    private image : HTMLImageElement;\r\n\r\n    constructor(engine: Engine, params: SpriteParams) {\r\n        super(engine, params);\r\n\r\n        this.image = this.engine.library.getImage(params.image, params.extension);\r\n    }\r\n\r\n    public draw(ctx: CanvasRenderingContext2D): void {\r\n        ctx.drawImage(this.image, 0, 0);\r\n    }\r\n}"],
+  "sourcesContent": ["import Engine from \"engine/engine\";\r\nimport ZGameObject, { ZGameObjectParams } from \"./zgameobject\";\r\n\r\nexport interface SpriteParams extends ZGameObjectParams {\r\n    image: string;\r\n    extension?: string;\r\n}\r\n\r\n/** Single image gameobject */\r\nexport default class Sprite extends ZGameObject {\r\n\r\n    private image : HTMLImageElement;\r\n\r\n    constructor(engine: Engine, params: SpriteParams) {\r\n        super(engine, params);\r\n\r\n        this.image = this.engine.library.getImage(params.image, params.extension);\r\n    }\r\n\r\n    public draw(ctx: CanvasRenderingContext2D): void {\r\n        ctx.drawImage(this.image, 0, 0);\r\n    }\r\n}"],
   "mappings": "AACA;AADA,oCASoC;AAAA,EAIhC,YAAY;AACR,UAAM,SAAQ;AAEd,SAAK,QAAQ,KAAK,OAAO,QAAQ,SAAS,OAAO,OAAO,OAAO;AAAA;AAAA,EAG5D;AACH,QAAI,UAAU,KAAK,OAAO,GAAG;AAAA;AAAA;",
   "names": []
 }

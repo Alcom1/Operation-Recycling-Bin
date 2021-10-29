@@ -1,4 +1,6 @@
+import {getZIndex} from "../../engine/utilities/math.js";
 import BrickPlate from "./brickplate.js";
+import Sprite from "./sprite.js";
 const brickSuperOverride = Object.freeze({
   images: ["brick_super_off", "brick_super"],
   width: 2,
@@ -7,6 +9,13 @@ const brickSuperOverride = Object.freeze({
 export default class BrickSuper extends BrickPlate {
   constructor(engine2, params) {
     super(engine2, Object.assign(params, brickSuperOverride));
+    var topGPos = this.gpos.getAdd({x: 0, y: -1});
+    this.topSprite = this.parent.pushGO(new Sprite(engine2, {
+      ...params,
+      position: topGPos,
+      zIndex: getZIndex(topGPos, -1),
+      image: "brick_super_top"
+    }));
   }
   getColliders() {
     return super.getColliders().concat(this.isOn ? [{
@@ -19,6 +28,7 @@ export default class BrickSuper extends BrickPlate {
     if (mask & 16) {
       this.isOn = false;
       this.image = this.images[+this.isOn];
+      this.topSprite.isActive = false;
     }
   }
 }

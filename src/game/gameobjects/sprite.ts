@@ -1,7 +1,7 @@
 import Engine from "engine/engine";
 import ZGameObject, { ZGameObjectParams } from "./zgameobject";
 
-interface SpriteParams extends ZGameObjectParams {
+export interface SpriteParams extends ZGameObjectParams {
     image: string;
     extension?: string;
 }

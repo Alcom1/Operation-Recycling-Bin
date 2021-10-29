@@ -13,7 +13,7 @@ export default class ZGameObject extends GameObject {
     constructor(engine: Engine, params: ZGameObjectParams) {
         super(engine, params);
 
-        this.zIndex = params.zIndex;
+        this.zIndex = params.zIndex || 0;
     }
 
     public getGOZIndex() : number {

@@ -1,7 +1,9 @@
 import Engine from "engine/engine";
+import { GameObjectParams } from "engine/gameobjects/gameobject";
 import { Collider } from "engine/modules/collision";
 import { getZIndex, GMULTY } from "engine/utilities/math";
 import BrickPlate, { BrickPlateParams } from "./brickplate";
+import Sprite, { SpriteParams } from "./sprite";
 
 const brickSuperOverride = Object.freeze({
     images : ["brick_super_off", "brick_super"],
@@ -11,8 +13,22 @@ const brickSuperOverride = Object.freeze({
 
 export default class BrickSuper extends BrickPlate {
 
+    private topSprite : Sprite;
+
     constructor(engine: Engine, params: BrickPlateParams) {
         super(engine, Object.assign(params, brickSuperOverride));
+
+        var topGPos = this.gpos.getAdd({x : 0, y : -1})
+
+        this.topSprite = this.parent.pushGO(
+            new Sprite(
+                engine,
+                {
+                    ...params,
+                    position : topGPos,
+                    zIndex : getZIndex(topGPos, -1),
+                    image : "brick_super_top"
+                } as SpriteParams)) as Sprite
     }
 
     //Get hazard and passive colliders of this brick.
@@ -33,6 +49,7 @@ export default class BrickSuper extends BrickPlate {
         if (mask & 0b10000) {
             this.isOn = false;
             this.image = this.images[+this.isOn];
+            this.topSprite.isActive = false;
         }
     }
 }
