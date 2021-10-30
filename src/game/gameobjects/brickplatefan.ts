@@ -31,8 +31,7 @@ export default class BrickPlateFan extends BrickPlate {
                     subPosition : { x : Z_DEPTH / 2 - 2, y : -Z_DEPTH / 2 + 2 }, 
                     zModifier : 1,                                      
                     images : [{ name : "part_wind", offsetX : 0 }],
-                    speed : 2,                                           
-                    framesSize : 30,
+                    speed : 2,
                     frameCount : 6,
                     isLoop : true                                        
                 } as AnimationParams)) as Animat);

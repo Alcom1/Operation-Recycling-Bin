@@ -125,6 +125,11 @@ export default class Animat extends GameObject {
             x : this.images[this.imageIndex].image.width,
             y : this.images[this.imageIndex].image.height
         }
+
+        //Default frame size based on the image size and number of frames
+        if(!this.framesSize) {
+            this.framesSize = (this.isVert ? this.fullSize.y : this.fullSize.x) * this.animsCount / this.frameCount
+        }
     }
 
     //Update and track timer for this animation

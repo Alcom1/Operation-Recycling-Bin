@@ -14,13 +14,11 @@ const characterBotOverride = Object.freeze({
   animsCount: 2,
   animsMisc: [{
     images: [{name: "char_bot_bin", offsetX: 0}],
-    framesSize: 126,
     gposOffset: {x: -1, y: 0},
     zModifier: 150,
     frameCount: 12
   }, {
     images: [{name: "char_bot_explosion", offsetX: 0}],
-    framesSize: 200,
     gposOffset: {x: -3, y: 0},
     zModifier: 600,
     frameCount: 16,
@@ -34,7 +32,6 @@ const characterBotOverride = Object.freeze({
     gposOffset: {x: -1, y: 0},
     frameCount: 10,
     animsCount: 2,
-    isLoop: true,
     isSliced: true
   }, {
     images: [
@@ -83,6 +80,9 @@ export default class CharacterBot extends Character {
   }
   get animImageIndex() {
     return this.move.x * (this.isArmor ? 2 : 1);
+  }
+  update(dt) {
+    super.update(dt);
   }
   handleSpecialMovement(dt) {
     this.timer += dt;

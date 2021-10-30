@@ -20,7 +20,6 @@ export default class BrickPlateFan extends BrickPlate {
           zModifier: 1,
           images: [{name: "part_wind", offsetX: 0}],
           speed: 2,
-          framesSize: 30,
           frameCount: 6,
           isLoop: true
         })));

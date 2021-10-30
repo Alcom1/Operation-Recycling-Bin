@@ -22,7 +22,6 @@ export default class BrickPlateHot extends BrickPlate {
             zModifier : 40,                                         //Z-index modifier of a 4-width brick
             images : [{ name : "brick_plate_hot", offsetX : 0 }],   //Single hotplate animation image
             speed : 2,                                              //Hotplate animation is weirdly fast
-            framesSize : 55,
             frameCount : 7,
             isVert : true                                           //Hotplate animation frames are stacked vertically
         } as AnimationParams)) as Animat;

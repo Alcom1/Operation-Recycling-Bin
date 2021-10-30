@@ -1,16 +1,14 @@
 import Engine from "engine/engine";
 import Character, { CharacterParams } from "./character";
-import { BOUNDARY, bitStack, colRectRectSizes, GMULTY, GMULTX} from "engine/utilities/math";
-import Scene from "engine/scene/scene";
+import { BOUNDARY, bitStack, GMULTY, GMULTX} from "engine/utilities/math";
 import Animat, { AnimationParams } from "./animation";
-import CharacterBin from "./characterbin";
 import { Collider } from "engine/modules/collision";
 
-export interface CharacterBotParams extends CharacterParams {
+interface CharacterBotParams extends CharacterParams {
     animsMisc : AnimationInputParams[];
 }
 
-export interface AnimationInputParams extends AnimationParams {
+interface AnimationInputParams extends AnimationParams {
     isSliced? : boolean;
 }
 
@@ -30,13 +28,11 @@ const characterBotOverride = Object.freeze({
     //Misc animation parameters
     animsMisc : [{ //Bot-bin interaction animation
         images : [{ name : "char_bot_bin", offsetX : 0 }],
-        framesSize : 126,
         gposOffset : { x : -1, y : 0},
         zModifier : 150,
         frameCount : 12
     },{             //Bot explosion animation
         images : [{ name : "char_bot_explosion", offsetX : 0 }],
-        framesSize : 200,
         gposOffset : { x : -3, y : 0},
         zModifier : 600,
         frameCount : 16,
@@ -49,7 +45,6 @@ const characterBotOverride = Object.freeze({
         gposOffset : { x : -1, y : 0},
         frameCount : 10,
         animsCount : 2,
-        isLoop : true,
         isSliced : true
     },{             //Bot armor animation
         images : [  //Flying has left & right animations
@@ -110,6 +105,11 @@ export default class CharacterBot extends Character {
             }
             this.animatGroups[newIndex].forEach(a => this.parent.pushGO(a));
         });
+    }
+
+    //Unique bot update
+    public update(dt : number) {
+        super.update(dt);
     }
 
     //Special movement

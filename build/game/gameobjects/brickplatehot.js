@@ -13,7 +13,6 @@ export default class BrickPlateHot extends BrickPlate {
       zModifier: 40,
       images: [{name: "brick_plate_hot", offsetX: 0}],
       speed: 2,
-      framesSize: 55,
       frameCount: 7,
       isVert: true
     }));

@@ -55,6 +55,9 @@ export default class Animat extends GameObject {
       x: this.images[this.imageIndex].image.width,
       y: this.images[this.imageIndex].image.height
     };
+    if (!this.framesSize) {
+      this.framesSize = (this.isVert ? this.fullSize.y : this.fullSize.x) * this.animsCount / this.frameCount;
+    }
   }
   update(dt) {
     if (this.speed > 0) {
