@@ -282,13 +282,17 @@ export default class CharacterBot extends Character {
     public getColliders() : Collider[] {
         
         return [{ 
-            mask : 0b11111, //All collisions
+            mask : 0b1111, //All collisions
             min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
             max : this.gpos.getAdd({ x :  1, y : 1}) 
         },{ 
             mask : 0,       //Passive
             min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
             max : this.gpos.getAdd({ x :  1, y : 1}) 
+        },{ 
+            mask : 0b10000, //Armor collides with legs
+            min : this.gpos.getAdd({ x : -1 - Math.min(this.move.x, 0), y : 0}),
+            max : this.gpos.getAdd({ x :    - Math.min(this.move.x, 0), y : 1}) 
         }];
     }
 
@@ -306,9 +310,9 @@ export default class CharacterBot extends Character {
         //Up
         else if (mask & 0b1000) {
             if(this.animatGroupsIndex != 3) {
-                this.handleBricks(true);            //Bricks should not be pressured by a floating character
-                this.setCurrentGroup(3);            //Play floating animation
-                this.spos.x = 0;                    //Force grid alignment
+                this.handleBricks(true);    //Bricks should not be pressured by a floating character
+                this.setCurrentGroup(3);    //Play floating animation
+                this.spos.x = 0;            //Force grid alignment
             }
             this.isFlight = true;
         }

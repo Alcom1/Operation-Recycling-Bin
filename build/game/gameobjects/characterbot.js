@@ -173,13 +173,17 @@ export default class CharacterBot extends Character {
   }
   getColliders() {
     return [{
-      mask: 31,
+      mask: 15,
       min: this.gpos.getAdd({x: -1, y: 1 - this.height}),
       max: this.gpos.getAdd({x: 1, y: 1})
     }, {
       mask: 0,
       min: this.gpos.getAdd({x: -1, y: 1 - this.height}),
       max: this.gpos.getAdd({x: 1, y: 1})
+    }, {
+      mask: 16,
+      min: this.gpos.getAdd({x: -1 - Math.min(this.move.x, 0), y: 0}),
+      max: this.gpos.getAdd({x: -Math.min(this.move.x, 0), y: 1})
     }];
   }
   resolveCollision(mask) {
