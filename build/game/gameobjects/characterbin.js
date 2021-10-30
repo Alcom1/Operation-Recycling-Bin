@@ -7,8 +7,8 @@ const characterBinOverride = Object.freeze({
   animsCount: 1
 });
 export default class CharacterBin extends Character {
-  constructor(engine2, params) {
-    super(engine2, Object.assign(params, characterBinOverride));
+  constructor(params) {
+    super(Object.assign(params, characterBinOverride));
   }
   getColliders() {
     return [{

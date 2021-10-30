@@ -21,8 +21,8 @@ export default class LevelSequence extends ZGameObject {
     }[];
     public par: number;
 
-    constructor(engine: Engine, params: LevelSequenceParams) {
-        super(engine, params);
+    constructor(params: LevelSequenceParams) {
+        super(params);
 
         this.font = params.font || "24px Font04b_08";
         this.color = params.color || "white";

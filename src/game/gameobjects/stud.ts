@@ -20,8 +20,8 @@ export default class Stud extends GameObject {
     public mobilePreviewSize : Vect = new Vect(0, 0);
     private isMobileFlipped : boolean = false;
 
-    constructor(engine: Engine, params: StudParams) {
-        super(engine, params);
+    constructor(params: StudParams) {
+        super(params);
 
         this.color = colorTranslate(params.color);
 

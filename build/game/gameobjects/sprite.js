@@ -1,7 +1,7 @@
 import ZGameObject from "./zgameobject.js";
 export default class Sprite extends ZGameObject {
-  constructor(engine2, params) {
-    super(engine2, params);
+  constructor(params) {
+    super(params);
     this.image = this.engine.library.getImage(params.image, params.extension);
   }
   draw(ctx) {

@@ -32,8 +32,8 @@ export default class Character extends GameObject {
     protected get isNormalMovment() : boolean { return this.animatGroupsIndex == 0 }
     protected get animImageIndex() : number { return this.move.x }
 
-    constructor(engine: Engine, params: CharacterParams) {
-        super(engine, params);
+    constructor(params: CharacterParams) {
+        super(params);
 
         this.tags.push("Character");        //All characters need to share a tag
         
@@ -46,7 +46,7 @@ export default class Character extends GameObject {
         for(let i = -1; i <= 1; i ++) {
             
             // Add segment to scene and this character
-            this.animatGroupCurr.push(this.parent.pushGO(new Animat(this.engine, {
+            this.animatGroupCurr.push(this.parent.pushGO(new Animat({
                     ...params, 
                     isLoop : false,                 //Remove looping to prevent stuttering. Loops are handled manually
                     zModifier : i < 1 ? 300 : 29,   //Z-modifier for different slices

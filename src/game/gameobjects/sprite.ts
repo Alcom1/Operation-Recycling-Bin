@@ -11,8 +11,8 @@ export default class Sprite extends ZGameObject {
 
     private image : HTMLImageElement;
 
-    constructor(engine: Engine, params: SpriteParams) {
-        super(engine, params);
+    constructor(params: SpriteParams) {
+        super(params);
 
         this.image = this.engine.library.getImage(params.image, params.extension);
     }

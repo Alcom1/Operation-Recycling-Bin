@@ -7,10 +7,10 @@ const brickSuperOverride = Object.freeze({
   isOn: true
 });
 export default class BrickSuper extends BrickPlate {
-  constructor(engine2, params) {
-    super(engine2, Object.assign(params, brickSuperOverride));
+  constructor(params) {
+    super(Object.assign(params, brickSuperOverride));
     var topGPos = this.gpos.getAdd({x: 0, y: -1});
-    this.topSprite = this.parent.pushGO(new Sprite(engine2, {
+    this.topSprite = this.parent.pushGO(new Sprite({
       ...params,
       position: topGPos,
       zIndex: getZIndex(topGPos, -1),

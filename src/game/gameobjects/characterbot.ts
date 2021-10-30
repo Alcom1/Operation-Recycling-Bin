@@ -78,8 +78,8 @@ export default class CharacterBot extends Character {
         return this.move.x * (this.isArmor ? 2 : 1)
     }
 
-    constructor(engine: Engine, params: CharacterBotParams) {
-        super(engine, Object.assign(params, characterBotOverride));
+    constructor(params: CharacterBotParams) {
+        super(Object.assign(params, characterBotOverride));
 
         //Setup miscellaneous animations.
         params.animsMisc.forEach(m => {
@@ -90,7 +90,7 @@ export default class CharacterBot extends Character {
             //3 slices if sliced, 1 otherwise
             for(let i = -1; i <= (m.isSliced ? 1 : -1); i ++) {
 
-                this.animatGroups[newIndex].push(new Animat(this.engine, {
+                this.animatGroups[newIndex].push(new Animat({
                     ...params,
                     speed :      m.speed,
                     images :     m.images,

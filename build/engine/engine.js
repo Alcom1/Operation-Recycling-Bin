@@ -86,7 +86,7 @@ export default class Engine {
         const GOType = this.gameObjectTypes.get(goData.name);
         if (!GOType)
           throw new Error(`GameObject of type ${goData.name} does not exist`);
-        const go = new GOType(this, {...goData, scene: scene2});
+        const go = new GOType({...goData, engine: this, scene: scene2});
         scene2.pushGO(go);
         this.tag.pushGO(go, scene2.name);
       }

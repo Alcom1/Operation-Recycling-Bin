@@ -1,7 +1,7 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
 export default class FPSCounter extends GameObject {
-  constructor(engine2, params) {
-    super(engine2, params);
+  constructor(params) {
+    super(params);
     this.text = "";
     this.font = params.font ?? "18pt Consolas";
     this.color = params.color || "white";

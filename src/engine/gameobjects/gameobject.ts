@@ -5,6 +5,7 @@ import { Collider } from "engine/modules/collision";
 import { getZIndex } from "engine/utilities/math";
 
 export interface GameObjectParams {
+    engine: Engine;
     position?: Point;
     subPosition?: Point;
     zIndex?: number;
@@ -20,15 +21,17 @@ export default class GameObject {
     public gpos: Vect;
     /** Sub-position */
     public spos: Vect;
+    protected engine: Engine;
     public tags: string[];
     public parent: Scene;
     public isActive: Boolean = true;
 
-    constructor(protected engine: Engine, params: GameObjectParams) {
+    constructor(params: GameObjectParams) {
         this.gpos = new Vect(params.position?.x ?? 0, params.position?.y ?? 0);
         this.spos = new Vect(params.subPosition?.x ?? 0, params.subPosition?.y ?? 0);
         this.tags = params.tags ?? [params.name];
         this.parent = params.scene;
+        this.engine = params.engine;
     }
 
     /**

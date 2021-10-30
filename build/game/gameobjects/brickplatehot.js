@@ -5,9 +5,9 @@ const brickPlateHotOverride = Object.freeze({
   width: 4
 });
 export default class BrickPlateHot extends BrickPlate {
-  constructor(engine2, params) {
-    super(engine2, Object.assign(params, brickPlateHotOverride));
-    this.animation = this.parent.pushGO(new Animat(this.engine, {
+  constructor(params) {
+    super(Object.assign(params, brickPlateHotOverride));
+    this.animation = this.parent.pushGO(new Animat({
       ...params,
       subPosition: {x: 0, y: -25},
       zModifier: 40,

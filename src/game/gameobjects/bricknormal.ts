@@ -20,13 +20,13 @@ export default class BrickNormal extends Brick {
         ["h", true]
     ]);
 
-    constructor(engine: Engine, params: BrickParams) {
-        super(engine, params);
+    constructor(params: BrickParams) {
+        super(params);
 
         // Spawn studs across the width of this brick
         // For each width unit of this brick
         for (let i = 0; i < this.width; i++) {
-            const stud = new Stud(this.engine, {
+            const stud = new Stud({
                 ...params,
                 // Stud has a different position than its parent brick
                 position: {
@@ -47,7 +47,7 @@ export default class BrickNormal extends Brick {
             if(!needsGrey || this.isGrey) { //Check if the key is grey-brick exclusive
                 this.brickSprites.set(
                     spriteKey, 
-                    engine.library.getImage(`brick_${spriteKey}_${this.color.replace("#", "").toLowerCase()}`));
+                    this.engine.library.getImage(`brick_${spriteKey}_${this.color.replace("#", "").toLowerCase()}`));
             }
         });
     }    

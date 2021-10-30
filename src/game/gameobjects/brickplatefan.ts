@@ -18,14 +18,14 @@ export default class BrickPlateFan extends BrickPlate {
     private beams: number[] = [];
     private characters: Character[] = [];
 
-    constructor(engine: Engine, params: BrickPlateParams) {
-        super(engine, Object.assign(params, brickPlateFanOverride));
+    constructor(params: BrickPlateParams) {
+        super(Object.assign(params, brickPlateFanOverride));
 
         //Going up to the ceiling
         for(let j = this.gpos.y - 1; j > 0; j--) {
             //Generate a wind animation for each position
             [0,1].forEach(i => {
-                this.animations.push(this.parent.pushGO(new Animat(this.engine, {
+                this.animations.push(this.parent.pushGO(new Animat({
                     ...params,
                     position : {x : this.gpos.x + i + 1, y : j},
                     subPosition : { x : Z_DEPTH / 2 - 2, y : -Z_DEPTH / 2 + 2 }, 

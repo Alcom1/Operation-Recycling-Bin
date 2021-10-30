@@ -15,15 +15,13 @@ export default class BrickSuper extends BrickPlate {
 
     private topSprite : Sprite;
 
-    constructor(engine: Engine, params: BrickPlateParams) {
-        super(engine, Object.assign(params, brickSuperOverride));
+    constructor(params: BrickPlateParams) {
+        super(Object.assign(params, brickSuperOverride));
 
         var topGPos = this.gpos.getAdd({x : 0, y : -1})
 
         this.topSprite = this.parent.pushGO(
-            new Sprite(
-                engine,
-                {
+            new Sprite({
                     ...params,
                     position : topGPos,
                     zIndex : getZIndex(topGPos, -1),

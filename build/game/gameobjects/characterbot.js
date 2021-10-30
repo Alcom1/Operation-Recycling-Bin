@@ -52,8 +52,8 @@ const cbc = Object.freeze({
   step: bitStack([6])
 });
 export default class CharacterBot extends Character {
-  constructor(engine2, params) {
-    super(engine2, Object.assign(params, characterBotOverride));
+  constructor(params) {
+    super(Object.assign(params, characterBotOverride));
     this.timer = 0;
     this.ceilSubOffset = -6;
     this.verticalSpeed = 500;
@@ -62,7 +62,7 @@ export default class CharacterBot extends Character {
     params.animsMisc.forEach((m) => {
       var newIndex = this.animatGroups.push([]) - 1;
       for (let i = -1; i <= (m.isSliced ? 1 : -1); i++) {
-        this.animatGroups[newIndex].push(new Animat(this.engine, {
+        this.animatGroups[newIndex].push(new Animat({
           ...params,
           speed: m.speed,
           images: m.images,

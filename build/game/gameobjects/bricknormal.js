@@ -2,8 +2,8 @@ import {col1D, GMULTX, GMULTY, Z_DEPTH} from "../../engine/utilities/math.js";
 import Brick from "./brick.js";
 import Stud from "./stud.js";
 export default class BrickNormal extends Brick {
-  constructor(engine2, params) {
-    super(engine2, params);
+  constructor(params) {
+    super(params);
     this.studs = [];
     this.brickSprites = new Map();
     this.brickSpriteKeys = new Map([
@@ -13,7 +13,7 @@ export default class BrickNormal extends Brick {
       ["h", true]
     ]);
     for (let i = 0; i < this.width; i++) {
-      const stud2 = new Stud(this.engine, {
+      const stud2 = new Stud({
         ...params,
         position: {
           x: this.gpos.x + i,
@@ -25,7 +25,7 @@ export default class BrickNormal extends Brick {
     }
     this.brickSpriteKeys.forEach((needsGrey, spriteKey) => {
       if (!needsGrey || this.isGrey) {
-        this.brickSprites.set(spriteKey, engine2.library.getImage(`brick_${spriteKey}_${this.color.replace("#", "").toLowerCase()}`));
+        this.brickSprites.set(spriteKey, this.engine.library.getImage(`brick_${spriteKey}_${this.color.replace("#", "").toLowerCase()}`));
       }
     });
   }

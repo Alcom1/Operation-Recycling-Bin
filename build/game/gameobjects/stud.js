@@ -2,8 +2,8 @@ import GameObject from "../../engine/gameobjects/gameobject.js";
 import {colorTranslate, getZIndex, GMULTX, GMULTY, MOBILE_PREVIEW_MAX, UNDER_CURSOR_Z_INDEX, Z_DEPTH} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
 export default class Stud extends GameObject {
-  constructor(engine2, params) {
-    super(engine2, params);
+  constructor(params) {
+    super(params);
     this.isPressed = false;
     this.isSelected = false;
     this.isSnapped = false;

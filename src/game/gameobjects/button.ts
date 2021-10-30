@@ -42,8 +42,8 @@ export default class Button extends GameObject {
 
     private images = new Map<boolean, Map<boolean, HTMLImageElement>>([[false, new Map()], [true, new Map()]]);
 
-    constructor(engine: Engine, params: ButtonParams) {
-        super(engine, params);
+    constructor(params: ButtonParams) {
+        super(params);
         
         this.bgColor = colorTranslate(params.backgroundColor ?? "#DDDDDD");
         this.bgColorDark = colorMult(this.bgColor, 0.75);

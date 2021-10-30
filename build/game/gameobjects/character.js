@@ -3,8 +3,8 @@ import {GMULTX} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
 import Animat from "./animation.js";
 export default class Character extends GameObject {
-  constructor(engine2, params) {
-    super(engine2, params);
+  constructor(params) {
+    super(params);
     this.underBricks = [];
     this.animatGroupsIndex = 0;
     this.animatGroups = [[]];
@@ -14,7 +14,7 @@ export default class Character extends GameObject {
     this._height = params.height ?? 2;
     this.checkCollision = true;
     for (let i = -1; i <= 1; i++) {
-      this.animatGroupCurr.push(this.parent.pushGO(new Animat(this.engine, {
+      this.animatGroupCurr.push(this.parent.pushGO(new Animat({
         ...params,
         isLoop: false,
         zModifier: i < 1 ? 300 : 29,

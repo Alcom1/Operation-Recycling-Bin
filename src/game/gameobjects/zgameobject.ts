@@ -10,8 +10,8 @@ export default class ZGameObject extends GameObject {
 
     private zIndex : number;
 
-    constructor(engine: Engine, params: ZGameObjectParams) {
-        super(engine, params);
+    constructor(params: ZGameObjectParams) {
+        super(params);
 
         this.zIndex = params.zIndex || 0;
     }

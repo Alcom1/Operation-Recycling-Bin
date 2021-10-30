@@ -25,8 +25,8 @@ export default class MobileIndicator extends GameObject {
         this._cursorPosition = value;
     }
 
-    constructor(engine: Engine, params: GameObjectParams) {
-        super(engine, params);
+    constructor(params: GameObjectParams) {
+        super(params);
 
         this.isActive = false;
     }

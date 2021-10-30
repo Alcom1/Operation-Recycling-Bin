@@ -62,8 +62,8 @@ export default class Animat extends GameObject {
     //get
     public get duration() : number { return 1 / this.speed; }
 
-    constructor(engine : Engine, params : AnimationParams) {
-        super(engine, params);
+    constructor(params : AnimationParams) {
+        super(params);
 
         this.speed = params.speed ?? 1;
         this.isLoop = params.isLoop ?? true;

@@ -12,11 +12,11 @@ export default class BrickPlateHot extends BrickPlate {
 
     private animation: Animat;
 
-    constructor(engine: Engine, params: BrickPlateParams) {
-        super(engine, Object.assign(params, brickPlateHotOverride));
+    constructor(params: BrickPlateParams) {
+        super(Object.assign(params, brickPlateHotOverride));
 
         //this.parent.pushGO(
-        this.animation = this.parent.pushGO(new Animat(this.engine, {
+        this.animation = this.parent.pushGO(new Animat({
             ...params,
             subPosition : { x : 0, y : -25 },                       //For some reason, this animation appears super low by default.
             zModifier : 40,                                         //Z-index modifier of a 4-width brick

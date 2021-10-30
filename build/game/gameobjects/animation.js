@@ -1,8 +1,8 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
 import {floor, getZIndex, GMULTY, OPPOSITE_DIRS} from "../../engine/utilities/math.js";
 export default class Animat extends GameObject {
-  constructor(engine2, params) {
-    super(engine2, params);
+  constructor(params) {
+    super(params);
     this.images = [];
     this.fullSize = {x: 0, y: 0};
     this.zModifierPub = 0;
