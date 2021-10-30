@@ -36,6 +36,14 @@ const characterBotOverride = Object.freeze({
     animsCount: 2,
     isLoop: true,
     isSliced: true
+  }, {
+    images: [
+      {name: "char_bot_armor_left", offsetX: 36},
+      {name: "char_bot_armor_right", offsetX: 14}
+    ],
+    gposOffset: {x: -1, y: 0},
+    frameCount: 12,
+    isSliced: true
   }]
 });
 const cbc = Object.freeze({
@@ -73,7 +81,7 @@ export default class CharacterBot extends Character {
       this.animatGroups[newIndex].forEach((a) => this.parent.pushGO(a));
     });
   }
-  get normalMoveIndex() {
+  get animImageIndex() {
     return this.move.x * (this.isArmor ? 2 : 1);
   }
   handleSpecialMovement(dt) {
@@ -86,18 +94,18 @@ export default class CharacterBot extends Character {
       default:
         break;
     }
-    if (this.timer > this.animatGroupCurr[0].length) {
+    if (this.timer > this.animatGroupCurr[0].duration) {
       switch (this.animatGroupsIndex) {
-        case 1:
-          this.timer = 0;
-          this.setCurrentGroup(0);
+        case 2:
+          this.isActive = false;
           break;
         case 3:
           this.timer = 0;
           this.animatGroupCurr.forEach((a) => a.reset());
           break;
         default:
-          this.isActive = false;
+          this.timer = 0;
+          this.setCurrentGroup(0);
           break;
       }
     }
@@ -183,13 +191,12 @@ export default class CharacterBot extends Character {
       if (this.animatGroupsIndex != 3) {
         this.handleBricks(true);
         this.setCurrentGroup(3);
-        this.animatGroupCurr.forEach((x) => x.setImageIndex(this.move.x));
         this.spos.x = 0;
       }
       this.isFlight = true;
     } else if (mask & 16) {
       this.isArmor = true;
-      this.resetImageIndex();
+      this.setCurrentGroup(4);
     }
   }
 }

@@ -60,7 +60,7 @@ export default class Animat extends GameObject {
     private animsIndex : number = 0;                //Index of the current animation
 
     //get
-    public get length() : number { return 1 / this.speed; }
+    public get duration() : number { return 1 / this.speed; }
 
     constructor(engine : Engine, params : AnimationParams) {
         super(engine, params);
@@ -161,7 +161,19 @@ export default class Animat extends GameObject {
 
     //Set the image index, swapping the image for this animation.
     public setImageIndex(index : number) {
-        this.imageIndex = index;
+
+        //This animation has many images
+        if(this.images[index]) {
+            this.imageIndex = index;
+        }
+        //This animation has 2 images
+        else if(this.images[Math.sign(index)]) {
+            this.imageIndex = Math.sign(index);
+        }
+        //This animation has 1 image
+        else if(this.images[0]) {
+            this.imageIndex = 0;
+        }
     }
 
     //Draw this animation

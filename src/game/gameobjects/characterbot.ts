@@ -51,6 +51,13 @@ const characterBotOverride = Object.freeze({
         animsCount : 2,
         isLoop : true,
         isSliced : true
+    },{             //Bot armor animation
+        images : [  //Flying has left & right animations
+            { name : "char_bot_armor_left", offsetX : 36 },
+            { name : "char_bot_armor_right", offsetX : 14 }],
+        gposOffset : { x : -1, y : 0},
+        frameCount : 12,
+        isSliced : true
     }]
 });
 
@@ -72,7 +79,7 @@ export default class CharacterBot extends Character {
     private isFlight : boolean = false;
     private isArmor : boolean = false;
 
-    protected get normalMoveIndex() : number { 
+    protected get animImageIndex() : number { 
         return this.move.x * (this.isArmor ? 2 : 1)
     }
 
@@ -125,14 +132,13 @@ export default class CharacterBot extends Character {
         }
 
         //If the current animation has ended
-        if(this.timer > this.animatGroupCurr[0].length) {
+        if(this.timer > this.animatGroupCurr[0].duration) {
 
             switch(this.animatGroupsIndex) {
-                
-                //End bot-bin animation
-                case 1 :
-                    this.timer = 0;
-                    this.setCurrentGroup(0);
+
+                //Deactivate this character
+                case 2 :
+                    this.isActive = false;
                     break;
 
                 //Reset up/down animation
@@ -140,10 +146,11 @@ export default class CharacterBot extends Character {
                     this.timer = 0;
                     this.animatGroupCurr.forEach(a => a.reset());
                     break;
-
-                //Default to deactivating this character
+                
+                //End animation
                 default :
-                    this.isActive = false;
+                    this.timer = 0;
+                    this.setCurrentGroup(0);
                     break;
             }
         }
@@ -301,8 +308,6 @@ export default class CharacterBot extends Character {
             if(this.animatGroupsIndex != 3) {
                 this.handleBricks(true);            //Bricks should not be pressured by a floating character
                 this.setCurrentGroup(3);            //Play floating animation
-                this.animatGroupCurr.forEach(x =>   //Match facing direction
-                    x.setImageIndex(this.move.x));
                 this.spos.x = 0;                    //Force grid alignment
             }
             this.isFlight = true;
@@ -310,7 +315,7 @@ export default class CharacterBot extends Character {
         //Armor
         else if (mask & 0b10000) {
             this.isArmor = true;
-            this.resetImageIndex();
+            this.setCurrentGroup(4);
         }
     }
 }

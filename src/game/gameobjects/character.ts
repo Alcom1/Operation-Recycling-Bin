@@ -30,7 +30,7 @@ export default class Character extends GameObject {
     protected animatGroups: Animat[][] = [[]];
     protected get animatGroupCurr() : Animat[] { return this.animatGroups[this.animatGroupsIndex] }
     protected get isNormalMovment() : boolean { return this.animatGroupsIndex == 0 }
-    protected get normalMoveIndex() : number { return this.move.x }
+    protected get animImageIndex() : number { return this.move.x }
 
     constructor(engine: Engine, params: CharacterParams) {
         super(engine, params);
@@ -150,12 +150,7 @@ export default class Character extends GameObject {
 
         this.move.x *= -1;
         this.gpos.x += this.move.x;
-        this.resetImageIndex();
-    }
-
-    //Reset the image index
-    protected resetImageIndex() {
-        this.animatGroups[0].forEach(x => x.setImageIndex(this.normalMoveIndex));
+        this.animatGroups[0].forEach(x => x.setImageIndex(this.animImageIndex));
     }
 
     //Set current & active group based on the group index
@@ -168,6 +163,7 @@ export default class Character extends GameObject {
             s.spos = { x : 0, y : 0} as Vect;   //Reset subposition
             s.reset(this.gpos);           //Make sure all sprites are in the character's position after set
         }));
+        this.animatGroupCurr.forEach(x => x.setImageIndex(this.animImageIndex))
     }
 
     //Deactivate this gameObject

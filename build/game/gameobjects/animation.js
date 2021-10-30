@@ -41,7 +41,7 @@ export default class Animat extends GameObject {
     this.animsCount = params.animsCount ?? 1;
     this.sliceIndex = params.sliceIndex;
   }
-  get length() {
+  get duration() {
     return 1 / this.speed;
   }
   getImage(params) {
@@ -75,7 +75,13 @@ export default class Animat extends GameObject {
     return getZIndex(this.gpos, this.zModifier + this.zModifierPub);
   }
   setImageIndex(index) {
-    this.imageIndex = index;
+    if (this.images[index]) {
+      this.imageIndex = index;
+    } else if (this.images[Math.sign(index)]) {
+      this.imageIndex = Math.sign(index);
+    } else if (this.images[0]) {
+      this.imageIndex = 0;
+    }
   }
   draw(ctx) {
     if (!this.isVisible) {

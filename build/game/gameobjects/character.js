@@ -33,7 +33,7 @@ export default class Character extends GameObject {
   get isNormalMovment() {
     return this.animatGroupsIndex == 0;
   }
-  get normalMoveIndex() {
+  get animImageIndex() {
     return this.move.x;
   }
   init(ctx, scenes) {
@@ -84,10 +84,7 @@ export default class Character extends GameObject {
   reverse() {
     this.move.x *= -1;
     this.gpos.x += this.move.x;
-    this.resetImageIndex();
-  }
-  resetImageIndex() {
-    this.animatGroups[0].forEach((x) => x.setImageIndex(this.normalMoveIndex));
+    this.animatGroups[0].forEach((x) => x.setImageIndex(this.animImageIndex));
   }
   setCurrentGroup(index) {
     index = index ?? this.animatGroupsIndex;
@@ -97,6 +94,7 @@ export default class Character extends GameObject {
       s.spos = {x: 0, y: 0};
       s.reset(this.gpos);
     }));
+    this.animatGroupCurr.forEach((x) => x.setImageIndex(this.animImageIndex));
   }
   deactivate() {
     this.isActive = false;
