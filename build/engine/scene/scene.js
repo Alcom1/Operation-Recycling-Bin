@@ -1,11 +1,9 @@
 import {GMULTX, GMULTY} from "../utilities/math.js";
 export default class Scene {
   constructor(engine2, {
-    name = "nameless",
+    name = "unnamed",
     need = [],
-    zIndex = 0,
-    gameObjects = [],
-    initialized = false
+    zIndex = 0
   }) {
     this.engine = engine2;
     this.isSortNext = false;
@@ -15,10 +13,10 @@ export default class Scene {
     this.gameObjects = [];
     this.initialized = false;
   }
-  init(ctx, scenes) {
+  init(ctx) {
     if (!this.initialized && this.need.every((n) => this.engine.tag.exists(n))) {
       ctx.save();
-      this.gameObjects.forEach((go) => go.init(ctx, scenes));
+      this.gameObjects.forEach((go) => go.init(ctx));
       ctx.restore();
       this.engine.collision.pushGOs(this.name, this.gameObjects);
       this.initialized = true;

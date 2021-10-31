@@ -5,8 +5,8 @@ import LevelSequence from "./levelsequence";
 export default class ButtonScene extends Button {
     private sceneName: string | null = null;
 
-    public init(ctx: CanvasRenderingContext2D, scenes: Scene[]): void {
-        super.init(ctx, scenes);
+    public init(ctx: CanvasRenderingContext2D) {
+        super.init(ctx);
         //Get level sequence for the current level
         const levelSequence = this.engine.tag.get("LevelSequence", "Level")[0] as LevelSequence;
 

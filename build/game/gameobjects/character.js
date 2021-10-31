@@ -36,11 +36,7 @@ export default class Character extends GameObject {
   get animImageIndex() {
     return this.move.x;
   }
-  init(ctx, scenes) {
-    const level = scenes.find((s) => s.name == "Level");
-    if (!level)
-      throw new Error("Can't find level");
-    this.level = level;
+  init() {
     this.brickHandler = this.engine.tag.get("BrickHandler", "LevelInterface")[0];
     this.setCurrentGroup();
   }

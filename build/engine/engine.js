@@ -66,8 +66,8 @@ export default class Engine {
   }
   initScenes() {
     this.collision.update();
-    this.scenesLoading.forEach((s) => s.init(this.ctx, this.scenesActive));
-    this.scenesActive.forEach((s) => s.init(this.ctx, this.scenesActive));
+    this.scenesLoading.forEach((s) => s.init(this.ctx));
+    this.scenesActive.forEach((s) => s.init(this.ctx));
   }
   updateDrawScenes(scenes, dt) {
     scenes.forEach((s) => s.update(dt));

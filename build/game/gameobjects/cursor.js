@@ -20,11 +20,7 @@ export default class Cursor extends GameObject {
     this.snapState = false;
     this.isUpdateForced = false;
   }
-  init(ctx, scenes) {
-    const level = scenes.find((s) => s.name == "Level");
-    if (!level)
-      throw new Error("Can't find level");
-    this.level = level;
+  init(ctx) {
     const brickHandler = this.engine.tag.get("BrickHandler", "LevelInterface")[0];
     if (!brickHandler)
       throw new Error("Can't find BrickHandler");

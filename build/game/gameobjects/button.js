@@ -28,7 +28,7 @@ export default class Button extends GameObject {
       }
     }
   }
-  init(ctx, scenes) {
+  init(ctx) {
     if (this.isCenterUI) {
       this.spos.x = ctx.canvas.width - WIDTH_SIDEPANEL / 2;
     }

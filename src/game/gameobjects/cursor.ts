@@ -22,21 +22,13 @@ export default class Cursor extends GameObject {
     private hoverState = BrickHandlerState.NONE;
     private snapState = false;
 
-    /** Level containing bricks */
-    private level!: Scene;
-
     private isUpdateForced = false;
 
     private brickHandler!: BrickHandler;
 
     private cursorIcon!: CursorIcon;
 
-    public init(ctx: CanvasRenderingContext2D, scenes: Scene[]) {
-        
-        // Get level containing bricks.
-        const level = scenes.find(s => s.name == "Level");
-        if (!level) throw new Error("Can't find level");
-        this.level = level;
+    public init(ctx: CanvasRenderingContext2D) {
 
         const brickHandler = this.engine.tag.get("BrickHandler", "LevelInterface")[0];
         if (!brickHandler) throw new Error("Can't find BrickHandler");

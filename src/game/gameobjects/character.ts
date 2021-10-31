@@ -17,7 +17,6 @@ export interface CharacterParams extends GameObjectParams {
 
 export default class Character extends GameObject {
 
-    private level!: Scene;
     private speed: number;
     protected _height: number;
     public get height() { return this._height; }
@@ -57,12 +56,7 @@ export default class Character extends GameObject {
         }
     }
 
-    public init(ctx: CanvasRenderingContext2D, scenes: Scene[]) {
-
-        // Get level.
-        const level = scenes.find(s => s.name == "Level");
-        if (!level) throw new Error("Can't find level");
-        this.level = level;
+    public init() {
 
         // Get brickhandler for pressure checks
         this.brickHandler = this.engine.tag.get("BrickHandler", "LevelInterface")[0] as BrickHandler;

@@ -4,8 +4,8 @@ export default class ButtonScene extends Button {
     super(...arguments);
     this.sceneName = null;
   }
-  init(ctx, scenes) {
-    super.init(ctx, scenes);
+  init(ctx) {
+    super.init(ctx);
     const levelSequence = this.engine.tag.get("LevelSequence", "Level")[0];
     if (levelSequence) {
       this.sceneName = levelSequence.levels.find((l) => l.label.toLowerCase() === this.text.split(" ").join("").toLowerCase())?.level ?? null;

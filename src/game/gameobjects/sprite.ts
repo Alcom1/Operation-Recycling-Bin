@@ -1,4 +1,3 @@
-import Engine from "engine/engine";
 import ZGameObject, { ZGameObjectParams } from "./zgameobject";
 
 export interface SpriteParams extends ZGameObjectParams {

@@ -39,7 +39,7 @@ export default class GameObject {
      * @param ctx
      * @param scenes
      */
-    public init(ctx: CanvasRenderingContext2D, scenes: Scene[]) {}
+    public init(ctx: CanvasRenderingContext2D) {}
 
     /**
      * Compare two objects, return true if they are the same

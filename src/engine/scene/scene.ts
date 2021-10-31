@@ -22,11 +22,9 @@ export default class Scene {
     constructor(
         private engine: Engine,
         {
-            name = "nameless",
+            name = "unnamed",
             need = [],
-            zIndex = 0,
-            gameObjects = [],
-            initialized = false
+            zIndex = 0
         }: SceneParams
     ) {
         this.name = name;
@@ -37,7 +35,7 @@ export default class Scene {
         this.initialized = false;
     }
 
-    public init(ctx: CanvasRenderingContext2D, scenes: Scene[]) {
+    public init(ctx: CanvasRenderingContext2D) {
         
         if (
             !this.initialized && 
@@ -45,7 +43,7 @@ export default class Scene {
         ) {
 
             ctx.save();
-                this.gameObjects.forEach(go =>  go.init(ctx, scenes));
+                this.gameObjects.forEach(go =>  go.init(ctx));
             ctx.restore();
 
             this.engine.collision.pushGOs(this.name, this.gameObjects);

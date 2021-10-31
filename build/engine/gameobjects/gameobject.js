@@ -9,7 +9,7 @@ export default class GameObject {
     this.parent = params.scene;
     this.engine = params.engine;
   }
-  init(ctx, scenes) {
+  init(ctx) {
   }
   compare(gameObject) {
     return gameObject.gpos.x == this.gpos.x && gameObject.gpos.y == this.gpos.y;
