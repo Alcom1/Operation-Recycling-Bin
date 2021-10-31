@@ -1,7 +1,5 @@
-import Engine from "engine/engine";
-import { GameObjectParams } from "engine/gameobjects/gameobject";
 import { Collider } from "engine/modules/collision";
-import { getZIndex, GMULTY } from "engine/utilities/math";
+import { getZIndex } from "engine/utilities/math";
 import BrickPlate, { BrickPlateParams } from "./brickplate";
 import Sprite, { SpriteParams } from "./sprite";
 

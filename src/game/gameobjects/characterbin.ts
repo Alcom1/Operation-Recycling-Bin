@@ -1,4 +1,3 @@
-import Engine from "engine/engine";
 import { Collider } from "engine/modules/collision";
 import Character, { CharacterParams } from "./character";
 

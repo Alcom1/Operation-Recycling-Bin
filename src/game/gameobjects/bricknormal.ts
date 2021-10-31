@@ -1,5 +1,4 @@
-import Engine from "engine/engine";
-import { col1D, getZIndex, GMULTX, GMULTY, UNDER_CURSOR_Z_INDEX, Z_DEPTH } from "engine/utilities/math";
+import { col1D, GMULTX, GMULTY, Z_DEPTH } from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 import Brick, { BrickParams } from "./brick";
 import Stud from "./stud";

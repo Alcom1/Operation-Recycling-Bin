@@ -80,6 +80,7 @@
       }
     ]
   },
+
   {
     "scene": {
       "name": "Level",
@@ -5545,10 +5546,52 @@
         }
       },
       {
+        "name": "BrickPipe",
+        "position": {
+          "x": 6,
+          "y": 6
+        }
+      },
+      {
+        "name": "BrickPipe",
+        "position": {
+          "x": 27,
+          "y": 6
+        }
+      },
+      {
         "name": "CharacterBin",
         "position": {
           "x": 33,
           "y": 17
+        }
+      },
+      {
+        "name": "BrickPipe",
+        "position": {
+          "x": 29,
+          "y": 6
+        }
+      },
+      {
+        "name": "BrickPipe",
+        "position": {
+          "x": 25,
+          "y": 6
+        }
+      },
+      {
+        "name": "BrickPipe",
+        "position": {
+          "x": 4,
+          "y": 6
+        }
+      },
+      {
+        "name": "BrickPipe",
+        "position": {
+          "x": 8,
+          "y": 6
         }
       },
       {
@@ -9490,6 +9533,41 @@
         "position": {
           "x": 2,
           "y": 14
+        }
+      },
+      {
+        "name": "BrickPipe",
+        "position": {
+          "x": 14,
+          "y": 8
+        }
+      },
+      {
+        "name": "BrickPipe",
+        "position": {
+          "x": 18,
+          "y": 8
+        }
+      },
+      {
+        "name": "BrickPipe",
+        "position": {
+          "x": 22,
+          "y": 8
+        }
+      },
+      {
+        "name": "BrickPipe",
+        "position": {
+          "x": 26,
+          "y": 8
+        }
+      },
+      {
+        "name": "BrickPipe",
+        "position": {
+          "x": 30,
+          "y": 8
         }
       },
       {
@@ -19270,6 +19348,41 @@
         }
       },
       {
+        "name": "BrickPipe",
+        "position": {
+          "x": 3,
+          "y": 3
+        }
+      },
+      {
+        "name": "BrickPipe",
+        "position": {
+          "x": 10,
+          "y": 3
+        }
+      },
+      {
+        "name": "BrickPipe",
+        "position": {
+          "x": 16,
+          "y": 3
+        }
+      },
+      {
+        "name": "BrickPipe",
+        "position": {
+          "x": 23,
+          "y": 3
+        }
+      },
+      {
+        "name": "BrickPipe",
+        "position": {
+          "x": 29,
+          "y": 3
+        }
+      },
+      {
         "width": 8,
         "name": "BrickNormal",
         "position": {
@@ -20861,6 +20974,13 @@
         }
       },
       {
+        "name": "BrickPipe",
+        "position": {
+          "x": 6,
+          "y": 15
+        }
+      },
+      {
         "width": 4,
         "name": "BrickNormal",
         "position": {
@@ -21759,6 +21879,27 @@
         "position": {
           "x": 32,
           "y": 8
+        }
+      },
+      {
+        "name": "BrickPipe",
+        "position": {
+          "x": 21,
+          "y": 9
+        }
+      },
+      {
+        "name": "BrickPipe",
+        "position": {
+          "x": 19,
+          "y": 9
+        }
+      },
+      {
+        "name": "BrickPipe",
+        "position": {
+          "x": 17,
+          "y": 9
         }
       },
       {
@@ -24072,6 +24213,20 @@
         "position": {
           "x": 8,
           "y": 19
+        }
+      },
+      {
+        "name": "BrickPipe",
+        "position": {
+          "x": 23,
+          "y": 8
+        }
+      },
+      {
+        "name": "BrickPipe",
+        "position": {
+          "x": 21,
+          "y": 6
         }
       },
       {
@@ -26937,6 +27092,27 @@
         "position": {
           "x": 32,
           "y": 12
+        }
+      },
+      {
+        "name": "BrickPipe",
+        "position": {
+          "x": 25,
+          "y": 3
+        }
+      },
+      {
+        "name": "BrickPipe",
+        "position": {
+          "x": 22,
+          "y": 2
+        }
+      },
+      {
+        "name": "BrickPipe",
+        "position": {
+          "x": 28,
+          "y": 2
         }
       },
       {

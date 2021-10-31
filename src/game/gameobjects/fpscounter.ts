@@ -1,4 +1,3 @@
-import Engine from "engine/engine";
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 
 interface FPSCounterParams extends GameObjectParams {

@@ -1,4 +1,3 @@
-import Engine from "engine/engine";
 import { Collider } from "engine/modules/collision";
 import { Z_DEPTH } from "engine/utilities/math";
 import Animat, { AnimationParams } from "./animation";

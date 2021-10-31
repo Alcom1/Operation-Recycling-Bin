@@ -1,4 +1,3 @@
-import Engine from "engine/engine";
 import { Collider } from "engine/modules/collision";
 import Brick, { BrickParams } from "./brick";
 

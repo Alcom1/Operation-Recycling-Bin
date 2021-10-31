@@ -1,5 +1,4 @@
 import GameObject, {GameObjectParams} from "engine/gameobjects/gameobject";
-import Engine from "engine/engine";
 import { colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX, getZIndex, MOBILE_PREVIEW_MAX } from "engine/utilities/math";
 import Vect, {Point} from "engine/utilities/vect";
 

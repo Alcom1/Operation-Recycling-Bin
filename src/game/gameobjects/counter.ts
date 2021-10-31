@@ -1,6 +1,5 @@
-import Engine from "engine/engine";
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
-import { GMULTX, GMULTY } from "engine/utilities/math";
+import { GMULTX } from "engine/utilities/math";
 import LevelSequence from "./levelsequence";
 
 interface CounterParams extends GameObjectParams {
