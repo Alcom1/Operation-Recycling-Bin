@@ -163,7 +163,7 @@ export default class Character extends GameObject {
             s.spos = { x : 0, y : 0} as Vect;   //Reset subposition
             s.reset(this.gpos);           //Make sure all sprites are in the character's position after set
         }));
-        this.animatGroupCurr.forEach(x => x.setImageIndex(this.animImageIndex))
+        this.animatGroupCurr.forEach(x => x.setImageIndex(this.animImageIndex));
     }
 
     //Deactivate this gameObject

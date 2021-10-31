@@ -12,6 +12,12 @@ interface AnimationInputParams extends AnimationParams {
     isSliced? : boolean;
 }
 
+enum ArmorState {
+    NONE,
+    ACTIVE,
+    FLASH
+}
+
 //Bot parameters
 const characterBotOverride = Object.freeze({
     //Main parameters
@@ -68,14 +74,20 @@ const cbc = Object.freeze({
 
 export default class CharacterBot extends Character {
 
-    private timer : number = 0;         //Timer to track duration of special movements
-    private ceilSubOffset = -6;         //Offset for up/down movement
-    private verticalSpeed = 500;
-    private isFlight : boolean = false;
-    private isArmor : boolean = false;
+    private timerSpc : number = 0;                      //Timer to track duration of special movements
+    private timerArm : number = 0;                      //Timer to track armor flash
+    private ceilSubOffset = -6;                         //Offset for up/down movement
+    private verticalSpeed = 500;                        //Speed of vertical movement
+    private isFlight : boolean = false;                 //If currently flying
+    private armorDelay : number = 2;                    //Delay where armor remains after taking damage
+    private armorFlashRate : number = 8;                //Rate of the armor flashing effect
+    private armorState : ArmorState = ArmorState.NONE;  //Current state of the armor
 
     protected get animImageIndex() : number { 
-        return this.move.x * (this.isArmor ? 2 : 1)
+        return this.move.x * (
+            this.armorState == ArmorState.ACTIVE ? 2 :
+            this.armorState == ArmorState.FLASH  ? (1 + Math.floor(this.timerArm * this.armorFlashRate) % 2) : 
+            1)
     }
 
     constructor(params: CharacterBotParams) {
@@ -110,12 +122,25 @@ export default class CharacterBot extends Character {
     //Unique bot update
     public update(dt : number) {
         super.update(dt);
+
+        //Update armor flash
+        if(this.armorState == ArmorState.FLASH) {
+            this.timerArm += dt;
+            console.log(1 + this.timerArm * 4 % 2);
+            this.animatGroupCurr.forEach(x => x.setImageIndex(this.animImageIndex));
+
+            //Remove armor after a duration and reset timer
+            if(this.timerArm > this.armorDelay) {
+                this.armorState = ArmorState.NONE;
+                this.timerArm = 0;
+            }
+        }
     }
 
     //Special movement
     protected handleSpecialMovement(dt : number) {
 
-        this.timer += dt;   //Update timer
+        this.timerSpc += dt;   //Update special timer
 
         //Perform special movement
         switch(this.animatGroupsIndex) {
@@ -132,7 +157,10 @@ export default class CharacterBot extends Character {
         }
 
         //If the current animation has ended
-        if(this.timer > this.animatGroupCurr[0].duration) {
+        if(this.timerSpc > this.animatGroupCurr[0].duration) {
+
+            //Reset timer
+            this.timerSpc = 0;
 
             switch(this.animatGroupsIndex) {
 
@@ -143,13 +171,11 @@ export default class CharacterBot extends Character {
 
                 //Reset up/down animation
                 case 3 :
-                    this.timer = 0;
                     this.animatGroupCurr.forEach(a => a.reset());
                     break;
                 
                 //End animation
                 default :
-                    this.timer = 0;
                     this.setCurrentGroup(0);
                     break;
             }
@@ -194,7 +220,7 @@ export default class CharacterBot extends Character {
             }
             //If going downwards, reset to walking
             else {
-                this.timer = 0;
+                this.timerSpc = 0;
                 this.handleBricks(); 
                 this.setCurrentGroup(0);
             }
@@ -304,8 +330,16 @@ export default class CharacterBot extends Character {
             this.setCurrentGroup(1);
         }
         //Hazard
-        else if (mask & 0b100 && this.isNormalMovment && !this.isArmor) {
-            this.setCurrentGroup(2);
+        else if (mask & 0b100 && this.isNormalMovment) {
+
+            //Start flashing animation after taking damage
+            if(this.armorState == ArmorState.ACTIVE) {
+                this.armorState = ArmorState.FLASH
+            }
+            //If unarmored, die.
+            else if(this.armorState == ArmorState.NONE) {
+                this.setCurrentGroup(2);
+            }
         }
         //Up
         else if (mask & 0b1000) {
@@ -318,7 +352,7 @@ export default class CharacterBot extends Character {
         }
         //Armor
         else if (mask & 0b10000) {
-            this.isArmor = true;
+            this.armorState = ArmorState.ACTIVE;
             this.setCurrentGroup(4);
         }
     }

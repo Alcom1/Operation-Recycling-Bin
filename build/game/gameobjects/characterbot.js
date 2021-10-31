@@ -1,6 +1,12 @@
 import Character from "./character.js";
 import {BOUNDARY, bitStack, GMULTY, GMULTX} from "../../engine/utilities/math.js";
 import Animat from "./animation.js";
+var ArmorState;
+(function(ArmorState2) {
+  ArmorState2[ArmorState2["NONE"] = 0] = "NONE";
+  ArmorState2[ArmorState2["ACTIVE"] = 1] = "ACTIVE";
+  ArmorState2[ArmorState2["FLASH"] = 2] = "FLASH";
+})(ArmorState || (ArmorState = {}));
 const characterBotOverride = Object.freeze({
   height: 4,
   speed: 2.5,
@@ -54,11 +60,14 @@ const cbc = Object.freeze({
 export default class CharacterBot extends Character {
   constructor(params) {
     super(Object.assign(params, characterBotOverride));
-    this.timer = 0;
+    this.timerSpc = 0;
+    this.timerArm = 0;
     this.ceilSubOffset = -6;
     this.verticalSpeed = 500;
     this.isFlight = false;
-    this.isArmor = false;
+    this.armorDelay = 2;
+    this.armorFlashRate = 8;
+    this.armorState = 0;
     params.animsMisc.forEach((m) => {
       var newIndex = this.animatGroups.push([]) - 1;
       for (let i = -1; i <= (m.isSliced ? 1 : -1); i++) {
@@ -79,13 +88,22 @@ export default class CharacterBot extends Character {
     });
   }
   get animImageIndex() {
-    return this.move.x * (this.isArmor ? 2 : 1);
+    return this.move.x * (this.armorState == 1 ? 2 : this.armorState == 2 ? 1 + Math.floor(this.timerArm * this.armorFlashRate) % 2 : 1);
   }
   update(dt) {
     super.update(dt);
+    if (this.armorState == 2) {
+      this.timerArm += dt;
+      console.log(1 + this.timerArm * 4 % 2);
+      this.animatGroupCurr.forEach((x) => x.setImageIndex(this.animImageIndex));
+      if (this.timerArm > this.armorDelay) {
+        this.armorState = 0;
+        this.timerArm = 0;
+      }
+    }
   }
   handleSpecialMovement(dt) {
-    this.timer += dt;
+    this.timerSpc += dt;
     switch (this.animatGroupsIndex) {
       case 3:
         this.moveVertical(dt, this.isFlight ? 1 : -1);
@@ -94,17 +112,16 @@ export default class CharacterBot extends Character {
       default:
         break;
     }
-    if (this.timer > this.animatGroupCurr[0].duration) {
+    if (this.timerSpc > this.animatGroupCurr[0].duration) {
+      this.timerSpc = 0;
       switch (this.animatGroupsIndex) {
         case 2:
           this.isActive = false;
           break;
         case 3:
-          this.timer = 0;
           this.animatGroupCurr.forEach((a) => a.reset());
           break;
         default:
-          this.timer = 0;
           this.setCurrentGroup(0);
           break;
       }
@@ -130,7 +147,7 @@ export default class CharacterBot extends Character {
           a.spos.y = this.ceilSubOffset;
         });
       } else {
-        this.timer = 0;
+        this.timerSpc = 0;
         this.handleBricks();
         this.setCurrentGroup(0);
       }
@@ -189,8 +206,12 @@ export default class CharacterBot extends Character {
   resolveCollision(mask) {
     if (mask & 2) {
       this.setCurrentGroup(1);
-    } else if (mask & 4 && this.isNormalMovment && !this.isArmor) {
-      this.setCurrentGroup(2);
+    } else if (mask & 4 && this.isNormalMovment) {
+      if (this.armorState == 1) {
+        this.armorState = 2;
+      } else if (this.armorState == 0) {
+        this.setCurrentGroup(2);
+      }
     } else if (mask & 8) {
       if (this.animatGroupsIndex != 3) {
         this.handleBricks(true);
@@ -199,7 +220,7 @@ export default class CharacterBot extends Character {
       }
       this.isFlight = true;
     } else if (mask & 16) {
-      this.isArmor = true;
+      this.armorState = 1;
       this.setCurrentGroup(4);
     }
   }
