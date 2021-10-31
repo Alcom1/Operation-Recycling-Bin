@@ -10,8 +10,8 @@ export var CursorIconState;
   CursorIconState2[CursorIconState2["HOVERUP"] = 5] = "HOVERUP";
 })(CursorIconState || (CursorIconState = {}));
 export default class CursorIcon extends GameObject {
-  constructor(engine2, params) {
-    super(engine2, params);
+  constructor(params) {
+    super(params);
     this.cursorImages = new Map([
       [0, "cursor_none"],
       [1, "cursor_drag"],

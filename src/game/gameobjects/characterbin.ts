@@ -12,8 +12,8 @@ const characterBinOverride = Object.freeze({
 
 export default class CharacterBin extends Character {
 
-    constructor(engine: Engine, params: CharacterParams) {
-        super(engine, Object.assign(params, characterBinOverride));
+    constructor(params: CharacterParams) {
+        super(Object.assign(params, characterBinOverride));
     }
     
     //Get bin colliders

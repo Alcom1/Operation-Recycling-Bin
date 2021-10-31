@@ -1,7 +1,7 @@
 import Brick from "./brick.js";
 export default class BrickPlate extends Brick {
-  constructor(engine2, params) {
-    super(engine2, Object.assign(params, {width: 4}));
+  constructor(params) {
+    super(params);
     this.images = params.images.map((i) => i ? this.engine.library.getImage(i) : {});
     this.isOn = params.isOn;
     this.image = this.images[+params.isOn];

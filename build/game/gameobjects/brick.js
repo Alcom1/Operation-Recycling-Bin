@@ -2,9 +2,8 @@ import GameObject from "../../engine/gameobjects/gameobject.js";
 import {colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX, getZIndex, MOBILE_PREVIEW_MAX} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
 export default class Brick extends GameObject {
-  constructor(engine2, params) {
-    super(engine2, params);
-    this.engine = engine2;
+  constructor(params) {
+    super(params);
     this.image = new Image();
     this.isStatic = false;
     this.isPressed = false;

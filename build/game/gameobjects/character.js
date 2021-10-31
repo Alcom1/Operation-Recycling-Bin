@@ -3,8 +3,8 @@ import {GMULTX} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
 import Animat from "./animation.js";
 export default class Character extends GameObject {
-  constructor(engine2, params) {
-    super(engine2, params);
+  constructor(params) {
+    super(params);
     this.underBricks = [];
     this.animatGroupsIndex = 0;
     this.animatGroups = [[]];
@@ -14,7 +14,7 @@ export default class Character extends GameObject {
     this._height = params.height ?? 2;
     this.checkCollision = true;
     for (let i = -1; i <= 1; i++) {
-      this.animatGroupCurr.push(this.parent.pushGO(new Animat(this.engine, {
+      this.animatGroupCurr.push(this.parent.pushGO(new Animat({
         ...params,
         isLoop: false,
         zModifier: i < 1 ? 300 : 29,
@@ -32,6 +32,9 @@ export default class Character extends GameObject {
   }
   get isNormalMovment() {
     return this.animatGroupsIndex == 0;
+  }
+  get animImageIndex() {
+    return this.move.x;
   }
   init(ctx, scenes) {
     const level = scenes.find((s) => s.name == "Level");
@@ -81,7 +84,7 @@ export default class Character extends GameObject {
   reverse() {
     this.move.x *= -1;
     this.gpos.x += this.move.x;
-    this.animatGroups[0].forEach((x) => x.setImageIndex(this.move.x));
+    this.animatGroups[0].forEach((x) => x.setImageIndex(this.animImageIndex));
   }
   setCurrentGroup(index) {
     index = index ?? this.animatGroupsIndex;
@@ -91,6 +94,7 @@ export default class Character extends GameObject {
       s.spos = {x: 0, y: 0};
       s.reset(this.gpos);
     }));
+    this.animatGroupCurr.forEach((x) => x.setImageIndex(this.animImageIndex));
   }
   deactivate() {
     this.isActive = false;

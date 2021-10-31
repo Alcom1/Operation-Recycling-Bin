@@ -1,17 +1,21 @@
 import Engine from "engine/engine";
 import Character, { CharacterParams } from "./character";
-import { BOUNDARY, bitStack, colRectRectSizes, GMULTY, GMULTX} from "engine/utilities/math";
-import Scene from "engine/scene/scene";
+import { BOUNDARY, bitStack, GMULTY, GMULTX} from "engine/utilities/math";
 import Animat, { AnimationParams } from "./animation";
-import CharacterBin from "./characterbin";
 import { Collider } from "engine/modules/collision";
 
-export interface CharacterBotParams extends CharacterParams {
+interface CharacterBotParams extends CharacterParams {
     animsMisc : AnimationInputParams[];
 }
 
-export interface AnimationInputParams extends AnimationParams {
+interface AnimationInputParams extends AnimationParams {
     isSliced? : boolean;
+}
+
+enum ArmorState {
+    NONE,
+    ACTIVE,
+    FLASH
 }
 
 //Bot parameters
@@ -21,20 +25,20 @@ const characterBotOverride = Object.freeze({
     speed : 2.5,    //Bot moves fast
     images : [      //Bot has left & right animations
         { name : "char_bot_left", offsetX : 36 },
-        { name : "char_bot_right", offsetX : 14}],
+        { name : "char_bot_right", offsetX : 14},
+        { name : "char_bot_left_armor", offsetX : 36 },
+        { name : "char_bot_right_armor", offsetX : 14}],
     frameCount : 10,
     animsCount : 2,
 
     //Misc animation parameters
     animsMisc : [{ //Bot-bin interaction animation
         images : [{ name : "char_bot_bin", offsetX : 0 }],
-        framesSize : 126,
         gposOffset : { x : -1, y : 0},
         zModifier : 150,
         frameCount : 12
     },{             //Bot explosion animation
         images : [{ name : "char_bot_explosion", offsetX : 0 }],
-        framesSize : 200,
         gposOffset : { x : -3, y : 0},
         zModifier : 600,
         frameCount : 16,
@@ -47,7 +51,13 @@ const characterBotOverride = Object.freeze({
         gposOffset : { x : -1, y : 0},
         frameCount : 10,
         animsCount : 2,
-        isLoop : true,
+        isSliced : true
+    },{             //Bot armor animation
+        images : [  //Flying has left & right animations
+            { name : "char_bot_armor_left", offsetX : 36 },
+            { name : "char_bot_armor_right", offsetX : 14 }],
+        gposOffset : { x : -1, y : 0},
+        frameCount : 12,
         isSliced : true
     }]
 });
@@ -64,13 +74,24 @@ const cbc = Object.freeze({
 
 export default class CharacterBot extends Character {
 
-    private timer : number = 0;         //Timer to track duration of special movements
-    private ceilSubOffset = -6;         //Offset for up/down movement
-    private verticalSpeed = 500;
-    private isFlight : boolean = false;
+    private timerSpc : number = 0;                      //Timer to track duration of special movements
+    private timerArm : number = 0;                      //Timer to track armor flash
+    private ceilSubOffset = -6;                         //Offset for up/down movement
+    private verticalSpeed = 500;                        //Speed of vertical movement
+    private isFlight : boolean = false;                 //If currently flying
+    private armorDelay : number = 2;                    //Delay where armor remains after taking damage
+    private armorFlashRate : number = 8;                //Rate of the armor flashing effect
+    private armorState : ArmorState = ArmorState.NONE;  //Current state of the armor
 
-    constructor(engine: Engine, params: CharacterBotParams) {
-        super(engine, Object.assign(params, characterBotOverride));
+    protected get animImageIndex() : number { 
+        return this.move.x * (
+            this.armorState == ArmorState.ACTIVE ? 2 :
+            this.armorState == ArmorState.FLASH  ? (1 + Math.floor(this.timerArm * this.armorFlashRate) % 2) : 
+            1)
+    }
+
+    constructor(params: CharacterBotParams) {
+        super(Object.assign(params, characterBotOverride));
 
         //Setup miscellaneous animations.
         params.animsMisc.forEach(m => {
@@ -81,7 +102,7 @@ export default class CharacterBot extends Character {
             //3 slices if sliced, 1 otherwise
             for(let i = -1; i <= (m.isSliced ? 1 : -1); i ++) {
 
-                this.animatGroups[newIndex].push(new Animat(this.engine, {
+                this.animatGroups[newIndex].push(new Animat({
                     ...params,
                     speed :      m.speed,
                     images :     m.images,
@@ -98,10 +119,28 @@ export default class CharacterBot extends Character {
         });
     }
 
+    //Unique bot update
+    public update(dt : number) {
+        super.update(dt);
+
+        //Update armor flash
+        if(this.armorState == ArmorState.FLASH) {
+            this.timerArm += dt;
+            console.log(1 + this.timerArm * 4 % 2);
+            this.animatGroupCurr.forEach(x => x.setImageIndex(this.animImageIndex));
+
+            //Remove armor after a duration and reset timer
+            if(this.timerArm > this.armorDelay) {
+                this.armorState = ArmorState.NONE;
+                this.timerArm = 0;
+            }
+        }
+    }
+
     //Special movement
     protected handleSpecialMovement(dt : number) {
 
-        this.timer += dt;   //Update timer
+        this.timerSpc += dt;   //Update special timer
 
         //Perform special movement
         switch(this.animatGroupsIndex) {
@@ -118,25 +157,26 @@ export default class CharacterBot extends Character {
         }
 
         //If the current animation has ended
-        if(this.timer > this.animatGroupCurr[0].length) {
+        if(this.timerSpc > this.animatGroupCurr[0].duration) {
+
+            //Reset timer
+            this.timerSpc = 0;
 
             switch(this.animatGroupsIndex) {
-                
-                //End bot-bin animation
-                case 1 :
-                    this.timer = 0;
-                    this.setCurrentGroup(0);
+
+                //Deactivate this character
+                case 2 :
+                    this.isActive = false;
                     break;
 
                 //Reset up/down animation
                 case 3 :
-                    this.timer = 0;
                     this.animatGroupCurr.forEach(a => a.reset());
                     break;
-
-                //Default to deactivating this character
+                
+                //End animation
                 default :
-                    this.isActive = false;
+                    this.setCurrentGroup(0);
                     break;
             }
         }
@@ -180,7 +220,7 @@ export default class CharacterBot extends Character {
             }
             //If going downwards, reset to walking
             else {
-                this.timer = 0;
+                this.timerSpc = 0;
                 this.handleBricks(); 
                 this.setCurrentGroup(0);
             }
@@ -268,13 +308,17 @@ export default class CharacterBot extends Character {
     public getColliders() : Collider[] {
         
         return [{ 
-            mask : 0b1111,   //All collisions
+            mask : 0b1111, //All collisions
             min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
             max : this.gpos.getAdd({ x :  1, y : 1}) 
         },{ 
             mask : 0,       //Passive
             min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
             max : this.gpos.getAdd({ x :  1, y : 1}) 
+        },{ 
+            mask : 0b10000, //Armor collides with legs
+            min : this.gpos.getAdd({ x : -1 - Math.min(this.move.x, 0), y : 0}),
+            max : this.gpos.getAdd({ x :    - Math.min(this.move.x, 0), y : 1}) 
         }];
     }
 
@@ -287,18 +331,29 @@ export default class CharacterBot extends Character {
         }
         //Hazard
         else if (mask & 0b100 && this.isNormalMovment) {
-            this.setCurrentGroup(2);
+
+            //Start flashing animation after taking damage
+            if(this.armorState == ArmorState.ACTIVE) {
+                this.armorState = ArmorState.FLASH
+            }
+            //If unarmored, die.
+            else if(this.armorState == ArmorState.NONE) {
+                this.setCurrentGroup(2);
+            }
         }
         //Up
         else if (mask & 0b1000) {
             if(this.animatGroupsIndex != 3) {
-                this.handleBricks(true);            //Bricks should not be pressured by a floating character
-                this.setCurrentGroup(3);            //Play floating animation
-                this.animatGroupCurr.forEach(x =>   //Match facing direction
-                    x.setImageIndex(this.move.x));
-                this.spos.x = 0;                    //Force grid alignment
+                this.handleBricks(true);    //Bricks should not be pressured by a floating character
+                this.setCurrentGroup(3);    //Play floating animation
+                this.spos.x = 0;            //Force grid alignment
             }
             this.isFlight = true;
+        }
+        //Armor
+        else if (mask & 0b10000) {
+            this.armorState = ArmorState.ACTIVE;
+            this.setCurrentGroup(4);
         }
     }
 }

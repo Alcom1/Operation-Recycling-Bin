@@ -11,8 +11,8 @@ export default class FPSCounter extends GameObject {
     private color: string;
     private text: string = '';
 
-    constructor(engine: Engine, params: FPSCounterParams) {
-        super(engine, params);
+    constructor(params: FPSCounterParams) {
+        super(params);
         this.font = params.font ?? "18pt Consolas";
         this.color = params.color || "white";
     }

@@ -23,8 +23,8 @@ export default class CursorIcon extends GameObject {
         [CursorIconState.HOVERUP,   "cursor_up"]
     ]);
 
-    public constructor(engine: Engine, params: GameObjectParams) {
-        super(engine, params);
+    public constructor(params: GameObjectParams) {
+        super(params);
         
         //Convert cursor image names to filepaths
         this.cursorImages.forEach((v, k) => this.cursorImages.set(k, pathImg(v)));

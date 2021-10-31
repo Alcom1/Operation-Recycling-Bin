@@ -3,8 +3,8 @@ import {MouseState} from "../../engine/modules/mouse.js";
 import {colorAdd, colorMult, colorTranslate, colPointRect, Z_DEPTH, WIDTH_SIDEPANEL} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
 export default class Button extends GameObject {
-  constructor(engine2, params) {
-    super(engine2, params);
+  constructor(params) {
+    super(params);
     this.press = false;
     this.hover = false;
     this.images = new Map([[false, new Map()], [true, new Map()]]);

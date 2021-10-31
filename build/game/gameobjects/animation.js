@@ -1,8 +1,8 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
 import {floor, getZIndex, GMULTY, OPPOSITE_DIRS} from "../../engine/utilities/math.js";
 export default class Animat extends GameObject {
-  constructor(engine2, params) {
-    super(engine2, params);
+  constructor(params) {
+    super(params);
     this.images = [];
     this.fullSize = {x: 0, y: 0};
     this.zModifierPub = 0;
@@ -32,13 +32,16 @@ export default class Animat extends GameObject {
         });
         break;
       default:
-        params.images.forEach((i) => this.images.push(this.getImage(i)));
+        this.imageIndex = 1;
+        params.images.forEach((x, i) => {
+          this.images[OPPOSITE_DIRS[i % 2] * Math.ceil((i + 1) / 2)] = this.getImage(x);
+        });
     }
     this.frameCount = params.frameCount;
     this.animsCount = params.animsCount ?? 1;
     this.sliceIndex = params.sliceIndex;
   }
-  get length() {
+  get duration() {
     return 1 / this.speed;
   }
   getImage(params) {
@@ -52,6 +55,9 @@ export default class Animat extends GameObject {
       x: this.images[this.imageIndex].image.width,
       y: this.images[this.imageIndex].image.height
     };
+    if (!this.framesSize) {
+      this.framesSize = (this.isVert ? this.fullSize.y : this.fullSize.x) * this.animsCount / this.frameCount;
+    }
   }
   update(dt) {
     if (this.speed > 0) {
@@ -72,7 +78,13 @@ export default class Animat extends GameObject {
     return getZIndex(this.gpos, this.zModifier + this.zModifierPub);
   }
   setImageIndex(index) {
-    this.imageIndex = index;
+    if (this.images[index]) {
+      this.imageIndex = index;
+    } else if (this.images[Math.sign(index)]) {
+      this.imageIndex = Math.sign(index);
+    } else if (this.images[0]) {
+      this.imageIndex = 0;
+    }
   }
   draw(ctx) {
     if (!this.isVisible) {

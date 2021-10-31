@@ -14,8 +14,8 @@ export default class Counter extends GameObject {
     private fontFamily: string = "";
     private par: number = 1;
     
-    constructor(engine: Engine, params: CounterParams) {
-        super(engine, params);
+    constructor(params: CounterParams) {
+        super(params);
 
         this.fontFamily = params.fontFamily ?? "Font04b_08";
     }    

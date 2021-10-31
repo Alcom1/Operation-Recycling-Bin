@@ -1,0 +1,53 @@
+import Engine from "engine/engine";
+import { GameObjectParams } from "engine/gameobjects/gameobject";
+import { Collider } from "engine/modules/collision";
+import { getZIndex, GMULTY } from "engine/utilities/math";
+import BrickPlate, { BrickPlateParams } from "./brickplate";
+import Sprite, { SpriteParams } from "./sprite";
+
+const brickSuperOverride = Object.freeze({
+    images : ["brick_super_off", "brick_super"],
+    width : 2,
+    isOn : true
+});
+
+export default class BrickSuper extends BrickPlate {
+
+    private topSprite : Sprite;
+
+    constructor(params: BrickPlateParams) {
+        super(Object.assign(params, brickSuperOverride));
+
+        var topGPos = this.gpos.getAdd({x : 0, y : -1})
+
+        this.topSprite = this.parent.pushGO(
+            new Sprite({
+                    ...params,
+                    position : topGPos,
+                    zIndex : getZIndex(topGPos, -1),
+                    image : "brick_super_top"
+                } as SpriteParams)) as Sprite
+    }
+
+    //Get hazard and passive colliders of this brick.
+    public getColliders() : Collider[] {
+
+        //Combine with passive collider from base class
+        return super.getColliders().concat(this.isOn ? [{ //Only return super hitbox if this plate is on.
+            mask : 0b10000,           //Super
+            min : this.gpos.getAdd({ x : 0,          y : -1}),
+            max : this.gpos.getAdd({ x : this.width, y :  0}) 
+        }] : []);
+    }
+
+    //Explode
+    public resolveCollision(mask : number) {
+
+        //Turn off
+        if (mask & 0b10000) {
+            this.isOn = false;
+            this.image = this.images[+this.isOn];
+            this.topSprite.isActive = false;
+        }
+    }
+}

@@ -58,8 +58,8 @@ export default class Brick extends GameObject {
     /** If the mobile preview is flipped */
     private isMobileFlipped : Boolean = false;
 
-    constructor(protected engine: Engine, params: BrickParams) {
-        super(engine, params);
+    constructor(params: BrickParams) {
+        super(params);
         
         this.color = colorTranslate(params.color);
         this.isGrey = !params.color;

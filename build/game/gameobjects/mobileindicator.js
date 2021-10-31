@@ -2,8 +2,8 @@ import GameObject from "../../engine/gameobjects/gameobject.js";
 import {BOUNDARY, GMULTX, GMULTY, MOBILE_PREVIEW_MAX, round} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
 export default class MobileIndicator extends GameObject {
-  constructor(engine2, params) {
-    super(engine2, params);
+  constructor(params) {
+    super(params);
     this.mobileOffset = new Vect(0, 0);
     this.isSnapped = false;
     this.isFlipped = false;

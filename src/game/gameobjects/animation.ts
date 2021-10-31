@@ -60,10 +60,10 @@ export default class Animat extends GameObject {
     private animsIndex : number = 0;                //Index of the current animation
 
     //get
-    public get length() : number { return 1 / this.speed; }
+    public get duration() : number { return 1 / this.speed; }
 
-    constructor(engine : Engine, params : AnimationParams) {
-        super(engine, params);
+    constructor(params : AnimationParams) {
+        super(params);
 
         this.speed = params.speed ?? 1;
         this.isLoop = params.isLoop ?? true;
@@ -96,7 +96,10 @@ export default class Animat extends GameObject {
 
             //Many images
             default:
-                params.images.forEach(i => this.images.push(this.getImage(i)));
+                this.imageIndex = 1;
+                params.images.forEach((x, i) => {
+                    this.images[OPPOSITE_DIRS[i % 2] * Math.ceil((i + 1) / 2)] = this.getImage(x);
+                });
         }
 
         this.frameCount = params.frameCount;
@@ -121,6 +124,11 @@ export default class Animat extends GameObject {
         this.fullSize = {
             x : this.images[this.imageIndex].image.width,
             y : this.images[this.imageIndex].image.height
+        }
+
+        //Default frame size based on the image size and number of frames
+        if(!this.framesSize) {
+            this.framesSize = (this.isVert ? this.fullSize.y : this.fullSize.x) * this.animsCount / this.frameCount
         }
     }
 
@@ -158,7 +166,19 @@ export default class Animat extends GameObject {
 
     //Set the image index, swapping the image for this animation.
     public setImageIndex(index : number) {
-        this.imageIndex = index;
+
+        //This animation has many images
+        if(this.images[index]) {
+            this.imageIndex = index;
+        }
+        //This animation has 2 images
+        else if(this.images[Math.sign(index)]) {
+            this.imageIndex = Math.sign(index);
+        }
+        //This animation has 1 image
+        else if(this.images[0]) {
+            this.imageIndex = 0;
+        }
     }
 
     //Draw this animation
