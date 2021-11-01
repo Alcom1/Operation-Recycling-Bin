@@ -71,7 +71,7 @@ export default class WaterDrop extends Sprite {
 
         //Return hazard hitbox
         return [{
-            mask : 0b100,   //Hazard
+            mask : 0b100100,   //Hazard & other
             min : this.gpos,
             max : this.gpos.getAdd({ x : 2, y :  1}) 
         }];

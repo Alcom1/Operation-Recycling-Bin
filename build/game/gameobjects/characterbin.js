@@ -12,7 +12,7 @@ export default class CharacterBin extends Character {
   }
   getColliders() {
     return [{
-      mask: 2,
+      mask: 34,
       min: this.gpos.getAdd({x: -1, y: 1 - this.height}),
       max: this.gpos.getAdd({x: 1, y: 1})
     }, {

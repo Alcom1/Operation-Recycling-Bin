@@ -19,11 +19,11 @@ export default class CharacterBin extends Character {
     public getColliders() : Collider[] {
         
         return [{ 
-            mask : 0b010,   //Bot-Bin
+            mask : 0b100010,    //Bot-Bin & Water
             min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
             max : this.gpos.getAdd({ x :  1, y : 1}) 
         },{ 
-            mask : 0,       //Passive
+            mask : 0,           //Passive
             min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
             max : this.gpos.getAdd({ x :  1, y : 1}) 
         }];

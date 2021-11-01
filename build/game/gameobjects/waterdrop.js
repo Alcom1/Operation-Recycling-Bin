@@ -33,7 +33,7 @@ export default class WaterDrop extends Sprite {
   }
   getColliders() {
     return [{
-      mask: 4,
+      mask: 36,
       min: this.gpos,
       max: this.gpos.getAdd({x: 2, y: 1})
     }];
