@@ -2,12 +2,12 @@ import Vect from "../utilities/vect.js";
 import {getZIndex} from "../utilities/math.js";
 export default class GameObject {
   constructor(params) {
-    this.isActive = true;
     this.gpos = new Vect(params.position?.x ?? 0, params.position?.y ?? 0);
     this.spos = new Vect(params.subPosition?.x ?? 0, params.subPosition?.y ?? 0);
     this.tags = params.tags ?? [params.name];
     this.parent = params.scene;
     this.engine = params.engine;
+    this.isActive = params.isActive ?? true;
   }
   init(ctx) {
   }

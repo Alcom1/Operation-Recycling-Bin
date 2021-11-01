@@ -3,16 +3,10 @@ import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import { floor, getZIndex, GMULTX, GMULTY, OPPOSITE_DIRS } from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 
-export interface OffsetImageExpandedParams {
-    name : string;
-    extension : string;
-    offsetX : number;
-}
-
 export interface OffsetImageParams {
     name : string;
     extension? : string;
-    offsetX : number;
+    offsetX? : number;
 }
 
 export interface OffsetImage {

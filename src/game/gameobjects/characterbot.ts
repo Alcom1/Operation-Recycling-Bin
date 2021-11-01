@@ -33,12 +33,12 @@ const characterBotOverride = Object.freeze({
 
     //Misc animation parameters
     animsMisc : [{ //Bot-bin interaction animation
-        images : [{ name : "char_bot_bin", offsetX : 0 }],
+        images : [{ name : "char_bot_bin" }],
         gposOffset : { x : -1, y : 0},
         zModifier : 150,
         frameCount : 12
     },{             //Bot explosion animation
-        images : [{ name : "char_bot_explosion", offsetX : 0 }],
+        images : [{ name : "char_bot_explosion" }],
         gposOffset : { x : -3, y : 0},
         zModifier : 600,
         frameCount : 16,

@@ -11,7 +11,7 @@ export default class BrickPlateHot extends BrickPlate {
       ...params,
       subPosition: {x: 0, y: -25},
       zModifier: 40,
-      images: [{name: "brick_plate_hot", offsetX: 0}],
+      images: [{name: "brick_plate_hot"}],
       speed: 2,
       frameCount: 7,
       isVert: true

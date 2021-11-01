@@ -12,6 +12,7 @@ export interface GameObjectParams {
     scene: Scene;
     name: string;
     tags?: [string];
+    isActive?: boolean;
 }
 
 /** Base game object */
@@ -24,7 +25,7 @@ export default class GameObject {
     protected engine: Engine;
     public tags: string[];
     public parent: Scene;
-    public isActive: Boolean = true;
+    public isActive: Boolean;
 
     constructor(params: GameObjectParams) {
         this.gpos = new Vect(params.position?.x ?? 0, params.position?.y ?? 0);
@@ -32,6 +33,7 @@ export default class GameObject {
         this.tags = params.tags ?? [params.name];
         this.parent = params.scene;
         this.engine = params.engine;
+        this.isActive = params.isActive ?? true;
     }
 
     /**

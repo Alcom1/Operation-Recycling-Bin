@@ -2,6 +2,7 @@ import { GameObjectParams } from "engine/gameobjects/gameobject";
 import { Collider } from "engine/modules/collision";
 import { BOUNDARY, GMULTY } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
+import Animat, { AnimationParams } from "./animation";
 import BrickHandler from "./brickhandler";
 import Sprite from "./sprite";
 
@@ -16,9 +17,21 @@ export default class WaterDrop extends Sprite {
 
     private speed : number = 500;
     private brickHandler! : BrickHandler;
+    private animLand: Animat;
 
     constructor(params: GameObjectParams) {
         super(Object.assign(params, characterBotOverride));
+
+        this.animLand = this.parent.pushGO(new Animat({
+            ...params,
+            zModifier : 100,
+            images : [{ name : "part_water_land" }],
+            speed : 2.5,
+            frameCount : 6,
+            isVert : true,
+            isActive : false,
+            isLoop : false
+        } as AnimationParams)) as Animat;
 
         this.isActive = false;  //Start deactivated
     }
@@ -49,7 +62,7 @@ export default class WaterDrop extends Sprite {
                 1,          //HEIGHT
                 1)) {       //Direction
 
-                this.isActive = false;
+                this.doLandAnimation();
             } 
         }
     }
@@ -62,8 +75,16 @@ export default class WaterDrop extends Sprite {
         this.spos = { x : 0, y : 0 } as Vect;
     }
 
+    //Remove this waterdrop upon collision
     public resolveCollision() {
+        this.doLandAnimation();
+    }
+
+    //Perform a waterdrop landing animation
+    private doLandAnimation() {
         this.isActive = false;
+        this.animLand.isActive = true;
+        this.animLand.reset(this.gpos);
     }
 
     //Get hazard and passive colliders of this brick.

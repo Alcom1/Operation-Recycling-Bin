@@ -15,12 +15,11 @@ export default class BrickPlateHot extends BrickPlate {
     constructor(params: BrickPlateParams) {
         super(Object.assign(params, brickPlateHotOverride));
 
-        //this.parent.pushGO(
         this.animation = this.parent.pushGO(new Animat({
             ...params,
             subPosition : { x : 0, y : -25 },                       //For some reason, this animation appears super low by default.
             zModifier : 40,                                         //Z-index modifier of a 4-width brick
-            images : [{ name : "brick_plate_hot", offsetX : 0 }],   //Single hotplate animation image
+            images : [{ name : "brick_plate_hot" }],   //Single hotplate animation image
             speed : 2,                                              //Hotplate animation is weirdly fast
             frameCount : 7,
             isVert : true                                           //Hotplate animation frames are stacked vertically
