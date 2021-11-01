@@ -53,6 +53,7 @@ export default class Engine {
         sceneSource: string,
         startScenes: string[],
         gameObjectTypes: typeof GameObject[],
+        private debug: boolean = false,
         private width: number = 1296,
         private height: number = 864
     ) {
@@ -141,6 +142,11 @@ export default class Engine {
         scenes.forEach(s => s.update(dt));
         scenes.forEach(s => s.draw(this.ctx));
         scenes.forEach(s => s.superDraw(this.ctx));
+
+        //Debug views
+        if(this.debug) {
+            this.collision.draw(this.ctx);
+        }
     }
 
     /** Load all scene data */

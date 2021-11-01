@@ -6,7 +6,8 @@ import TagModule from "./modules/tag.js";
 import Scene from "./scene/scene.js";
 import {clamp} from "./utilities/math.js";
 export default class Engine {
-  constructor(element, scenePathName, sceneSource, startScenes, gameObjectTypes, width = 1296, height = 864) {
+  constructor(element, scenePathName, sceneSource, startScenes, gameObjectTypes, debug = false, width = 1296, height = 864) {
+    this.debug = debug;
     this.width = width;
     this.height = height;
     this.lastTime = 0;
@@ -73,6 +74,9 @@ export default class Engine {
     scenes.forEach((s) => s.update(dt));
     scenes.forEach((s) => s.draw(this.ctx));
     scenes.forEach((s) => s.superDraw(this.ctx));
+    if (this.debug) {
+      this.collision.draw(this.ctx);
+    }
   }
   async loadScenes(sceneName, scenes) {
     const sceneResponse = await fetch(`${this.scenePath}${sceneName}.json`);

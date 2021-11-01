@@ -1,6 +1,6 @@
 import GameObject from "engine/gameobjects/gameobject";
 import Scene from "engine/scene/scene";
-import { colRectRectCorners } from "engine/utilities/math";
+import { colRectRectCorners, GMULTX, GMULTY } from "engine/utilities/math";
 import { Point } from "engine/utilities/vect";
 
 export interface Collider {
@@ -75,6 +75,29 @@ export default class CollisionModule {
                 }
             }
         });
+    }
+
+    //Debug Draw
+    public draw(ctx : CanvasRenderingContext2D) {
+
+        ctx.strokeStyle = "#F00";
+        ctx.lineWidth = 2;
+
+        this.scenes.forEach(s =>
+            s.gameObjects.filter(go => go.isActive).forEach(go =>
+                go.getColliders().forEach(c => {
+
+                    //Color box based on most significant bit
+                    ctx.strokeStyle = `hsl(${c.mask.toString(2).length * 48},100%,50%)`
+                    ctx.strokeRect(
+                        c.min.x * GMULTX + 1,
+                        c.min.y * GMULTY - 1,
+                        c.max.x * GMULTX - c.min.x * GMULTX,
+                        c.max.y * GMULTY - c.min.y * GMULTY
+                    )
+                })
+            )
+        );
     }
 
     //Get passive colliders that are within the given box

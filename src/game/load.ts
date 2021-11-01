@@ -49,6 +49,7 @@ window.onload = function() {
             LevelSequence,
             Sprite,
             Stud
-        ]
+        ],
+        false
     );    
 }

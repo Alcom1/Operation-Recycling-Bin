@@ -1,4 +1,4 @@
-import {colRectRectCorners} from "../utilities/math.js";
+import {colRectRectCorners, GMULTX, GMULTY} from "../utilities/math.js";
 export default class CollisionModule {
   constructor() {
     this.scenes = [];
@@ -37,6 +37,14 @@ export default class CollisionModule {
         }
       }
     });
+  }
+  draw(ctx) {
+    ctx.strokeStyle = "#F00";
+    ctx.lineWidth = 2;
+    this.scenes.forEach((s) => s.gameObjects.filter((go) => go.isActive).forEach((go) => go.getColliders().forEach((c) => {
+      ctx.strokeStyle = `hsl(${c.mask.toString(2).length * 48},100%,50%)`;
+      ctx.strokeRect(c.min.x * GMULTX + 1, c.min.y * GMULTY - 1, c.max.x * GMULTX - c.min.x * GMULTX, c.max.y * GMULTY - c.min.y * GMULTY);
+    })));
   }
   collidePassive(min, max) {
     return this.getPassiveColliders().filter((c) => colRectRectCorners(c.min, c.max, min, max));

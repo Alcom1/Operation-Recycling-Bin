@@ -42,6 +42,6 @@ window.onload = function() {
     LevelSequence,
     Sprite,
     Stud
-  ]);
+  ], false);
 };
 //# sourceMappingURL=load.js.map
