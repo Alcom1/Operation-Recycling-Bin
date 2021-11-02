@@ -8,7 +8,7 @@ const brickPipeOverride = Object.freeze({
 export default class BrickPipe extends BrickPlate {
   constructor(params) {
     super(Object.assign(params, brickPipeOverride));
-    this.rate = 1.8;
+    this.rate = 2.5;
     this.antiDelay = 1;
     this.timer = this.antiDelay + Math.random() * (this.rate - this.antiDelay);
     this.drop = this.parent.pushGO(new WaterDrop(params));

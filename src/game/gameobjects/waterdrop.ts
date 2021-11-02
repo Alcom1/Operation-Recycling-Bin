@@ -18,6 +18,9 @@ export default class WaterDrop extends Sprite {
     private speed : number = 500;
     private brickHandler! : BrickHandler;
     private animLand: Animat;
+    private animSlip: Animat;
+    private slipDuration : number = 0.4;
+    private slipTimer: number = 0;
 
     constructor(params: GameObjectParams) {
         super(Object.assign(params, characterBotOverride));
@@ -27,6 +30,17 @@ export default class WaterDrop extends Sprite {
             zModifier : 100,
             images : [{ name : "part_water_land" }],
             speed : 2.5,
+            frameCount : 6,
+            isVert : true,
+            isActive : false,
+            isLoop : false
+        } as AnimationParams)) as Animat;
+
+        this.animSlip = this.parent.pushGO(new Animat({
+            ...params,
+            zModifier : 100,
+            images : [{ name : "part_water_slip" }],
+            speed : 1 / this.slipDuration,
             frameCount : 6,
             isVert : true,
             isActive : false,
@@ -47,6 +61,15 @@ export default class WaterDrop extends Sprite {
 
     //Move waterdrop down.
     public update(dt : number) {
+
+        if(this.slipTimer < this.slipDuration) {
+            this.slipTimer += dt;
+            return;
+        }
+        else {
+            this.animSlip.isActive = false;
+        }
+
         this.spos.y += dt * this.speed;
 
         if(this.spos.y > GMULTY) {
@@ -67,12 +90,22 @@ export default class WaterDrop extends Sprite {
         }
     }
 
+    //Draw only after slip animation ends
+    public draw(ctx : CanvasRenderingContext2D) {
+        if(this.slipTimer >= this.slipDuration) {
+            super.draw(ctx);
+        }
+    }
+
     //Reset and spawn this waterdrop.
     public reset(gpos : Vect) {
 
         this.isActive = true;
         this.gpos = gpos.get();
         this.spos = { x : 0, y : 0 } as Vect;
+        this.slipTimer = 0;
+        this.animSlip.isActive = true;
+        this.animSlip.reset(this.gpos);
     }
 
     //Remove this waterdrop upon collision
@@ -82,6 +115,7 @@ export default class WaterDrop extends Sprite {
 
     //Perform a waterdrop landing animation
     private doLandAnimation() {
+
         this.isActive = false;
         this.animLand.isActive = true;
         this.animLand.reset(this.gpos);
