@@ -66,11 +66,11 @@ export default class Engine {
     this.mouse.update();
   }
   initScenes() {
-    this.collision.update();
     this.scenesLoading.forEach((s) => s.init(this.ctx));
     this.scenesActive.forEach((s) => s.init(this.ctx));
   }
   updateDrawScenes(scenes, dt) {
+    this.collision.update();
     scenes.forEach((s) => s.update(dt));
     scenes.forEach((s) => s.draw(this.ctx));
     scenes.forEach((s) => s.superDraw(this.ctx));
