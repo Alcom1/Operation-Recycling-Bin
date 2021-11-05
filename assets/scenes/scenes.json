@@ -80,7 +80,6 @@
       }
     ]
   },
-
   {
     "scene": {
       "name": "Level",
@@ -10234,6 +10233,13 @@
         }
       },
       {
+        "name": "BrickJump",
+        "position": {
+          "x": 7,
+          "y": 10
+        }
+      },
+      {
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -10269,6 +10275,13 @@
         "name": "BrickNormal",
         "position": {
           "x": 10,
+          "y": 10
+        }
+      },
+      {
+        "name": "BrickJump",
+        "position": {
+          "x": 16,
           "y": 10
         }
       },
@@ -10367,6 +10380,13 @@
         "name": "BrickNormal",
         "position": {
           "x": 20,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickJump",
+        "position": {
+          "x": 18,
           "y": 23
         }
       },
@@ -10471,6 +10491,13 @@
         "position": {
           "x": 2,
           "y": 23
+        }
+      },
+      {
+        "name": "BrickJump",
+        "position": {
+          "x": 26,
+          "y": 10
         }
       },
       {
@@ -14378,6 +14405,34 @@
     },
     "gameObjects": [
       {
+        "name": "BrickJump",
+        "position": {
+          "x": 7,
+          "y": 22
+        }
+      },
+      {
+        "name": "BrickJump",
+        "position": {
+          "x": 11,
+          "y": 20
+        }
+      },
+      {
+        "name": "BrickJump",
+        "position": {
+          "x": 15,
+          "y": 18
+        }
+      },
+      {
+        "name": "BrickJump",
+        "position": {
+          "x": 19,
+          "y": 16
+        }
+      },
+      {
         "width": 8,
         "name": "BrickNormal",
         "position": {
@@ -14535,6 +14590,13 @@
         "position": {
           "x": 23,
           "y": 15
+        }
+      },
+      {
+        "name": "BrickJump",
+        "position": {
+          "x": 23,
+          "y": 14
         }
       },
       {
@@ -15107,6 +15169,13 @@
         "position": {
           "x": 12,
           "y": 14
+        }
+      },
+      {
+        "name": "BrickJump",
+        "position": {
+          "x": 14,
+          "y": 15
         }
       },
       {
@@ -18885,6 +18954,41 @@
     },
     "gameObjects": [
       {
+        "name": "BrickJump",
+        "position": {
+          "x": 23,
+          "y": 9
+        }
+      },
+      {
+        "name": "BrickJump",
+        "position": {
+          "x": 28,
+          "y": 11
+        }
+      },
+      {
+        "name": "BrickJump",
+        "position": {
+          "x": 26,
+          "y": 13
+        }
+      },
+      {
+        "name": "BrickJump",
+        "position": {
+          "x": 24,
+          "y": 15
+        }
+      },
+      {
+        "name": "BrickJump",
+        "position": {
+          "x": 14,
+          "y": 9
+        }
+      },
+      {
         "width": 4,
         "name": "BrickNormal",
         "position": {
@@ -18922,6 +19026,20 @@
         "position": {
           "x": 27,
           "y": 23
+        }
+      },
+      {
+        "name": "BrickJump",
+        "position": {
+          "x": 8,
+          "y": 13
+        }
+      },
+      {
+        "name": "BrickJump",
+        "position": {
+          "x": 12,
+          "y": 17
         }
       },
       {

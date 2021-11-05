@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["C:\\Users\\Alcom\\Desktop\\Dev\\Git\\Operation Recycling Bin\\src\\game\\gameobjects\\brickjump.ts"],
+  "sourcesContent": ["import BrickPlate, { BrickPlateParams } from \"./brickplate\";\r\n\r\nconst brickJumpOverride = Object.freeze({\r\n    images : [\"brick_jump\", \"brick_jump\"],\r\n    width : 2,\r\n    isOn : true\r\n});\r\n\r\nexport default class BrickJump extends BrickPlate {\r\n\r\n    constructor(params: BrickPlateParams) {\r\n        super(Object.assign(params, brickJumpOverride));\r\n    }\r\n}\r\n"],
+  "mappings": "AAAA;AAEA,MAAM,oBAAoB,OAAO,OAAO;AAAA,EACpC,QAAS,CAAC,cAAc;AAAA,EACxB,OAAQ;AAAA,EACR,MAAO;AAAA;AALX,uCAQuC;AAAA,EAEnC;AACI,UAAM,OAAO,OAAO,QAAQ;AAAA;AAAA;",
+  "names": []
+}

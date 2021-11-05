@@ -18,6 +18,7 @@ import BrickPlateHot from "./gameobjects/brickplatehot";
 import BrickPlateFan from "./gameobjects/brickplatefan";
 import BrickSuper from "./gameobjects/bricksuper";
 import BrickPipe from "./gameobjects/brickpipe";
+import BrickJump from "./gameobjects/brickjump";
 
 //Load
 window.onload = function() {
@@ -28,13 +29,14 @@ window.onload = function() {
         canvas, 
         "assets/scenes/",
         "scenes",
-        ["LevelInterface", "LEVEL_08"],
+        ["LevelInterface", "LEVEL_16"],
         [
             BrickHandler,
-            BrickPlateFan,
-            BrickPlateHot,
+            BrickJump,
             BrickNormal,
             BrickPipe,
+            BrickPlateFan,
+            BrickPlateHot,
             BrickSuper,
             Button,
             ButtonScene,
