@@ -8,5 +8,12 @@ export default class BrickJump extends BrickPlate {
   constructor(params) {
     super(Object.assign(params, brickJumpOverride));
   }
+  getColliders() {
+    return super.getColliders().concat(this.isOn ? [{
+      mask: 64,
+      min: this.gpos.getAdd({x: 0, y: -1}),
+      max: this.gpos.getAdd({x: this.width, y: 0})
+    }] : []);
+  }
 }
 //# sourceMappingURL=brickjump.js.map

@@ -7,6 +7,12 @@ var ArmorState;
   ArmorState2[ArmorState2["ACTIVE"] = 1] = "ACTIVE";
   ArmorState2[ArmorState2["FLASH"] = 2] = "FLASH";
 })(ArmorState || (ArmorState = {}));
+var FlightState;
+(function(FlightState2) {
+  FlightState2[FlightState2["NONE"] = 0] = "NONE";
+  FlightState2[FlightState2["JUMP"] = 1] = "JUMP";
+  FlightState2[FlightState2["UPWARD"] = 2] = "UPWARD";
+})(FlightState || (FlightState = {}));
 const characterBotOverride = Object.freeze({
   height: 4,
   speed: 2.5,
@@ -64,7 +70,7 @@ export default class CharacterBot extends Character {
     this.timerArm = 0;
     this.ceilSubOffset = -6;
     this.verticalSpeed = 500;
-    this.isFlight = false;
+    this.flightState = 0;
     this.armorDelay = 2;
     this.armorFlashRate = 8;
     this.armorState = 0;
@@ -106,8 +112,12 @@ export default class CharacterBot extends Character {
     this.timerSpc += dt;
     switch (this.animatGroupsIndex) {
       case 3:
-        this.moveVertical(dt, this.isFlight ? 1 : -1);
-        this.isFlight = false;
+        if (this.flightState == 1) {
+          this.moveVertical(dt, 1);
+        } else {
+          this.moveVertical(dt, this.flightState == 2 ? 1 : -1);
+          this.flightState = 0;
+        }
         break;
       default:
         break;
@@ -188,6 +198,14 @@ export default class CharacterBot extends Character {
       }
     }
   }
+  setFlightState(state) {
+    this.flightState = state;
+    if (this.animatGroupsIndex != 3) {
+      this.handleBricks(true);
+      this.setCurrentGroup(3);
+      this.spos.x = 0;
+    }
+  }
   getColliders() {
     return [{
       mask: 15,
@@ -198,7 +216,7 @@ export default class CharacterBot extends Character {
       min: this.gpos.getAdd({x: -1, y: 1 - this.height}),
       max: this.gpos.getAdd({x: 1, y: 1})
     }, {
-      mask: 16,
+      mask: 80,
       min: this.gpos.getAdd({x: -1 - Math.min(this.move.x, 0), y: 0}),
       max: this.gpos.getAdd({x: -Math.min(this.move.x, 0), y: 1})
     }];
@@ -213,15 +231,12 @@ export default class CharacterBot extends Character {
         this.setCurrentGroup(2);
       }
     } else if (mask & 8) {
-      if (this.animatGroupsIndex != 3) {
-        this.handleBricks(true);
-        this.setCurrentGroup(3);
-        this.spos.x = 0;
-      }
-      this.isFlight = true;
+      this.setFlightState(2);
     } else if (mask & 16) {
       this.armorState = 1;
       this.setCurrentGroup(4);
+    } else if (mask & 64) {
+      this.setFlightState(1);
     }
   }
 }

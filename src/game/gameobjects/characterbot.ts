@@ -18,6 +18,12 @@ enum ArmorState {
     FLASH
 }
 
+enum FlightState {
+    NONE,
+    JUMP,
+    UPWARD
+}
+
 //Bot parameters
 const characterBotOverride = Object.freeze({
     //Main parameters
@@ -74,14 +80,14 @@ const cbc = Object.freeze({
 
 export default class CharacterBot extends Character {
 
-    private timerSpc : number = 0;                      //Timer to track duration of special movements
-    private timerArm : number = 0;                      //Timer to track armor flash
-    private ceilSubOffset = -6;                         //Offset for up/down movement
-    private verticalSpeed = 500;                        //Speed of vertical movement
-    private isFlight : boolean = false;                 //If currently flying
-    private armorDelay : number = 2;                    //Delay where armor remains after taking damage
-    private armorFlashRate : number = 8;                //Rate of the armor flashing effect
-    private armorState : ArmorState = ArmorState.NONE;  //Current state of the armor
+    private timerSpc : number = 0;                          //Timer to track duration of special movements
+    private timerArm : number = 0;                          //Timer to track armor flash
+    private ceilSubOffset = -6;                             //Offset for up/down movement
+    private verticalSpeed = 500;                            //Speed of vertical movement
+    private flightState : FlightState = FlightState.NONE;   //If currently flying
+    private armorDelay : number = 2;                        //Delay where armor remains after taking damage
+    private armorFlashRate : number = 8;                    //Rate of the armor flashing effect
+    private armorState : ArmorState = ArmorState.NONE;      //Current state of the armor
 
     protected get animImageIndex() : number { 
         return this.move.x * (
@@ -145,10 +151,18 @@ export default class CharacterBot extends Character {
         //Perform special movement
         switch(this.animatGroupsIndex) {
 
-            //Vertical movement. flight state will have been set to true by collision
+            //Vertical movement.
             case 3 : 
-                this.moveVertical(dt, this.isFlight ? 1 : -1);
-                this.isFlight = false;  //Unset for next collision check
+                
+                //Bot is jumping
+                if(this.flightState == FlightState.JUMP) {
+                    this.moveVertical(dt, 1);
+                }
+                //Bot is moving vertically
+                else {
+                    this.moveVertical(dt, this.flightState == FlightState.UPWARD ? 1 : -1);
+                    this.flightState = FlightState.NONE;  //Unset for next collision check, UPWARD requires constant collision
+                }
                 break;
             
             //Default is do nothing
@@ -256,9 +270,9 @@ export default class CharacterBot extends Character {
                 x : this.move.x > 0 ? 1 : 0, 
                 y : 1 + this.height
             }),             //Position
-            5,              //START : n + 1
+            5,              //START :  n + 1
             15,             //FINAL : (n + 3) * 2 + 1
-            7,              //HEIGHT: n + 3
+            7,              //HEIGHT:  n + 3
             this.move.x);   //Direction
         
         //WALL BOUNDARY
@@ -304,6 +318,17 @@ export default class CharacterBot extends Character {
         }
     }
 
+    //Set bot to a flight state
+    private setFlightState(state : FlightState) {
+        this.flightState = state;
+
+        if(this.animatGroupsIndex != 3) {
+            this.handleBricks(true);    //Bricks should not be pressured by a floating character
+            this.setCurrentGroup(3);    //Play floating animation
+            this.spos.x = 0;            //Force grid alignment
+        }
+    }
+
     //Colliders for non-brick collisions
     public getColliders() : Collider[] {
         
@@ -316,7 +341,7 @@ export default class CharacterBot extends Character {
             min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
             max : this.gpos.getAdd({ x :  1, y : 1}) 
         },{ 
-            mask : 0b10000, //Armor collides with legs
+            mask : 0b1010000, //Armor & Jump collides with legs
             min : this.gpos.getAdd({ x : -1 - Math.min(this.move.x, 0), y : 0}),
             max : this.gpos.getAdd({ x :    - Math.min(this.move.x, 0), y : 1}) 
         }];
@@ -343,17 +368,16 @@ export default class CharacterBot extends Character {
         }
         //Up
         else if (mask & 0b1000) {
-            if(this.animatGroupsIndex != 3) {
-                this.handleBricks(true);    //Bricks should not be pressured by a floating character
-                this.setCurrentGroup(3);    //Play floating animation
-                this.spos.x = 0;            //Force grid alignment
-            }
-            this.isFlight = true;
+            this.setFlightState(FlightState.UPWARD)
         }
         //Armor
         else if (mask & 0b10000) {
             this.armorState = ArmorState.ACTIVE;
             this.setCurrentGroup(4);
+        }
+        //Flight
+        else if (mask & 0b1000000) {
+            this.setFlightState(FlightState.JUMP)
         }
     }
 }
