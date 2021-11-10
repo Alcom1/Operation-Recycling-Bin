@@ -1,5 +1,5 @@
 import Character from "./character.js";
-import {BOUNDARY, bitStack, GMULTY, GMULTX} from "../../engine/utilities/math.js";
+import {BOUNDARY, bitStack, GMULTX} from "../../engine/utilities/math.js";
 import Animat from "./animation.js";
 var ArmorState;
 (function(ArmorState2) {
@@ -69,7 +69,10 @@ export default class CharacterBot extends Character {
     this.timerSpc = 0;
     this.timerArm = 0;
     this.ceilSubOffset = -6;
-    this.verticalSpeed = 500;
+    this.vertSpeedMax = 500;
+    this.vertSpeed = 500;
+    this.vertAccel = -1200;
+    this.horzSpeed = 175;
     this.flightState = 0;
     this.armorDelay = 2;
     this.armorFlashRate = 8;
@@ -100,7 +103,6 @@ export default class CharacterBot extends Character {
     super.update(dt);
     if (this.armorState == 2) {
       this.timerArm += dt;
-      console.log(1 + this.timerArm * 4 % 2);
       this.animatGroupCurr.forEach((x) => x.setImageIndex(this.animImageIndex));
       if (this.timerArm > this.armorDelay) {
         this.armorState = 0;
@@ -113,9 +115,12 @@ export default class CharacterBot extends Character {
     switch (this.animatGroupsIndex) {
       case 3:
         if (this.flightState == 1) {
-          this.moveVertical(dt, 1);
+          this.moveVertical(dt);
+          this.spos.x += this.move.x * this.horzSpeed * dt;
+          this.vertSpeed += this.vertAccel * dt;
         } else {
-          this.moveVertical(dt, this.flightState == 2 ? 1 : -1);
+          this.vertSpeed = this.vertSpeedMax * (this.flightState == 2 ? 1 : -1);
+          this.moveVertical(dt);
           this.flightState = 0;
         }
         break;
@@ -137,20 +142,14 @@ export default class CharacterBot extends Character {
       }
     }
   }
-  moveVertical(dt, dir = 1) {
-    this.spos.y -= dir * dt * this.verticalSpeed;
+  moveVertical(dt) {
+    this.spos.y -= dt * this.vertSpeed;
+    const dir = Math.sign(this.vertSpeed);
     if (this.getCollisionVetical(dir)) {
-      if (dir * this.spos.y < -GMULTY + this.ceilSubOffset) {
-        this.gpos.y -= dir;
-        this.spos.y += dir * GMULTY;
-        this.animatGroupCurr.forEach((a) => {
-          a.gpos.y -= dir;
-          a.zModifierPub = dir > 0 && this.getCollisionVetical(dir) ? 200 : 0;
-        });
-      }
       this.animatGroupCurr.forEach((a) => a.spos = this.spos);
     } else {
       if (dir > 0) {
+        this.flightState = 2;
         this.spos.y = this.ceilSubOffset;
         this.animatGroupCurr.forEach((a) => {
           a.zModifierPub = 0;
@@ -158,6 +157,7 @@ export default class CharacterBot extends Character {
         });
       } else {
         this.timerSpc = 0;
+        this.vertSpeed = this.vertSpeedMax;
         this.handleBricks();
         this.setCurrentGroup(0);
       }

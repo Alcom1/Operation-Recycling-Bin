@@ -67,12 +67,14 @@ export default class Character extends GameObject {
 
     public update(dt: number) {
 
-        //Normal or unique movement
+        //Normal or unique movement, shift grid/sub position after movement
         if(this.isNormalMovment) {
             this.handleNormalMovement(dt);
+            this.shift(true);
         }
         else {
             this.handleSpecialMovement(dt);
+            this.shift(false);
         }
 
         //Handle collision, set zIndices for new position
@@ -87,22 +89,36 @@ export default class Character extends GameObject {
         }
     }
 
+    //Move to next grid position of the subposition extends too far
+    private shift(isCollideAfterShift : boolean) {
+
+        var move = {
+            x : Math.abs(this.spos.x) > GMULTX ? Math.sign(this.spos.x) : 0,
+            y : Math.abs(this.spos.y) > GMULTY ? Math.sign(this.spos.y) : 0
+        };
+
+        if(move.x || move.y) {
+    
+            this.gpos.add(move);    //Go up or down to new grid position
+            this.spos.sub({         //Reset subposition to match new grid position
+                x : move.x * GMULTX,
+                y : move.y * GMULTY
+            });            
+    
+            //Update animations to match
+            this.animatGroupCurr.forEach(a => {
+                a.gpos.add(move);
+            });
+
+            this.checkCollision = isCollideAfterShift;
+        }
+    }
+
     //Move forward and set collection check at each step.
     private handleNormalMovement(dt: number) {
 
         //Increment position by speed
         this.spos.x += this.move.x * this.speed * GMULTX * dt;
-
-        //Step grid position further once subposition goes past a grid-unit
-        if (Math.abs(this.spos.x) > GMULTX) {
-
-            var dir = Math.sign(this.spos.x);
-
-            this.spos.x -= GMULTX * dir;
-            this.gpos.x += dir;
-
-            this.checkCollision = true;
-        }
     }
 
     //Do nothing - override
