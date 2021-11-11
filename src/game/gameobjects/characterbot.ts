@@ -84,7 +84,8 @@ export default class CharacterBot extends Character {
     private timerArm : number = 0;                          //Timer to track armor flash
     private ceilSubOffset : number = -6;                    //Offset for up/down movement
     private vertSpeed : number = 500;                       //Speed of air movement
-    private horzSpeed : number = 700;                       //Horizontal air speed
+    private horzSpeed : number = 350;                       //Horizontal air speed
+    private jumpHeights : number[] = [0, 2, 3, 3, 2, 0];    //Individual heights throughout a jump
     private jumpOrigin : Point = { x : 0, y : 0 }           //Origin of the previous jump
     private flightState : FlightState = FlightState.NONE;   //If currently flying
     private armorDelay : number = 2;                        //Delay where armor remains after taking damage
@@ -158,18 +159,27 @@ export default class CharacterBot extends Character {
                 //Bot is jumping
                 if(this.flightState == FlightState.JUMP) {
                     
-                    this.moveVertical(dt);
                     this.spos.x += this.move.x * this.horzSpeed * dt;
+                    var index = Math.abs(this.gpos.x - this.jumpOrigin.x);
+
+                    if(index > this.jumpHeights.length - 2) {
+                        this.flightState = FlightState.UPWARD;
+                        this.spos.x = 0;
+                    }
+                    else {
+                        this.spos.y = - GMULTY * (
+                            this.jumpHeights[index] + 
+                            this.gpos.y - 
+                            this.jumpOrigin.y +
+                            Math.abs(this.spos.x / GMULTX) * (this.jumpHeights[index + 1] - this.jumpHeights[index]));
+                    }
+
+                    this.animatGroupCurr.forEach(a => a.spos = this.spos);
                 }
                 //Bot is moving vertically
                 else {
 
-                    this.vertSpeed = Math.abs(this.vertSpeed) * (
-                        this.flightState == FlightState.UPWARD ? 
-                        1 : 
-                        -1);
-
-                    this.moveVertical(dt);
+                    this.moveVertical(dt, this.flightState == FlightState.UPWARD ?  1 : -1);
                     this.flightState = FlightState.NONE;  //Unset for next collision check, UPWARD requires constant collision
                 }
                 break;
@@ -206,15 +216,12 @@ export default class CharacterBot extends Character {
     }
 
     //Vertical motion
-    private moveVertical(dt: number) {
+    private moveVertical(dt: number, dir: number) {
 
-        this.spos.y -= dt * this.vertSpeed;     //Move subposition vertically based on speed
-        const dir = Math.sign(this.vertSpeed);  //Store direction of virtical speed
+        this.spos.y -= dt * this.vertSpeed * dir;   //Move subposition vertically based on speed
         
         //If the direction has no obstacles
-        if ((
-            this.flightState != FlightState.JUMP || Math.abs(this.jumpOrigin.x - this.gpos.x) < 4) &&
-            this.getCollisionVetical(dir)) {
+        if (this.getCollisionVetical(dir)) {
 
             this.animatGroupCurr.forEach(a => a.spos = this.spos);
         }
@@ -235,7 +242,6 @@ export default class CharacterBot extends Character {
 
                 this.spos.x = 0;
                 this.timerSpc = 0;
-                this.vertSpeed = Math.abs(this.vertSpeed);
                 this.handleBricks(); 
                 this.setCurrentGroup(0);
             }
@@ -321,6 +327,11 @@ export default class CharacterBot extends Character {
 
     //Set bot to a flight state
     private setFlightState(state : FlightState) {
+
+        if(this.flightState == state) { //Don't repeat states
+            return;
+        }
+
         this.flightState = state;
         this.jumpOrigin = this.gpos.get();
 

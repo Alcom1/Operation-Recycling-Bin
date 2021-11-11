@@ -1,5 +1,5 @@
 import Character from "./character.js";
-import {BOUNDARY, bitStack, GMULTX} from "../../engine/utilities/math.js";
+import {BOUNDARY, bitStack, GMULTY, GMULTX} from "../../engine/utilities/math.js";
 import Animat from "./animation.js";
 var ArmorState;
 (function(ArmorState2) {
@@ -70,7 +70,8 @@ export default class CharacterBot extends Character {
     this.timerArm = 0;
     this.ceilSubOffset = -6;
     this.vertSpeed = 500;
-    this.horzSpeed = 700;
+    this.horzSpeed = 350;
+    this.jumpHeights = [0, 2, 3, 3, 2, 0];
     this.jumpOrigin = {x: 0, y: 0};
     this.flightState = 0;
     this.armorDelay = 2;
@@ -114,11 +115,17 @@ export default class CharacterBot extends Character {
     switch (this.animatGroupsIndex) {
       case 3:
         if (this.flightState == 1) {
-          this.moveVertical(dt);
           this.spos.x += this.move.x * this.horzSpeed * dt;
+          var index = Math.abs(this.gpos.x - this.jumpOrigin.x);
+          if (index > this.jumpHeights.length - 2) {
+            this.flightState = 2;
+            this.spos.x = 0;
+          } else {
+            this.spos.y = -GMULTY * (this.jumpHeights[index] + this.gpos.y - this.jumpOrigin.y + Math.abs(this.spos.x / GMULTX) * (this.jumpHeights[index + 1] - this.jumpHeights[index]));
+          }
+          this.animatGroupCurr.forEach((a) => a.spos = this.spos);
         } else {
-          this.vertSpeed = Math.abs(this.vertSpeed) * (this.flightState == 2 ? 1 : -1);
-          this.moveVertical(dt);
+          this.moveVertical(dt, this.flightState == 2 ? 1 : -1);
           this.flightState = 0;
         }
         break;
@@ -140,10 +147,9 @@ export default class CharacterBot extends Character {
       }
     }
   }
-  moveVertical(dt) {
-    this.spos.y -= dt * this.vertSpeed;
-    const dir = Math.sign(this.vertSpeed);
-    if ((this.flightState != 1 || Math.abs(this.jumpOrigin.x - this.gpos.x) < 4) && this.getCollisionVetical(dir)) {
+  moveVertical(dt, dir) {
+    this.spos.y -= dt * this.vertSpeed * dir;
+    if (this.getCollisionVetical(dir)) {
       this.animatGroupCurr.forEach((a) => a.spos = this.spos);
     } else {
       if (dir > 0) {
@@ -157,7 +163,6 @@ export default class CharacterBot extends Character {
       } else {
         this.spos.x = 0;
         this.timerSpc = 0;
-        this.vertSpeed = Math.abs(this.vertSpeed);
         this.handleBricks();
         this.setCurrentGroup(0);
       }
@@ -199,6 +204,9 @@ export default class CharacterBot extends Character {
     }
   }
   setFlightState(state) {
+    if (this.flightState == state) {
+      return;
+    }
     this.flightState = state;
     this.jumpOrigin = this.gpos.get();
     if (this.animatGroupsIndex != 3) {
