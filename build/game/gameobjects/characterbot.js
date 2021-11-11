@@ -69,10 +69,9 @@ export default class CharacterBot extends Character {
     this.timerSpc = 0;
     this.timerArm = 0;
     this.ceilSubOffset = -6;
-    this.vertSpeedMax = 500;
     this.vertSpeed = 500;
-    this.vertAccel = -1200;
-    this.horzSpeed = 175;
+    this.horzSpeed = 700;
+    this.jumpOrigin = {x: 0, y: 0};
     this.flightState = 0;
     this.armorDelay = 2;
     this.armorFlashRate = 8;
@@ -117,9 +116,8 @@ export default class CharacterBot extends Character {
         if (this.flightState == 1) {
           this.moveVertical(dt);
           this.spos.x += this.move.x * this.horzSpeed * dt;
-          this.vertSpeed += this.vertAccel * dt;
         } else {
-          this.vertSpeed = this.vertSpeedMax * (this.flightState == 2 ? 1 : -1);
+          this.vertSpeed = Math.abs(this.vertSpeed) * (this.flightState == 2 ? 1 : -1);
           this.moveVertical(dt);
           this.flightState = 0;
         }
@@ -145,19 +143,21 @@ export default class CharacterBot extends Character {
   moveVertical(dt) {
     this.spos.y -= dt * this.vertSpeed;
     const dir = Math.sign(this.vertSpeed);
-    if (this.getCollisionVetical(dir)) {
+    if ((this.flightState != 1 || Math.abs(this.jumpOrigin.x - this.gpos.x) < 4) && this.getCollisionVetical(dir)) {
       this.animatGroupCurr.forEach((a) => a.spos = this.spos);
     } else {
       if (dir > 0) {
         this.flightState = 2;
+        this.spos.x = 0;
         this.spos.y = this.ceilSubOffset;
         this.animatGroupCurr.forEach((a) => {
           a.zModifierPub = 0;
           a.spos.y = this.ceilSubOffset;
         });
       } else {
+        this.spos.x = 0;
         this.timerSpc = 0;
-        this.vertSpeed = this.vertSpeedMax;
+        this.vertSpeed = Math.abs(this.vertSpeed);
         this.handleBricks();
         this.setCurrentGroup(0);
       }
@@ -200,6 +200,7 @@ export default class CharacterBot extends Character {
   }
   setFlightState(state) {
     this.flightState = state;
+    this.jumpOrigin = this.gpos.get();
     if (this.animatGroupsIndex != 3) {
       this.handleBricks(true);
       this.setCurrentGroup(3);

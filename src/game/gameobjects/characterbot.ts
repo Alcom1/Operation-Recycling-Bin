@@ -1,9 +1,8 @@
-import Engine from "engine/engine";
 import Character, { CharacterParams } from "./character";
 import { BOUNDARY, bitStack, GMULTY, GMULTX} from "engine/utilities/math";
 import Animat, { AnimationParams } from "./animation";
 import { Collider } from "engine/modules/collision";
-import Vect, { Point } from "engine/utilities/vect";
+import { Point } from "engine/utilities/vect";
 
 interface CharacterBotParams extends CharacterParams {
     animsMisc : AnimationInputParams[];
@@ -83,11 +82,10 @@ export default class CharacterBot extends Character {
 
     private timerSpc : number = 0;                          //Timer to track duration of special movements
     private timerArm : number = 0;                          //Timer to track armor flash
-    private ceilSubOffset = -6;                             //Offset for up/down movement
-    private vertSpeedMax = 500;                             //Maximum air speed
-    private vertSpeed = 500;                                //Speed of air movement
-    private vertAccel = -1200;                              //Gravity hurts
-    private horzSpeed = 175;                                //Horizontal air speed
+    private ceilSubOffset : number = -6;                    //Offset for up/down movement
+    private vertSpeed : number = 500;                       //Speed of air movement
+    private horzSpeed : number = 700;                       //Horizontal air speed
+    private jumpOrigin : Point = { x : 0, y : 0 }           //Origin of the previous jump
     private flightState : FlightState = FlightState.NONE;   //If currently flying
     private armorDelay : number = 2;                        //Delay where armor remains after taking damage
     private armorFlashRate : number = 8;                    //Rate of the armor flashing effect
@@ -162,16 +160,14 @@ export default class CharacterBot extends Character {
                     
                     this.moveVertical(dt);
                     this.spos.x += this.move.x * this.horzSpeed * dt;
-                    this.vertSpeed += this.vertAccel * dt;
                 }
                 //Bot is moving vertically
                 else {
 
-                    this.vertSpeed = 
-                        this.vertSpeedMax * (
-                            this.flightState == FlightState.UPWARD ? 
-                            1 : 
-                            -1);
+                    this.vertSpeed = Math.abs(this.vertSpeed) * (
+                        this.flightState == FlightState.UPWARD ? 
+                        1 : 
+                        -1);
 
                     this.moveVertical(dt);
                     this.flightState = FlightState.NONE;  //Unset for next collision check, UPWARD requires constant collision
@@ -216,7 +212,9 @@ export default class CharacterBot extends Character {
         const dir = Math.sign(this.vertSpeed);  //Store direction of virtical speed
         
         //If the direction has no obstacles
-        if(this.getCollisionVetical(dir)) {
+        if ((
+            this.flightState != FlightState.JUMP || Math.abs(this.jumpOrigin.x - this.gpos.x) < 4) &&
+            this.getCollisionVetical(dir)) {
 
             this.animatGroupCurr.forEach(a => a.spos = this.spos);
         }
@@ -225,6 +223,7 @@ export default class CharacterBot extends Character {
             //If going upwards, collide with ceiling
             if(dir > 0) {
                 this.flightState = FlightState.UPWARD;  //Bonk!
+                this.spos.x = 0;
                 this.spos.y = this.ceilSubOffset;
                 this.animatGroupCurr.forEach(a => {
                     a.zModifierPub = 0;
@@ -234,8 +233,9 @@ export default class CharacterBot extends Character {
             //If going downwards, reset to walking
             else {
 
+                this.spos.x = 0;
                 this.timerSpc = 0;
-                this.vertSpeed = this.vertSpeedMax;
+                this.vertSpeed = Math.abs(this.vertSpeed);
                 this.handleBricks(); 
                 this.setCurrentGroup(0);
             }
@@ -322,6 +322,7 @@ export default class CharacterBot extends Character {
     //Set bot to a flight state
     private setFlightState(state : FlightState) {
         this.flightState = state;
+        this.jumpOrigin = this.gpos.get();
 
         if(this.animatGroupsIndex != 3) {
             this.handleBricks(true);    //Bricks should not be pressured by a floating character
