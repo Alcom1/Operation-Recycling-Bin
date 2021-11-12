@@ -7,12 +7,12 @@ var ArmorState;
   ArmorState2[ArmorState2["ACTIVE"] = 1] = "ACTIVE";
   ArmorState2[ArmorState2["FLASH"] = 2] = "FLASH";
 })(ArmorState || (ArmorState = {}));
-var FlightState;
-(function(FlightState2) {
-  FlightState2[FlightState2["NONE"] = 0] = "NONE";
-  FlightState2[FlightState2["JUMP"] = 1] = "JUMP";
-  FlightState2[FlightState2["UPWARD"] = 2] = "UPWARD";
-})(FlightState || (FlightState = {}));
+var AirState;
+(function(AirState2) {
+  AirState2[AirState2["NONE"] = 0] = "NONE";
+  AirState2[AirState2["JUMP"] = 1] = "JUMP";
+  AirState2[AirState2["UPWARD"] = 2] = "UPWARD";
+})(AirState || (AirState = {}));
 const characterBotOverride = Object.freeze({
   height: 4,
   speed: 2.5,
@@ -73,7 +73,7 @@ export default class CharacterBot extends Character {
     this.horzSpeed = 350;
     this.jumpHeights = [0, 2, 3, 3, 2, 0];
     this.jumpOrigin = {x: 0, y: 0};
-    this.flightState = 0;
+    this.airState = 0;
     this.armorDelay = 2;
     this.armorFlashRate = 8;
     this.armorState = 0;
@@ -114,19 +114,11 @@ export default class CharacterBot extends Character {
     this.timerSpc += dt;
     switch (this.animatGroupsIndex) {
       case 3:
-        if (this.flightState == 1) {
-          this.spos.x += this.move.x * this.horzSpeed * dt;
-          var index = Math.abs(this.gpos.x - this.jumpOrigin.x);
-          if (index > this.jumpHeights.length - 2) {
-            this.flightState = 2;
-            this.spos.x = 0;
-          } else {
-            this.spos.y = -GMULTY * (this.jumpHeights[index] + this.gpos.y - this.jumpOrigin.y + Math.abs(this.spos.x / GMULTX) * (this.jumpHeights[index + 1] - this.jumpHeights[index]));
-          }
-          this.animatGroupCurr.forEach((a) => a.spos = this.spos);
+        if (this.airState == 1) {
+          this.moveJump(dt);
         } else {
-          this.moveVertical(dt, this.flightState == 2 ? 1 : -1);
-          this.flightState = 0;
+          this.moveVertical(dt, this.airState == 2 ? 1 : -1);
+          this.airState = 0;
         }
         break;
       default:
@@ -147,35 +139,59 @@ export default class CharacterBot extends Character {
       }
     }
   }
+  moveJump(dt) {
+    var index = Math.abs(this.gpos.x - this.jumpOrigin.x);
+    if (this.getCollisionHorizontal(this.move.x) && (index > 0 || Math.abs(this.spos.x) > GMULTX / 2) || this.getCollisionVertical(1) && this.jumpHeights[index] < Math.max(...this.jumpHeights) || index > this.jumpHeights.length - 2) {
+      this.startVertMovement();
+    } else if (this.getCollisionVertical(-1) && index > 0) {
+      this.endAirMovement();
+    } else {
+      this.spos.x += this.move.x * this.horzSpeed * dt;
+      this.spos.y = -GMULTY * (this.jumpHeights[index] + this.gpos.y - this.jumpOrigin.y + Math.abs(this.spos.x / GMULTX) * (this.jumpHeights[index + 1] - this.jumpHeights[index]));
+      this.animatGroupCurr.forEach((a) => a.spos = this.spos);
+    }
+  }
   moveVertical(dt, dir) {
     this.spos.y -= dt * this.vertSpeed * dir;
-    if (this.getCollisionVetical(dir)) {
+    if (!this.getCollisionVertical(dir)) {
       this.animatGroupCurr.forEach((a) => a.spos = this.spos);
     } else {
       if (dir > 0) {
-        this.flightState = 2;
-        this.spos.x = 0;
         this.spos.y = this.ceilSubOffset;
         this.animatGroupCurr.forEach((a) => {
           a.zModifierPub = 0;
           a.spos.y = this.ceilSubOffset;
         });
       } else {
-        this.spos.x = 0;
-        this.timerSpc = 0;
-        this.handleBricks();
-        this.setCurrentGroup(0);
+        this.endAirMovement();
       }
     }
   }
-  getCollisionVetical(dir) {
+  startVertMovement() {
+    this.airState = 2;
+    this.spos.x = 0;
+  }
+  endAirMovement() {
+    this.airState = 0;
+    this.spos.x = 0;
+    this.timerSpc = 0;
+    this.handleBricks();
+    this.setCurrentGroup(0);
+  }
+  getCollisionVertical(dir) {
     if (dir > 0 && this.gpos.y <= this.height + 1) {
-      return false;
+      return true;
     }
-    return !this.brickHandler.checkCollisionRange(this.gpos.getSub({
+    return !!this.brickHandler.checkCollisionRange(this.gpos.getSub({
       x: 1,
       y: dir > 0 ? 1 + this.height : 0
     }), 0, 2, 1, 1);
+  }
+  getCollisionHorizontal(dir) {
+    return !!this.brickHandler.checkCollisionRange(this.gpos.getSub({
+      x: this.move.x > 0 ? -1 : 2,
+      y: this.height - 1
+    }), 0, 2, 2, 1);
   }
   handleCollision() {
     const cbm = this.brickHandler.checkCollisionRange(this.gpos.getSub({
@@ -204,10 +220,10 @@ export default class CharacterBot extends Character {
     }
   }
   setFlightState(state) {
-    if (this.flightState == state) {
+    if (this.airState == state) {
       return;
     }
-    this.flightState = state;
+    this.airState = state;
     this.jumpOrigin = this.gpos.get();
     if (this.animatGroupsIndex != 3) {
       this.handleBricks(true);

@@ -18,7 +18,7 @@ enum ArmorState {
     FLASH
 }
 
-enum FlightState {
+enum AirState {
     NONE,
     JUMP,
     UPWARD
@@ -84,10 +84,10 @@ export default class CharacterBot extends Character {
     private timerArm : number = 0;                          //Timer to track armor flash
     private ceilSubOffset : number = -6;                    //Offset for up/down movement
     private vertSpeed : number = 500;                       //Speed of air movement
-    private horzSpeed : number = 350;                       //Horizontal air speed
+    private horzSpeed : number = 350;                        //Horizontal air speed
     private jumpHeights : number[] = [0, 2, 3, 3, 2, 0];    //Individual heights throughout a jump
     private jumpOrigin : Point = { x : 0, y : 0 }           //Origin of the previous jump
-    private flightState : FlightState = FlightState.NONE;   //If currently flying
+    private airState : AirState = AirState.NONE;            //If currently flying
     private armorDelay : number = 2;                        //Delay where armor remains after taking damage
     private armorFlashRate : number = 8;                    //Rate of the armor flashing effect
     private armorState : ArmorState = ArmorState.NONE;      //Current state of the armor
@@ -157,30 +157,14 @@ export default class CharacterBot extends Character {
             case 3 : 
                 
                 //Bot is jumping
-                if(this.flightState == FlightState.JUMP) {
-                    
-                    this.spos.x += this.move.x * this.horzSpeed * dt;
-                    var index = Math.abs(this.gpos.x - this.jumpOrigin.x);
-
-                    if(index > this.jumpHeights.length - 2) {
-                        this.flightState = FlightState.UPWARD;
-                        this.spos.x = 0;
-                    }
-                    else {
-                        this.spos.y = - GMULTY * (
-                            this.jumpHeights[index] + 
-                            this.gpos.y - 
-                            this.jumpOrigin.y +
-                            Math.abs(this.spos.x / GMULTX) * (this.jumpHeights[index + 1] - this.jumpHeights[index]));
-                    }
-
-                    this.animatGroupCurr.forEach(a => a.spos = this.spos);
+                if(this.airState == AirState.JUMP) {
+                    this.moveJump(dt);
                 }
                 //Bot is moving vertically
                 else {
 
-                    this.moveVertical(dt, this.flightState == FlightState.UPWARD ?  1 : -1);
-                    this.flightState = FlightState.NONE;  //Unset for next collision check, UPWARD requires constant collision
+                    this.moveVertical(dt, this.airState == AirState.UPWARD ?  1 : -1);
+                    this.airState = AirState.NONE;  //Unset for next collision check, UPWARD requires constant collision
                 }
                 break;
             
@@ -215,22 +199,50 @@ export default class CharacterBot extends Character {
         }
     }
 
+    //Move in a jumping arc
+    private moveJump(dt: number) {
+
+        var index = Math.abs(this.gpos.x - this.jumpOrigin.x);  //Index of current jump height
+
+        //DO : Collision checks should be combined into one.
+        //Stop if there's a wall, ceiling, or the jump ended
+        if (
+            this.getCollisionHorizontal(this.move.x) && (index > 0 || Math.abs(this.spos.x) > GMULTX / 2) ||    //Forward collision
+            this.getCollisionVertical(1) && this.jumpHeights[index] < Math.max(...this.jumpHeights) ||          //Ceiling collision
+            index > this.jumpHeights.length - 2) {                                                              //End of jump
+            this.startVertMovement();
+        }
+        //Check for landing shortly after initial liftoff
+        else if (this.getCollisionVertical(-1) && index > 0) {
+            this.endAirMovement();
+        }
+        //Update position, travel in an arc based on the jump heights.
+        else {
+            this.spos.x += this.move.x * this.horzSpeed * dt;       //Update horizontal position
+            this.spos.y = - GMULTY * (                              //Update vertical position
+                this.jumpHeights[index] + 
+                this.gpos.y - 
+                this.jumpOrigin.y +
+                Math.abs(this.spos.x / GMULTX) * (this.jumpHeights[index + 1] - this.jumpHeights[index]));
+
+            this.animatGroupCurr.forEach(a => a.spos = this.spos);  //Update animations to match current position
+        }
+    }
+
     //Vertical motion
     private moveVertical(dt: number, dir: number) {
 
         this.spos.y -= dt * this.vertSpeed * dir;   //Move subposition vertically based on speed
         
         //If the direction has no obstacles
-        if (this.getCollisionVetical(dir)) {
-
+        if (!this.getCollisionVertical(dir)) {
             this.animatGroupCurr.forEach(a => a.spos = this.spos);
         }
+        //There is an obstacle, stop based on its direction
         else {
 
             //If going upwards, collide with ceiling
             if(dir > 0) {
-                this.flightState = FlightState.UPWARD;  //Bonk!
-                this.spos.x = 0;
                 this.spos.y = this.ceilSubOffset;
                 this.animatGroupCurr.forEach(a => {
                     a.zModifierPub = 0;
@@ -239,25 +251,37 @@ export default class CharacterBot extends Character {
             }
             //If going downwards, reset to walking
             else {
-
-                this.spos.x = 0;
-                this.timerSpc = 0;
-                this.handleBricks(); 
-                this.setCurrentGroup(0);
+                this.endAirMovement();
             }
         }
     }
 
+    //Quickly shift fight to 
+    private startVertMovement() {
+        this.airState = AirState.UPWARD;
+        this.spos.x = 0;
+    }
+
+    //End vertical or jump movement
+    private endAirMovement() {
+
+        this.airState = AirState.NONE;
+        this.spos.x = 0;
+        this.timerSpc = 0;
+        this.handleBricks(); 
+        this.setCurrentGroup(0);
+    }
+
     //Return true if the given vertical direction is free of bricks
-    private getCollisionVetical(dir : number) : boolean {
+    private getCollisionVertical(dir : number) : boolean {
 
         //If moving upward and hit the ceiling, return false
         if(dir > 0 && this.gpos.y <= this.height + 1) {
-            return false;
+            return true;
         }
 
         //Check for bricks in travelling direction
-        return !this.brickHandler.checkCollisionRange(
+        return !!this.brickHandler.checkCollisionRange(
             this.gpos.getSub({
                 x : 1,
                 y : dir > 0 ? 1 + this.height : 0
@@ -265,6 +289,21 @@ export default class CharacterBot extends Character {
             0,  //START
             2,  //FINAL
             1,  //HEIGHT
+            1); //Direction
+    }
+
+    //Return true if the given horizontal direction is free of bricks
+    private getCollisionHorizontal(dir : number) : boolean {
+
+        //Collision bitmask
+        return !!this.brickHandler.checkCollisionRange(
+            this.gpos.getSub({
+                x : this.move.x > 0 ? -1 : 2, 
+                y : this.height - 1
+            }), //Position
+            0,  //START
+            2,  //FINAL
+            2,  //HEIGHT
             1); //Direction
     }
 
@@ -326,13 +365,13 @@ export default class CharacterBot extends Character {
     }
 
     //Set bot to a flight state
-    private setFlightState(state : FlightState) {
+    private setFlightState(state : AirState) {
 
-        if(this.flightState == state) { //Don't repeat states
+        if(this.airState == state) { //Don't repeat states
             return;
         }
 
-        this.flightState = state;
+        this.airState = state;
         this.jumpOrigin = this.gpos.get();
 
         if(this.animatGroupsIndex != 3) {
@@ -381,7 +420,7 @@ export default class CharacterBot extends Character {
         }
         //Up
         else if (mask & 0b1000) {
-            this.setFlightState(FlightState.UPWARD)
+            this.setFlightState(AirState.UPWARD)
         }
         //Armor
         else if (mask & 0b10000) {
@@ -390,7 +429,7 @@ export default class CharacterBot extends Character {
         }
         //Flight
         else if (mask & 0b1000000) {
-            this.setFlightState(FlightState.JUMP)
+            this.setFlightState(AirState.JUMP)
         }
     }
 }
