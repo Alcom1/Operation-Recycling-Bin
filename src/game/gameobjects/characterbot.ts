@@ -208,7 +208,7 @@ export default class CharacterBot extends Character {
         //Stop if there's a wall, ceiling, or the jump ended
         if (
             this.getCollisionHorizontal(this.move.x) && (index > 0 || Math.abs(this.spos.x) > GMULTX / 2) ||    //Forward collision
-            this.getCollisionVertical(1) && this.jumpHeights[index] < Math.max(...this.jumpHeights) ||          //Ceiling collision
+            this.getCollisionVertical(1, true) && this.jumpHeights[index] < Math.max(...this.jumpHeights) ||    //Ceiling collision
             index > this.jumpHeights.length - 2) {                                                              //End of jump
             this.startVertMovement();
         }
@@ -273,7 +273,7 @@ export default class CharacterBot extends Character {
     }
 
     //Return true if the given vertical direction is free of bricks
-    private getCollisionVertical(dir : number) : boolean {
+    private getCollisionVertical(dir : number, isBackSkip : boolean = false) : boolean {
 
         //If moving upward and hit the ceiling, return false
         if(dir > 0 && this.gpos.y <= this.height + 1) {
@@ -285,11 +285,11 @@ export default class CharacterBot extends Character {
             this.gpos.getSub({
                 x : 1,
                 y : dir > 0 ? 1 + this.height : 0
-            }), //Position
-            0,  //START
-            2,  //FINAL
-            1,  //HEIGHT
-            1); //Direction
+            }),                     //Position
+            isBackSkip ? 1 : 0,     //START
+            2,                      //FINAL
+            1,                      //HEIGHT
+            1);                     //Direction
     }
 
     //Return true if the given horizontal direction is free of bricks
@@ -366,10 +366,6 @@ export default class CharacterBot extends Character {
 
     //Set bot to a flight state
     private setFlightState(state : AirState) {
-
-        if(this.airState == state) { //Don't repeat states
-            return;
-        }
 
         this.airState = state;
         this.jumpOrigin = this.gpos.get();

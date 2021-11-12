@@ -141,7 +141,7 @@ export default class CharacterBot extends Character {
   }
   moveJump(dt) {
     var index = Math.abs(this.gpos.x - this.jumpOrigin.x);
-    if (this.getCollisionHorizontal(this.move.x) && (index > 0 || Math.abs(this.spos.x) > GMULTX / 2) || this.getCollisionVertical(1) && this.jumpHeights[index] < Math.max(...this.jumpHeights) || index > this.jumpHeights.length - 2) {
+    if (this.getCollisionHorizontal(this.move.x) && (index > 0 || Math.abs(this.spos.x) > GMULTX / 2) || this.getCollisionVertical(1, true) && this.jumpHeights[index] < Math.max(...this.jumpHeights) || index > this.jumpHeights.length - 2) {
       this.startVertMovement();
     } else if (this.getCollisionVertical(-1) && index > 0) {
       this.endAirMovement();
@@ -178,14 +178,14 @@ export default class CharacterBot extends Character {
     this.handleBricks();
     this.setCurrentGroup(0);
   }
-  getCollisionVertical(dir) {
+  getCollisionVertical(dir, isBackSkip = false) {
     if (dir > 0 && this.gpos.y <= this.height + 1) {
       return true;
     }
     return !!this.brickHandler.checkCollisionRange(this.gpos.getSub({
       x: 1,
       y: dir > 0 ? 1 + this.height : 0
-    }), 0, 2, 1, 1);
+    }), isBackSkip ? 1 : 0, 2, 1, 1);
   }
   getCollisionHorizontal(dir) {
     return !!this.brickHandler.checkCollisionRange(this.gpos.getSub({
@@ -220,9 +220,6 @@ export default class CharacterBot extends Character {
     }
   }
   setFlightState(state) {
-    if (this.airState == state) {
-      return;
-    }
     this.airState = state;
     this.jumpOrigin = this.gpos.get();
     if (this.animatGroupsIndex != 3) {
