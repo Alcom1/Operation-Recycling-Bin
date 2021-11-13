@@ -78,11 +78,12 @@ const gcb = Object.freeze({
     step : bitStack([6])
 });
 
+//Collision bitmasks for bot-brick collisions in air
 const acb = Object.freeze({
     flor : bitStack([0, 6]),
     head : bitStack([1]),
-    face : bitStack([8, 9]),
-    chin : bitStack([10, 11])
+    face : bitStack([8, 9, 10]),
+    chin : bitStack([11])
 });
 
 export default class CharacterBot extends Character {
