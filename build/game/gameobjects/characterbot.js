@@ -55,13 +55,19 @@ const characterBotOverride = Object.freeze({
     isSliced: true
   }]
 });
-const cbc = Object.freeze({
+const gcb = Object.freeze({
   flor: bitStack([0, 7]),
   down: bitStack([1, 8]),
   ceil: bitStack([2, 9]),
   head: bitStack([3]),
   wall: bitStack([4, 5]),
   step: bitStack([6])
+});
+const acb = Object.freeze({
+  flor: bitStack([0, 6]),
+  head: bitStack([1]),
+  face: bitStack([8, 9]),
+  chin: bitStack([10, 11])
 });
 export default class CharacterBot extends Character {
   constructor(params) {
@@ -141,19 +147,34 @@ export default class CharacterBot extends Character {
   }
   moveJump(dt) {
     var index = Math.abs(this.gpos.x - this.jumpOrigin.x);
-    if (this.getCollisionHorizontal(this.move.x) && (index > 0 || Math.abs(this.spos.x) > GMULTX / 2) || this.getCollisionVertical(1, true) && this.jumpHeights[index] < Math.max(...this.jumpHeights) || index > this.jumpHeights.length - 2) {
+    const cbm = this.brickHandler.checkCollisionRange(this.gpos.getSub({
+      x: this.move.x > 0 ? 1 : 0,
+      y: this.height + 1
+    }), this.move.x, 5, 17, 6, 3);
+    if (cbm & acb.face && (index > 0 || Math.abs(this.spos.x) > GMULTX / 2)) {
       this.startVertMovement();
-    } else if (this.getCollisionVertical(-1) && index > 0) {
+      return;
+    } else if (cbm & acb.chin && index > 0) {
+      this.startVertMovement();
+      return;
+    } else if (cbm & acb.head && this.jumpHeights[index] < Math.max(...this.jumpHeights)) {
+      this.startVertMovement();
+      return;
+    } else if (cbm & acb.flor && index > 0) {
       this.endAirMovement();
-    } else {
-      this.spos.x += this.move.x * this.horzSpeed * dt;
-      this.spos.y = -GMULTY * (this.jumpHeights[index] + this.gpos.y - this.jumpOrigin.y + Math.abs(this.spos.x / GMULTX) * (this.jumpHeights[index + 1] - this.jumpHeights[index]));
-      this.animatGroupCurr.forEach((a) => a.spos = this.spos);
+      return;
     }
+    if (index > this.jumpHeights.length - 2) {
+      this.startVertMovement();
+      return;
+    }
+    this.spos.x += this.move.x * this.horzSpeed * dt;
+    this.spos.y = -GMULTY * (this.jumpHeights[index] + this.gpos.y - this.jumpOrigin.y + Math.abs(this.spos.x / GMULTX) * (this.jumpHeights[index + 1] - this.jumpHeights[index]));
+    this.animatGroupCurr.forEach((a) => a.spos = this.spos);
   }
   moveVertical(dt, dir) {
     this.spos.y -= dt * this.vertSpeed * dir;
-    if (!this.getCollisionVertical(dir)) {
+    if (this.getCollisionVertical(dir)) {
       this.animatGroupCurr.forEach((a) => a.spos = this.spos);
     } else {
       if (dir > 0) {
@@ -178,41 +199,35 @@ export default class CharacterBot extends Character {
     this.handleBricks();
     this.setCurrentGroup(0);
   }
-  getCollisionVertical(dir, isBackSkip = false) {
+  getCollisionVertical(dir) {
     if (dir > 0 && this.gpos.y <= this.height + 1) {
-      return true;
+      return false;
     }
-    return !!this.brickHandler.checkCollisionRange(this.gpos.getSub({
+    return !this.brickHandler.checkCollisionRange(this.gpos.getSub({
       x: 1,
       y: dir > 0 ? 1 + this.height : 0
-    }), isBackSkip ? 1 : 0, 2, 1, 1);
-  }
-  getCollisionHorizontal(dir) {
-    return !!this.brickHandler.checkCollisionRange(this.gpos.getSub({
-      x: this.move.x > 0 ? -1 : 2,
-      y: this.height - 1
-    }), 0, 2, 2, 1);
+    }), 1, 0, 2, 1);
   }
   handleCollision() {
-    const cbm = this.brickHandler.checkCollisionRange(this.gpos.getSub({
-      x: this.move.x > 0 ? 1 : 0,
-      y: 1 + this.height
-    }), 5, 15, 7, this.move.x);
     if (this.gpos.x - 1 < BOUNDARY.minx || this.gpos.x + 1 > BOUNDARY.maxx) {
       this.reverse();
     } else {
-      if (cbm & cbc.wall) {
+      const cbm = this.brickHandler.checkCollisionRange(this.gpos.getSub({
+        x: this.move.x > 0 ? 1 : 0,
+        y: 1 + this.height
+      }), this.move.x, 5, 15, 7);
+      if (cbm & gcb.wall) {
         this.reverse();
-      } else if (cbm & cbc.head && cbm & cbc.flor) {
+      } else if (cbm & gcb.head && cbm & gcb.flor) {
         this.reverse();
-      } else if (cbm & cbc.step) {
-        if (cbm & cbc.ceil || this.gpos.y <= BOUNDARY.miny + 3) {
+      } else if (cbm & gcb.step) {
+        if (cbm & gcb.ceil || this.gpos.y <= BOUNDARY.miny + 3) {
           this.reverse();
         } else {
           this.gpos.y -= 1;
         }
-      } else if (cbm & cbc.flor) {
-      } else if (cbm & cbc.down) {
+      } else if (cbm & gcb.flor) {
+      } else if (cbm & gcb.down) {
         this.gpos.y += 1;
       } else {
         this.reverse();

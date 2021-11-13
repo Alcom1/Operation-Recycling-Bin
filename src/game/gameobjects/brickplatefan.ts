@@ -76,6 +76,7 @@ export default class BrickPlateFan extends BrickPlate {
         .map(i => {
             return this.brickHandler.checkCollisionRange(            
                 { x : this.gpos.x + i, y : -1 },        //Position
+                1,
                 0,                                      //START
                 this.gpos.y - 1,                        //FINAL
                 this.gpos.y - 1).toString(2).length;    //HEIGHT

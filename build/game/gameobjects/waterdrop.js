@@ -47,7 +47,7 @@ export default class WaterDrop extends Sprite {
     if (this.spos.y > GMULTY) {
       this.spos.y -= GMULTY;
       this.gpos.y += 1;
-      if (this.gpos.y > BOUNDARY.maxy || this.brickHandler.checkCollisionRange(this.gpos, 0, 2, 1, 1)) {
+      if (this.gpos.y > BOUNDARY.maxy || this.brickHandler.checkCollisionRange(this.gpos, 1, 0, 2, 1)) {
         this.doLandAnimation();
       }
     }

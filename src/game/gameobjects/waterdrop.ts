@@ -80,10 +80,12 @@ export default class WaterDrop extends Sprite {
             if (this.gpos.y > BOUNDARY.maxy || 
                 this.brickHandler.checkCollisionRange(
                 this.gpos,  //Position
+                1,          //Direction
                 0,          //START
                 2,          //FINAL
-                1,          //HEIGHT
-                1)) {       //Direction
+                1))         //HEIGHT
+                {
+                      
 
                 this.doLandAnimation();
             } 
