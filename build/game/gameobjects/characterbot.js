@@ -65,9 +65,10 @@ const gcb = Object.freeze({
 });
 const acb = Object.freeze({
   flor: bitStack([0, 6]),
-  head: bitStack([1]),
+  head: bitStack([1, 13]),
   face: bitStack([8, 9, 10]),
-  chin: bitStack([11])
+  chin: bitStack([11]),
+  knee: bitStack([12])
 });
 export default class CharacterBot extends Character {
   constructor(params) {
@@ -147,14 +148,21 @@ export default class CharacterBot extends Character {
   }
   moveJump(dt) {
     var index = Math.abs(this.gpos.x - this.jumpOrigin.x);
+    if ((index > 0 || Math.abs(this.spos.x) > GMULTX / 2) && (this.gpos.x - 2 < BOUNDARY.minx || this.gpos.x + 2 > BOUNDARY.maxx)) {
+      this.startVertMovement();
+      return;
+    }
     const cbm = this.brickHandler.checkCollisionRange(this.gpos.getSub({
       x: this.move.x > 0 ? 1 : 0,
       y: this.height + 1
-    }), this.move.x, 5, 17, 6, 3);
+    }), this.move.x, 5, 19, 6, 3);
     if (cbm & acb.face && (index > 0 || Math.abs(this.spos.x) > GMULTX / 2)) {
       this.startVertMovement();
       return;
     } else if (cbm & acb.chin && index > 0) {
+      this.startVertMovement();
+      return;
+    } else if (cbm & acb.knee && index > 2) {
       this.startVertMovement();
       return;
     } else if (cbm & acb.head && this.jumpHeights[index] < Math.max(...this.jumpHeights)) {

@@ -38,7 +38,7 @@ export default class BrickSuper extends BrickPlate {
         }] : []);
     }
 
-    //Explode
+    //Turn off
     public resolveCollision(mask : number) {
 
         //Turn off

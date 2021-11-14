@@ -81,9 +81,10 @@ const gcb = Object.freeze({
 //Collision bitmasks for bot-brick collisions in air
 const acb = Object.freeze({
     flor : bitStack([0, 6]),
-    head : bitStack([1]),
+    head : bitStack([1, 13]),
     face : bitStack([8, 9, 10]),
-    chin : bitStack([11])
+    chin : bitStack([11]),
+    knee : bitStack([12])
 });
 
 export default class CharacterBot extends Character {
@@ -212,6 +213,15 @@ export default class CharacterBot extends Character {
 
         var index = Math.abs(this.gpos.x - this.jumpOrigin.x);  //Index of current jump height
 
+        //Don't jump past the level boundary
+        if ((index > 0 || Math.abs(this.spos.x) > GMULTX / 2) && (
+            this.gpos.x - 2 < BOUNDARY.minx || 
+            this.gpos.x + 2 > BOUNDARY.maxx)) {
+
+            this.startVertMovement();
+            return;
+        }
+
         //Collision bitmask
         const cbm = this.brickHandler.checkCollisionRange(
             this.gpos.getSub({
@@ -220,7 +230,7 @@ export default class CharacterBot extends Character {
             }),             //Position
             this.move.x,    //Direction
             5,              //START  n + 1
-            17,             //FINAL
+            19,             //FINAL
             6,              //HEIGHT n + 2
             3);             //Width
         
@@ -231,6 +241,11 @@ export default class CharacterBot extends Character {
         }
         //collide chin after the first step
         else if (cbm & acb.chin && index > 0) {
+            this.startVertMovement();
+            return;
+        }
+        //collide knee after some step
+        else if (cbm & acb.knee && index > 2) {
             this.startVertMovement();
             return;
         }
@@ -330,8 +345,7 @@ export default class CharacterBot extends Character {
     protected handleCollision() {
         
         //WALL BOUNDARY
-        if(
-            this.gpos.x - 1 < BOUNDARY.minx || 
+        if (this.gpos.x - 1 < BOUNDARY.minx || 
             this.gpos.x + 1 > BOUNDARY.maxx) {
 
             this.reverse();
