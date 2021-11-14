@@ -20,6 +20,7 @@ import BrickSuper from "./gameobjects/bricksuper";
 import BrickPipe from "./gameobjects/brickpipe";
 import BrickJump from "./gameobjects/brickjump";
 import BrickHandlerDebug from "./gameobjects/brickhandlerdebug";
+import BrickJumpMove from "./gameobjects/brickjumpmove";
 
 //Load
 window.onload = function() {
@@ -30,11 +31,12 @@ window.onload = function() {
         canvas, 
         "assets/scenes/",
         "scenes",
-        ["LevelInterface", "LEVEL_16"],
+        ["LevelInterface", "LEVEL_31"],
         [
             BrickHandler,
             BrickHandlerDebug,
             BrickJump,
+            BrickJumpMove,
             BrickNormal,
             BrickPipe,
             BrickPlateFan,

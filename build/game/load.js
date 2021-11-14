@@ -20,14 +20,16 @@ import BrickSuper from "./gameobjects/bricksuper.js";
 import BrickPipe from "./gameobjects/brickpipe.js";
 import BrickJump from "./gameobjects/brickjump.js";
 import BrickHandlerDebug from "./gameobjects/brickhandlerdebug.js";
+import BrickJumpMove from "./gameobjects/brickjumpmove.js";
 window.onload = function() {
   const canvas = document.querySelector("canvas");
   if (!canvas)
     throw new Error("Can't get canvas");
-  new Engine(canvas, "assets/scenes/", "scenes", ["LevelInterface", "LEVEL_16"], [
+  new Engine(canvas, "assets/scenes/", "scenes", ["LevelInterface", "LEVEL_31"], [
     BrickHandler,
     BrickHandlerDebug,
     BrickJump,
+    BrickJumpMove,
     BrickNormal,
     BrickPipe,
     BrickPlateFan,

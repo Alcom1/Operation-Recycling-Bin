@@ -30,8 +30,8 @@ export default class BrickSuper extends BrickPlate {
     //Get hazard and passive colliders of this brick.
     public getColliders() : Collider[] {
 
-        //Combine with passive collider from base class
-        return super.getColliders().concat(this.isOn ? [{ //Only return super hitbox if this plate is on.
+        //Combine with passive collider from base class, only return jump hitbox if this plate is on and not selected
+        return super.getColliders().concat(this.isOn && !this.isSelected ? [{
             mask : 0b10000,           //Super
             min : this.gpos.getAdd({ x : 0,          y : -1}),
             max : this.gpos.getAdd({ x : this.width, y :  0}) 

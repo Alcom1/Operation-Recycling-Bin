@@ -7,7 +7,7 @@ export default class BrickPlate extends Brick {
     this.image = this.images[+params.isOn];
   }
   getColliders() {
-    return [{
+    return !this.isSelected ? [] : [{
       mask: 0,
       min: this.gpos.getAdd({x: 0, y: -1}),
       max: this.gpos.getAdd({x: this.width, y: 2})

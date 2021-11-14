@@ -22,7 +22,7 @@ export default class BrickPlate extends Brick {
 
     //Get passive collider of this brick.
     public getColliders() : Collider[] {
-        return [{ 
+        return !this.isSelected ? [] : [{ 
             mask : 0,               //Passive
             min : this.gpos.getAdd({ x : 0,              y : -1}),
             max : this.gpos.getAdd({ x : this.width,     y :  2}) 

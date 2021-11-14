@@ -80,6 +80,7 @@
       }
     ]
   },
+
   {
     "scene": {
       "name": "Level",
@@ -16589,6 +16590,13 @@
         }
       },
       {
+        "name": "BrickJumpMove",
+        "position": {
+          "x": 15,
+          "y": 22
+        }
+      },
+      {
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
@@ -21354,6 +21362,34 @@
         }
       },
       {
+        "name": "BrickJumpMove",
+        "position": {
+          "x": 19,
+          "y": 20
+        }
+      },
+      {
+        "name": "BrickJumpMove",
+        "position": {
+          "x": 21,
+          "y": 20
+        }
+      },
+      {
+        "name": "BrickJumpMove",
+        "position": {
+          "x": 23,
+          "y": 20
+        }
+      },
+      {
+        "name": "BrickJumpMove",
+        "position": {
+          "x": 25,
+          "y": 20
+        }
+      },
+      {
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -24864,6 +24900,34 @@
         }
       },
       {
+        "name": "BrickJumpMove",
+        "position": {
+          "x": 32,
+          "y": 22
+        }
+      },
+      {
+        "name": "BrickJumpMove",
+        "position": {
+          "x": 29,
+          "y": 22
+        }
+      },
+      {
+        "name": "BrickJumpMove",
+        "position": {
+          "x": 26,
+          "y": 22
+        }
+      },
+      {
+        "name": "BrickJumpMove",
+        "position": {
+          "x": 23,
+          "y": 22
+        }
+      },
+      {
         "width": 8,
         "name": "BrickNormal",
         "position": {
@@ -26420,6 +26484,13 @@
         }
       },
       {
+        "name": "BrickJumpMove",
+        "position": {
+          "x": 27,
+          "y": 17
+        }
+      },
+      {
         "width": 6,
         "name": "BrickNormal",
         "position": {
@@ -27210,6 +27281,20 @@
         "position": {
           "x": 32,
           "y": 12
+        }
+      },
+      {
+        "name": "BrickJumpMove",
+        "position": {
+          "x": 15,
+          "y": 15
+        }
+      },
+      {
+        "name": "BrickJumpMove",
+        "position": {
+          "x": 21,
+          "y": 7
         }
       },
       {

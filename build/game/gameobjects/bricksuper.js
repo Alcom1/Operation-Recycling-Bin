@@ -18,7 +18,7 @@ export default class BrickSuper extends BrickPlate {
     }));
   }
   getColliders() {
-    return super.getColliders().concat(this.isOn ? [{
+    return super.getColliders().concat(this.isOn && !this.isSelected ? [{
       mask: 16,
       min: this.gpos.getAdd({x: 0, y: -1}),
       max: this.gpos.getAdd({x: this.width, y: 0})
