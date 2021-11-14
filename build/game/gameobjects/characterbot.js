@@ -65,10 +65,10 @@ const gcb = Object.freeze({
 });
 const acb = Object.freeze({
   flor: bitStack([0, 6]),
-  head: bitStack([1, 13]),
+  head: bitStack([1]),
   face: bitStack([8, 9, 10]),
   chin: bitStack([11]),
-  knee: bitStack([12])
+  knee: bitStack([12, 13])
 });
 export default class CharacterBot extends Character {
   constructor(params) {
