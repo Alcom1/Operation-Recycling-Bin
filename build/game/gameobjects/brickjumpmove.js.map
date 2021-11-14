@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["C:\\Users\\Alcom\\Desktop\\Dev\\Git\\Operation Recycling Bin\\src\\game\\gameobjects\\brickjumpmove.ts"],
-  "sourcesContent": ["import { Collider } from \"engine/modules/collision\";\r\nimport BrickJump from \"./brickjump\";\r\nimport { BrickPlateParams } from \"./brickplate\";\r\n\r\nconst brickJumpMoveOverride = Object.freeze({\r\n    color : \"yellow\",\r\n    images : [\"brick_jump_move\", \"brick_jump_move\"],\r\n    width : 2,\r\n    isOn : true\r\n});\r\n\r\nexport default class BrickJumpMove extends BrickJump {\r\n\r\n    constructor(params: BrickPlateParams) {\r\n        super(Object.assign(params, brickJumpMoveOverride));\r\n    }\r\n}"],
-  "mappings": "AACA;AAGA,MAAM,wBAAwB,OAAO,OAAO;AAAA,EACxC,OAAQ;AAAA,EACR,QAAS,CAAC,mBAAmB;AAAA,EAC7B,OAAQ;AAAA,EACR,MAAO;AAAA;AARX,2CAW2C;AAAA,EAEvC;AACI,UAAM,OAAO,OAAO,QAAQ;AAAA;AAAA;",
+  "sourcesContent": ["import { Collider } from \"engine/modules/collision\";\r\nimport BrickJump from \"./brickjump\";\r\nimport { BrickPlateParams } from \"./brickplate\";\r\n\r\nconst brickJumpMoveOverride = Object.freeze({\r\n    color : \"yellow\",\r\n    images : [\"brick_jump_move_up\", \"brick_jump_move\"],\r\n    imageTop : \"brick_jump_move_top\",\r\n    width : 2,\r\n    isOn : true\r\n});\r\n\r\nexport default class BrickJumpMove extends BrickJump {\r\n\r\n    constructor(params: BrickPlateParams) {\r\n        super(Object.assign(params, brickJumpMoveOverride));\r\n    }\r\n}"],
+  "mappings": "AACA;AAGA,MAAM,wBAAwB,OAAO,OAAO;AAAA,EACxC,OAAQ;AAAA,EACR,QAAS,CAAC,sBAAsB;AAAA,EAChC,UAAW;AAAA,EACX,OAAQ;AAAA,EACR,MAAO;AAAA;AATX,2CAY2C;AAAA,EAEvC;AACI,UAAM,OAAO,OAAO,QAAQ;AAAA;AAAA;",
   "names": []
 }
