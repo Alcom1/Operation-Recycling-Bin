@@ -10,7 +10,7 @@ const brickJumpOverride = Object.freeze({
 export default class BrickJump extends BrickPlate {
 
     private timer : number = 0;
-    private offDuration : number = 1.5;
+    private offDuration : number = 1;
 
     constructor(params: BrickPlateParams) {
         super(Object.assign({}, brickJumpOverride, params));

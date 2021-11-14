@@ -8,7 +8,7 @@ export default class BrickJump extends BrickPlate {
   constructor(params) {
     super(Object.assign({}, brickJumpOverride, params));
     this.timer = 0;
-    this.offDuration = 1.5;
+    this.offDuration = 1;
   }
   update(dt) {
     if (this.timer > 0) {

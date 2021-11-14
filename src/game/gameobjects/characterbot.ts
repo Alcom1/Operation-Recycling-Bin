@@ -28,7 +28,7 @@ enum AirState {
 const characterBotOverride = Object.freeze({
     //Main parameters
     height: 4,      //Bot is this tall
-    speed : 2.5,    //Bot moves fast
+    speed : 3,      //Bot moves fast
     images : [      //Bot has left & right animations
         { name : "char_bot_left", offsetX : 36 },
         { name : "char_bot_right", offsetX : 14},

@@ -15,7 +15,7 @@ var AirState;
 })(AirState || (AirState = {}));
 const characterBotOverride = Object.freeze({
   height: 4,
-  speed: 2.5,
+  speed: 3,
   images: [
     {name: "char_bot_left", offsetX: 36},
     {name: "char_bot_right", offsetX: 14},
