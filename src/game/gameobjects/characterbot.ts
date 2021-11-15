@@ -160,14 +160,21 @@ export default class CharacterBot extends Character {
 
         this.timerSpc += dt;   //Update special timer
 
+        console.log(this.timerSpc);
+
         //Perform special movement
         switch(this.animatGroupsIndex) {
+
+            case 1 :
+
+                this.moveVertical(dt, -1);
+                break;
 
             //Vertical movement.
             case 3 : 
                 
                 //Bot is jumping
-                if(this.airState == AirState.JUMP) {
+                if (this.airState == AirState.JUMP) {
                     this.moveJump(dt);
                 }
                 //Bot is moving vertically
@@ -185,6 +192,8 @@ export default class CharacterBot extends Character {
 
         //If the current animation has ended
         if(this.timerSpc > this.animatGroupCurr[0].duration) {
+
+            console.log("YEEEE " + this.animatGroupCurr[0].duration);
 
             //Reset timer
             this.timerSpc = 0;
@@ -285,11 +294,11 @@ export default class CharacterBot extends Character {
 
     //Vertical motion
     private moveVertical(dt: number, dir: number) {
-
-        this.spos.y -= dt * this.vertSpeed * dir;   //Move subposition vertically based on speed
         
         //If the direction has no obstacles
         if (this.getCollisionVertical(dir)) {
+
+            this.spos.y -= dt * this.vertSpeed * dir;   //Move subposition vertically based on speed
             this.animatGroupCurr.forEach(a => a.spos = this.spos);
         }
         //There is an obstacle, stop based on its direction
@@ -320,10 +329,13 @@ export default class CharacterBot extends Character {
     private endAirMovement() {
 
         this.airState = AirState.NONE;
-        this.spos.x = 0;
-        this.timerSpc = 0;
-        this.handleBricks(); 
-        this.setCurrentGroup(0);
+        this.spos.setToZero();
+        this.handleBricks();
+
+        //Go from air state to walking state.
+        if (this.animatGroupsIndex == 3) {
+            this.setCurrentGroup(0);
+        }
     }
 
     //Return true if the given vertical direction is free of bricks
@@ -433,6 +445,12 @@ export default class CharacterBot extends Character {
             min : this.gpos.getAdd({ x : -1 - Math.min(this.move.x, 0), y : 0}),
             max : this.gpos.getAdd({ x :    - Math.min(this.move.x, 0), y : 1}) 
         }];
+    }
+
+    //Also reset timer when setting the current group
+    public setCurrentGroup(index : number) {
+        this.timerSpc = 0;  //Timer reset incase we cancelled a previous animation
+        super.setCurrentGroup(index);
     }
 
     //Explode

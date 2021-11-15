@@ -112,4 +112,9 @@ export default class Vect implements Point {
     public getMagnitudeSquared(): number {
         return this.x * this.x + this.y * this.y;
     }
+
+    public setToZero(): void {
+        this.x = 0;
+        this.y = 0;
+    }
 }

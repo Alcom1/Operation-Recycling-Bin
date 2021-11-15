@@ -120,7 +120,11 @@ export default class CharacterBot extends Character {
   }
   handleSpecialMovement(dt) {
     this.timerSpc += dt;
+    console.log(this.timerSpc.toFixed(3));
     switch (this.animatGroupsIndex) {
+      case 1:
+        this.moveVertical(dt, -1);
+        break;
       case 3:
         if (this.airState == 1) {
           this.moveJump(dt);
@@ -185,8 +189,8 @@ export default class CharacterBot extends Character {
     this.animatGroupCurr.forEach((a) => a.spos = this.spos);
   }
   moveVertical(dt, dir) {
-    this.spos.y -= dt * this.vertSpeed * dir;
     if (this.getCollisionVertical(dir)) {
+      this.spos.y -= dt * this.vertSpeed * dir;
       this.animatGroupCurr.forEach((a) => a.spos = this.spos);
     } else {
       if (dir > 0) {
@@ -206,10 +210,12 @@ export default class CharacterBot extends Character {
   }
   endAirMovement() {
     this.airState = 0;
-    this.spos.x = 0;
-    this.timerSpc = 0;
+    this.spos.setToZero();
     this.handleBricks();
-    this.setCurrentGroup(0);
+    if (this.animatGroupsIndex == 3) {
+      this.timerSpc = 0;
+      this.setCurrentGroup(0);
+    }
   }
   getCollisionVertical(dir) {
     if (dir > 0 && this.gpos.y <= this.height + 1) {

@@ -60,7 +60,7 @@ export default class WaterDrop extends Sprite {
   reset(gpos) {
     this.isActive = true;
     this.gpos = gpos.get();
-    this.spos = {x: 0, y: 0};
+    this.spos.setToZero();
     this.slipTimer = 0;
     this.animSlip.isActive = true;
     this.animSlip.reset(this.gpos);

@@ -165,14 +165,14 @@ export default class Character extends GameObject {
     }
 
     //Set current & active group based on the group index
-    protected setCurrentGroup(index? : number) {
+    protected setCurrentGroup(index : number) {
         
         index = index ?? this.animatGroupsIndex;
         this.animatGroupsIndex = index;
         this.animatGroups.forEach((sg, i) => sg.forEach(s => {
             s.isActive = i == index;
-            s.spos = { x : 0, y : 0} as Vect;   //Reset subposition
-            s.reset(this.gpos);           //Make sure all sprites are in the character's position after set
+            s.spos.setToZero();   //Reset subposition
+            s.reset(this.gpos); //Make sure all sprites are in the character's position after set
         }));
         this.animatGroupCurr.forEach(x => x.setImageIndex(this.animImageIndex));
     }

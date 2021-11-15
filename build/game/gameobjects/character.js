@@ -100,7 +100,7 @@ export default class Character extends GameObject {
     this.animatGroupsIndex = index;
     this.animatGroups.forEach((sg, i) => sg.forEach((s) => {
       s.isActive = i == index;
-      s.spos = {x: 0, y: 0};
+      s.spos.setToZero();
       s.reset(this.gpos);
     }));
     this.animatGroupCurr.forEach((x) => x.setImageIndex(this.animImageIndex));
