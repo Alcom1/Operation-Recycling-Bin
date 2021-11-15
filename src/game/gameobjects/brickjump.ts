@@ -15,7 +15,7 @@ export default class BrickJump extends BrickPlateTop {
 
     private brickHandler!: BrickHandler;
     private timer : number = 0;
-    private offDuration : number = 1.0;
+    private offDuration : number = 0.1;
     private timer2 : number = 0;
     private offDuration2 : number = 1.2;
 

@@ -1139,6 +1139,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 4,
@@ -1376,6 +1377,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 3,
@@ -2268,6 +2270,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 3,
@@ -2745,6 +2748,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -2999,6 +3003,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 3,
@@ -3666,6 +3671,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 17,
@@ -4271,6 +4277,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 3,
@@ -4779,6 +4786,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 34,
@@ -5761,6 +5769,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 1,
@@ -5980,6 +5989,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 33,
@@ -7060,6 +7070,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -8069,6 +8080,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 3,
@@ -8493,6 +8505,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 1,
@@ -8806,6 +8819,7 @@
     },
     "gameObjects": [
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -9529,6 +9543,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -9713,6 +9728,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 21,
@@ -10241,6 +10257,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -10631,6 +10648,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 34,
@@ -11116,6 +11134,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 3,
@@ -11406,6 +11425,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 3,
@@ -11698,6 +11718,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -12248,6 +12269,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 5,
@@ -13084,6 +13106,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 1,
@@ -13160,6 +13183,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 33,
@@ -14043,6 +14067,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 15,
@@ -14670,6 +14695,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 1,
@@ -14846,6 +14872,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 34,
@@ -14923,6 +14950,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 31,
@@ -15866,6 +15894,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 3,
@@ -16084,6 +16113,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 17,
@@ -16194,6 +16224,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 34,
@@ -16479,6 +16510,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 3,
@@ -16846,6 +16878,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 1,
@@ -17199,6 +17232,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 4,
@@ -17704,6 +17738,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 11,
@@ -18699,6 +18734,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 6,
@@ -18832,6 +18868,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 24,
@@ -19231,6 +19268,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 32,
@@ -19953,6 +19991,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 17,
@@ -20248,6 +20287,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 4,
@@ -20390,6 +20430,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -21115,6 +21156,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 16,
@@ -21390,6 +21432,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -21466,6 +21509,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 33,
@@ -21894,6 +21938,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 3,
@@ -22319,6 +22364,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -23310,6 +23356,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 34,
@@ -23583,6 +23630,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 18,
@@ -23795,6 +23843,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 17,
@@ -24407,6 +24456,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -24534,6 +24584,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 1,
@@ -24774,6 +24825,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -25035,6 +25087,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 5,
@@ -25383,6 +25436,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -26130,6 +26184,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -26438,6 +26493,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 1,
@@ -26568,6 +26624,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 12,
@@ -27231,6 +27288,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 3,
@@ -27397,6 +27455,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 18,
@@ -27834,6 +27893,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 34,
@@ -28285,6 +28345,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 1,

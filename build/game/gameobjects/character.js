@@ -10,7 +10,7 @@ export default class Character extends GameObject {
     this.animatGroups = [[]];
     this.tags.push("Character");
     this.speed = params.speed ?? 1;
-    this.move = new Vect(1, 0);
+    this.move = new Vect(params.isForward ?? true ? 1 : -1, 0);
     this._height = params.height ?? 2;
     this.checkCollision = true;
     for (let i = -1; i <= 1; i++) {

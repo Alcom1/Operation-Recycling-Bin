@@ -13,6 +13,7 @@ export interface CharacterParams extends GameObjectParams {
     images : OffsetImageParams[];
     frameCount : number;
     animsCount : number;
+    isForward? : boolean;
 }
 
 export default class Character extends GameObject {
@@ -34,11 +35,11 @@ export default class Character extends GameObject {
     constructor(params: CharacterParams) {
         super(params);
 
-        this.tags.push("Character");        //All characters need to share a tag
+        this.tags.push("Character");                                //All characters need to share a tag
         
-        this.speed = params.speed ?? 1;     //Default speed
-        this.move = new Vect(1, 0);         //Default move directions
-        this._height = params.height ?? 2;  //Default height for a character
+        this.speed = params.speed ?? 1;                             //Default speed
+        this.move = new Vect(params.isForward ?? true ? 1 : -1, 0); //Default move direction
+        this._height = params.height ?? 2;                          //Default height for a character
         this.checkCollision = true;
 
         //Spawn 3 animations, the sprite is sliced vertically into 2x wide segments for proper z-indexing
