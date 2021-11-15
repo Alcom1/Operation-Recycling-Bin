@@ -169,7 +169,7 @@ export default class CharacterBot extends Character {
     } else if (cbm & acb.foot && index > 2) {
       this.startVertMovement();
       return;
-    } else if (cbm & acb.hed1 && this.jumpHeights[index] < Math.max(...this.jumpHeights)) {
+    } else if ((cbm & acb.hed1 || this.gpos.y <= BOUNDARY.miny + 3) && this.jumpHeights[index] < Math.max(...this.jumpHeights)) {
       this.startVertMovement();
       return;
     } else if (cbm & acb.flor && index > 0) {
@@ -249,10 +249,10 @@ export default class CharacterBot extends Character {
   setFlightState(state) {
     this.airState = state;
     this.jumpOrigin = this.gpos.get();
+    this.spos.x = 0;
     if (this.animatGroupsIndex != 3) {
       this.handleBricks(true);
       this.setCurrentGroup(3);
-      this.spos.x = 0;
     }
   }
   getColliders() {

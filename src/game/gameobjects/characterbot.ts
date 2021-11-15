@@ -255,8 +255,8 @@ export default class CharacterBot extends Character {
             this.startVertMovement();
             return;
         }
-        //Collide head 1 unless we're at the peak of the jump
-        else if (cbm & acb.hed1 && this.jumpHeights[index] < Math.max(...this.jumpHeights)) {
+        //Collide head 1 or ceiling unless we're at the peak of the jump
+        else if ((cbm & acb.hed1 || this.gpos.y <= BOUNDARY.miny + 3) && this.jumpHeights[index] < Math.max(...this.jumpHeights)) {
             this.startVertMovement();
             return;
         }
@@ -409,11 +409,11 @@ export default class CharacterBot extends Character {
 
         this.airState = state;
         this.jumpOrigin = this.gpos.get();
+        this.spos.x = 0;                //Force grid alignment
 
         if(this.animatGroupsIndex != 3) {
             this.handleBricks(true);    //Bricks should not be pressured by a floating character
             this.setCurrentGroup(3);    //Play floating animation
-            this.spos.x = 0;            //Force grid alignment
         }
     }
 

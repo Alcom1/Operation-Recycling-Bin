@@ -14,7 +14,7 @@ export default class BrickPlateTop extends BrickPlate {
     private isOnTop : boolean = true;
 
     constructor(params: BrickPlateTopParams) {
-        super(params);
+        super(Object.assign(params, { width : 2}));
 
         var topGPos = this.gpos.getAdd({x : 0, y : -1});
 
@@ -22,9 +22,10 @@ export default class BrickPlateTop extends BrickPlate {
             new Sprite({
                     ...params,
                     position : topGPos,
-                    zIndex : getZIndex(topGPos, -1),
                     image : params.imageTop
                 } as SpriteParams)) as Sprite
+
+        this.topSprite.setZIndex(10);
 
         this.isOnTop = params.isOnTop ?? true;
         this.topSprite.isActive = this.isOn == this.isOnTop;
@@ -38,6 +39,7 @@ export default class BrickPlateTop extends BrickPlate {
     public deselect() {
         super.deselect();
         this.topSprite.gpos = this.gpos.getAdd({x : 0, y : -1});
+        this.topSprite.setZIndex(10);
     }
 
     protected setOnOff(state : boolean) {

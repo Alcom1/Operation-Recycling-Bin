@@ -2,7 +2,6 @@ import BrickPlateTop from "./brickplatetop.js";
 const brickSuperOverride = Object.freeze({
   images: ["brick_super_off", "brick_super"],
   imageTop: "brick_super_top",
-  width: 2,
   isOn: true
 });
 export default class BrickSuper extends BrickPlateTop {
