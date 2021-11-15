@@ -120,7 +120,6 @@ export default class CharacterBot extends Character {
   }
   handleSpecialMovement(dt) {
     this.timerSpc += dt;
-    console.log(this.timerSpc.toFixed(3));
     switch (this.animatGroupsIndex) {
       case 1:
         this.moveVertical(dt, -1);
@@ -213,7 +212,6 @@ export default class CharacterBot extends Character {
     this.spos.setToZero();
     this.handleBricks();
     if (this.animatGroupsIndex == 3) {
-      this.timerSpc = 0;
       this.setCurrentGroup(0);
     }
   }
@@ -275,6 +273,10 @@ export default class CharacterBot extends Character {
       min: this.gpos.getAdd({x: -1 - Math.min(this.move.x, 0), y: 0}),
       max: this.gpos.getAdd({x: -Math.min(this.move.x, 0), y: 1})
     }];
+  }
+  setCurrentGroup(index) {
+    this.timerSpc = 0;
+    super.setCurrentGroup(index);
   }
   resolveCollision(mask) {
     if (mask & 2) {

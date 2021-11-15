@@ -160,8 +160,6 @@ export default class CharacterBot extends Character {
 
         this.timerSpc += dt;   //Update special timer
 
-        console.log(this.timerSpc);
-
         //Perform special movement
         switch(this.animatGroupsIndex) {
 
@@ -192,8 +190,6 @@ export default class CharacterBot extends Character {
 
         //If the current animation has ended
         if(this.timerSpc > this.animatGroupCurr[0].duration) {
-
-            console.log("YEEEE " + this.animatGroupCurr[0].duration);
 
             //Reset timer
             this.timerSpc = 0;
@@ -448,7 +444,7 @@ export default class CharacterBot extends Character {
     }
 
     //Also reset timer when setting the current group
-    public setCurrentGroup(index : number) {
+    public setCurrentGroup(index? : number) {
         this.timerSpc = 0;  //Timer reset incase we cancelled a previous animation
         super.setCurrentGroup(index);
     }

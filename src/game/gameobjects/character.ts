@@ -49,7 +49,7 @@ export default class Character extends GameObject {
             this.animatGroupCurr.push(this.parent.pushGO(new Animat({
                     ...params, 
                     isLoop : false,                 //Remove looping to prevent stuttering. Loops are handled manually
-                    zModifier : i < 1 ? 300 : 29,   //Z-modifier for different slices
+                    zModifier : i < 1 ? 301 : 29,   //Z-modifier for different slices
                     sliceIndex : i,                 //This animation is sliced
                     framesSize : GMULTX * 2,        //2x wide slices
                     gposOffset : { x : -1, y : 0 }  //Move back by 1. Animations are centered around this character
@@ -165,7 +165,7 @@ export default class Character extends GameObject {
     }
 
     //Set current & active group based on the group index
-    protected setCurrentGroup(index : number) {
+    protected setCurrentGroup(index? : number) {
         
         index = index ?? this.animatGroupsIndex;
         this.animatGroupsIndex = index;
