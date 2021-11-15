@@ -81,10 +81,11 @@ const gcb = Object.freeze({
 //Collision bitmasks for bot-brick collisions in air
 const acb = Object.freeze({
     flor : bitStack([0, 6]),
-    head : bitStack([1]),
+    hed1 : bitStack([1]),
+    hed2 : bitStack([13]),
     face : bitStack([8, 9, 10]),
     chin : bitStack([11]),
-    knee : bitStack([12, 13])   //Bitmask 13 is actually on the head. This is intended.
+    foot : bitStack([12])
 });
 
 export default class CharacterBot extends Character {
@@ -244,13 +245,18 @@ export default class CharacterBot extends Character {
             this.startVertMovement();
             return;
         }
-        //collide knee after some step
-        else if (cbm & acb.knee && index > 2) {
+        //collide head 2 after the first step but not at the peak of the jump
+        else if (cbm & acb.hed2 && this.jumpHeights[index] < Math.max(...this.jumpHeights) && index > 0 ) {
             this.startVertMovement();
             return;
         }
-        //Collide head unless we're at the peak of the jump
-        else if (cbm & acb.head && this.jumpHeights[index] < Math.max(...this.jumpHeights)) {
+        //collide knee after some step
+        else if (cbm & acb.foot && index > 2) {
+            this.startVertMovement();
+            return;
+        }
+        //Collide head 1 unless we're at the peak of the jump
+        else if (cbm & acb.hed1 && this.jumpHeights[index] < Math.max(...this.jumpHeights)) {
             this.startVertMovement();
             return;
         }

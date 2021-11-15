@@ -65,10 +65,11 @@ const gcb = Object.freeze({
 });
 const acb = Object.freeze({
   flor: bitStack([0, 6]),
-  head: bitStack([1]),
+  hed1: bitStack([1]),
+  hed2: bitStack([13]),
   face: bitStack([8, 9, 10]),
   chin: bitStack([11]),
-  knee: bitStack([12, 13])
+  foot: bitStack([12])
 });
 export default class CharacterBot extends Character {
   constructor(params) {
@@ -162,10 +163,13 @@ export default class CharacterBot extends Character {
     } else if (cbm & acb.chin && index > 0) {
       this.startVertMovement();
       return;
-    } else if (cbm & acb.knee && index > 2) {
+    } else if (cbm & acb.hed2 && this.jumpHeights[index] < Math.max(...this.jumpHeights) && index > 0) {
       this.startVertMovement();
       return;
-    } else if (cbm & acb.head && this.jumpHeights[index] < Math.max(...this.jumpHeights)) {
+    } else if (cbm & acb.foot && index > 2) {
+      this.startVertMovement();
+      return;
+    } else if (cbm & acb.hed1 && this.jumpHeights[index] < Math.max(...this.jumpHeights)) {
       this.startVertMovement();
       return;
     } else if (cbm & acb.flor && index > 0) {
