@@ -32,7 +32,7 @@ export default class Cursor extends GameObject {
   }
   update(dt) {
     var tempSpos = this.engine.mouse.getPos();
-    if (this.isUpdateForced || tempSpos.getDiff(this.spos) || this.brickHandler.isPressured) {
+    if (this.isUpdateForced || tempSpos.getDiff(this.spos) || this.brickHandler.isRecheck) {
       this.isUpdateForced = false;
       switch (this.state) {
         case 0:

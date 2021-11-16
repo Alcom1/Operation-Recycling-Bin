@@ -70,6 +70,7 @@ export default class Character extends GameObject {
         a.gpos.add(move);
       });
       this.checkCollision = isCollideAfterShift;
+      this.brickHandler.isRecheck = true;
     }
   }
   handleNormalMovement(dt) {
@@ -81,11 +82,9 @@ export default class Character extends GameObject {
     this.underBricks.forEach((b) => b.pressure -= 1);
     if (isClear) {
       this.underBricks = [];
-      this.brickHandler.isPressured = true;
     } else {
       this.underBricks = this.brickHandler.checkCollisionRow(this.gpos.getAdd({x: -1, y: 1}), 2);
       this.underBricks.forEach((b) => b.pressure += 1);
-      this.brickHandler.isPressured = true;
     }
   }
   handleCollision() {

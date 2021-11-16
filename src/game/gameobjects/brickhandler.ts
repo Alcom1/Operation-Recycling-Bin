@@ -48,7 +48,7 @@ export default class BrickHandler extends GameObject {
     private get bricksGrey(): Brick[] { return this.bricks.filter(b => b.isGrey == true); }
 
     /** If a brick has been stepped on or off */
-    public isPressured = true;
+    public isRecheck = false;
 
     public init(ctx: CanvasRenderingContext2D) {
         
@@ -104,7 +104,9 @@ export default class BrickHandler extends GameObject {
         const min : Point = {x : Number.MAX_VALUE, y : Number.MAX_VALUE}
         const max : Point = {x : 0, y : 0}
 
-        for (const brick1 of this.bricks.filter(b => b.isSelected)) {
+        const bricksSelected = this.bricks.filter(b => b.isSelected);
+
+        for (const brick1 of bricksSelected) {
             
             brick1.setToCursor();   // Force update so the brick position matches this frame and not the previous
 
@@ -156,7 +158,7 @@ export default class BrickHandler extends GameObject {
         for(const c of this.engine.collision.collidePassive(min, max)) {
 
             // For each individual brick in the selection
-            for (const b of this.bricks.filter(b => b.isSelected)) {
+            for (const b of bricksSelected) {
 
                 // Check collision between each selected brick and the character
                 if (colRectRectCornerSize(
@@ -369,11 +371,11 @@ export default class BrickHandler extends GameObject {
     private hoverBrick(brick: Brick, pos: Vect): BrickHandlerState {
 
         // Do nothing if the two bricks are the same
-        if (this.selectedBrick != null && this.selectedBrick.compare(brick) && !this.isPressured) {
+        if (this.selectedBrick != null && this.selectedBrick.compare(brick) && !this.isRecheck) {
             return BrickHandlerState.SAME;
         }
 
-        this.isPressured = false;   // Reset pressured state
+        this.isRecheck = false;     // Reset pressured state
         this.selectedBrick = brick; // Set current selected brick for later use
         this.selections = [];       // Reset selections
 

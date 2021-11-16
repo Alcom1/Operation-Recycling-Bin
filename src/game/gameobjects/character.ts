@@ -90,7 +90,7 @@ export default class Character extends GameObject {
         }
     }
 
-    //Move to next grid position of the subposition extends too far
+    //Shift to next grid position of the subposition extends too far
     private shift(isCollideAfterShift : boolean) {
 
         var move = {
@@ -112,6 +112,7 @@ export default class Character extends GameObject {
             });
 
             this.checkCollision = isCollideAfterShift;
+            this.brickHandler.isRecheck = true; //Recheck bricks after every shift
         }
     }
 
@@ -136,7 +137,6 @@ export default class Character extends GameObject {
         //Reset underbricks if we are clearing unconditionally.
         if(isClear) {
             this.underBricks = [];
-            this.brickHandler.isPressured = true;
         }
         //Otherwise, get a new set.
         else {
@@ -147,7 +147,6 @@ export default class Character extends GameObject {
     
             //Set new pressures
             this.underBricks.forEach(b => b.pressure += 1);
-            this.brickHandler.isPressured = true;
         }
     }
 

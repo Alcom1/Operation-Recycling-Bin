@@ -17,7 +17,7 @@ export default class BrickHandler extends GameObject {
     this.mobileIndicator = null;
     this.selectedBrick = null;
     this.selections = [];
-    this.isPressured = true;
+    this.isRecheck = false;
   }
   get bricksGrey() {
     return this.bricks.filter((b) => b.isGrey == true);
@@ -47,7 +47,8 @@ export default class BrickHandler extends GameObject {
     const adjacents = [];
     const min = {x: Number.MAX_VALUE, y: Number.MAX_VALUE};
     const max = {x: 0, y: 0};
-    for (const brick1 of this.bricks.filter((b) => b.isSelected)) {
+    const bricksSelected = this.bricks.filter((b) => b.isSelected);
+    for (const brick1 of bricksSelected) {
       brick1.setToCursor();
       var tposx = brick1.gpos.x + Math.round(brick1.spos.x / GMULTX);
       var tposy = brick1.gpos.y + Math.round(brick1.spos.y / GMULTY);
@@ -73,7 +74,7 @@ export default class BrickHandler extends GameObject {
       return false;
     }
     for (const c of this.engine.collision.collidePassive(min, max)) {
-      for (const b of this.bricks.filter((b2) => b2.isSelected)) {
+      for (const b of bricksSelected) {
         if (colRectRectCornerSize(c.min, c.max, b.gpos.getAdd({
           x: Math.round(b.spos.x / GMULTX),
           y: Math.round(b.spos.y / GMULTY)
@@ -167,10 +168,10 @@ export default class BrickHandler extends GameObject {
     return null;
   }
   hoverBrick(brick, pos) {
-    if (this.selectedBrick != null && this.selectedBrick.compare(brick) && !this.isPressured) {
+    if (this.selectedBrick != null && this.selectedBrick.compare(brick) && !this.isRecheck) {
       return 4;
     }
-    this.isPressured = false;
+    this.isRecheck = false;
     this.selectedBrick = brick;
     this.selections = [];
     for (const dir of OPPOSITE_DIRS) {
