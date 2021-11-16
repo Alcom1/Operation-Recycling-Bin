@@ -2,7 +2,7 @@ import BrickPlate from "./brickplate.js";
 import Sprite from "./sprite.js";
 export default class BrickPlateTop extends BrickPlate {
   constructor(params) {
-    super(Object.assign(params, {width: 2}));
+    super(Object.assign(params, {width: 2, isOn: true}));
     this.isOnTop = true;
     var topGPos = this.gpos.getAdd({x: 0, y: -1});
     this.topSprite = this.parent.pushGO(new Sprite({

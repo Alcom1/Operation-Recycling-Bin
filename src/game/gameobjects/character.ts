@@ -1,7 +1,5 @@
-import Engine from "engine/engine";
-import Scene from "engine/scene/scene";
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
-import { getZIndex, GMULTX, GMULTY } from "engine/utilities/math";
+import { GMULTX, GMULTY } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 import BrickHandler from "./brickhandler";
 import Brick from "./bricknormal";

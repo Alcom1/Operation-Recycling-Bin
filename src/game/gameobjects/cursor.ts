@@ -1,6 +1,5 @@
 import GameObject from "engine/gameobjects/gameobject";
 import { MouseState } from "engine/modules/mouse";
-import Scene from "engine/scene/scene";
 import Vect from "engine/utilities/vect";
 import BrickHandler, { BrickHandlerState } from "./brickhandler";
 import CursorIcon, { CursorIconState } from "./cursoricon";

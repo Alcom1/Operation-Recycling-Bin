@@ -1,4 +1,4 @@
-import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
+import { GameObjectParams } from "engine/gameobjects/gameobject";
 import { GMULTX, GMULTY } from "engine/utilities/math";
 import { Point } from "engine/utilities/vect";
 import BrickHandler from "./brickhandler";

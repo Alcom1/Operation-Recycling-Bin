@@ -1,7 +1,6 @@
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
-import Scene from "engine/scene/scene";
-import {MouseState} from "engine/modules/mouse";
-import { BOUNDARY, colorAdd, colorMult, colorTranslate, colPointRect, Z_DEPTH, WIDTH_SIDEPANEL } from "engine/utilities/math";
+import { MouseState } from "engine/modules/mouse";
+import { colorAdd, colorMult, colorTranslate, colPointRect, Z_DEPTH, WIDTH_SIDEPANEL } from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 
 interface ButtonParams extends GameObjectParams {

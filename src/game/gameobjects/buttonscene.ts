@@ -1,4 +1,3 @@
-import Scene from "engine/scene/scene";
 import Button from "./button";
 import LevelSequence from "./levelsequence";
 

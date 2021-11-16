@@ -1,4 +1,3 @@
-import { getZIndex } from "engine/utilities/math";
 import { Point } from "engine/utilities/vect";
 import BrickPlate, { BrickPlateParams } from "./brickplate";
 import Sprite, { SpriteParams } from "./sprite";
@@ -14,7 +13,7 @@ export default class BrickPlateTop extends BrickPlate {
     private isOnTop : boolean = true;
 
     constructor(params: BrickPlateTopParams) {
-        super(Object.assign(params, { width : 2}));
+        super(Object.assign(params, { width : 2, isOn : true }));
 
         var topGPos = this.gpos.getAdd({x : 0, y : -1});
 

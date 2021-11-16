@@ -1,5 +1,4 @@
 import { Collider } from "engine/modules/collision";
-import { Point } from "engine/utilities/vect";
 import BrickHandler from "./brickhandler";
 import { BrickPlateParams } from "./brickplate";
 import BrickPlateTop from "./brickplatetop";

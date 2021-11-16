@@ -1,12 +1,9 @@
 import { Collider } from "engine/modules/collision";
-import { getZIndex } from "engine/utilities/math";
 import BrickPlateTop, { BrickPlateTopParams } from "./brickplatetop";
-import Sprite, { SpriteParams } from "./sprite";
 
 const brickSuperOverride = Object.freeze({
     images : ["brick_super_off", "brick_super"],
-    imageTop : "brick_super_top",
-    isOn : true
+    imageTop : "brick_super_top"
 });
 
 export default class BrickSuper extends BrickPlateTop {
