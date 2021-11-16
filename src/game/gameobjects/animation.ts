@@ -52,6 +52,7 @@ export default class Animat extends GameObject {
     private timer : number = 0;                     //Timer to track frames
     private imageIndex: number = 0;                 //Index of the current image
     private animsIndex : number = 0;                //Index of the current animation
+    private sposYFix : number = 101;                //Z-index offset to fix vertical clipping
 
     //get
     public get duration() : number { return 1 / this.speed; }
@@ -64,7 +65,7 @@ export default class Animat extends GameObject {
         this.isVert = params.isVert ?? false;
         this.framesSize = params.framesSize;
         this.gposOffset = params.gposOffset ?? { x : 0, y : 0 }
-        this.zModifier = params.zModifier ?? 300;
+        this.zModifier = (params.zModifier ?? 300) + (this.spos.y < 0 ? -this.sposYFix : 0);
 
         switch(params.images.length) {
 
@@ -155,7 +156,9 @@ export default class Animat extends GameObject {
 
         return getZIndex(
             this.gpos,
-            this.zModifier + this.zModifierPub)
+            this.zModifier + 
+            this.zModifierPub + (
+            this.spos.y < 0 ? this.sposYFix : 0 ))    //Fix clipping while moving upwards
     }
 
     //Set the image index, swapping the image for this animation.

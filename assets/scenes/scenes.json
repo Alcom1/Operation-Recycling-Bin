@@ -1139,6 +1139,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 4,
@@ -1376,6 +1377,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 3,
@@ -2268,6 +2270,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 3,
@@ -2745,6 +2748,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -2999,6 +3003,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 3,
@@ -3666,6 +3671,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 17,
@@ -4271,6 +4277,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 3,
@@ -4779,6 +4786,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 34,
@@ -5761,6 +5769,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 1,
@@ -5980,6 +5989,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 33,
@@ -7060,6 +7070,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -8069,6 +8080,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 3,
@@ -8493,6 +8505,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 1,
@@ -8806,6 +8819,7 @@
     },
     "gameObjects": [
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -9529,6 +9543,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -9713,6 +9728,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 21,
@@ -10234,6 +10250,14 @@
         }
       },
       {
+        "name": "BrickJump",
+        "position": {
+          "x": 7,
+          "y": 10
+        }
+      },
+      {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -10269,6 +10293,13 @@
         "name": "BrickNormal",
         "position": {
           "x": 10,
+          "y": 10
+        }
+      },
+      {
+        "name": "BrickJump",
+        "position": {
+          "x": 16,
           "y": 10
         }
       },
@@ -10367,6 +10398,13 @@
         "name": "BrickNormal",
         "position": {
           "x": 20,
+          "y": 23
+        }
+      },
+      {
+        "name": "BrickJump",
+        "position": {
+          "x": 18,
           "y": 23
         }
       },
@@ -10474,6 +10512,13 @@
         }
       },
       {
+        "name": "BrickJump",
+        "position": {
+          "x": 26,
+          "y": 10
+        }
+      },
+      {
         "width": 4,
         "name": "BrickNormal",
         "position": {
@@ -10489,8 +10534,8 @@
       {
         "levelName": "Jump Around",
         "levels": {
-          "nextLevel": "LEVEL_17",
-          "previousLevel": "LEVEL_15"
+          "nextLevel": "LEVEL_25",
+          "previousLevel": "LEVEL_55"
         },
         "par": 1,
         "name": "LevelSequence",
@@ -10603,6 +10648,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 34,
@@ -11088,6 +11134,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 3,
@@ -11378,6 +11425,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 3,
@@ -11670,6 +11718,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -12220,6 +12269,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 5,
@@ -13056,6 +13106,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 1,
@@ -13132,6 +13183,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 33,
@@ -14015,6 +14067,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 15,
@@ -14378,6 +14431,34 @@
     },
     "gameObjects": [
       {
+        "name": "BrickJump",
+        "position": {
+          "x": 7,
+          "y": 22
+        }
+      },
+      {
+        "name": "BrickJump",
+        "position": {
+          "x": 11,
+          "y": 20
+        }
+      },
+      {
+        "name": "BrickJump",
+        "position": {
+          "x": 15,
+          "y": 18
+        }
+      },
+      {
+        "name": "BrickJump",
+        "position": {
+          "x": 19,
+          "y": 16
+        }
+      },
+      {
         "width": 8,
         "name": "BrickNormal",
         "position": {
@@ -14538,6 +14619,13 @@
         }
       },
       {
+        "name": "BrickJump",
+        "position": {
+          "x": 23,
+          "y": 14
+        }
+      },
+      {
         "width": 8,
         "name": "BrickNormal",
         "position": {
@@ -14607,6 +14695,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 1,
@@ -14639,8 +14728,8 @@
       {
         "levelName": "The Think Tank",
         "levels": {
-          "nextLevel": "LEVEL_26",
-          "previousLevel": "LEVEL_24"
+          "nextLevel": "LEVEL_27",
+          "previousLevel": "LEVEL_16"
         },
         "par": 8,
         "name": "LevelSequence",
@@ -14783,6 +14872,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 34,
@@ -14860,6 +14950,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 31,
@@ -15110,6 +15201,13 @@
         }
       },
       {
+        "name": "BrickJump",
+        "position": {
+          "x": 14,
+          "y": 15
+        }
+      },
+      {
         "width": 6,
         "name": "BrickNormal",
         "position": {
@@ -15312,8 +15410,8 @@
       {
         "levelName": "The Garage",
         "levels": {
-          "nextLevel": "LEVEL_28",
-          "previousLevel": "LEVEL_26"
+          "nextLevel": "LEVEL_31",
+          "previousLevel": "LEVEL_25"
         },
         "par": 17,
         "name": "LevelSequence",
@@ -15796,6 +15894,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 3,
@@ -16014,6 +16113,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 17,
@@ -16124,6 +16224,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 34,
@@ -16409,6 +16510,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 3,
@@ -16520,6 +16622,13 @@
         }
       },
       {
+        "name": "BrickJumpMove",
+        "position": {
+          "x": 15,
+          "y": 22
+        }
+      },
+      {
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
@@ -16527,8 +16636,8 @@
       {
         "levelName": "Portable Boost",
         "levels": {
-          "nextLevel": "LEVEL_32",
-          "previousLevel": "LEVEL_30"
+          "nextLevel": "LEVEL_37",
+          "previousLevel": "LEVEL_27"
         },
         "par": 5,
         "name": "LevelSequence",
@@ -16769,6 +16878,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 1,
@@ -17122,6 +17232,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 4,
@@ -17627,6 +17738,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 11,
@@ -18622,6 +18734,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 6,
@@ -18755,6 +18868,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 24,
@@ -18885,6 +18999,41 @@
     },
     "gameObjects": [
       {
+        "name": "BrickJump",
+        "position": {
+          "x": 23,
+          "y": 9
+        }
+      },
+      {
+        "name": "BrickJump",
+        "position": {
+          "x": 28,
+          "y": 11
+        }
+      },
+      {
+        "name": "BrickJump",
+        "position": {
+          "x": 26,
+          "y": 13
+        }
+      },
+      {
+        "name": "BrickJump",
+        "position": {
+          "x": 24,
+          "y": 15
+        }
+      },
+      {
+        "name": "BrickJump",
+        "position": {
+          "x": 14,
+          "y": 9
+        }
+      },
+      {
         "width": 4,
         "name": "BrickNormal",
         "position": {
@@ -18922,6 +19071,20 @@
         "position": {
           "x": 27,
           "y": 23
+        }
+      },
+      {
+        "name": "BrickJump",
+        "position": {
+          "x": 8,
+          "y": 13
+        }
+      },
+      {
+        "name": "BrickJump",
+        "position": {
+          "x": 12,
+          "y": 17
         }
       },
       {
@@ -19105,6 +19268,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 32,
@@ -19285,8 +19449,8 @@
       {
         "levelName": "Perpetual Motion Machine",
         "levels": {
-          "nextLevel": "LEVEL_38",
-          "previousLevel": "LEVEL_36"
+          "nextLevel": "LEVEL_42",
+          "previousLevel": "LEVEL_31"
         },
         "par": 2,
         "name": "LevelSequence",
@@ -19827,6 +19991,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 17,
@@ -20122,6 +20287,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 4,
@@ -20264,6 +20430,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -20989,6 +21156,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 16,
@@ -21236,6 +21404,35 @@
         }
       },
       {
+        "name": "BrickJumpMove",
+        "position": {
+          "x": 19,
+          "y": 20
+        }
+      },
+      {
+        "name": "BrickJumpMove",
+        "position": {
+          "x": 21,
+          "y": 20
+        }
+      },
+      {
+        "name": "BrickJumpMove",
+        "position": {
+          "x": 23,
+          "y": 20
+        }
+      },
+      {
+        "name": "BrickJumpMove",
+        "position": {
+          "x": 25,
+          "y": 20
+        }
+      },
+      {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -21257,8 +21454,8 @@
       {
         "levelName": "Look Before You Leap",
         "levels": {
-          "nextLevel": "LEVEL_43",
-          "previousLevel": "LEVEL_41"
+          "nextLevel": "LEVEL_55",
+          "previousLevel": "LEVEL_37"
         },
         "par": 6,
         "name": "LevelSequence",
@@ -21312,6 +21509,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 33,
@@ -21740,6 +21938,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 3,
@@ -22165,6 +22364,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -23156,6 +23356,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 34,
@@ -23429,6 +23630,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 18,
@@ -23641,6 +23843,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 17,
@@ -24253,6 +24456,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -24380,6 +24584,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 1,
@@ -24620,6 +24825,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -24746,6 +24952,34 @@
         }
       },
       {
+        "name": "BrickJumpMove",
+        "position": {
+          "x": 32,
+          "y": 22
+        }
+      },
+      {
+        "name": "BrickJumpMove",
+        "position": {
+          "x": 29,
+          "y": 22
+        }
+      },
+      {
+        "name": "BrickJumpMove",
+        "position": {
+          "x": 26,
+          "y": 22
+        }
+      },
+      {
+        "name": "BrickJumpMove",
+        "position": {
+          "x": 23,
+          "y": 22
+        }
+      },
+      {
         "width": 8,
         "name": "BrickNormal",
         "position": {
@@ -24853,6 +25087,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 5,
@@ -25201,6 +25436,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -25948,6 +26184,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 2,
@@ -26256,6 +26493,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 1,
@@ -26302,6 +26540,13 @@
         }
       },
       {
+        "name": "BrickJumpMove",
+        "position": {
+          "x": 27,
+          "y": 17
+        }
+      },
+      {
         "width": 6,
         "name": "BrickNormal",
         "position": {
@@ -26340,8 +26585,8 @@
       {
         "levelName": "Junkbot is Brave",
         "levels": {
-          "nextLevel": "LEVEL_56",
-          "previousLevel": "LEVEL_54"
+          "nextLevel": "LEVEL_16",
+          "previousLevel": "LEVEL_42"
         },
         "par": 3,
         "name": "LevelSequence",
@@ -26379,6 +26624,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 12,
@@ -27042,6 +27288,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 3,
@@ -27092,6 +27339,20 @@
         "position": {
           "x": 32,
           "y": 12
+        }
+      },
+      {
+        "name": "BrickJumpMove",
+        "position": {
+          "x": 15,
+          "y": 15
+        }
+      },
+      {
+        "name": "BrickJumpMove",
+        "position": {
+          "x": 21,
+          "y": 7
         }
       },
       {
@@ -27194,6 +27455,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 18,
@@ -27631,6 +27893,7 @@
         }
       },
       {
+        "isForward": false,
         "name": "CharacterBot",
         "position": {
           "x": 34,
@@ -28082,6 +28345,7 @@
         }
       },
       {
+        "isForward": true,
         "name": "CharacterBot",
         "position": {
           "x": 1,

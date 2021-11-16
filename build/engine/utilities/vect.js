@@ -82,5 +82,9 @@ export default class Vect {
   getMagnitudeSquared() {
     return this.x * this.x + this.y * this.y;
   }
+  setToZero() {
+    this.x = 0;
+    this.y = 0;
+  }
 }
 //# sourceMappingURL=vect.js.map

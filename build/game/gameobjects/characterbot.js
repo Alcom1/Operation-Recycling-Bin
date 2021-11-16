@@ -7,9 +7,15 @@ var ArmorState;
   ArmorState2[ArmorState2["ACTIVE"] = 1] = "ACTIVE";
   ArmorState2[ArmorState2["FLASH"] = 2] = "FLASH";
 })(ArmorState || (ArmorState = {}));
+var AirState;
+(function(AirState2) {
+  AirState2[AirState2["NONE"] = 0] = "NONE";
+  AirState2[AirState2["JUMP"] = 1] = "JUMP";
+  AirState2[AirState2["UPWARD"] = 2] = "UPWARD";
+})(AirState || (AirState = {}));
 const characterBotOverride = Object.freeze({
   height: 4,
-  speed: 2.5,
+  speed: 3,
   images: [
     {name: "char_bot_left", offsetX: 36},
     {name: "char_bot_right", offsetX: 14},
@@ -49,7 +55,7 @@ const characterBotOverride = Object.freeze({
     isSliced: true
   }]
 });
-const cbc = Object.freeze({
+const gcb = Object.freeze({
   flor: bitStack([0, 7]),
   down: bitStack([1, 8]),
   ceil: bitStack([2, 9]),
@@ -57,14 +63,25 @@ const cbc = Object.freeze({
   wall: bitStack([4, 5]),
   step: bitStack([6])
 });
+const acb = Object.freeze({
+  flor: bitStack([0, 6]),
+  hed1: bitStack([1]),
+  hed2: bitStack([13]),
+  face: bitStack([8, 9, 10]),
+  chin: bitStack([11]),
+  foot: bitStack([12])
+});
 export default class CharacterBot extends Character {
   constructor(params) {
     super(Object.assign(params, characterBotOverride));
     this.timerSpc = 0;
     this.timerArm = 0;
     this.ceilSubOffset = -6;
-    this.verticalSpeed = 500;
-    this.isFlight = false;
+    this.vertSpeed = 500;
+    this.horzSpeed = 350;
+    this.jumpHeights = [0, 2, 3, 3, 2, 0];
+    this.jumpOrigin = {x: 0, y: 0};
+    this.airState = 0;
     this.armorDelay = 2;
     this.armorFlashRate = 8;
     this.armorState = 0;
@@ -94,7 +111,6 @@ export default class CharacterBot extends Character {
     super.update(dt);
     if (this.armorState == 2) {
       this.timerArm += dt;
-      console.log(1 + this.timerArm * 4 % 2);
       this.animatGroupCurr.forEach((x) => x.setImageIndex(this.animImageIndex));
       if (this.timerArm > this.armorDelay) {
         this.armorState = 0;
@@ -105,9 +121,16 @@ export default class CharacterBot extends Character {
   handleSpecialMovement(dt) {
     this.timerSpc += dt;
     switch (this.animatGroupsIndex) {
+      case 1:
+        this.moveVertical(dt, -1);
+        break;
       case 3:
-        this.moveVertical(dt, this.isFlight ? 1 : -1);
-        this.isFlight = false;
+        if (this.airState == 1) {
+          this.moveJump(dt);
+        } else {
+          this.moveVertical(dt, this.airState == 2 ? 1 : -1);
+          this.airState = 0;
+        }
         break;
       default:
         break;
@@ -127,17 +150,46 @@ export default class CharacterBot extends Character {
       }
     }
   }
-  moveVertical(dt, dir = 1) {
-    this.spos.y -= dir * dt * this.verticalSpeed;
-    if (this.getCollisionVetical(dir)) {
-      if (dir * this.spos.y < -GMULTY + this.ceilSubOffset) {
-        this.gpos.y -= dir;
-        this.spos.y += dir * GMULTY;
-        this.animatGroupCurr.forEach((a) => {
-          a.gpos.y -= dir;
-          a.zModifierPub = dir > 0 && this.getCollisionVetical(dir) ? 200 : 0;
-        });
-      }
+  moveJump(dt) {
+    var index = Math.abs(this.gpos.x - this.jumpOrigin.x);
+    if ((index > 0 || Math.abs(this.spos.x) > GMULTX / 2) && (this.gpos.x - 2 < BOUNDARY.minx || this.gpos.x + 2 > BOUNDARY.maxx)) {
+      this.startVertMovement();
+      return;
+    }
+    const cbm = this.brickHandler.checkCollisionRange(this.gpos.getSub({
+      x: this.move.x > 0 ? 1 : 0,
+      y: this.height + 1
+    }), this.move.x, 5, 19, 6, 3);
+    if (cbm & acb.face && (index > 0 || Math.abs(this.spos.x) > GMULTX / 2)) {
+      this.startVertMovement();
+      return;
+    } else if (cbm & acb.chin && index > 0) {
+      this.startVertMovement();
+      return;
+    } else if (cbm & acb.hed2 && this.jumpHeights[index] < Math.max(...this.jumpHeights) && index > 0) {
+      this.startVertMovement();
+      return;
+    } else if (cbm & acb.foot && index > 2) {
+      this.startVertMovement();
+      return;
+    } else if ((cbm & acb.hed1 || this.gpos.y <= BOUNDARY.miny + 3) && this.jumpHeights[index] < Math.max(...this.jumpHeights)) {
+      this.startVertMovement();
+      return;
+    } else if (cbm & acb.flor && index > 0) {
+      this.endAirMovement();
+      return;
+    }
+    if (index > this.jumpHeights.length - 2) {
+      this.startVertMovement();
+      return;
+    }
+    this.spos.x += this.move.x * this.horzSpeed * dt;
+    this.spos.y = -GMULTY * (this.jumpHeights[index] + this.gpos.y - this.jumpOrigin.y + Math.abs(this.spos.x / GMULTX) * (this.jumpHeights[index + 1] - this.jumpHeights[index]));
+    this.animatGroupCurr.forEach((a) => a.spos = this.spos);
+  }
+  moveVertical(dt, dir) {
+    if (this.getCollisionVertical(dir)) {
+      this.spos.y -= dt * this.vertSpeed * dir;
       this.animatGroupCurr.forEach((a) => a.spos = this.spos);
     } else {
       if (dir > 0) {
@@ -147,45 +199,64 @@ export default class CharacterBot extends Character {
           a.spos.y = this.ceilSubOffset;
         });
       } else {
-        this.timerSpc = 0;
-        this.handleBricks();
-        this.setCurrentGroup(0);
+        this.endAirMovement();
       }
     }
   }
-  getCollisionVetical(dir) {
+  startVertMovement() {
+    this.airState = 2;
+    this.spos.x = 0;
+  }
+  endAirMovement() {
+    this.airState = 0;
+    this.spos.setToZero();
+    this.handleBricks();
+    if (this.animatGroupsIndex == 3) {
+      this.setCurrentGroup(0);
+    }
+  }
+  getCollisionVertical(dir) {
     if (dir > 0 && this.gpos.y <= this.height + 1) {
       return false;
     }
     return !this.brickHandler.checkCollisionRange(this.gpos.getSub({
       x: 1,
       y: dir > 0 ? 1 + this.height : 0
-    }), 0, 2, 1, 1);
+    }), 1, 0, 2, 1);
   }
   handleCollision() {
-    const cbm = this.brickHandler.checkCollisionRange(this.gpos.getSub({
-      x: this.move.x > 0 ? 1 : 0,
-      y: 1 + this.height
-    }), 5, 15, 7, this.move.x);
     if (this.gpos.x - 1 < BOUNDARY.minx || this.gpos.x + 1 > BOUNDARY.maxx) {
       this.reverse();
     } else {
-      if (cbm & cbc.wall) {
+      const cbm = this.brickHandler.checkCollisionRange(this.gpos.getSub({
+        x: this.move.x > 0 ? 1 : 0,
+        y: 1 + this.height
+      }), this.move.x, 5, 15, 7);
+      if (cbm & gcb.wall) {
         this.reverse();
-      } else if (cbm & cbc.head && cbm & cbc.flor) {
+      } else if (cbm & gcb.head && cbm & gcb.flor) {
         this.reverse();
-      } else if (cbm & cbc.step) {
-        if (cbm & cbc.ceil || this.gpos.y <= BOUNDARY.miny + 3) {
+      } else if (cbm & gcb.step) {
+        if (cbm & gcb.ceil || this.gpos.y <= BOUNDARY.miny + 3) {
           this.reverse();
         } else {
           this.gpos.y -= 1;
         }
-      } else if (cbm & cbc.flor) {
-      } else if (cbm & cbc.down) {
+      } else if (cbm & gcb.flor) {
+      } else if (cbm & gcb.down) {
         this.gpos.y += 1;
       } else {
         this.reverse();
       }
+    }
+  }
+  setFlightState(state) {
+    this.airState = state;
+    this.jumpOrigin = this.gpos.get();
+    this.spos.x = 0;
+    if (this.animatGroupsIndex != 3) {
+      this.handleBricks(true);
+      this.setCurrentGroup(3);
     }
   }
   getColliders() {
@@ -198,10 +269,14 @@ export default class CharacterBot extends Character {
       min: this.gpos.getAdd({x: -1, y: 1 - this.height}),
       max: this.gpos.getAdd({x: 1, y: 1})
     }, {
-      mask: 16,
+      mask: 80,
       min: this.gpos.getAdd({x: -1 - Math.min(this.move.x, 0), y: 0}),
       max: this.gpos.getAdd({x: -Math.min(this.move.x, 0), y: 1})
     }];
+  }
+  setCurrentGroup(index) {
+    this.timerSpc = 0;
+    super.setCurrentGroup(index);
   }
   resolveCollision(mask) {
     if (mask & 2) {
@@ -213,15 +288,12 @@ export default class CharacterBot extends Character {
         this.setCurrentGroup(2);
       }
     } else if (mask & 8) {
-      if (this.animatGroupsIndex != 3) {
-        this.handleBricks(true);
-        this.setCurrentGroup(3);
-        this.spos.x = 0;
-      }
-      this.isFlight = true;
+      this.setFlightState(2);
     } else if (mask & 16) {
       this.armorState = 1;
       this.setCurrentGroup(4);
+    } else if (mask & 64) {
+      this.setFlightState(1);
     }
   }
 }

@@ -30,7 +30,7 @@ export default class BrickHandler extends GameObject {
     private counter!: Counter;
 
     /** Rows of bricks */
-    private rows: BrickRow[] = [];
+    protected rows: BrickRow[] = [];
 
     /** All bricks */
     private bricks: Brick[] = [];
@@ -179,14 +179,14 @@ export default class BrickHandler extends GameObject {
     }
 
     /** Check collisons for a vertically-looping range and return a bitmask */
-    public checkCollisionRange(pos: Point, start: number, final: number, height: number, dir: number = 1): number {
+    public checkCollisionRange(pos: Point, dir: number, start: number, final: number, height: number, width: number = 2): number {
 
         let collisions = 0;
 
         for(let i = start; i < final; i++) {
 
-            let y = i % height;                 //Wrap by height
-            let x = Math.floor(i / height) % 2; //Wrap by 2 to go back and check ceiling
+            let y = i % height;                     //Wrap by height
+            let x = Math.floor(i / height) % width; //Wrap by width to go back and check ceiling
 
             for (const brick of this.rows.find(r => r.row == pos.y + y + 1)?.bricks.filter(b => !b.isSelected) || []) {
 

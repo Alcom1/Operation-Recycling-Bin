@@ -1,51 +1,37 @@
 import { Collider } from "engine/modules/collision";
 import { getZIndex } from "engine/utilities/math";
-import BrickPlate, { BrickPlateParams } from "./brickplate";
+import BrickPlateTop, { BrickPlateTopParams } from "./brickplatetop";
 import Sprite, { SpriteParams } from "./sprite";
 
 const brickSuperOverride = Object.freeze({
     images : ["brick_super_off", "brick_super"],
-    width : 2,
+    imageTop : "brick_super_top",
     isOn : true
 });
 
-export default class BrickSuper extends BrickPlate {
+export default class BrickSuper extends BrickPlateTop {
 
-    private topSprite : Sprite;
-
-    constructor(params: BrickPlateParams) {
+    constructor(params: BrickPlateTopParams) {
         super(Object.assign(params, brickSuperOverride));
-
-        var topGPos = this.gpos.getAdd({x : 0, y : -1})
-
-        this.topSprite = this.parent.pushGO(
-            new Sprite({
-                    ...params,
-                    position : topGPos,
-                    zIndex : getZIndex(topGPos, -1),
-                    image : "brick_super_top"
-                } as SpriteParams)) as Sprite
     }
 
     //Get hazard and passive colliders of this brick.
     public getColliders() : Collider[] {
 
-        //Combine with passive collider from base class
-        return super.getColliders().concat(this.isOn ? [{ //Only return super hitbox if this plate is on.
+        //Combine with passive collider from base class, only return jump hitbox if this plate is on and not selected
+        return super.getColliders().concat(this.isOn && !this.isSelected ? [{
             mask : 0b10000,           //Super
             min : this.gpos.getAdd({ x : 0,          y : -1}),
             max : this.gpos.getAdd({ x : this.width, y :  0}) 
         }] : []);
     }
 
-    //Explode
+    //Turn off
     public resolveCollision(mask : number) {
 
         //Turn off
         if (mask & 0b10000) {
-            this.isOn = false;
-            this.image = this.images[+this.isOn];
-            this.topSprite.isActive = false;
+            this.setOnOff(false);
         }
     }
 }

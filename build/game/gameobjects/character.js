@@ -1,5 +1,5 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
-import {GMULTX} from "../../engine/utilities/math.js";
+import {GMULTX, GMULTY} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
 import Animat from "./animation.js";
 export default class Character extends GameObject {
@@ -10,14 +10,14 @@ export default class Character extends GameObject {
     this.animatGroups = [[]];
     this.tags.push("Character");
     this.speed = params.speed ?? 1;
-    this.move = new Vect(1, 0);
+    this.move = new Vect(params.isForward ?? true ? 1 : -1, 0);
     this._height = params.height ?? 2;
     this.checkCollision = true;
     for (let i = -1; i <= 1; i++) {
       this.animatGroupCurr.push(this.parent.pushGO(new Animat({
         ...params,
         isLoop: false,
-        zModifier: i < 1 ? 300 : 29,
+        zModifier: i < 1 ? 301 : 29,
         sliceIndex: i,
         framesSize: GMULTX * 2,
         gposOffset: {x: -1, y: 0}
@@ -43,8 +43,10 @@ export default class Character extends GameObject {
   update(dt) {
     if (this.isNormalMovment) {
       this.handleNormalMovement(dt);
+      this.shift(true);
     } else {
       this.handleSpecialMovement(dt);
+      this.shift(false);
     }
     if (this.checkCollision) {
       this.handleCollision();
@@ -53,14 +55,25 @@ export default class Character extends GameObject {
       this.checkCollision = false;
     }
   }
+  shift(isCollideAfterShift) {
+    var move = {
+      x: Math.abs(this.spos.x) > GMULTX ? Math.sign(this.spos.x) : 0,
+      y: Math.abs(this.spos.y) > GMULTY ? Math.sign(this.spos.y) : 0
+    };
+    if (move.x || move.y) {
+      this.gpos.add(move);
+      this.spos.sub({
+        x: move.x * GMULTX,
+        y: move.y * GMULTY
+      });
+      this.animatGroupCurr.forEach((a) => {
+        a.gpos.add(move);
+      });
+      this.checkCollision = isCollideAfterShift;
+    }
+  }
   handleNormalMovement(dt) {
     this.spos.x += this.move.x * this.speed * GMULTX * dt;
-    if (Math.abs(this.spos.x) > GMULTX) {
-      var dir = Math.sign(this.spos.x);
-      this.spos.x -= GMULTX * dir;
-      this.gpos.x += dir;
-      this.checkCollision = true;
-    }
   }
   handleSpecialMovement(dt) {
   }
@@ -87,7 +100,7 @@ export default class Character extends GameObject {
     this.animatGroupsIndex = index;
     this.animatGroups.forEach((sg, i) => sg.forEach((s) => {
       s.isActive = i == index;
-      s.spos = {x: 0, y: 0};
+      s.spos.setToZero();
       s.reset(this.gpos);
     }));
     this.animatGroupCurr.forEach((x) => x.setImageIndex(this.animImageIndex));

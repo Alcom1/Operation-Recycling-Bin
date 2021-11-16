@@ -1,4 +1,5 @@
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
+import { getZIndex } from "engine/utilities/math";
 
 export interface ZGameObjectParams extends GameObjectParams {
     zIndex: number;
@@ -17,5 +18,9 @@ export default class ZGameObject extends GameObject {
 
     public getGOZIndex() : number {
         return this.zIndex;
+    }
+
+    public setZIndex(modifier : number) {
+        this.zIndex = getZIndex(this.gpos, modifier);
     }
 }

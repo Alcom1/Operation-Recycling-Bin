@@ -84,11 +84,11 @@ export default class BrickHandler extends GameObject {
     }
     return adjacents[-1] != adjacents[1];
   }
-  checkCollisionRange(pos, start, final, height, dir = 1) {
+  checkCollisionRange(pos, dir, start, final, height, width = 2) {
     let collisions = 0;
     for (let i = start; i < final; i++) {
       let y = i % height;
-      let x = Math.floor(i / height) % 2;
+      let x = Math.floor(i / height) % width;
       for (const brick of this.rows.find((r) => r.row == pos.y + y + 1)?.bricks.filter((b) => !b.isSelected) || []) {
         if (col1D(brick.gpos.x - 1, brick.gpos.x + brick.width, pos.x + x * dir, pos.x + x * dir)) {
           collisions += 1 << i - start;

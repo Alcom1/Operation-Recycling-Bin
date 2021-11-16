@@ -10,12 +10,13 @@ export default class Animat extends GameObject {
     this.timer = 0;
     this.imageIndex = 0;
     this.animsIndex = 0;
+    this.sposYFix = 101;
     this.speed = params.speed ?? 1;
     this.isLoop = params.isLoop ?? true;
     this.isVert = params.isVert ?? false;
     this.framesSize = params.framesSize;
     this.gposOffset = params.gposOffset ?? {x: 0, y: 0};
-    this.zModifier = params.zModifier ?? 300;
+    this.zModifier = (params.zModifier ?? 300) + (this.spos.y < 0 ? -this.sposYFix : 0);
     switch (params.images.length) {
       case 0:
         break;
@@ -75,7 +76,7 @@ export default class Animat extends GameObject {
     this.animsIndex = ++this.animsIndex % this.animsCount;
   }
   getGOZIndex() {
-    return getZIndex(this.gpos, this.zModifier + this.zModifierPub);
+    return getZIndex(this.gpos, this.zModifier + this.zModifierPub + (this.spos.y < 0 ? this.sposYFix : 0));
   }
   setImageIndex(index) {
     if (this.images[index]) {

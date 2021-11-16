@@ -42,7 +42,7 @@ export default class BrickPlateFan extends BrickPlate {
   }
   setBeams() {
     this.beams = [1, 2].map((i) => {
-      return this.brickHandler.checkCollisionRange({x: this.gpos.x + i, y: -1}, 0, this.gpos.y - 1, this.gpos.y - 1).toString(2).length;
+      return this.brickHandler.checkCollisionRange({x: this.gpos.x + i, y: -1}, 1, 0, this.gpos.y - 1, this.gpos.y - 1).toString(2).length;
     }).map((b, i) => {
       let ret = b;
       this.characters.forEach((c) => {
