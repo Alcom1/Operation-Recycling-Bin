@@ -81,11 +81,9 @@ const gcb = Object.freeze({
 //Collision bitmasks for bot-brick collisions in air
 const acb = Object.freeze({
     flor : bitStack([0, 6]),
-    hed1 : bitStack([1]),
-    hed2 : bitStack([13]),
+    head : bitStack([1, 7]),
     face : bitStack([8, 9, 10]),
-    chin : bitStack([11]),
-    foot : bitStack([12])
+    shin : bitStack([11])
 });
 
 export default class CharacterBot extends Character {
@@ -236,7 +234,7 @@ export default class CharacterBot extends Character {
             }),             //Position
             this.move.x,    //Direction
             5,              //START  n + 1
-            19,             //FINAL
+            17,             //FINAL
             6,              //HEIGHT n + 2
             3);             //Width
         
@@ -245,23 +243,13 @@ export default class CharacterBot extends Character {
             this.startVertMovement();
             return;
         }
-        //collide chin after the first step
-        else if (cbm & acb.chin && index > 0) {
+        //Collide head if not at the peak of the jump
+        else if(cbm & acb.head && this.jumpHeights[index] < Math.max(...this.jumpHeights)) {
             this.startVertMovement();
             return;
         }
-        //collide head 2 after the first step but not at the peak of the jump
-        else if (cbm & acb.hed2 && this.jumpHeights[index] < Math.max(...this.jumpHeights) && index > 0 ) {
-            this.startVertMovement();
-            return;
-        }
-        //collide knee after some step
-        else if (cbm & acb.foot && index > 2) {
-            this.startVertMovement();
-            return;
-        }
-        //Collide head 1 or ceiling unless we're at the peak of the jump
-        else if ((cbm & acb.hed1 || this.gpos.y <= BOUNDARY.miny + 3) && this.jumpHeights[index] < Math.max(...this.jumpHeights)) {
+        //collide shin after the first step
+        else if (cbm & acb.shin && index > 0) {
             this.startVertMovement();
             return;
         }
