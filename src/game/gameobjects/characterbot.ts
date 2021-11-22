@@ -244,7 +244,7 @@ export default class CharacterBot extends Character {
             return;
         }
         //Collide head if not at the peak of the jump
-        else if(cbm & acb.head && this.jumpHeights[index] < Math.max(...this.jumpHeights)) {
+        else if((cbm & acb.head || this.gpos.y <= BOUNDARY.miny + 3) && this.jumpHeights[index] < Math.max(...this.jumpHeights)) {
             this.startVertMovement();
             return;
         }

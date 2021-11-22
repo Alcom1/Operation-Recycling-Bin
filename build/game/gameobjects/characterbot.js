@@ -161,7 +161,7 @@ export default class CharacterBot extends Character {
     if (cbm & acb.face && (index > 0 || Math.abs(this.spos.x) > GMULTX / 2)) {
       this.startVertMovement();
       return;
-    } else if (cbm & acb.head && this.jumpHeights[index] < Math.max(...this.jumpHeights)) {
+    } else if ((cbm & acb.head || this.gpos.y <= BOUNDARY.miny + 3) && this.jumpHeights[index] < Math.max(...this.jumpHeights)) {
       this.startVertMovement();
       return;
     } else if (cbm & acb.shin && index > 0) {
