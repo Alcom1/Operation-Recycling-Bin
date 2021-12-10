@@ -4,7 +4,7 @@ export default class BrickPlate extends Brick {
     super(params);
     this.isOn = false;
     this.images = params.images.map((i) => i ? this.engine.library.getImage(i) : {});
-    this.isOn = params.isOn;
+    this.isOn = params.isOn ?? true;
     this.image = this.images[+this.isOn];
   }
   setOnOff(state) {

@@ -6,8 +6,7 @@ import BrickPlateTop from "./brickplatetop";
 const brickJumpOverride = Object.freeze({
     images : ["brick_jump_up", "brick_jump"],
     imageTop : "brick_jump_top",
-    isOnTop : false,
-    isOn : true
+    isOnShowTop : false
 });
 
 export default class BrickJump extends BrickPlateTop {

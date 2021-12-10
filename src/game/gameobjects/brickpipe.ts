@@ -3,8 +3,7 @@ import WaterDrop from "./waterdrop";
 
 const brickPipeOverride = Object.freeze({
     images : ["brick_pipe", "brick_pipe"],
-    width : 2,
-    isOn : true
+    width : 2
 });
 
 export default class BrickPipe extends BrickPlate {

@@ -80,7 +80,6 @@
       }
     ]
   },
-
   {
     "scene": {
       "name": "Level",
@@ -10534,8 +10533,8 @@
       {
         "levelName": "Jump Around",
         "levels": {
-          "nextLevel": "LEVEL_25",
-          "previousLevel": "LEVEL_55"
+          "nextLevel": "LEVEL_17",
+          "previousLevel": "LEVEL_15"
         },
         "par": 1,
         "name": "LevelSequence",
@@ -14728,8 +14727,8 @@
       {
         "levelName": "The Think Tank",
         "levels": {
-          "nextLevel": "LEVEL_27",
-          "previousLevel": "LEVEL_16"
+          "nextLevel": "LEVEL_26",
+          "previousLevel": "LEVEL_24"
         },
         "par": 8,
         "name": "LevelSequence",
@@ -15410,8 +15409,8 @@
       {
         "levelName": "The Garage",
         "levels": {
-          "nextLevel": "LEVEL_31",
-          "previousLevel": "LEVEL_25"
+          "nextLevel": "LEVEL_28",
+          "previousLevel": "LEVEL_26"
         },
         "par": 17,
         "name": "LevelSequence",
@@ -16636,8 +16635,8 @@
       {
         "levelName": "Portable Boost",
         "levels": {
-          "nextLevel": "LEVEL_37",
-          "previousLevel": "LEVEL_27"
+          "nextLevel": "LEVEL_32",
+          "previousLevel": "LEVEL_30"
         },
         "par": 5,
         "name": "LevelSequence",
@@ -18665,6 +18664,14 @@
         }
       },
       {
+        "isOn": false,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 9,
+          "y": 18
+        }
+      },
+      {
         "width": 4,
         "name": "BrickNormal",
         "position": {
@@ -18864,6 +18871,14 @@
         "name": "BrickNormal",
         "position": {
           "x": 32,
+          "y": 21
+        }
+      },
+      {
+        "isOn": false,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 33,
           "y": 21
         }
       },
@@ -19449,8 +19464,8 @@
       {
         "levelName": "Perpetual Motion Machine",
         "levels": {
-          "nextLevel": "LEVEL_42",
-          "previousLevel": "LEVEL_31"
+          "nextLevel": "LEVEL_38",
+          "previousLevel": "LEVEL_36"
         },
         "par": 2,
         "name": "LevelSequence",
@@ -20100,6 +20115,14 @@
         }
       },
       {
+        "isOn": false,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 0,
+          "y": 13
+        }
+      },
+      {
         "width": 2,
         "name": "BrickNormal",
         "position": {
@@ -20113,6 +20136,14 @@
         "position": {
           "x": 6,
           "y": 14
+        }
+      },
+      {
+        "isOn": false,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 6,
+          "y": 13
         }
       },
       {
@@ -20132,6 +20163,14 @@
         }
       },
       {
+        "isOn": false,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 12,
+          "y": 13
+        }
+      },
+      {
         "width": 2,
         "name": "BrickNormal",
         "position": {
@@ -20148,6 +20187,14 @@
         }
       },
       {
+        "isOn": false,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 18,
+          "y": 13
+        }
+      },
+      {
         "width": 2,
         "name": "BrickNormal",
         "position": {
@@ -20161,6 +20208,14 @@
         "position": {
           "x": 24,
           "y": 14
+        }
+      },
+      {
+        "isOn": false,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 24,
+          "y": 13
         }
       },
       {
@@ -20185,6 +20240,14 @@
         "position": {
           "x": 30,
           "y": 14
+        }
+      },
+      {
+        "isOn": false,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 30,
+          "y": 13
         }
       },
       {
@@ -20389,6 +20452,14 @@
         }
       },
       {
+        "isOn": false,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 5,
+          "y": 23
+        }
+      },
+      {
         "width": 8,
         "name": "BrickNormal",
         "position": {
@@ -20427,6 +20498,38 @@
         "position": {
           "x": 23,
           "y": 10
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 10,
+          "y": 23
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 15,
+          "y": 23
+        }
+      },
+      {
+        "isOn": false,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 20,
+          "y": 23
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 25,
+          "y": 23
         }
       },
       {
@@ -21454,8 +21557,8 @@
       {
         "levelName": "Look Before You Leap",
         "levels": {
-          "nextLevel": "LEVEL_55",
-          "previousLevel": "LEVEL_37"
+          "nextLevel": "LEVEL_43",
+          "previousLevel": "LEVEL_41"
         },
         "par": 6,
         "name": "LevelSequence",
@@ -21497,6 +21600,14 @@
         "name": "BrickNormal",
         "position": {
           "x": 25,
+          "y": 7
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 29,
           "y": 7
         }
       },
@@ -21632,6 +21743,22 @@
         "position": {
           "x": 18,
           "y": 6
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 21,
+          "y": 21
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 10,
+          "y": 14
         }
       },
       {
@@ -24254,6 +24381,14 @@
       },
       {
         "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 0,
+          "y": 23
+        }
+      },
+      {
+        "isOn": true,
         "name": "BrickPlateHot",
         "position": {
           "x": 5,
@@ -24298,6 +24433,14 @@
         "name": "BrickPlateHot",
         "position": {
           "x": 26,
+          "y": 23
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 33,
           "y": 23
         }
       },
@@ -24837,6 +24980,70 @@
         "position": {
           "x": 2,
           "y": 18
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 4,
+          "y": 12
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 6,
+          "y": 12
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 10,
+          "y": 12
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 14,
+          "y": 12
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 16,
+          "y": 12
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 20,
+          "y": 12
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 24,
+          "y": 12
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 26,
+          "y": 12
         }
       },
       {
@@ -26056,6 +26263,14 @@
         }
       },
       {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 29,
+          "y": 11
+        }
+      },
+      {
         "width": 2,
         "name": "BrickNormal",
         "position": {
@@ -26415,6 +26630,126 @@
         }
       },
       {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 0,
+          "y": 23
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 14,
+          "y": 12
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 6,
+          "y": 12
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 29,
+          "y": 17
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 6,
+          "y": 18
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 2,
+          "y": 18
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 4,
+          "y": 23
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 7,
+          "y": 23
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 11,
+          "y": 23
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 29,
+          "y": 23
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 33,
+          "y": 23
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 10,
+          "y": 12
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 10,
+          "y": 18
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 33,
+          "y": 17
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 33,
+          "y": 11
+        }
+      },
+      {
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
@@ -26585,8 +26920,8 @@
       {
         "levelName": "Junkbot is Brave",
         "levels": {
-          "nextLevel": "LEVEL_16",
-          "previousLevel": "LEVEL_42"
+          "nextLevel": "LEVEL_56",
+          "previousLevel": "LEVEL_54"
         },
         "par": 3,
         "name": "LevelSequence",
@@ -26769,6 +27104,14 @@
         }
       },
       {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 26,
+          "y": 6
+        }
+      },
+      {
         "width": 2,
         "name": "BrickNormal",
         "position": {
@@ -26832,6 +27175,14 @@
         }
       },
       {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 26,
+          "y": 11
+        }
+      },
+      {
         "width": 2,
         "name": "BrickNormal",
         "position": {
@@ -26891,6 +27242,14 @@
         "name": "BrickNormal",
         "position": {
           "x": 24,
+          "y": 16
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 26,
           "y": 16
         }
       },
@@ -27309,6 +27668,14 @@
         "position": {
           "x": 8,
           "y": 10
+        }
+      },
+      {
+        "isOn": true,
+        "name": "BrickPlateButton",
+        "position": {
+          "x": 33,
+          "y": 8
         }
       },
       {

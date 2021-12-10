@@ -2,7 +2,7 @@ import { Collider } from "engine/modules/collision";
 import Brick, { BrickParams } from "./brick";
 
 export interface BrickPlateParams extends BrickParams {
-    isOn: boolean;
+    isOn?: boolean;
     images: string[];
 }
 
@@ -16,7 +16,7 @@ export default class BrickPlate extends Brick {
 
         this.images = params.images.map(i => i ? this.engine.library.getImage(i) : {} as HTMLImageElement);
 
-        this.isOn = params.isOn;
+        this.isOn = params.isOn ?? true;
         this.image = this.images[+this.isOn];
     }
 

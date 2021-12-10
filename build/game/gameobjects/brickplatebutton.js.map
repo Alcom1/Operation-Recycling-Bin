@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["C:\\Users\\Alcom\\Desktop\\Dev\\Git\\Operation Recycling Bin\\src\\game\\gameobjects\\brickplatebutton.ts"],
+  "sourcesContent": ["import BrickPlate, { BrickPlateParams } from \"./brickplate\";\r\n\r\nconst brickButtonOverride = Object.freeze({\r\n    images : [\"brick_button_off\", \"brick_button_on\"],\r\n    width : 2\r\n});\r\n\r\nexport default class BrickPlateButton extends BrickPlate {\r\n\r\n    constructor(params: BrickPlateParams) {\r\n        super(Object.assign(params, brickButtonOverride));\r\n    }\r\n}\r\n"],
+  "mappings": "AAAA;AAEA,MAAM,sBAAsB,OAAO,OAAO;AAAA,EACtC,QAAS,CAAC,oBAAoB;AAAA,EAC9B,OAAQ;AAAA;AAJZ,8CAO8C;AAAA,EAE1C;AACI,UAAM,OAAO,OAAO,QAAQ;AAAA;AAAA;",
+  "names": []
+}
