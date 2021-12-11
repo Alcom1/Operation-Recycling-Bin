@@ -80,6 +80,7 @@
       }
     ]
   },
+
   {
     "scene": {
       "name": "Level",
@@ -3639,6 +3640,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateHot",
         "position": {
           "x": 25,
@@ -3647,6 +3649,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateHot",
         "position": {
           "x": 15,
@@ -3793,6 +3796,7 @@
       },
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateHot",
         "position": {
           "x": 5,
@@ -6278,6 +6282,7 @@
       },
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateFan",
         "position": {
           "x": 6,
@@ -6286,6 +6291,7 @@
       },
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateFan",
         "position": {
           "x": 12,
@@ -6294,6 +6300,7 @@
       },
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateFan",
         "position": {
           "x": 18,
@@ -6302,6 +6309,7 @@
       },
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateFan",
         "position": {
           "x": 24,
@@ -7196,6 +7204,7 @@
       },
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateHot",
         "position": {
           "x": 16,
@@ -10831,6 +10840,7 @@
       },
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateFan",
         "position": {
           "x": 8,
@@ -10847,6 +10857,7 @@
       },
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateFan",
         "position": {
           "x": 23,
@@ -11392,6 +11403,7 @@
       },
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateFan",
         "position": {
           "x": 8,
@@ -11584,6 +11596,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateFan",
         "position": {
           "x": 8,
@@ -12092,6 +12105,7 @@
     "gameObjects": [
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateFan",
         "position": {
           "x": 26,
@@ -12100,6 +12114,7 @@
       },
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateFan",
         "position": {
           "x": 3,
@@ -12185,6 +12200,7 @@
       },
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateFan",
         "position": {
           "x": 15,
@@ -12424,6 +12440,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateHot",
         "position": {
           "x": 8,
@@ -12432,6 +12449,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateHot",
         "position": {
           "x": 12,
@@ -12440,6 +12458,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateHot",
         "position": {
           "x": 23,
@@ -12448,6 +12467,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateHot",
         "position": {
           "x": 19,
@@ -14767,6 +14787,7 @@
       },
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateFan",
         "position": {
           "x": 11,
@@ -16232,6 +16253,7 @@
       },
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateFan",
         "position": {
           "x": 5,
@@ -16240,6 +16262,7 @@
       },
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateFan",
         "position": {
           "x": 13,
@@ -16248,6 +16271,7 @@
       },
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateFan",
         "position": {
           "x": 21,
@@ -16659,6 +16683,7 @@
     "gameObjects": [
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateHot",
         "position": {
           "x": 4,
@@ -16667,6 +16692,7 @@
       },
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateFan",
         "position": {
           "x": 8,
@@ -16675,6 +16701,7 @@
       },
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateHot",
         "position": {
           "x": 12,
@@ -16691,6 +16718,7 @@
       },
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateHot",
         "position": {
           "x": 18,
@@ -16699,6 +16727,7 @@
       },
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateFan",
         "position": {
           "x": 22,
@@ -16707,6 +16736,7 @@
       },
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateHot",
         "position": {
           "x": 26,
@@ -18665,6 +18695,7 @@
       },
       {
         "isOn": false,
+        "circuit": 1,
         "name": "BrickPlateButton",
         "position": {
           "x": 9,
@@ -18726,6 +18757,7 @@
       },
       {
         "isOn": false,
+        "circuit": 1,
         "name": "BrickPlateHot",
         "position": {
           "x": 19,
@@ -18734,6 +18766,7 @@
       },
       {
         "isOn": false,
+        "circuit": 1,
         "name": "BrickPlateHot",
         "position": {
           "x": 23,
@@ -18780,6 +18813,7 @@
     "gameObjects": [
       {
         "isOn": false,
+        "circuit": 1,
         "name": "BrickPlateFan",
         "position": {
           "x": 11,
@@ -18788,6 +18822,7 @@
       },
       {
         "isOn": false,
+        "circuit": 1,
         "name": "BrickPlateFan",
         "position": {
           "x": 15,
@@ -18796,6 +18831,7 @@
       },
       {
         "isOn": false,
+        "circuit": 1,
         "name": "BrickPlateFan",
         "position": {
           "x": 19,
@@ -18876,6 +18912,7 @@
       },
       {
         "isOn": false,
+        "circuit": 1,
         "name": "BrickPlateButton",
         "position": {
           "x": 33,
@@ -20053,6 +20090,7 @@
       },
       {
         "isOn": false,
+        "circuit": 1,
         "name": "BrickPlateFan",
         "position": {
           "x": 0,
@@ -20061,6 +20099,7 @@
       },
       {
         "isOn": false,
+        "circuit": 2,
         "name": "BrickPlateFan",
         "position": {
           "x": 6,
@@ -20069,6 +20108,7 @@
       },
       {
         "isOn": false,
+        "circuit": 3,
         "name": "BrickPlateFan",
         "position": {
           "x": 12,
@@ -20077,6 +20117,7 @@
       },
       {
         "isOn": false,
+        "circuit": 4,
         "name": "BrickPlateFan",
         "position": {
           "x": 18,
@@ -20085,6 +20126,7 @@
       },
       {
         "isOn": false,
+        "circuit": 5,
         "name": "BrickPlateFan",
         "position": {
           "x": 24,
@@ -20093,6 +20135,7 @@
       },
       {
         "isOn": false,
+        "circuit": 6,
         "name": "BrickPlateFan",
         "position": {
           "x": 30,
@@ -20116,6 +20159,7 @@
       },
       {
         "isOn": false,
+        "circuit": 1,
         "name": "BrickPlateButton",
         "position": {
           "x": 0,
@@ -20140,6 +20184,7 @@
       },
       {
         "isOn": false,
+        "circuit": 2,
         "name": "BrickPlateButton",
         "position": {
           "x": 6,
@@ -20164,6 +20209,7 @@
       },
       {
         "isOn": false,
+        "circuit": 3,
         "name": "BrickPlateButton",
         "position": {
           "x": 12,
@@ -20188,6 +20234,7 @@
       },
       {
         "isOn": false,
+        "circuit": 4,
         "name": "BrickPlateButton",
         "position": {
           "x": 18,
@@ -20212,6 +20259,7 @@
       },
       {
         "isOn": false,
+        "circuit": 5,
         "name": "BrickPlateButton",
         "position": {
           "x": 24,
@@ -20244,6 +20292,7 @@
       },
       {
         "isOn": false,
+        "circuit": 6,
         "name": "BrickPlateButton",
         "position": {
           "x": 30,
@@ -20453,6 +20502,7 @@
       },
       {
         "isOn": false,
+        "circuit": 1,
         "name": "BrickPlateButton",
         "position": {
           "x": 5,
@@ -20502,6 +20552,7 @@
       },
       {
         "isOn": true,
+        "circuit": 2,
         "name": "BrickPlateButton",
         "position": {
           "x": 10,
@@ -20510,6 +20561,7 @@
       },
       {
         "isOn": true,
+        "circuit": 3,
         "name": "BrickPlateButton",
         "position": {
           "x": 15,
@@ -20518,6 +20570,7 @@
       },
       {
         "isOn": false,
+        "circuit": 4,
         "name": "BrickPlateButton",
         "position": {
           "x": 20,
@@ -20526,6 +20579,7 @@
       },
       {
         "isOn": true,
+        "circuit": 5,
         "name": "BrickPlateButton",
         "position": {
           "x": 25,
@@ -20628,6 +20682,7 @@
       },
       {
         "isOn": true,
+        "circuit": 2,
         "name": "BrickPlateHot",
         "position": {
           "x": 22,
@@ -20636,6 +20691,7 @@
       },
       {
         "isOn": false,
+        "circuit": 1,
         "name": "BrickPlateHot",
         "position": {
           "x": 18,
@@ -20644,6 +20700,7 @@
       },
       {
         "isOn": false,
+        "circuit": 4,
         "name": "BrickPlateHot",
         "position": {
           "x": 14,
@@ -20652,6 +20709,7 @@
       },
       {
         "isOn": true,
+        "circuit": 5,
         "name": "BrickPlateHot",
         "position": {
           "x": 10,
@@ -20660,6 +20718,7 @@
       },
       {
         "isOn": true,
+        "circuit": 3,
         "name": "BrickPlateHot",
         "position": {
           "x": 6,
@@ -20884,6 +20943,7 @@
       },
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateFan",
         "position": {
           "x": 30,
@@ -21403,6 +21463,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateFan",
         "position": {
           "x": 3,
@@ -21589,6 +21650,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateHot",
         "position": {
           "x": 21,
@@ -21605,6 +21667,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateButton",
         "position": {
           "x": 29,
@@ -21747,6 +21810,7 @@
       },
       {
         "isOn": true,
+        "circuit": 3,
         "name": "BrickPlateButton",
         "position": {
           "x": 21,
@@ -21755,6 +21819,7 @@
       },
       {
         "isOn": true,
+        "circuit": 2,
         "name": "BrickPlateButton",
         "position": {
           "x": 10,
@@ -21763,6 +21828,7 @@
       },
       {
         "isOn": true,
+        "circuit": 3,
         "name": "BrickPlateHot",
         "position": {
           "x": 0,
@@ -21771,6 +21837,7 @@
       },
       {
         "isOn": true,
+        "circuit": 2,
         "name": "BrickPlateHot",
         "position": {
           "x": 16,
@@ -21779,6 +21846,7 @@
       },
       {
         "isOn": true,
+        "circuit": 3,
         "name": "BrickPlateHot",
         "position": {
           "x": 4,
@@ -21787,6 +21855,7 @@
       },
       {
         "isOn": true,
+        "circuit": 3,
         "name": "BrickPlateHot",
         "position": {
           "x": 9,
@@ -21795,6 +21864,7 @@
       },
       {
         "isOn": true,
+        "circuit": 3,
         "name": "BrickPlateHot",
         "position": {
           "x": 13,
@@ -21803,6 +21873,7 @@
       },
       {
         "isOn": true,
+        "circuit": 3,
         "name": "BrickPlateHot",
         "position": {
           "x": 18,
@@ -21811,6 +21882,7 @@
       },
       {
         "isOn": true,
+        "circuit": 3,
         "name": "BrickPlateHot",
         "position": {
           "x": 22,
@@ -21819,6 +21891,7 @@
       },
       {
         "isOn": true,
+        "circuit": 3,
         "name": "BrickPlateHot",
         "position": {
           "x": 27,
@@ -21827,6 +21900,7 @@
       },
       {
         "isOn": true,
+        "circuit": 3,
         "name": "BrickPlateHot",
         "position": {
           "x": 31,
@@ -21835,6 +21909,7 @@
       },
       {
         "isOn": true,
+        "circuit": 4,
         "name": "BrickPlateHot",
         "position": {
           "x": 13,
@@ -22082,6 +22157,7 @@
       },
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateFan",
         "position": {
           "x": 29,
@@ -22178,6 +22254,7 @@
       },
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateFan",
         "position": {
           "x": 5,
@@ -23476,6 +23553,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateFan",
         "position": {
           "x": 26,
@@ -23492,6 +23570,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateFan",
         "position": {
           "x": 5,
@@ -24381,6 +24460,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateButton",
         "position": {
           "x": 0,
@@ -24389,6 +24469,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateHot",
         "position": {
           "x": 5,
@@ -24430,6 +24511,7 @@
       },
       {
         "isOn": true,
+        "circuit": 2,
         "name": "BrickPlateHot",
         "position": {
           "x": 26,
@@ -24438,6 +24520,7 @@
       },
       {
         "isOn": true,
+        "circuit": 2,
         "name": "BrickPlateButton",
         "position": {
           "x": 33,
@@ -24905,6 +24988,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateHot",
         "position": {
           "x": 4,
@@ -24913,6 +24997,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateHot",
         "position": {
           "x": 8,
@@ -24921,6 +25006,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateHot",
         "position": {
           "x": 12,
@@ -24929,6 +25015,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateHot",
         "position": {
           "x": 16,
@@ -24984,6 +25071,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateButton",
         "position": {
           "x": 4,
@@ -24992,6 +25080,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateButton",
         "position": {
           "x": 6,
@@ -25000,6 +25089,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateButton",
         "position": {
           "x": 10,
@@ -25008,6 +25098,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateButton",
         "position": {
           "x": 14,
@@ -25016,6 +25107,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateButton",
         "position": {
           "x": 16,
@@ -25024,6 +25116,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateButton",
         "position": {
           "x": 20,
@@ -25032,6 +25125,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateButton",
         "position": {
           "x": 24,
@@ -25040,6 +25134,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateButton",
         "position": {
           "x": 26,
@@ -25652,6 +25747,7 @@
       },
       {
         "isOn": false,
+        "circuit": 1,
         "name": "BrickPlateHot",
         "position": {
           "x": 0,
@@ -25660,6 +25756,7 @@
       },
       {
         "isOn": false,
+        "circuit": 1,
         "name": "BrickPlateHot",
         "position": {
           "x": 7,
@@ -25668,6 +25765,7 @@
       },
       {
         "isOn": false,
+        "circuit": 1,
         "name": "BrickPlateHot",
         "position": {
           "x": 31,
@@ -25676,6 +25774,7 @@
       },
       {
         "isOn": false,
+        "circuit": 1,
         "name": "BrickPlateHot",
         "position": {
           "x": 24,
@@ -25684,6 +25783,7 @@
       },
       {
         "isOn": false,
+        "circuit": 1,
         "name": "BrickPlateHot",
         "position": {
           "x": 15,
@@ -26264,6 +26364,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateButton",
         "position": {
           "x": 29,
@@ -26607,6 +26708,7 @@
       },
       {
         "isOn": true,
+        "circuit": 2,
         "name": "BrickPlateHot",
         "position": {
           "x": 17,
@@ -26615,6 +26717,7 @@
       },
       {
         "isOn": true,
+        "circuit": 3,
         "name": "BrickPlateHot",
         "position": {
           "x": 21,
@@ -26623,6 +26726,7 @@
       },
       {
         "isOn": true,
+        "circuit": 4,
         "name": "BrickPlateHot",
         "position": {
           "x": 25,
@@ -26631,6 +26735,7 @@
       },
       {
         "isOn": true,
+        "circuit": 4,
         "name": "BrickPlateButton",
         "position": {
           "x": 0,
@@ -26639,6 +26744,7 @@
       },
       {
         "isOn": true,
+        "circuit": 5,
         "name": "BrickPlateButton",
         "position": {
           "x": 14,
@@ -26647,6 +26753,7 @@
       },
       {
         "isOn": true,
+        "circuit": 7,
         "name": "BrickPlateButton",
         "position": {
           "x": 6,
@@ -26655,6 +26762,7 @@
       },
       {
         "isOn": true,
+        "circuit": 8,
         "name": "BrickPlateButton",
         "position": {
           "x": 29,
@@ -26663,6 +26771,7 @@
       },
       {
         "isOn": true,
+        "circuit": 9,
         "name": "BrickPlateButton",
         "position": {
           "x": 6,
@@ -26671,6 +26780,7 @@
       },
       {
         "isOn": true,
+        "circuit": 10,
         "name": "BrickPlateButton",
         "position": {
           "x": 2,
@@ -26679,6 +26789,7 @@
       },
       {
         "isOn": true,
+        "circuit": 11,
         "name": "BrickPlateButton",
         "position": {
           "x": 4,
@@ -26687,6 +26798,7 @@
       },
       {
         "isOn": true,
+        "circuit": 12,
         "name": "BrickPlateButton",
         "position": {
           "x": 7,
@@ -26695,6 +26807,7 @@
       },
       {
         "isOn": true,
+        "circuit": 14,
         "name": "BrickPlateButton",
         "position": {
           "x": 11,
@@ -26703,6 +26816,7 @@
       },
       {
         "isOn": true,
+        "circuit": 15,
         "name": "BrickPlateButton",
         "position": {
           "x": 29,
@@ -26711,6 +26825,7 @@
       },
       {
         "isOn": true,
+        "circuit": 16,
         "name": "BrickPlateButton",
         "position": {
           "x": 33,
@@ -26719,6 +26834,7 @@
       },
       {
         "isOn": true,
+        "circuit": 3,
         "name": "BrickPlateButton",
         "position": {
           "x": 10,
@@ -26727,6 +26843,7 @@
       },
       {
         "isOn": true,
+        "circuit": 6,
         "name": "BrickPlateButton",
         "position": {
           "x": 10,
@@ -26735,6 +26852,7 @@
       },
       {
         "isOn": true,
+        "circuit": 2,
         "name": "BrickPlateButton",
         "position": {
           "x": 33,
@@ -26743,6 +26861,7 @@
       },
       {
         "isOn": true,
+        "circuit": 20,
         "name": "BrickPlateButton",
         "position": {
           "x": 33,
@@ -26852,6 +26971,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateHot",
         "position": {
           "x": 11,
@@ -26860,6 +26980,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateHot",
         "position": {
           "x": 17,
@@ -26868,6 +26989,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateHot",
         "position": {
           "x": 23,
@@ -27010,6 +27132,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateFan",
         "position": {
           "x": 20,
@@ -27018,6 +27141,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateFan",
         "position": {
           "x": 30,
@@ -27065,6 +27189,7 @@
       },
       {
         "isOn": true,
+        "circuit": 2,
         "name": "BrickPlateHot",
         "position": {
           "x": 4,
@@ -27073,6 +27198,7 @@
       },
       {
         "isOn": true,
+        "circuit": 2,
         "name": "BrickPlateHot",
         "position": {
           "x": 8,
@@ -27081,6 +27207,7 @@
       },
       {
         "isOn": true,
+        "circuit": 2,
         "name": "BrickPlateHot",
         "position": {
           "x": 12,
@@ -27105,6 +27232,7 @@
       },
       {
         "isOn": true,
+        "circuit": 4,
         "name": "BrickPlateButton",
         "position": {
           "x": 26,
@@ -27136,6 +27264,7 @@
       },
       {
         "isOn": true,
+        "circuit": 4,
         "name": "BrickPlateHot",
         "position": {
           "x": 4,
@@ -27144,6 +27273,7 @@
       },
       {
         "isOn": true,
+        "circuit": 4,
         "name": "BrickPlateHot",
         "position": {
           "x": 8,
@@ -27152,6 +27282,7 @@
       },
       {
         "isOn": true,
+        "circuit": 4,
         "name": "BrickPlateHot",
         "position": {
           "x": 12,
@@ -27176,6 +27307,7 @@
       },
       {
         "isOn": true,
+        "circuit": 3,
         "name": "BrickPlateButton",
         "position": {
           "x": 26,
@@ -27207,6 +27339,7 @@
       },
       {
         "isOn": true,
+        "circuit": 3,
         "name": "BrickPlateHot",
         "position": {
           "x": 4,
@@ -27215,6 +27348,7 @@
       },
       {
         "isOn": true,
+        "circuit": 3,
         "name": "BrickPlateHot",
         "position": {
           "x": 8,
@@ -27223,6 +27357,7 @@
       },
       {
         "isOn": true,
+        "circuit": 3,
         "name": "BrickPlateHot",
         "position": {
           "x": 12,
@@ -27247,6 +27382,7 @@
       },
       {
         "isOn": true,
+        "circuit": 2,
         "name": "BrickPlateButton",
         "position": {
           "x": 26,
@@ -27356,6 +27492,7 @@
     "gameObjects": [
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateHot",
         "position": {
           "x": 23,
@@ -27364,6 +27501,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateHot",
         "position": {
           "x": 27,
@@ -27672,6 +27810,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateButton",
         "position": {
           "x": 33,
@@ -27783,6 +27922,7 @@
       },
       {
         "isOn": true,
+        "circuit": 1,
         "name": "BrickPlateFan",
         "position": {
           "x": 16,
@@ -28079,6 +28219,7 @@
       },
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateHot",
         "position": {
           "x": 8,
@@ -28110,6 +28251,7 @@
       },
       {
         "isOn": true,
+        "circuit": 0,
         "name": "BrickPlateFan",
         "position": {
           "x": 19,

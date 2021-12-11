@@ -425,7 +425,7 @@ export default class CharacterBot extends Character {
             min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
             max : this.gpos.getAdd({ x :  1, y : 1}) 
         },{ 
-            mask : 0b1010000, //Armor & Jump collides with legs
+            mask : 0b11010000, //Armor & Jump & buttons collides with legs
             min : this.gpos.getAdd({ x : -1 - Math.min(this.move.x, 0), y : 0}),
             max : this.gpos.getAdd({ x :    - Math.min(this.move.x, 0), y : 1}) 
         }];

@@ -41,7 +41,7 @@ export default class BrickPlateTop extends BrickPlate {
         this.topSprite.setZIndex(10);
     }
 
-    protected setOnOff(state : boolean) {
+    public setOnOff(state : boolean) {
         super.setOnOff(state);
         this.topSprite.isActive = state == this.isOnShowTop;
     }

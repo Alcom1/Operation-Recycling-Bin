@@ -261,7 +261,7 @@ export default class CharacterBot extends Character {
       min: this.gpos.getAdd({x: -1, y: 1 - this.height}),
       max: this.gpos.getAdd({x: 1, y: 1})
     }, {
-      mask: 80,
+      mask: 208,
       min: this.gpos.getAdd({x: -1 - Math.min(this.move.x, 0), y: 0}),
       max: this.gpos.getAdd({x: -Math.min(this.move.x, 0), y: 1})
     }];
