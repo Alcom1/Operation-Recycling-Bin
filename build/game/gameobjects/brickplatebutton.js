@@ -7,14 +7,19 @@ export default class BrickPlateButton extends BrickPlate {
   constructor(params) {
     super(Object.assign(params, brickButtonOverride));
     this.plates = [];
-    this.timer = 0;
-    this.waitDuration = 1.5;
+    this.isLock = false;
+    this.isLeft = false;
   }
   init() {
     this.plates = this.engine.tag.get("BrickPlate", "Level").filter((p) => p.circuit == this.circuit);
   }
   update(dt) {
-    this.timer = this.timer > 0 ? this.timer - dt : 0;
+    if (this.isLeft) {
+      this.isLock = false;
+    }
+    if (this.isLock) {
+      this.isLeft = true;
+    }
   }
   getColliders() {
     return super.getColliders().concat([{
@@ -24,10 +29,13 @@ export default class BrickPlateButton extends BrickPlate {
     }]);
   }
   resolveCollision(mask) {
-    if (this.timer <= 0 && mask & 128) {
-      this.setOnOff(!this.isOn);
-      this.plates.forEach((p) => p.setOnOff(this.isOn));
-      this.timer = this.waitDuration;
+    if (mask & 128) {
+      this.isLeft = false;
+      if (!this.isLock) {
+        var temp = !this.isOn;
+        this.plates.forEach((p) => p.setOnOff(temp));
+        this.isLock = true;
+      }
     }
   }
 }

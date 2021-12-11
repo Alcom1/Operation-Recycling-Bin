@@ -9,8 +9,8 @@ const brickButtonOverride = Object.freeze({
 export default class BrickPlateButton extends BrickPlate {
     
     plates: BrickPlate[] = [];
-    private timer : number = 0;
-    private waitDuration : number = 1.5;
+    private isLock : boolean = false;   //If this button is locked and can't be flipped again
+    private isLeft : boolean = false;   //If the presser of this button left and it *can* be flipped again
 
     constructor(params: BrickPlateParams) {
         super(Object.assign(params, brickButtonOverride));
@@ -26,8 +26,16 @@ export default class BrickPlateButton extends BrickPlate {
 
     //Update timer
     public update(dt: number) {
-        
-        this.timer = this.timer > 0 ? this.timer - dt : 0;
+
+        //Unlock the button after the presser leaves
+        if(this.isLeft) {
+            this.isLock = false;
+        }
+
+        //Setup a check for if the presser left while this button is locked
+        if(this.isLock) {
+            this.isLeft = true;
+        }
     }
 
     //Get hazard and passive colliders of this brick.
@@ -45,10 +53,16 @@ export default class BrickPlateButton extends BrickPlate {
     public resolveCollision(mask : number) {
 
         //Turn off
-        if (this.timer <= 0 && mask & 0b10000000) {
-            this.setOnOff(!this.isOn);
-            this.plates.forEach(p => p.setOnOff(this.isOn));
-            this.timer = this.waitDuration;
+        if (mask & 0b10000000) {
+
+            //Left check failed, presser is still here
+            this.isLeft = false;
+
+            if(!this.isLock) {
+                var temp = !this.isOn;                      //Store opposite of this button
+                this.plates.forEach(p => p.setOnOff(temp)); //Set all other plates in this circuit
+                this.isLock = true;                         //Lock the button to prevent repeat presses
+            }
         }
     }
 }
