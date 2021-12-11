@@ -34,12 +34,11 @@ export default class CollisionModule {
         sceneObjects.forEach(go => {
 
             const colliders = go.getColliders();
+            
+            gameObjects.push(go);
 
             if(colliders.some(c => c.mask == 0)) {
                 passObjects.push(go);
-            }
-            if(colliders.some(c => c.mask > 0)) {
-                gameObjects.push(go);
             }
         });
 

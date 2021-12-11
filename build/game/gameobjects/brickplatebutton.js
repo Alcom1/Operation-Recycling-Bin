@@ -12,7 +12,6 @@ export default class BrickPlateButton extends BrickPlate {
   }
   init() {
     this.plates = this.engine.tag.get("BrickPlate", "Level").filter((p) => p.circuit == this.circuit);
-    console.log(this.plates);
   }
   update(dt) {
     this.timer = this.timer > 0 ? this.timer - dt : 0;

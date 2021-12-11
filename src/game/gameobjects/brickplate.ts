@@ -23,8 +23,6 @@ export default class BrickPlate extends Brick {
         this.isOn = params.isOn ?? true;
         this.image = this.images[+this.isOn];
         this.circuit = params.circuit;
-
-        console.log(this.tags);
     }
 
     //Set the on/off state of this plate
