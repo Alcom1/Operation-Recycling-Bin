@@ -83,7 +83,8 @@ const acb = Object.freeze({
     flor : bitStack([0, 6]),
     head : bitStack([1, 7]),
     face : bitStack([8, 9, 10]),
-    shin : bitStack([11])
+    shin : bitStack([11]),
+    foot : bitStack([12])
 });
 
 export default class CharacterBot extends Character {
@@ -234,7 +235,7 @@ export default class CharacterBot extends Character {
             }),             //Position
             this.move.x,    //Direction
             5,              //START  n + 1
-            17,             //FINAL
+            18,             //FINAL
             6,              //HEIGHT n + 2
             3);             //Width
         
@@ -244,12 +245,17 @@ export default class CharacterBot extends Character {
             return;
         }
         //Collide head if not at the peak of the jump
-        else if((cbm & acb.head || this.gpos.y <= BOUNDARY.miny + 3) && this.jumpHeights[index] < Math.max(...this.jumpHeights)) {
+        else if((cbm & acb.head || this.gpos.y <= BOUNDARY.miny + 3) && index < 2) {
             this.startVertMovement();
             return;
         }
         //collide shin after the first step
         else if (cbm & acb.shin && index > 0) {
+            this.startVertMovement();
+            return;
+        }
+        //Collide with foot after the arc starts travelling downwards
+        else if (cbm & acb.foot && index > 2) {
             this.startVertMovement();
             return;
         }
