@@ -13,11 +13,12 @@ export default class Character extends GameObject {
     this.move = new Vect(params.isForward ?? true ? 1 : -1, 0);
     this._height = params.height ?? 2;
     this.checkCollision = true;
+    const mainZIndex = this.height * 100 - 99;
     for (let i = -1; i <= 1; i++) {
       this.animatGroupCurr.push(this.parent.pushGO(new Animat({
         ...params,
         isLoop: false,
-        zModifier: i < 1 ? 301 : 29,
+        zModifier: i < 1 ? mainZIndex : 29,
         sliceIndex: i,
         framesSize: GMULTX * 2,
         gposOffset: {x: -1, y: 0}

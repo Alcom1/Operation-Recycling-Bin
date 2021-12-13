@@ -2,8 +2,8 @@ import { bitStack, BOUNDARY } from "engine/utilities/math";
 import Character, { CharacterParams } from "./character";
 
 const characterRomGOverride = Object.freeze({
-    height: 2,
-    speed : 3.0,
+    height: 3,
+    speed : 6.0,
     images : [        
         { name : "char_romg_left", offsetX : 0 },
         { name : "char_romg_right", offsetX : 0}],
@@ -39,7 +39,7 @@ export default class CharacterRomG extends Character {
             const cbm = this.brickHandler.checkCollisionRange(
                 this.gpos.getSub({
                     x : this.move.x > 0 ? 0 : 1, 
-                    y : this.height
+                    y : this.height - 1
                 }),             //Position
                 this.move.x,    //Direction
                 0,              //START :  n + 1

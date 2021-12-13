@@ -1,8 +1,8 @@
 import {bitStack, BOUNDARY} from "../../engine/utilities/math.js";
 import Character from "./character.js";
 const characterRomGOverride = Object.freeze({
-  height: 2,
-  speed: 3,
+  height: 3,
+  speed: 6,
   images: [
     {name: "char_romg_left", offsetX: 0},
     {name: "char_romg_right", offsetX: 0}
@@ -24,7 +24,7 @@ export default class CharacterRomG extends Character {
     } else {
       const cbm = this.brickHandler.checkCollisionRange(this.gpos.getSub({
         x: this.move.x > 0 ? 0 : 1,
-        y: this.height
+        y: this.height - 1
       }), this.move.x, 0, 3, 3);
       if (cbm & gcb.face) {
         this.reverse();

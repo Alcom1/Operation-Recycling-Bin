@@ -40,17 +40,19 @@ export default class Character extends GameObject {
         this._height = params.height ?? 2;                          //Default height for a character
         this.checkCollision = true;
 
+        const mainZIndex = this.height * 100 - 99;                  //Z-index of main slices in the character sprite
+
         //Spawn 3 animations, the sprite is sliced vertically into 2x wide segments for proper z-indexing
         for(let i = -1; i <= 1; i ++) {
             
             // Add segment to scene and this character
             this.animatGroupCurr.push(this.parent.pushGO(new Animat({
                     ...params, 
-                    isLoop : false,                 //Remove looping to prevent stuttering. Loops are handled manually
-                    zModifier : i < 1 ? 301 : 29,   //Z-modifier for different slices
-                    sliceIndex : i,                 //This animation is sliced
-                    framesSize : GMULTX * 2,        //2x wide slices
-                    gposOffset : { x : -1, y : 0 }  //Move back by 1. Animations are centered around this character
+                    isLoop : false,                                 //Remove looping to prevent stuttering. Loops are handled manually
+                    zModifier : i < 1 ? mainZIndex : 29,            //Z-modifier for different slices
+                    sliceIndex : i,                                 //This animation is sliced
+                    framesSize : GMULTX * 2,                        //2x wide slices
+                    gposOffset : { x : -1, y : 0 }                  //Move back by 1. Animations are centered around this character
                 } as AnimationParams)) as Animat);
         }
     }
