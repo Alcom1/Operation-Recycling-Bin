@@ -22,11 +22,12 @@ import BrickJump from "./gameobjects/brickjump.js";
 import BrickHandlerDebug from "./gameobjects/brickhandlerdebug.js";
 import BrickJumpMove from "./gameobjects/brickjumpmove.js";
 import BrickPlateButton from "./gameobjects/brickplatebutton.js";
+import CharacterRomG from "./gameobjects/characterromg.js";
 window.onload = function() {
   const canvas = document.querySelector("canvas");
   if (!canvas)
     throw new Error("Can't get canvas");
-  new Engine(canvas, "assets/scenes/", "scenes", ["LevelInterface", "LEVEL_40"], [
+  new Engine(canvas, "assets/scenes/", "scenes", ["LevelInterface", "LEVEL_06"], [
     BrickHandler,
     BrickHandlerDebug,
     BrickJump,
@@ -42,6 +43,7 @@ window.onload = function() {
     Character,
     CharacterBot,
     CharacterBin,
+    CharacterRomG,
     Counter,
     Cursor,
     CursorIcon,

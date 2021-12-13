@@ -22,6 +22,7 @@ import BrickJump from "./gameobjects/brickjump";
 import BrickHandlerDebug from "./gameobjects/brickhandlerdebug";
 import BrickJumpMove from "./gameobjects/brickjumpmove";
 import BrickPlateButton from "./gameobjects/brickplatebutton";
+import CharacterRomG from "./gameobjects/characterromg";
 
 //Load
 window.onload = function() {
@@ -32,7 +33,7 @@ window.onload = function() {
         canvas, 
         "assets/scenes/",
         "scenes",
-        ["LevelInterface", "LEVEL_40"],
+        ["LevelInterface", "LEVEL_06"],
         [
             BrickHandler,
             BrickHandlerDebug,
@@ -49,6 +50,7 @@ window.onload = function() {
             Character,
             CharacterBot,
             CharacterBin,
+            CharacterRomG,
             Counter,
             Cursor,
             CursorIcon,
