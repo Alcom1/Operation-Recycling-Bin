@@ -10,7 +10,8 @@ const characterRomGOverride = Object.freeze({
         { name : "char_romg_left", offsetX : 0 },
         { name : "char_romg_right", offsetX : 0}],
     frameCount : 2,
-    animsCount : 1
+    animsCount : 1,
+    isGlide : true
 });
 
 //Collision bitmasks for bot-brick collisions
@@ -42,7 +43,7 @@ export default class CharacterRBG extends Character {
             //Collision bitmask
             const cbm = this.brickHandler.checkCollisionRange(
                 this.gpos.getSub({
-                    x : this.move.x > 0 ? 0 : 1, 
+                    x : this.move.x > 0 ? -1 : 2, 
                     y : this.height
                 }),             //Position
                 this.move.x,    //Direction
@@ -81,7 +82,7 @@ export default class CharacterRBG extends Character {
                 .getAdd(this.spos),
             isSub : true
         },{ 
-            mask : 0,           //Passive
+            mask : 0,   //Passive
             min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
             max : this.gpos.getAdd({ x :  1, y : 1}) 
         }];
@@ -97,7 +98,7 @@ export default class CharacterRBG extends Character {
             var facingDir = Math.sign(this.move.x);                 //Direction of this's movement  
 
             if(targetDir == facingDir) {
-                this.reverse(false);
+                this.reverse();
             }
         }
     }

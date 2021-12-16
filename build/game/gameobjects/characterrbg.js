@@ -8,7 +8,8 @@ const characterRomGOverride = Object.freeze({
     {name: "char_romg_right", offsetX: 0}
   ],
   frameCount: 2,
-  animsCount: 1
+  animsCount: 1,
+  isGlide: true
 });
 const gcb = Object.freeze({
   flor: bitStack([2]),
@@ -23,7 +24,7 @@ export default class CharacterRBG extends Character {
       this.reverse();
     } else {
       const cbm = this.brickHandler.checkCollisionRange(this.gpos.getSub({
-        x: this.move.x > 0 ? 0 : 1,
+        x: this.move.x > 0 ? -1 : 2,
         y: this.height
       }), this.move.x, 0, 3, 3);
       if (cbm & gcb.face) {
@@ -51,7 +52,7 @@ export default class CharacterRBG extends Character {
       var targetDir = Math.sign(other.gpos.x - this.gpos.x);
       var facingDir = Math.sign(this.move.x);
       if (targetDir == facingDir) {
-        this.reverse(false);
+        this.reverse();
       }
     }
   }

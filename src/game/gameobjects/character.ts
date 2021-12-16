@@ -12,17 +12,19 @@ export interface CharacterParams extends GameObjectParams {
     frameCount : number;
     animsCount : number;
     isForward? : boolean;
+    isGlide? : boolean;
 }
 
 export default class Character extends GameObject {
 
-    private speed: number;
+    public get height() { return this._height; }    //Collision height of this character
     protected _height: number;
-    public get height() { return this._height; }
-    protected move: Vect;
-    protected brickHandler!: BrickHandler;
-    private underBricks: Brick[] = [];
-    protected checkCollision: boolean;
+    protected move: Vect;                           //Movement direction of this character
+    protected brickHandler!: BrickHandler;          //Brick handler for brick pressure (bricks under this character)
+    protected checkCollision: boolean;              //If collision needs to be checked
+    private speed: number;                          //Speed of this character
+    private isGlide: boolean;                       //If the character sprite matches the character's subposition
+    private underBricks: Brick[] = [];              //Bricks under pressure, under this character
 
     protected animatGroupsIndex = 0;
     protected animatGroups: Animat[][] = [[]];
@@ -38,7 +40,8 @@ export default class Character extends GameObject {
         this.speed = params.speed ?? 1;                             //Default speed
         this.move = new Vect(params.isForward ?? true ? 1 : -1, 0); //Default move direction
         this._height = params.height ?? 2;                          //Default height for a character
-        this.checkCollision = true;
+        this.isGlide = params.isGlide ?? false;                     //Default glide state
+        this.checkCollision = true;                                 //Force initial collision check
 
         const mainZIndex = this.height * 100;                       //Z-index of main slices in the character sprite
 
@@ -114,6 +117,12 @@ export default class Character extends GameObject {
             this.checkCollision = isCollideAfterShift;
             this.brickHandler.isRecheck = true; //Recheck bricks after every shift
         }
+
+        if(this.isGlide) {
+            this.animatGroupCurr.forEach(a => {
+                a.spos = this.spos;
+            });
+        }
     }
 
     //Move forward and set collection check at each step.
@@ -156,18 +165,18 @@ export default class Character extends GameObject {
     }
 
     //Reverse the direction of this character
-    protected reverse(isOffset : Boolean = true) {
+    protected reverse() {
 
         this.move.x *= -1;                                                          //Reverse direction
         this.animatGroups[0].forEach(x => x.setImageIndex(this.animImageIndex));    //Establish sprites for new direction
         
-        //If we are offsetting this character, move it over in its movement direction
-        if(isOffset) {
-            this.gpos.x += this.move.x;
-        }
-        //Otherwise, force-reset the sprite to match its current position
-        else {
+        //If gliding force-reset the sprite to match its current position
+        if(this.isGlide) {
             this.animatGroupCurr.forEach(a => a.reset(this.gpos));
+        }
+        //Otherwise move the sprite over in its movement direction
+        if(!this.isGlide) {
+            this.gpos.x += this.move.x;
         }
     }
 

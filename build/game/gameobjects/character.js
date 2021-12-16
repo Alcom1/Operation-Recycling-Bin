@@ -12,6 +12,7 @@ export default class Character extends GameObject {
     this.speed = params.speed ?? 1;
     this.move = new Vect(params.isForward ?? true ? 1 : -1, 0);
     this._height = params.height ?? 2;
+    this.isGlide = params.isGlide ?? false;
     this.checkCollision = true;
     const mainZIndex = this.height * 100;
     for (let i = -1; i <= 1; i++) {
@@ -73,6 +74,11 @@ export default class Character extends GameObject {
       this.checkCollision = isCollideAfterShift;
       this.brickHandler.isRecheck = true;
     }
+    if (this.isGlide) {
+      this.animatGroupCurr.forEach((a) => {
+        a.spos = this.spos;
+      });
+    }
   }
   handleNormalMovement(dt) {
     this.spos.x += this.move.x * this.speed * GMULTX * dt;
@@ -90,13 +96,14 @@ export default class Character extends GameObject {
   }
   handleCollision() {
   }
-  reverse(isOffset = true) {
+  reverse() {
     this.move.x *= -1;
     this.animatGroups[0].forEach((x) => x.setImageIndex(this.animImageIndex));
-    if (isOffset) {
-      this.gpos.x += this.move.x;
-    } else {
+    if (this.isGlide) {
       this.animatGroupCurr.forEach((a) => a.reset(this.gpos));
+    }
+    if (!this.isGlide) {
+      this.gpos.x += this.move.x;
     }
   }
   setCurrentGroup(index) {
