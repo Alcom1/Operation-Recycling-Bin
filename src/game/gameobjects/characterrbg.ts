@@ -1,8 +1,10 @@
-import { bitStack, BOUNDARY } from "engine/utilities/math";
+import GameObject from "engine/gameobjects/gameobject";
+import { Collider } from "engine/modules/collision";
+import { bitStack, BOUNDARY, GMULTX, GMULTY } from "engine/utilities/math";
 import Character, { CharacterParams } from "./character";
 
 const characterRomGOverride = Object.freeze({
-    height: 3,
+    height: 2,
     speed : 6.0,
     images : [        
         { name : "char_romg_left", offsetX : 0 },
@@ -17,7 +19,9 @@ const gcb = Object.freeze({
     face : bitStack([0, 1])
 });
 
-export default class CharacterRomG extends Character {
+export default class CharacterRBG extends Character {
+
+    private other! : GameObject;
 
     constructor(params: CharacterParams) {
         super(Object.assign(params, characterRomGOverride));
@@ -39,7 +43,7 @@ export default class CharacterRomG extends Character {
             const cbm = this.brickHandler.checkCollisionRange(
                 this.gpos.getSub({
                     x : this.move.x > 0 ? 0 : 1, 
-                    y : this.height - 1
+                    y : this.height
                 }),             //Position
                 this.move.x,    //Direction
                 0,              //START :  n + 1
@@ -57,6 +61,43 @@ export default class CharacterRomG extends Character {
             //VOID - REVERSE
             else {
                 this.reverse();
+            }
+        }
+    }
+
+    //Get bin colliders
+    public getColliders() : Collider[] {
+
+        return [{ 
+            mask : 0b100000100,
+            min : this.gpos
+                .getAdd({ x : -1, y : 1 - this.height})
+                .getMult(GMULTX, GMULTY)
+                .getAdd(this.spos)
+                .getAdd({x : 18, y : 0}),
+            max : this.gpos
+                .getAdd({ x :  1, y : 1})
+                .getMult(GMULTX, GMULTY)
+                .getAdd(this.spos),
+            isSub : true
+        },{ 
+            mask : 0,           //Passive
+            min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
+            max : this.gpos.getAdd({ x :  1, y : 1}) 
+        }];
+    }
+
+    //Explode
+    public resolveCollision(mask : number, other : GameObject) {
+
+        //Reverse
+        if (mask & 0b100000000){
+
+            var targetDir = Math.sign(other.gpos.x - this.gpos.x)   //Direction of the target
+            var facingDir = Math.sign(this.move.x);                 //Direction of this's movement  
+
+            if(targetDir == facingDir) {
+                this.reverse(false);
             }
         }
     }

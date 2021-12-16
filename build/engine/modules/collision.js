@@ -40,8 +40,13 @@ export default class CollisionModule {
     ctx.strokeStyle = "#F00";
     ctx.lineWidth = 2;
     this.scenes.forEach((s) => s.gameObjects.filter((go) => go.isActive).forEach((go) => go.getColliders().forEach((c) => {
-      ctx.strokeStyle = `hsl(${c.mask.toString(2).length * 48},100%,50%)`;
-      ctx.strokeRect(c.min.x * GMULTX + 1, c.min.y * GMULTY - 1, c.max.x * GMULTX - c.min.x * GMULTX, c.max.y * GMULTY - c.min.y * GMULTY);
+      if (c.isSub) {
+        ctx.strokeStyle = "#000";
+        ctx.strokeRect(c.min.x, c.min.y, c.max.x - c.min.x, c.max.y - c.min.y);
+      } else {
+        ctx.strokeStyle = `hsl(${c.mask.toString(2).length * 48},100%,50%)`;
+        ctx.strokeRect(c.min.x * GMULTX + 1, c.min.y * GMULTY - 1, c.max.x * GMULTX - c.min.x * GMULTX, c.max.y * GMULTY - c.min.y * GMULTY);
+      }
     })));
   }
   collidePassive(min, max) {
@@ -57,12 +62,16 @@ export default class CollisionModule {
   }
   compareGOPair(c1, c2, g1, g2) {
     if (c1.mask & c2.mask && this.compareColliders(c1, c2)) {
-      g1.resolveCollision(c1.mask & c2.mask);
-      g2.resolveCollision(c1.mask & c2.mask);
+      g1.resolveCollision(c1.mask & c2.mask, g2);
+      g2.resolveCollision(c1.mask & c2.mask, g1);
     }
   }
   compareColliders(c1, c2) {
-    return colRectRectCorners(c1.min, c1.max, c2.min, c2.max);
+    if (c1.isSub == c2.isSub) {
+      return colRectRectCorners(c1.min, c1.max, c2.min, c2.max);
+    } else {
+      return colRectRectCorners(c1.isSub ? c1.min.getDiv(GMULTX, GMULTY) : c1.min, c1.isSub ? c1.max.getDiv(GMULTX, GMULTY) : c1.max, c2.isSub ? c2.min.getDiv(GMULTX, GMULTY) : c2.min, c2.isSub ? c2.max.getDiv(GMULTX, GMULTY) : c2.max);
+    }
   }
   clear(sceneNames) {
     this.scenes = this.scenes.filter((sg) => !sceneNames.some((sn) => sg.name == sn));

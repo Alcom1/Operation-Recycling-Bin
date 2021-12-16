@@ -22,7 +22,7 @@ import BrickJump from "./gameobjects/brickjump.js";
 import BrickHandlerDebug from "./gameobjects/brickhandlerdebug.js";
 import BrickJumpMove from "./gameobjects/brickjumpmove.js";
 import BrickPlateButton from "./gameobjects/brickplatebutton.js";
-import CharacterRomG from "./gameobjects/characterromg.js";
+import CharacterRBG from "./gameobjects/characterrbg.js";
 window.onload = function() {
   const canvas = document.querySelector("canvas");
   if (!canvas)
@@ -43,7 +43,7 @@ window.onload = function() {
     Character,
     CharacterBot,
     CharacterBin,
-    CharacterRomG,
+    CharacterRBG,
     Counter,
     Cursor,
     CursorIcon,

@@ -55,22 +55,26 @@ export default class Vect implements Point {
         return new Vect(this.x - vect.x, this.y - vect.y);
     }
 
-    public mult(value: number): void {
+    public mult(value: number, valueY?: number): void {
         this.x *= value;
-        this.y *= value;
+        this.y *= valueY == null ? value : valueY;
     }
 
-    public getMult(value: number): Vect {
-        return new Vect(this.x * value, this.y * value);
+    public getMult(value: number, valueY?: number): Vect {
+        return new Vect(
+            this.x * value, 
+            this.y * (valueY == null ? value : valueY));
     }
 
-    public div(value: number): void {
+    public div(value: number, valueY?: number): void {
         this.x /= value;
-        this.y /= value;
+        this.y /= valueY == null ? value : valueY;
     }
 
-    public getDiv(value: number): Vect {
-        return new Vect(this.x / value, this.y / value);
+    public getDiv(value: number, valueY?: number): Vect {
+        return new Vect(
+            this.x / value, 
+            this.y / (valueY == null ? value : valueY));
     }
 
     public clamp(min: Point, max: Point): void {

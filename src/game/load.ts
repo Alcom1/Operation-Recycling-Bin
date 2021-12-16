@@ -22,7 +22,7 @@ import BrickJump from "./gameobjects/brickjump";
 import BrickHandlerDebug from "./gameobjects/brickhandlerdebug";
 import BrickJumpMove from "./gameobjects/brickjumpmove";
 import BrickPlateButton from "./gameobjects/brickplatebutton";
-import CharacterRomG from "./gameobjects/characterromg";
+import CharacterRBG from "./gameobjects/characterrbg";
 
 //Load
 window.onload = function() {
@@ -50,7 +50,7 @@ window.onload = function() {
             Character,
             CharacterBot,
             CharacterBin,
-            CharacterRomG,
+            CharacterRBG,
             Counter,
             Cursor,
             CursorIcon,

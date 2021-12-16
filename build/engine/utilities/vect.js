@@ -40,19 +40,19 @@ export default class Vect {
   getSub(vect) {
     return new Vect(this.x - vect.x, this.y - vect.y);
   }
-  mult(value) {
+  mult(value, valueY) {
     this.x *= value;
-    this.y *= value;
+    this.y *= valueY == null ? value : valueY;
   }
-  getMult(value) {
-    return new Vect(this.x * value, this.y * value);
+  getMult(value, valueY) {
+    return new Vect(this.x * value, this.y * (valueY == null ? value : valueY));
   }
-  div(value) {
+  div(value, valueY) {
     this.x /= value;
-    this.y /= value;
+    this.y /= valueY == null ? value : valueY;
   }
-  getDiv(value) {
-    return new Vect(this.x / value, this.y / value);
+  getDiv(value, valueY) {
+    return new Vect(this.x / value, this.y / (valueY == null ? value : valueY));
   }
   clamp(min, max) {
     this.x = Math.max(min.x, Math.min(max.x, this.x));

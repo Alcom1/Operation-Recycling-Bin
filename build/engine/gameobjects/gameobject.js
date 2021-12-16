@@ -23,7 +23,7 @@ export default class GameObject {
   getGOZIndex() {
     return getZIndex(this.gpos);
   }
-  resolveCollision(mask) {
+  resolveCollision(mask, other) {
   }
   update(dt) {
   }

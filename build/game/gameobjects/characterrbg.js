@@ -1,0 +1,59 @@
+import {bitStack, BOUNDARY, GMULTX, GMULTY} from "../../engine/utilities/math.js";
+import Character from "./character.js";
+const characterRomGOverride = Object.freeze({
+  height: 2,
+  speed: 6,
+  images: [
+    {name: "char_romg_left", offsetX: 0},
+    {name: "char_romg_right", offsetX: 0}
+  ],
+  frameCount: 2,
+  animsCount: 1
+});
+const gcb = Object.freeze({
+  flor: bitStack([2]),
+  face: bitStack([0, 1])
+});
+export default class CharacterRBG extends Character {
+  constructor(params) {
+    super(Object.assign(params, characterRomGOverride));
+  }
+  handleCollision() {
+    if (this.gpos.x - 1 < BOUNDARY.minx || this.gpos.x + 1 > BOUNDARY.maxx) {
+      this.reverse();
+    } else {
+      const cbm = this.brickHandler.checkCollisionRange(this.gpos.getSub({
+        x: this.move.x > 0 ? 0 : 1,
+        y: this.height
+      }), this.move.x, 0, 3, 3);
+      if (cbm & gcb.face) {
+        this.reverse();
+      } else if (cbm & gcb.flor) {
+      } else {
+        this.reverse();
+      }
+    }
+  }
+  getColliders() {
+    return [{
+      mask: 260,
+      min: this.gpos.getAdd({x: -1, y: 1 - this.height}).getMult(GMULTX, GMULTY).getAdd(this.spos).getAdd({x: 18, y: 0}),
+      max: this.gpos.getAdd({x: 1, y: 1}).getMult(GMULTX, GMULTY).getAdd(this.spos),
+      isSub: true
+    }, {
+      mask: 0,
+      min: this.gpos.getAdd({x: -1, y: 1 - this.height}),
+      max: this.gpos.getAdd({x: 1, y: 1})
+    }];
+  }
+  resolveCollision(mask, other) {
+    if (mask & 256) {
+      var targetDir = Math.sign(other.gpos.x - this.gpos.x);
+      var facingDir = Math.sign(this.move.x);
+      if (targetDir == facingDir) {
+        this.reverse(false);
+      }
+    }
+  }
+}
+//# sourceMappingURL=characterrbg.js.map

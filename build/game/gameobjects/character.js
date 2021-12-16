@@ -13,7 +13,7 @@ export default class Character extends GameObject {
     this.move = new Vect(params.isForward ?? true ? 1 : -1, 0);
     this._height = params.height ?? 2;
     this.checkCollision = true;
-    const mainZIndex = this.height * 100 - 99;
+    const mainZIndex = this.height * 100;
     for (let i = -1; i <= 1; i++) {
       this.animatGroupCurr.push(this.parent.pushGO(new Animat({
         ...params,
@@ -90,10 +90,14 @@ export default class Character extends GameObject {
   }
   handleCollision() {
   }
-  reverse() {
+  reverse(isOffset = true) {
     this.move.x *= -1;
-    this.gpos.x += this.move.x;
     this.animatGroups[0].forEach((x) => x.setImageIndex(this.animImageIndex));
+    if (isOffset) {
+      this.gpos.x += this.move.x;
+    } else {
+      this.animatGroupCurr.forEach((a) => a.reset(this.gpos));
+    }
   }
   setCurrentGroup(index) {
     index = index ?? this.animatGroupsIndex;

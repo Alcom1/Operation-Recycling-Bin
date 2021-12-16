@@ -1,12 +1,13 @@
 import GameObject from "engine/gameobjects/gameobject";
 import Scene from "engine/scene/scene";
 import { colRectRectCorners, GMULTX, GMULTY } from "engine/utilities/math";
-import { Point } from "engine/utilities/vect";
+import Vect, { Point } from "engine/utilities/vect";
 
 export interface Collider {
     mask : number,
     min : Point,
-    max : Point
+    max : Point,
+    isSub? : Boolean
 }
 
 interface GameObjectCollider {
@@ -86,14 +87,25 @@ export default class CollisionModule {
             s.gameObjects.filter(go => go.isActive).forEach(go =>
                 go.getColliders().forEach(c => {
 
-                    //Color box based on most significant bit
-                    ctx.strokeStyle = `hsl(${c.mask.toString(2).length * 48},100%,50%)`
-                    ctx.strokeRect(
-                        c.min.x * GMULTX + 1,
-                        c.min.y * GMULTY - 1,
-                        c.max.x * GMULTX - c.min.x * GMULTX,
-                        c.max.y * GMULTY - c.min.y * GMULTY
-                    )
+                    if(c.isSub) {
+                        ctx.strokeStyle = '#000'
+                        ctx.strokeRect(
+                            c.min.x,
+                            c.min.y,
+                            c.max.x - c.min.x,
+                            c.max.y - c.min.y
+                        )
+                    }
+                    else {
+                        //Color box based on most significant bit
+                        ctx.strokeStyle = `hsl(${c.mask.toString(2).length * 48},100%,50%)`
+                        ctx.strokeRect(
+                            c.min.x * GMULTX + 1,
+                            c.min.y * GMULTY - 1,
+                            c.max.x * GMULTX - c.min.x * GMULTX,
+                            c.max.y * GMULTY - c.min.y * GMULTY
+                        )
+                    }
                 })
             )
         );
@@ -127,14 +139,30 @@ export default class CollisionModule {
     //Check & resolve collision between two colliders
     private compareGOPair(c1 : Collider, c2 : Collider, g1 : GameObject, g2 : GameObject) {
         if((c1.mask & c2.mask) && this.compareColliders(c1, c2)) {
-            g1.resolveCollision(c1.mask & c2.mask);
-            g2.resolveCollision(c1.mask & c2.mask);
+            g1.resolveCollision(c1.mask & c2.mask, g2);
+            g2.resolveCollision(c1.mask & c2.mask, g1);
         }
     }
 
     //Compare two colliders, check if they overlap
     private compareColliders(c1 : Collider, c2 : Collider) : boolean {
-        return colRectRectCorners(c1.min, c1.max, c2.min, c2.max)
+
+        //Collider subtypes match. No need to convert
+        if(c1.isSub == c2.isSub) {
+            return colRectRectCorners(
+                c1.min, 
+                c1.max, 
+                c2.min, 
+                c2.max)
+        }
+        //Divide colliders by grid multipliers if based on subpositions
+        else {
+            return colRectRectCorners(
+                c1.isSub ? (c1.min as Vect).getDiv(GMULTX, GMULTY) : c1.min, 
+                c1.isSub ? (c1.max as Vect).getDiv(GMULTX, GMULTY) : c1.max, 
+                c2.isSub ? (c2.min as Vect).getDiv(GMULTX, GMULTY) : c2.min, 
+                c2.isSub ? (c2.max as Vect).getDiv(GMULTX, GMULTY) : c2.max)
+        }
     }
 
     //Remove scene reference from colliders

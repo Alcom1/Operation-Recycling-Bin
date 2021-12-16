@@ -40,7 +40,7 @@ export default class Character extends GameObject {
         this._height = params.height ?? 2;                          //Default height for a character
         this.checkCollision = true;
 
-        const mainZIndex = this.height * 100 - 99;                  //Z-index of main slices in the character sprite
+        const mainZIndex = this.height * 100;                       //Z-index of main slices in the character sprite
 
         //Spawn 3 animations, the sprite is sliced vertically into 2x wide segments for proper z-indexing
         for(let i = -1; i <= 1; i ++) {
@@ -156,11 +156,19 @@ export default class Character extends GameObject {
     }
 
     //Reverse the direction of this character
-    protected reverse() {
+    protected reverse(isOffset : Boolean = true) {
 
-        this.move.x *= -1;
-        this.gpos.x += this.move.x;
-        this.animatGroups[0].forEach(x => x.setImageIndex(this.animImageIndex));
+        this.move.x *= -1;                                                          //Reverse direction
+        this.animatGroups[0].forEach(x => x.setImageIndex(this.animImageIndex));    //Establish sprites for new direction
+        
+        //If we are offsetting this character, move it over in its movement direction
+        if(isOffset) {
+            this.gpos.x += this.move.x;
+        }
+        //Otherwise, force-reset the sprite to match its current position
+        else {
+            this.animatGroupCurr.forEach(a => a.reset(this.gpos));
+        }
     }
 
     //Set current & active group based on the group index

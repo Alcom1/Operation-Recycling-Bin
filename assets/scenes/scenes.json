@@ -4311,7 +4311,7 @@
       },
       {
         "isForward": false,
-        "name": "CharacterRomG",
+        "name": "CharacterRBG",
         "position": {
           "x": 6,
           "y": 20
@@ -4319,7 +4319,7 @@
       },
       {
         "isForward": false,
-        "name": "CharacterRomG",
+        "name": "CharacterRBG",
         "position": {
           "x": 14,
           "y": 20
@@ -4327,7 +4327,7 @@
       },
       {
         "isForward": false,
-        "name": "CharacterRomG",
+        "name": "CharacterRBG",
         "position": {
           "x": 22,
           "y": 20
@@ -4335,7 +4335,7 @@
       },
       {
         "isForward": false,
-        "name": "CharacterRomG",
+        "name": "CharacterRBG",
         "position": {
           "x": 30,
           "y": 20
@@ -5812,7 +5812,7 @@
       },
       {
         "isForward": false,
-        "name": "CharacterRomG",
+        "name": "CharacterRBG",
         "position": {
           "x": 29,
           "y": 3
@@ -7094,7 +7094,7 @@
       },
       {
         "isForward": false,
-        "name": "CharacterRomG",
+        "name": "CharacterRBG",
         "position": {
           "x": 27,
           "y": 21
@@ -7133,7 +7133,7 @@
       },
       {
         "isForward": false,
-        "name": "CharacterRomG",
+        "name": "CharacterRBG",
         "position": {
           "x": 11,
           "y": 21
@@ -9042,7 +9042,7 @@
       },
       {
         "isForward": false,
-        "name": "CharacterRomG",
+        "name": "CharacterRBG",
         "position": {
           "x": 18,
           "y": 17
@@ -9050,7 +9050,7 @@
       },
       {
         "isForward": false,
-        "name": "CharacterRomG",
+        "name": "CharacterRBG",
         "position": {
           "x": 13,
           "y": 17
@@ -13298,7 +13298,7 @@
       },
       {
         "isForward": false,
-        "name": "CharacterRomG",
+        "name": "CharacterRBG",
         "position": {
           "x": 16,
           "y": 14
@@ -14725,7 +14725,7 @@
       },
       {
         "isForward": false,
-        "name": "CharacterRomG",
+        "name": "CharacterRBG",
         "position": {
           "x": 32,
           "y": 21
@@ -14733,7 +14733,7 @@
       },
       {
         "isForward": false,
-        "name": "CharacterRomG",
+        "name": "CharacterRBG",
         "position": {
           "x": 27,
           "y": 21
@@ -14963,7 +14963,7 @@
       },
       {
         "isForward": false,
-        "name": "CharacterRomG",
+        "name": "CharacterRBG",
         "position": {
           "x": 29,
           "y": 22
@@ -18943,7 +18943,7 @@
       },
       {
         "isForward": false,
-        "name": "CharacterRomG",
+        "name": "CharacterRBG",
         "position": {
           "x": 19,
           "y": 22
@@ -22333,7 +22333,7 @@
       },
       {
         "isForward": false,
-        "name": "CharacterRomG",
+        "name": "CharacterRBG",
         "position": {
           "x": 28,
           "y": 8
@@ -27611,7 +27611,7 @@
     "gameObjects": [
       {
         "isForward": false,
-        "name": "CharacterRomG",
+        "name": "CharacterRBG",
         "position": {
           "x": 12,
           "y": 22
@@ -28395,7 +28395,7 @@
       },
       {
         "isForward": false,
-        "name": "CharacterRomG",
+        "name": "CharacterRBG",
         "position": {
           "x": 15,
           "y": 22

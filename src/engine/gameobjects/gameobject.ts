@@ -78,7 +78,7 @@ export default class GameObject {
     /**
      * Resolve collision for this game object
      */
-    public resolveCollision(mask : number) {
+    public resolveCollision(mask : number, other : GameObject) {
 
     }
 
