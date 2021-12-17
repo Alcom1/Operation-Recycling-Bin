@@ -82,8 +82,8 @@ export default class CharacterRBG extends Character {
             isSub : true
         },{ 
             mask : 0,   //Passive
-            min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
-            max : this.gpos.getAdd({ x :  1, y : 1}) 
+            min : this.gpos.getAdd({ x : -1 - (this.move.x < 0 ? 1 : 0), y : 1 - this.height}),
+            max : this.gpos.getAdd({ x :  1 + (this.move.x < 0 ? 0 : 1), y : 1})
         }];
     }
 

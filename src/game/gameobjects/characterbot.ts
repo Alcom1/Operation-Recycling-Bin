@@ -451,7 +451,7 @@ export default class CharacterBot extends Character {
             this.setCurrentGroup(1);
         }
         //Hazard
-        else if (mask & MASKS.death && this.isNormalMovment) {
+        else if (mask & MASKS.death && this.animatGroupsIndex != 2) {
 
             //Start flashing animation after taking damage
             if(this.armorState == ArmorState.ACTIVE) {

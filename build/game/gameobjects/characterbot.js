@@ -277,7 +277,7 @@ export default class CharacterBot extends Character {
   resolveCollision(mask) {
     if (mask & MASKS.scrap) {
       this.setCurrentGroup(1);
-    } else if (mask & MASKS.death && this.isNormalMovment) {
+    } else if (mask & MASKS.death && this.animatGroupsIndex != 2) {
       if (this.armorState == 1) {
         this.armorState = 2;
       } else if (this.armorState == 0) {
