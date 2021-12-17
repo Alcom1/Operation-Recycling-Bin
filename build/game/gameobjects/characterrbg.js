@@ -2,7 +2,7 @@ import {bitStack, BOUNDARY, GMULTX, GMULTY} from "../../engine/utilities/math.js
 import Character from "./character.js";
 const characterRomGOverride = Object.freeze({
   height: 2,
-  speed: 6,
+  speed: 5,
   images: [
     {name: "char_romg_left", offsetX: 0},
     {name: "char_romg_right", offsetX: 0}

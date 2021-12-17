@@ -14,7 +14,7 @@ export default class Character extends GameObject {
     this._height = params.height ?? 2;
     this.isGlide = params.isGlide ?? false;
     this.checkCollision = true;
-    const mainZIndex = this.height * 100;
+    const mainZIndex = this.height * 100 - (this.isGlide ? 100 : 0);
     for (let i = -1; i <= 1; i++) {
       this.animatGroupCurr.push(this.parent.pushGO(new Animat({
         ...params,

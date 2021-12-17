@@ -5,7 +5,7 @@ import Character, { CharacterParams } from "./character";
 
 const characterRomGOverride = Object.freeze({
     height: 2,
-    speed : 6.0,
+    speed : 5.0,
     images : [        
         { name : "char_romg_left", offsetX : 0 },
         { name : "char_romg_right", offsetX : 0}],

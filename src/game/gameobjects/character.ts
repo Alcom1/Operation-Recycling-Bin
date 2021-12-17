@@ -43,7 +43,9 @@ export default class Character extends GameObject {
         this.isGlide = params.isGlide ?? false;                     //Default glide state
         this.checkCollision = true;                                 //Force initial collision check
 
-        const mainZIndex = this.height * 100;                       //Z-index of main slices in the character sprite
+        const mainZIndex =                                          //Z-index of main slices in the character sprite
+            this.height * 100 - (
+            this.isGlide ? 100 : 0);
 
         //Spawn 3 animations, the sprite is sliced vertically into 2x wide segments for proper z-indexing
         for(let i = -1; i <= 1; i ++) {
