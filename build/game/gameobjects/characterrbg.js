@@ -4,8 +4,8 @@ const characterRomGOverride = Object.freeze({
   height: 2,
   speed: 5,
   images: [
-    {name: "char_romg_left", offsetX: 0},
-    {name: "char_romg_right", offsetX: 0}
+    {name: "char_rbg_left", offsetX: 0},
+    {name: "char_rbg_right", offsetX: 0}
   ],
   frameCount: 2,
   animsCount: 1,
@@ -38,7 +38,7 @@ export default class CharacterRBG extends Character {
   getColliders() {
     return [{
       mask: MASKS.block | MASKS.death | MASKS.enemy,
-      min: this.gpos.getAdd({x: -1, y: 1 - this.height}).getMult(GMULTX, GMULTY).getAdd(this.spos).getAdd({x: 18, y: 0}),
+      min: this.gpos.getAdd({x: -1, y: 1 - this.height}).getMult(GMULTX, GMULTY).getAdd(this.spos),
       max: this.gpos.getAdd({x: 1, y: 1}).getMult(GMULTX, GMULTY).getAdd(this.spos),
       isSub: true
     }, {
