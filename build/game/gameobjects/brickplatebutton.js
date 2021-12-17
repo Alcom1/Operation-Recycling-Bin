@@ -1,3 +1,4 @@
+import {MASKS} from "../../engine/utilities/math.js";
 import BrickPlate from "./brickplate.js";
 const brickButtonOverride = Object.freeze({
   images: ["brick_button_off", "brick_button_on"],
@@ -23,13 +24,13 @@ export default class BrickPlateButton extends BrickPlate {
   }
   getColliders() {
     return super.getColliders().concat([{
-      mask: 128,
+      mask: MASKS.press,
       min: this.gpos.getAdd({x: 0, y: -1}),
       max: this.gpos.getAdd({x: this.width, y: 0})
     }]);
   }
   resolveCollision(mask) {
-    if (mask & 128) {
+    if (mask & MASKS.press) {
       this.isLeft = false;
       if (!this.isLock) {
         var temp = !this.isOn;

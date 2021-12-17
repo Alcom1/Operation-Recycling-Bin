@@ -1,3 +1,4 @@
+import {MASKS} from "../../engine/utilities/math.js";
 import Character from "./character.js";
 const characterBinOverride = Object.freeze({
   height: 3,
@@ -12,7 +13,7 @@ export default class CharacterBin extends Character {
   }
   getColliders() {
     return [{
-      mask: 34,
+      mask: MASKS.block | MASKS.scrap | MASKS.water,
       min: this.gpos.getAdd({x: -1, y: 1 - this.height}),
       max: this.gpos.getAdd({x: 1, y: 1})
     }, {
@@ -22,7 +23,7 @@ export default class CharacterBin extends Character {
     }];
   }
   resolveCollision(mask) {
-    if (mask & 2) {
+    if (mask & MASKS.scrap) {
       this.deactivate();
     }
   }

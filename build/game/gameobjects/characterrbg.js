@@ -1,4 +1,4 @@
-import {bitStack, BOUNDARY, GMULTX, GMULTY} from "../../engine/utilities/math.js";
+import {bitStack, BOUNDARY, GMULTX, GMULTY, MASKS} from "../../engine/utilities/math.js";
 import Character from "./character.js";
 const characterRomGOverride = Object.freeze({
   height: 2,
@@ -37,7 +37,7 @@ export default class CharacterRBG extends Character {
   }
   getColliders() {
     return [{
-      mask: 260,
+      mask: MASKS.block | MASKS.death | MASKS.enemy,
       min: this.gpos.getAdd({x: -1, y: 1 - this.height}).getMult(GMULTX, GMULTY).getAdd(this.spos).getAdd({x: 18, y: 0}),
       max: this.gpos.getAdd({x: 1, y: 1}).getMult(GMULTX, GMULTY).getAdd(this.spos),
       isSub: true
@@ -48,7 +48,7 @@ export default class CharacterRBG extends Character {
     }];
   }
   resolveCollision(mask, other) {
-    if (mask & 256) {
+    if (mask & (MASKS.enemy | MASKS.block)) {
       var targetDir = Math.sign(other.gpos.x - this.gpos.x);
       var facingDir = Math.sign(this.move.x);
       if (targetDir == facingDir) {

@@ -1,4 +1,5 @@
 import { Collider } from "engine/modules/collision";
+import { MASKS } from "engine/utilities/math";
 import BrickPlate, { BrickPlateParams } from "./brickplate";
 
 const brickButtonOverride = Object.freeze({
@@ -43,7 +44,7 @@ export default class BrickPlateButton extends BrickPlate {
 
         //Combine with passive collider from base class
         return super.getColliders().concat([{
-            mask : 0b10000000,  //Button
+            mask : MASKS.press,  //Button
             min : this.gpos.getAdd({ x : 0,          y : -1}),
             max : this.gpos.getAdd({ x : this.width, y :  0}) 
         }]);
@@ -53,7 +54,7 @@ export default class BrickPlateButton extends BrickPlate {
     public resolveCollision(mask : number) {
 
         //Turn off
-        if (mask & 0b10000000) {
+        if (mask & MASKS.press) {
 
             //Left check failed, presser is still here
             this.isLeft = false;

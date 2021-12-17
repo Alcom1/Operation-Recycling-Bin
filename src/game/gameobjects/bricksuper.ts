@@ -1,4 +1,5 @@
 import { Collider } from "engine/modules/collision";
+import { MASKS } from "engine/utilities/math";
 import BrickPlateTop, { BrickPlateTopParams } from "./brickplatetop";
 
 const brickSuperOverride = Object.freeze({
@@ -17,7 +18,7 @@ export default class BrickSuper extends BrickPlateTop {
 
         //Combine with passive collider from base class, only return jump hitbox if this plate is on and not selected
         return super.getColliders().concat(this.isOn && !this.isSelected ? [{
-            mask : 0b10000,           //Super
+            mask : MASKS.super,
             min : this.gpos.getAdd({ x : 0,          y : -1}),
             max : this.gpos.getAdd({ x : this.width, y :  0}) 
         }] : []);
@@ -27,7 +28,7 @@ export default class BrickSuper extends BrickPlateTop {
     public resolveCollision(mask : number) {
 
         //Turn off
-        if (mask & 0b10000) {
+        if (mask & MASKS.super) {
             this.setOnOff(false);
         }
     }

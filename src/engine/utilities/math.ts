@@ -31,6 +31,18 @@ export const BOUNDARY = Object.freeze({
     maxy: 24
 });
 
+export const MASKS = Object.freeze({
+    block: 0b1,
+    scrap: 0b10,
+    death: 0b100,
+    float: 0b1000,
+    super: 0b10000,
+    water: 0b100000,
+    jumps: 0b1000000,
+    press: 0b10000000,
+    enemy: 0b100000000,
+})
+
 /** Handles file extension - image */
 export function pathImg(fileName : string, extension?: string) {
 

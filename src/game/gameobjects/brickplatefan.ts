@@ -1,5 +1,5 @@
 import { Collider } from "engine/modules/collision";
-import { Z_DEPTH } from "engine/utilities/math";
+import { MASKS, Z_DEPTH } from "engine/utilities/math";
 import Animat, { AnimationParams } from "./animation";
 import BrickHandler from "./brickhandler";
 import BrickPlate, { BrickPlateParams } from "./brickplate";
@@ -108,7 +108,7 @@ export default class BrickPlateFan extends BrickPlate {
         return super.getColliders().concat(this.isOn ? 
             this.beams.map((b, i) => {
                 return {
-                    mask : 0b1000,
+                    mask : MASKS.float,
                     min : { x : this.gpos.x + i + 1, y : b },
                     max : this.gpos.getAdd({ x : i + 2, y :  0})
                 }

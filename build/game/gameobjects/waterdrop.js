@@ -1,4 +1,4 @@
-import {BOUNDARY, GMULTY} from "../../engine/utilities/math.js";
+import {BOUNDARY, GMULTY, MASKS} from "../../engine/utilities/math.js";
 import Animat from "./animation.js";
 import Sprite from "./sprite.js";
 const characterBotOverride = Object.freeze({
@@ -75,7 +75,7 @@ export default class WaterDrop extends Sprite {
   }
   getColliders() {
     return [{
-      mask: 36,
+      mask: MASKS.water | MASKS.death,
       min: this.gpos,
       max: this.gpos.getAdd({x: 2, y: 1})
     }];

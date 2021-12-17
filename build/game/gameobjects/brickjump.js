@@ -1,3 +1,4 @@
+import {MASKS} from "../../engine/utilities/math.js";
 import BrickPlateTop from "./brickplatetop.js";
 const brickJumpOverride = Object.freeze({
   images: ["brick_jump_up", "brick_jump"],
@@ -39,13 +40,13 @@ export default class BrickJump extends BrickPlateTop {
   }
   getColliders() {
     return super.getColliders().concat(this.isOn && this.timer2 == 0 && !this.isSelected && !this.isBlocked() ? [{
-      mask: 64,
+      mask: MASKS.jumps,
       min: this.gpos.getAdd({x: 0, y: -1}),
       max: this.gpos.getAdd({x: this.width, y: 0})
     }] : []);
   }
   resolveCollision(mask) {
-    if (mask & 64) {
+    if (mask & MASKS.jumps) {
       this.setOnOff(false);
       this.timer = this.offDuration;
       this.timer2 = this.offDuration2;

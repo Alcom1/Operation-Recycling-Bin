@@ -1,4 +1,4 @@
-import {Z_DEPTH} from "../../engine/utilities/math.js";
+import {MASKS, Z_DEPTH} from "../../engine/utilities/math.js";
 import Animat from "./animation.js";
 import BrickPlate from "./brickplate.js";
 const brickPlateFanOverride = Object.freeze({
@@ -57,7 +57,7 @@ export default class BrickPlateFan extends BrickPlate {
     this.setBeams();
     return super.getColliders().concat(this.isOn ? this.beams.map((b, i) => {
       return {
-        mask: 8,
+        mask: MASKS.float,
         min: {x: this.gpos.x + i + 1, y: b},
         max: this.gpos.getAdd({x: i + 2, y: 0})
       };

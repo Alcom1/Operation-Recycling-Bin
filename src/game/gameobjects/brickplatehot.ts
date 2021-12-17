@@ -1,4 +1,5 @@
 import { Collider } from "engine/modules/collision";
+import { MASKS } from "engine/utilities/math";
 import Animat, { AnimationParams } from "./animation";
 import BrickPlate, { BrickPlateParams } from "./brickplate";
 
@@ -39,7 +40,7 @@ export default class BrickPlateHot extends BrickPlate {
 
         //Combine with passive collider from base class
         return super.getColliders().concat(this.isOn ? [{//Only return hazard hitbox if this plate is on.
-            mask : 0b100,           //Hazard
+            mask : MASKS.death,
             min : this.gpos.getAdd({ x : 1,              y : -1}),
             max : this.gpos.getAdd({ x : this.width - 1, y :  0}) 
         }] : []);

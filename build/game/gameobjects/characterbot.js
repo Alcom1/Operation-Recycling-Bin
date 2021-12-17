@@ -1,5 +1,5 @@
 import Character from "./character.js";
-import {BOUNDARY, bitStack, GMULTY, GMULTX} from "../../engine/utilities/math.js";
+import {BOUNDARY, bitStack, GMULTY, GMULTX, MASKS} from "../../engine/utilities/math.js";
 import Animat from "./animation.js";
 var ArmorState;
 (function(ArmorState2) {
@@ -257,7 +257,7 @@ export default class CharacterBot extends Character {
   }
   getColliders() {
     return [{
-      mask: 15,
+      mask: MASKS.scrap | MASKS.death | MASKS.float,
       min: this.gpos.getAdd({x: -1, y: 1 - this.height}),
       max: this.gpos.getAdd({x: 1, y: 1})
     }, {
@@ -265,7 +265,7 @@ export default class CharacterBot extends Character {
       min: this.gpos.getAdd({x: -1, y: 1 - this.height}),
       max: this.gpos.getAdd({x: 1, y: 1})
     }, {
-      mask: 208,
+      mask: MASKS.super | MASKS.jumps | MASKS.press,
       min: this.gpos.getAdd({x: -1 - Math.min(this.move.x, 0), y: 0}),
       max: this.gpos.getAdd({x: -Math.min(this.move.x, 0), y: 1})
     }];
@@ -275,20 +275,20 @@ export default class CharacterBot extends Character {
     super.setCurrentGroup(index);
   }
   resolveCollision(mask) {
-    if (mask & 2) {
+    if (mask & MASKS.scrap) {
       this.setCurrentGroup(1);
-    } else if (mask & 4 && this.isNormalMovment) {
+    } else if (mask & MASKS.death && this.isNormalMovment) {
       if (this.armorState == 1) {
         this.armorState = 2;
       } else if (this.armorState == 0) {
         this.setCurrentGroup(2);
       }
-    } else if (mask & 8) {
+    } else if (mask & MASKS.float) {
       this.setFlightState(2);
-    } else if (mask & 16) {
+    } else if (mask & MASKS.super) {
       this.armorState = 1;
       this.setCurrentGroup(4);
-    } else if (mask & 64) {
+    } else if (mask & MASKS.jumps) {
       this.setFlightState(1);
     }
   }

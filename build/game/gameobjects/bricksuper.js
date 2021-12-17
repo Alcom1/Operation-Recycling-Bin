@@ -1,3 +1,4 @@
+import {MASKS} from "../../engine/utilities/math.js";
 import BrickPlateTop from "./brickplatetop.js";
 const brickSuperOverride = Object.freeze({
   images: ["brick_super_off", "brick_super"],
@@ -9,13 +10,13 @@ export default class BrickSuper extends BrickPlateTop {
   }
   getColliders() {
     return super.getColliders().concat(this.isOn && !this.isSelected ? [{
-      mask: 16,
+      mask: MASKS.super,
       min: this.gpos.getAdd({x: 0, y: -1}),
       max: this.gpos.getAdd({x: this.width, y: 0})
     }] : []);
   }
   resolveCollision(mask) {
-    if (mask & 16) {
+    if (mask & MASKS.super) {
       this.setOnOff(false);
     }
   }

@@ -1,3 +1,4 @@
+import {MASKS} from "../../engine/utilities/math.js";
 import Animat from "./animation.js";
 import BrickPlate from "./brickplate.js";
 const brickPlateHotOverride = Object.freeze({
@@ -25,7 +26,7 @@ export default class BrickPlateHot extends BrickPlate {
   }
   getColliders() {
     return super.getColliders().concat(this.isOn ? [{
-      mask: 4,
+      mask: MASKS.death,
       min: this.gpos.getAdd({x: 1, y: -1}),
       max: this.gpos.getAdd({x: this.width - 1, y: 0})
     }] : []);

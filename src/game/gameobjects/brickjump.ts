@@ -1,4 +1,5 @@
 import { Collider } from "engine/modules/collision";
+import { MASKS } from "engine/utilities/math";
 import BrickHandler from "./brickhandler";
 import { BrickPlateParams } from "./brickplate";
 import BrickPlateTop from "./brickplatetop";
@@ -72,7 +73,7 @@ export default class BrickJump extends BrickPlateTop {
 
         //Combine with passive collider from base class, only return jump hitbox if this plate is on and not selected
         return super.getColliders().concat(this.isOn && this.timer2 == 0 && !this.isSelected && !this.isBlocked() ? [{
-            mask : 0b1000000,   //Jump
+            mask : MASKS.jumps,
             min : this.gpos.getAdd({ x : 0,          y : -1}),
             max : this.gpos.getAdd({ x : this.width, y :  0}) 
         }] : []);
@@ -82,7 +83,7 @@ export default class BrickJump extends BrickPlateTop {
     public resolveCollision(mask : number) {
 
         //Turn off
-        if (mask & 0b1000000) {
+        if (mask & MASKS.jumps) {
             this.setOnOff(false);
             this.timer = this.offDuration;
             this.timer2 = this.offDuration2;

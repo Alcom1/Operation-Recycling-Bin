@@ -1,6 +1,6 @@
 import GameObject from "engine/gameobjects/gameobject";
 import { Collider } from "engine/modules/collision";
-import { bitStack, BOUNDARY, GMULTX, GMULTY } from "engine/utilities/math";
+import { bitStack, BOUNDARY, GMULTX, GMULTY, MASKS } from "engine/utilities/math";
 import Character, { CharacterParams } from "./character";
 
 const characterRomGOverride = Object.freeze({
@@ -70,7 +70,7 @@ export default class CharacterRBG extends Character {
     public getColliders() : Collider[] {
 
         return [{ 
-            mask : 0b100000100,
+            mask : MASKS.block | MASKS.death | MASKS.enemy,
             min : this.gpos
                 .getAdd({ x : -1, y : 1 - this.height})
                 .getMult(GMULTX, GMULTY)
@@ -92,7 +92,7 @@ export default class CharacterRBG extends Character {
     public resolveCollision(mask : number, other : GameObject) {
 
         //Reverse
-        if (mask & 0b100000000){
+        if (mask & (MASKS.enemy | MASKS.block)){
 
             var targetDir = Math.sign(other.gpos.x - this.gpos.x)   //Direction of the target
             var facingDir = Math.sign(this.move.x);                 //Direction of this's movement  

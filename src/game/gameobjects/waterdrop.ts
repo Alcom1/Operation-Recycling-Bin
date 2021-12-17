@@ -1,6 +1,6 @@
 import { GameObjectParams } from "engine/gameobjects/gameobject";
 import { Collider } from "engine/modules/collision";
-import { BOUNDARY, GMULTY } from "engine/utilities/math";
+import { BOUNDARY, GMULTY, MASKS } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 import Animat, { AnimationParams } from "./animation";
 import BrickHandler from "./brickhandler";
@@ -128,7 +128,7 @@ export default class WaterDrop extends Sprite {
 
         //Return hazard hitbox
         return [{
-            mask : 0b100100,   //Hazard & other
+            mask : MASKS.water | MASKS.death,
             min : this.gpos,
             max : this.gpos.getAdd({ x : 2, y :  1}) 
         }];

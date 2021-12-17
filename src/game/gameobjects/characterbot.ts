@@ -1,5 +1,5 @@
 import Character, { CharacterParams } from "./character";
-import { BOUNDARY, bitStack, GMULTY, GMULTX} from "engine/utilities/math";
+import { BOUNDARY, bitStack, GMULTY, GMULTX, MASKS} from "engine/utilities/math";
 import Animat, { AnimationParams } from "./animation";
 import { Collider } from "engine/modules/collision";
 import { Point } from "engine/utilities/vect";
@@ -423,7 +423,7 @@ export default class CharacterBot extends Character {
     public getColliders() : Collider[] {
         
         return [{ 
-            mask : 0b1111, //All collisions
+            mask : MASKS.scrap | MASKS.death | MASKS.float,
             min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
             max : this.gpos.getAdd({ x :  1, y : 1}) 
         },{ 
@@ -431,7 +431,7 @@ export default class CharacterBot extends Character {
             min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
             max : this.gpos.getAdd({ x :  1, y : 1}) 
         },{ 
-            mask : 0b11010000, //Armor & Jump & buttons collides with legs
+            mask : MASKS.super | MASKS.jumps | MASKS.press,
             min : this.gpos.getAdd({ x : -1 - Math.min(this.move.x, 0), y : 0}),
             max : this.gpos.getAdd({ x :    - Math.min(this.move.x, 0), y : 1}) 
         }];
@@ -447,11 +447,11 @@ export default class CharacterBot extends Character {
     public resolveCollision(mask : number) {
 
         //Eat
-        if (mask & 0b010) {
+        if (mask & MASKS.scrap) {
             this.setCurrentGroup(1);
         }
         //Hazard
-        else if (mask & 0b100 && this.isNormalMovment) {
+        else if (mask & MASKS.death && this.isNormalMovment) {
 
             //Start flashing animation after taking damage
             if(this.armorState == ArmorState.ACTIVE) {
@@ -463,16 +463,16 @@ export default class CharacterBot extends Character {
             }
         }
         //Up
-        else if (mask & 0b1000) {
+        else if (mask & MASKS.float) {
             this.setFlightState(AirState.UPWARD)
         }
         //Armor
-        else if (mask & 0b10000) {
+        else if (mask & MASKS.super) {
             this.armorState = ArmorState.ACTIVE;
             this.setCurrentGroup(4);
         }
-        //Flight
-        else if (mask & 0b1000000) {
+        //Jump
+        else if (mask & MASKS.jumps) {
             this.setFlightState(AirState.JUMP)
         }
     }

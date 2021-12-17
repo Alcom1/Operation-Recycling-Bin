@@ -1,4 +1,5 @@
 import { Collider } from "engine/modules/collision";
+import { MASKS } from "engine/utilities/math";
 import Character, { CharacterParams } from "./character";
 
 const characterBinOverride = Object.freeze({
@@ -19,7 +20,7 @@ export default class CharacterBin extends Character {
     public getColliders() : Collider[] {
         
         return [{ 
-            mask : 0b100010,    //Bot-Bin & Water
+            mask : MASKS.block | MASKS.scrap | MASKS.water,
             min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
             max : this.gpos.getAdd({ x :  1, y : 1}) 
         },{ 
@@ -32,7 +33,7 @@ export default class CharacterBin extends Character {
     //Collect
     public resolveCollision(mask : number) {
     
-        if (mask & 0b010) {
+        if (mask & MASKS.scrap) {
             this.deactivate();
         }
     }
