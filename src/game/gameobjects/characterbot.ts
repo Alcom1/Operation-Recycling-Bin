@@ -4,14 +4,6 @@ import Animat, { AnimationParams } from "./animation";
 import { Collider } from "engine/modules/collision";
 import { Point } from "engine/utilities/vect";
 
-interface CharacterBotParams extends CharacterParams {
-    animsMisc : AnimationInputParams[];
-}
-
-interface AnimationInputParams extends AnimationParams {
-    isSliced? : boolean;
-}
-
 enum ArmorState {
     NONE,
     ACTIVE,
@@ -108,33 +100,8 @@ export default class CharacterBot extends Character {
             1)
     }
 
-    constructor(params: CharacterBotParams) {
+    constructor(params: CharacterParams) {
         super(Object.assign(params, characterBotOverride));
-
-        //Setup miscellaneous animations.
-        params.animsMisc.forEach(m => {
-
-            //Build a new animation, store it here and in the scene
-            var newIndex = this.animatGroups.push([]) - 1;
-
-            //3 slices if sliced, 1 otherwise
-            for(let i = -1; i <= (m.isSliced ? 1 : -1); i ++) {
-
-                this.animatGroups[newIndex].push(new Animat({
-                    ...params,
-                    speed :      m.speed,
-                    images :     m.images,
-                    sliceIndex : m.isSliced ? i : null,
-                    framesSize : m.isSliced ? GMULTX * 2 : m.framesSize,
-                    gposOffset : m.gposOffset,
-                    zModifier :  m.isSliced ? (i < 1 ? 300 : 29) : m.zModifier,
-                    frameCount : m.frameCount,
-                    animsCount : m.animsCount,
-                    isLoop :     m.isLoop
-                } as AnimationParams));
-            }
-            this.animatGroups[newIndex].forEach(a => this.parent.pushGO(a));
-        });
     }
 
     //Unique bot update

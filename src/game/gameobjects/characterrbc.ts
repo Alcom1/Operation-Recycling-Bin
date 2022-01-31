@@ -4,27 +4,45 @@ import { bitStack, BOUNDARY, GMULTX, GMULTY, MASKS } from "engine/utilities/math
 import { CharacterParams } from "./character";
 import CharacterRB from "./characterrb";
 
-const characterRBGOverride = Object.freeze({
+const characterRBCOverride = Object.freeze({
     height: 2,
-    speed : 5.0,
+    speed : 2.0,
     images : [        
         { name : "char_rbg_left", offsetX : 0 },
         { name : "char_rbg_right", offsetX : 0}],
     frameCount : 2,
     animsCount : 1,
-    isGlide : true
+    isGlide : true,
+    
+    //Misc animation parameters
+    animsMisc : [{
+        images : [{ name : "char_rbg_left" }],
+        frameCount : 2,
+        gposOffset : { x : -1, y : 0},
+        isSliced : true
+    },{
+        images : [{ name : "char_rbg_right" }],
+        frameCount : 2,
+        gposOffset : { x : -1, y : 0},
+        isSliced : true
+    }]
 });
 
 //Collision bitmasks for bot-brick collisions
 const gcb = Object.freeze({
-    flor : bitStack([2]),
-    face : bitStack([0, 1])
+    flor : bitStack([2, 5]),
+    face : bitStack([3, 4])
 });
 
-export default class CharacterRBG extends CharacterRB {
+export default class CharacterRBC extends CharacterRB {
 
     constructor(params: CharacterParams) {
-        super(Object.assign(params, characterRBGOverride));
+        super(Object.assign(params, characterRBCOverride));
+    }
+
+    public update(dt: number) {
+        super.update(dt);
+        console.log(this.gpos.x, this.spos.x);
     }
 
     //Check and resolve brick collisions
@@ -42,21 +60,20 @@ export default class CharacterRBG extends CharacterRB {
             //Collision bitmask
             const cbm = this.brickHandler.checkCollisionRange(
                 this.gpos.getSub({
-                    x : this.move.x > 0 ? -1 : 2, 
+                    x : this.move.x > 0 ? 0 : 1, 
                     y : this.height
                 }),             //Position
                 this.move.x,    //Direction
                 0,              //START :  n + 1
-                3,              //FINAL : (n + 3) * 2 + 1
+                6,              //FINAL : (n + 3) * 2 + 1
                 3);             //HEIGHT:  n + 3
-
+            
             //
             if(cbm & gcb.face) {
-                this.reverse();
+                this.setCurrentGroup(1);
             }
-            //
             else if(!(cbm & gcb.flor)) {
-                this.reverse();
+                this.setCurrentGroup(2);
             }
         }
     }

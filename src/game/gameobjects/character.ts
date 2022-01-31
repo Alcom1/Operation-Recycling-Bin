@@ -13,6 +13,11 @@ export interface CharacterParams extends GameObjectParams {
     animsCount : number;
     isForward? : boolean;
     isGlide? : boolean;
+    animsMisc : AnimationInputParams[];
+}
+
+interface AnimationInputParams extends AnimationParams {
+    isSliced? : boolean;
 }
 
 export default class Character extends GameObject {
@@ -60,6 +65,31 @@ export default class Character extends GameObject {
                     gposOffset : { x : -1, y : 0 }                  //Move back by 1. Animations are centered around this character
                 } as AnimationParams)) as Animat);
         }
+
+        //Setup miscellaneous animations.
+        params.animsMisc?.forEach(m => {
+
+            //Build a new animation, store it here and in the scene
+            var newIndex = this.animatGroups.push([]) - 1;
+
+            //3 slices if sliced, 1 otherwise
+            for(let i = -1; i <= (m.isSliced ? 1 : -1); i ++) {
+
+                this.animatGroups[newIndex].push(new Animat({
+                    ...params,
+                    speed :      m.speed,
+                    images :     m.images,
+                    sliceIndex : m.isSliced ? i : null,
+                    framesSize : m.isSliced ? GMULTX * 2 : m.framesSize,
+                    gposOffset : m.gposOffset,
+                    zModifier :  m.isSliced ? (i < 1 ? 300 : 29) : m.zModifier,
+                    frameCount : m.frameCount,
+                    animsCount : m.animsCount,
+                    isLoop :     m.isLoop
+                } as AnimationParams));
+            }
+            this.animatGroups[newIndex].forEach(a => this.parent.pushGO(a));
+        });
     }
 
     public init() {
