@@ -45,6 +45,10 @@ export default class CharacterRBC extends CharacterRB {
         console.log(this.gpos.x, this.spos.x);
     }
 
+    public handleSpecialMovement(dt : number) {
+        
+    }
+
     //Check and resolve brick collisions
     protected handleCollision() {
     
@@ -60,13 +64,14 @@ export default class CharacterRBC extends CharacterRB {
             //Collision bitmask
             const cbm = this.brickHandler.checkCollisionRange(
                 this.gpos.getSub({
-                    x : this.move.x > 0 ? 0 : 1, 
+                    x : this.move.x > 0 ? 1 : 0, 
                     y : this.height
                 }),             //Position
                 this.move.x,    //Direction
                 0,              //START :  n + 1
-                6,              //FINAL : (n + 3) * 2 + 1
-                3);             //HEIGHT:  n + 3
+                9,              //FINAL : (n + 3) * 2 + 1
+                3,              //HEIGHT:  n + 3
+                3);             
             
             //
             if(cbm & gcb.face) {
