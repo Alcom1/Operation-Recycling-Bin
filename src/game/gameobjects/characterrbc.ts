@@ -75,10 +75,10 @@ export default class CharacterRBC extends CharacterRB {
             
             //
             if(cbm & gcb.face) {
-                this.setCurrentGroup(1);
+                this.setStateIndex(1);
             }
             else if(!(cbm & gcb.flor)) {
-                this.setCurrentGroup(2);
+                this.setStateIndex(2);
             }
         }
     }

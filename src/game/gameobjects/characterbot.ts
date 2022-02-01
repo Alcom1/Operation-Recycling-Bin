@@ -1,6 +1,5 @@
 import Character, { CharacterParams } from "./character";
 import { BOUNDARY, bitStack, GMULTY, GMULTX, MASKS} from "engine/utilities/math";
-import Animat, { AnimationParams } from "./animation";
 import { Collider } from "engine/modules/collision";
 import { Point } from "engine/utilities/vect";
 
@@ -28,6 +27,7 @@ const characterBotOverride = Object.freeze({
         { name : "char_bot_right_armor", offsetX : 14}],
     frameCount : 10,
     animsCount : 2,
+    stateAnimations : [1, 2, 2],
 
     //Misc animation parameters
     animsMisc : [{ //Bot-bin interaction animation
@@ -111,7 +111,7 @@ export default class CharacterBot extends Character {
         //Update armor flash
         if(this.armorState == ArmorState.FLASH) {
             this.timerArm += dt;
-            this.animatGroupCurr.forEach(x => x.setImageIndex(this.animImageIndex));
+            this.animationsCurr.forEach(x => x.setImageIndex(this.animImageIndex));
 
             //Remove armor after a duration and reset timer
             if(this.timerArm > this.armorDelay) {
@@ -127,7 +127,7 @@ export default class CharacterBot extends Character {
         this.timerSpc += dt;   //Update special timer
 
         //Perform special movement
-        switch(this.animatGroupsIndex) {
+        switch(this.stateIndex) {
 
             case 1 :
 
@@ -155,12 +155,12 @@ export default class CharacterBot extends Character {
         }
 
         //If the current animation has ended
-        if(this.timerSpc > this.animatGroupCurr[0].duration) {
+        if(this.timerSpc > this.animationsCurr[0].duration) {
 
             //Reset timer
             this.timerSpc = 0;
 
-            switch(this.animatGroupsIndex) {
+            switch(this.stateIndex) {
 
                 //Deactivate this character
                 case 2 :
@@ -169,12 +169,12 @@ export default class CharacterBot extends Character {
 
                 //Reset up/down animation
                 case 3 :
-                    this.animatGroupCurr.forEach(a => a.reset());
+                    this.animationsCurr.forEach(a => a.reset());
                     break;
                 
                 //End animation
                 default :
-                    this.setCurrentGroup(0);
+                    this.setStateIndex(0);
                     break;
             }
         }
@@ -246,7 +246,7 @@ export default class CharacterBot extends Character {
             this.jumpOrigin.y +
             Math.abs(this.spos.x / GMULTX) * (this.jumpHeights[index + 1] - this.jumpHeights[index]));
 
-        this.animatGroupCurr.forEach(a => a.spos = this.spos);  //Update animations to match current position
+        this.animationsCurr.forEach(a => a.spos = this.spos);  //Update animations to match current position
     }
 
     //Vertical motion
@@ -256,7 +256,7 @@ export default class CharacterBot extends Character {
         if (this.getCollisionVertical(dir)) {
 
             this.spos.y -= dt * this.vertSpeed * dir;   //Move subposition vertically based on speed
-            this.animatGroupCurr.forEach(a => a.spos = this.spos);
+            this.animationsCurr.forEach(a => a.spos = this.spos);
         }
         //There is an obstacle, stop based on its direction
         else {
@@ -264,7 +264,7 @@ export default class CharacterBot extends Character {
             //If going upwards, collide with ceiling
             if(dir > 0) {
                 this.spos.y = this.ceilSubOffset;
-                this.animatGroupCurr.forEach(a => {
+                this.animationsCurr.forEach(a => {
                     a.zModifierPub = 0;
                     a.spos.y = this.ceilSubOffset;
                 });
@@ -290,8 +290,8 @@ export default class CharacterBot extends Character {
         this.handleBricks();
 
         //Go from air state to walking state.
-        if (this.animatGroupsIndex == 3) {
-            this.setCurrentGroup(0);
+        if (this.stateIndex == 3) {
+            this.setStateIndex(0);
         }
     }
 
@@ -380,9 +380,9 @@ export default class CharacterBot extends Character {
         this.jumpOrigin = this.gpos.get();
         this.spos.x = 0;                //Force grid alignment
 
-        if(this.animatGroupsIndex != 3) {
+        if(this.stateIndex != 3) {
             this.handleBricks(true);    //Bricks should not be pressured by a floating character
-            this.setCurrentGroup(3);    //Play floating animation
+            this.setStateIndex(3);    //Play floating animation
         }
     }
 
@@ -405,9 +405,9 @@ export default class CharacterBot extends Character {
     }
 
     //Also reset timer when setting the current group
-    public setCurrentGroup(index? : number) {
+    public setStateIndex(index? : number) {
         this.timerSpc = 0;  //Timer reset incase we cancelled a previous animation
-        super.setCurrentGroup(index);
+        super.setStateIndex(index);
     }
 
     //Explode
@@ -415,10 +415,10 @@ export default class CharacterBot extends Character {
 
         //Eat
         if (mask & MASKS.scrap) {
-            this.setCurrentGroup(1);
+            this.setStateIndex(1);
         }
         //Hazard
-        else if (mask & MASKS.death && this.animatGroupsIndex != 2) {
+        else if (mask & MASKS.death && this.stateIndex != 2) {
 
             //Start flashing animation after taking damage
             if(this.armorState == ArmorState.ACTIVE) {
@@ -426,7 +426,7 @@ export default class CharacterBot extends Character {
             }
             //If unarmored, die.
             else if(this.armorState == ArmorState.NONE) {
-                this.setCurrentGroup(2);
+                this.setStateIndex(2);
             }
         }
         //Up
@@ -436,7 +436,7 @@ export default class CharacterBot extends Character {
         //Armor
         else if (mask & MASKS.super) {
             this.armorState = ArmorState.ACTIVE;
-            this.setCurrentGroup(4);
+            this.setStateIndex(4);
         }
         //Jump
         else if (mask & MASKS.jumps) {
