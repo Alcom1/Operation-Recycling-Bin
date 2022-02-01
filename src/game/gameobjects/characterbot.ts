@@ -9,12 +9,6 @@ enum ArmorState {
     FLASH
 }
 
-enum AirState {
-    NONE,
-    JUMP,
-    UPWARD
-}
-
 //Bot parameters
 const characterBotOverride = Object.freeze({
     //Main parameters
@@ -27,7 +21,7 @@ const characterBotOverride = Object.freeze({
         { name : "char_bot_right_armor", offsetX : 14}],
     frameCount : 10,
     animsCount : 2,
-    stateAnimations : [1, 2, 2],
+    stateAnimations : [1, 2, 3, 3, 4],
 
     //Misc animation parameters
     animsMisc : [{ //Bot-bin interaction animation
@@ -88,7 +82,6 @@ export default class CharacterBot extends Character {
     private horzSpeed : number = 350;                       //Horizontal air speed
     private jumpHeights : number[] = [0, 2, 3, 3, 2, 0];    //Individual heights throughout a jump
     private jumpOrigin : Point = { x : 0, y : 0 }           //Origin of the previous jump
-    private airState : AirState = AirState.NONE;            //If currently flying
     private armorDelay : number = 2;                        //Delay where armor remains after taking damage
     private armorFlashRate : number = 8;                    //Rate of the armor flashing effect
     private armorState : ArmorState = ArmorState.NONE;      //Current state of the armor
@@ -129,25 +122,16 @@ export default class CharacterBot extends Character {
         //Perform special movement
         switch(this.stateIndex) {
 
-            case 1 :
-
-                this.moveVertical(dt, -1);
-                break;
-
-            //Vertical movement.
+            //Vertical
             case 3 : 
-                
-                //Bot is jumping
-                if (this.airState == AirState.JUMP) {
-                    this.moveJump(dt);
-                }
-                //Bot is moving vertically
-                else {
-
-                    this.moveVertical(dt, this.airState == AirState.UPWARD ?  1 : -1);
-                    this.airState = AirState.NONE;  //Unset for next collision check, UPWARD requires constant collision
-                }
+                this.moveVertical(dt, 1);
                 break;
+
+            //Jump
+            case 4 :
+                this.moveJump(dt);
+                break;
+
             
             //Default is do nothing
             default :
@@ -251,6 +235,7 @@ export default class CharacterBot extends Character {
 
     //Vertical motion
     private moveVertical(dt: number, dir: number) {
+
         
         //If the direction has no obstacles
         if (this.getCollisionVertical(dir)) {
@@ -278,21 +263,18 @@ export default class CharacterBot extends Character {
 
     //Quickly shift fight to 
     private startVertMovement() {
-        this.airState = AirState.UPWARD;
+        this.setStateIndex(3);
         this.spos.x = 0;
     }
 
     //End vertical or jump movement
     private endAirMovement() {
 
-        this.airState = AirState.NONE;
         this.spos.setToZero();
         this.handleBricks();
 
         //Go from air state to walking state.
-        if (this.stateIndex == 3) {
-            this.setStateIndex(0);
-        }
+        this.setStateIndex(0);
     }
 
     //Return true if the given vertical direction is free of bricks
@@ -373,19 +355,6 @@ export default class CharacterBot extends Character {
         }
     }
 
-    //Set bot to a flight state
-    private setFlightState(state : AirState) {
-
-        this.airState = state;
-        this.jumpOrigin = this.gpos.get();
-        this.spos.x = 0;                //Force grid alignment
-
-        if(this.stateIndex != 3) {
-            this.handleBricks(true);    //Bricks should not be pressured by a floating character
-            this.setStateIndex(3);    //Play floating animation
-        }
-    }
-
     //Colliders for non-brick collisions
     public getColliders() : Collider[] {
         
@@ -406,11 +375,22 @@ export default class CharacterBot extends Character {
 
     //Also reset timer when setting the current group
     public setStateIndex(index? : number) {
-        this.timerSpc = 0;  //Timer reset incase we cancelled a previous animation
-        super.setStateIndex(index);
+
+        //Only set state if it's different from the current
+        if(this.stateIndex != index) {
+
+            this.timerSpc = 0;  //Timer reset incase we cancelled a previous animation
+            super.setStateIndex(index);
+            return; 
+        }
     }
 
-    //Explode
+    //Collisions
+    // 1 : Eat trash
+    // 2 : Die
+    // 3 : Fly
+    // 4 : Jump
+    // 5 : Armor
     public resolveCollision(mask : number) {
 
         //Eat
@@ -431,16 +411,18 @@ export default class CharacterBot extends Character {
         }
         //Up
         else if (mask & MASKS.float) {
-            this.setFlightState(AirState.UPWARD)
+            //this.setFlightState(AirState.UPWARD)
+            this.setStateIndex(3);
+        }
+        //Jump
+        else if (mask & MASKS.jumps) {
+            //this.setFlightState(AirState.JUMP)
+            this.setStateIndex(4);
         }
         //Armor
         else if (mask & MASKS.super) {
             this.armorState = ArmorState.ACTIVE;
-            this.setStateIndex(4);
-        }
-        //Jump
-        else if (mask & MASKS.jumps) {
-            this.setFlightState(AirState.JUMP)
+            this.setStateIndex(5);
         }
     }
 }
