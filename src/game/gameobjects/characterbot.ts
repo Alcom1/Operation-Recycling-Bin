@@ -79,6 +79,7 @@ export default class CharacterBot extends Character {
     private timerArm : number = 0;                          //Timer to track armor flash
     private ceilSubOffset : number = -6;                    //Offset for up/down movement
     private vertSpeed : number = 500;                       //Speed of air movement
+    private vertMult : -1|1 = 1;                            //Up/Down multiplier for air movement
     private horzSpeed : number = 350;                       //Horizontal air speed
     private jumpHeights : number[] = [0, 2, 3, 3, 2, 0];    //Individual heights throughout a jump
     private jumpOrigin : Point = { x : 0, y : 0 }           //Origin of the previous jump
@@ -124,7 +125,8 @@ export default class CharacterBot extends Character {
 
             //Vertical
             case 3 : 
-                this.moveVertical(dt, 1);
+                this.moveVertical(dt, this.vertMult);
+                this.vertMult = -1;
                 break;
 
             //Jump
@@ -132,7 +134,6 @@ export default class CharacterBot extends Character {
                 this.moveJump(dt);
                 break;
 
-            
             //Default is do nothing
             default :
                 break;
@@ -154,6 +155,10 @@ export default class CharacterBot extends Character {
                 //Reset up/down animation
                 case 3 :
                     this.animationsCurr.forEach(a => a.reset());
+                    break;
+
+                //Do nothing for jump
+                case 4 :
                     break;
                 
                 //End animation
@@ -212,7 +217,7 @@ export default class CharacterBot extends Character {
         }
         //Collide with floor after the first step
         else if (cbm & acb.flor && index > 0) {
-            this.endAirMovement();
+            this.endVertMovement();
             return;
         }
 
@@ -256,19 +261,20 @@ export default class CharacterBot extends Character {
             }
             //If going downwards, reset to walking
             else {
-                this.endAirMovement();
+                this.endVertMovement();
             }
         }
     }
 
     //Quickly shift fight to 
     private startVertMovement() {
+        this.vertMult = -1;
         this.setStateIndex(3);
         this.spos.x = 0;
     }
 
     //End vertical or jump movement
-    private endAirMovement() {
+    private endVertMovement() {
 
         this.spos.setToZero();
         this.handleBricks();
@@ -386,11 +392,6 @@ export default class CharacterBot extends Character {
     }
 
     //Collisions
-    // 1 : Eat trash
-    // 2 : Die
-    // 3 : Fly
-    // 4 : Jump
-    // 5 : Armor
     public resolveCollision(mask : number) {
 
         //Eat
@@ -409,14 +410,15 @@ export default class CharacterBot extends Character {
                 this.setStateIndex(2);
             }
         }
-        //Up
+        //Vertical
         else if (mask & MASKS.float) {
-            //this.setFlightState(AirState.UPWARD)
+            this.vertMult = 1;
+            this.handleBricks(true); 
             this.setStateIndex(3);
         }
         //Jump
         else if (mask & MASKS.jumps) {
-            //this.setFlightState(AirState.JUMP)
+            this.jumpOrigin = this.gpos.get();
             this.setStateIndex(4);
         }
         //Armor
