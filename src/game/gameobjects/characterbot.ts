@@ -83,22 +83,24 @@ export default class CharacterBot extends Character {
     private horzSpeed : number = 350;                       //Horizontal air speed
     private jumpHeights : number[] = [0, 2, 3, 3, 2, 0];    //Individual heights throughout a jump
     private jumpOrigin : Point = { x : 0, y : 0 }           //Origin of the previous jump
+    private jumpIndex : number = 0;
     private armorDelay : number = 2;                        //Delay where armor remains after taking damage
     private armorFlashRate : number = 8;                    //Rate of the armor flashing effect
     private armorState : ArmorState = ArmorState.NONE;      //Current state of the armor
 
-    protected get animImageIndex() : number { 
+    protected get animImageIndex() : number {               //Adjust animation index for armor flash effect
         return this.move.x * (
             this.armorState == ArmorState.ACTIVE ? 2 :
             this.armorState == ArmorState.FLASH  ? (1 + Math.floor(this.timerArm * this.armorFlashRate) % 2) : 
             1)
     }
 
+    //Constructor
     constructor(params: CharacterParams) {
         super(Object.assign(params, characterBotOverride));
     }
 
-    //Unique bot update
+    //Unique bot update to update armor flash
     public update(dt : number) {
         super.update(dt);
 
@@ -123,6 +125,11 @@ export default class CharacterBot extends Character {
         //Perform special movement
         switch(this.stateIndex) {
 
+            //Downward movement for mid-air bin eating.
+            case 1 :
+                this.moveVertical(dt, -1);
+                break;
+
             //Vertical
             case 3 : 
                 this.moveVertical(dt, this.vertMult);
@@ -133,7 +140,7 @@ export default class CharacterBot extends Character {
                 this.moveJump(dt);
                 break;
 
-            //Default is do nothing
+            //Default - Do nothing
             default :
                 break;
         }
@@ -144,23 +151,24 @@ export default class CharacterBot extends Character {
             //Reset timer
             this.timerSpc = 0;
 
+            //Perform ending actions for different states
             switch(this.stateIndex) {
 
-                //Deactivate this character
+                //Dead - Deactivate this character
                 case 2 :
                     this.isActive = false;
                     break;
 
-                //Reset up/down animation
+                //Vertical - Reset up/down animation
                 case 3 :
                     this.animationsCurr.forEach(a => a.reset());
                     break;
 
-                //Do nothing for jump
+                //Jump - Do nothing
                 case 4 :
                     break;
                 
-                //End animation
+                //Default - End animation, return to ground movement
                 default :
                     this.setStateIndex(0);
                     break;
@@ -168,111 +176,59 @@ export default class CharacterBot extends Character {
         }
     }
 
-    //Move in a jumping arc
-    private moveJump(dt: number) {
-
-        var index = Math.abs(this.gpos.x - this.jumpOrigin.x);  //Index of current jump height
-
-        //Don't jump past the level boundary
-        if ((index > 0 || Math.abs(this.spos.x) > GMULTX / 2) && (
-            this.gpos.x - 2 < BOUNDARY.minx || 
-            this.gpos.x + 2 > BOUNDARY.maxx)) {
-
-            this.startVertMovement();
-            return;
-        }
-
-        //Collision bitmask
-        const cbm = this.brickHandler.checkCollisionRange(
-            this.gpos.getSub({
-                x : this.move.x > 0 ? 1 : 0, 
-                y : this.height + 1
-            }),             //Position
-            this.move.x,    //Direction
-            5,              //START  n + 1
-            18,             //FINAL
-            6,              //HEIGHT n + 2
-            3);             //Width
-        
-        //Collide face if we're over half-way past the first step
-        if(cbm & acb.face && (index > 0 || Math.abs(this.spos.x) > GMULTX / 2)) {
-            this.startVertMovement();
-            return;
-        }
-        //Collide head if not at the peak of the jump
-        else if((cbm & acb.head || this.gpos.y <= BOUNDARY.miny + 3) && index < 2) {
-            this.startVertMovement();
-            return;
-        }
-        //collide shin after the first step
-        else if (cbm & acb.shin && index > 0) {
-            this.startVertMovement();
-            return;
-        }
-        //Collide with foot after the arc starts travelling downwards
-        else if (cbm & acb.foot && index > 2) {
-            this.startVertMovement();
-            return;
-        }
-        //Collide with floor after the first step
-        else if (cbm & acb.flor && index > 0) {
-            this.endVertMovement();
-            return;
-        }
-
-        //End of jump
-        if(index > this.jumpHeights.length - 2) {
-            this.startVertMovement();
-            return;
-        }
-
-        //Update position, travel in an arc based on the jump heights.
-        this.spos.x += this.move.x * this.horzSpeed * dt;       //Update horizontal position
-        this.spos.y = - GMULTY * (                              //Update vertical position
-            this.jumpHeights[index] + 
-            this.gpos.y - 
-            this.jumpOrigin.y +
-            Math.abs(this.spos.x / GMULTX) * (this.jumpHeights[index + 1] - this.jumpHeights[index]));
-
-        this.animationsCurr.forEach(a => a.spos = this.spos);  //Update animations to match current position
-    }
-
     //Vertical motion
     private moveVertical(dt: number, dir: number) {
 
-        this.spos.y -= dt * this.vertSpeed * dir;   //Move subposition vertically based on speed
-        this.animationsCurr.forEach(a => a.spos = this.spos);
+        this.spos.y -= dt * this.vertSpeed * dir;               //Move subposition vertically based on speed
+        this.animationsCurr.forEach(a => a.spos = this.spos);   //Move animation to match
     }
 
-    //Quickly shift fight to 
+    //Move in a jumping arc
+    private moveJump(dt: number) {
+
+        this.jumpIndex = Math.abs(this.gpos.x - this.jumpOrigin.x); //Update index of current jump height
+
+        //Update position, travel in an arc based on the jump heights.
+        this.spos.x += this.move.x * this.horzSpeed * dt;           //Update horizontal position
+        this.spos.y = - GMULTY * (                                  //Update vertical position to match the jump arc
+            this.jumpHeights[this.jumpIndex] + 
+            this.gpos.y - 
+            this.jumpOrigin.y +
+            Math.abs(this.spos.x / GMULTX) * (this.jumpHeights[this.jumpIndex + 1] - this.jumpHeights[this.jumpIndex]));
+
+        this.animationsCurr.forEach(a => a.spos = this.spos);       //Update animations to match current position
+    }
+
+    //Quick shift to downward vertical movement
     private startVertMovement() {
-        this.vertMult = -1;
-        this.setStateIndex(3);
-        this.spos.x = 0;
+
+        this.vertMult = -1;     //Default to downward movement to remove 1-frame hitch.
+        this.setStateIndex(3);  //Vertical movement
+        this.spos.x = 0;        //Reset horizontal position to grid
     }
 
     //End vertical or jump movement
     private endVertMovement() {
 
-        this.spos.setToZero();
-        this.handleBricks();
+        this.spos.setToZero();  //Snap to grid
+        this.handleBricks();    //Handle bricks now under this character
 
         //Go from air state to walking state.
-        this.setStateIndex(0);
+        if([3, 4].some(n => n == this.stateIndex)) {
+            this.setStateIndex(0);
+        }
     }
 
-    //Return true if the given vertical direction is free of bricks
+    //Return true if the given vertical direction has an obstacle
     private getCollisionVertical(dir : number) : boolean {
 
-        console.log(dir);
-
-        //If moving upward and hit the ceiling, return false
+        //If moving upward and hit the ceiling, return true
         if(dir > 0 && this.gpos.y <= this.height + 1) {
-            return false;
+            return true;
         }
 
         //Check for bricks in travelling direction
-        return !this.brickHandler.checkCollisionRange(
+        return !!this.brickHandler.checkCollisionRange(
             this.gpos.getSub({
                 x : 1,
                 y : dir > 0 ? 1 + this.height : 0
@@ -292,10 +248,13 @@ export default class CharacterBot extends Character {
                 this.handleBrickCollisionNormal();
                 break;
 
+            case 1 :    //Trash eating also has edge-case air movement
             case 3 :
                 this.handleBrickCollisionVertical();
-                this.vertMult = -1;
                 break;
+
+            case 4 :
+                this.handleBrickCollisionJump();
 
             default :
                 break;
@@ -362,17 +321,13 @@ export default class CharacterBot extends Character {
     //Check and resolve brick collisions - Vertical movement
     protected handleBrickCollisionVertical() {
         
-        //If the direction has no obstacles
-        if (this.getCollisionVertical(this.vertMult)) {
-
-        }
         //There is an obstacle, stop based on its direction
-        else {
+        if(this.getCollisionVertical(this.vertMult)) {
 
             //If going upwards, collide with ceiling
             if(this.vertMult > 0) {
-                this.spos.y = this.ceilSubOffset;
-                this.animationsCurr.forEach(a => {
+                this.spos.y = this.ceilSubOffset;   //Block vertical movement
+                this.animationsCurr.forEach(a => {  //Adjust animations to match
                     a.zModifierPub = 0;
                     a.spos.y = this.ceilSubOffset;
                 });
@@ -381,6 +336,66 @@ export default class CharacterBot extends Character {
             else {
                 this.endVertMovement();
             }
+        }
+
+        //Set to go downwards incase a collision with wind DOES NOT occur next frame.
+        this.vertMult = -1;
+    }
+
+    //Check and resolve brick collisions - Jump movement
+    protected handleBrickCollisionJump() {
+
+        //Don't jump past the level boundary
+        if ((this.jumpIndex > 0 || Math.abs(this.spos.x) > GMULTX / 2) && (
+            this.gpos.x - 2 < BOUNDARY.minx || 
+            this.gpos.x + 2 > BOUNDARY.maxx)) {
+
+            this.startVertMovement();
+            return;
+        }
+
+        //Collision bitmask
+        const cbm = this.brickHandler.checkCollisionRange(
+            this.gpos.getSub({
+                x : this.move.x > 0 ? 1 : 0, 
+                y : this.height + 1
+            }),             //Position
+            this.move.x,    //Direction
+            5,              //START  n + 1
+            18,             //FINAL
+            6,              //HEIGHT n + 2
+            3);             //Width
+        
+        //Collide face if we're past the first step
+        if(cbm & acb.face && (this.jumpIndex > 1)) {
+            this.startVertMovement();
+            return;
+        }
+        //Collide head if not at the peak of the jump
+        else if((cbm & acb.head || this.gpos.y <= BOUNDARY.miny + 3) && this.jumpIndex < 1) {
+            this.startVertMovement();
+            return;
+        }
+        //collide shin after the first step
+        else if (cbm & acb.shin && this.jumpIndex > 0) {
+            this.startVertMovement();
+            return;
+        }
+        //Collide with foot after the arc starts travelling downwards
+        else if (cbm & acb.foot && this.jumpIndex > 2) {
+            this.startVertMovement();
+            return;
+        }
+        //Collide with floor after the first step
+        else if (cbm & acb.flor && this.jumpIndex > 0) {
+            this.endVertMovement();
+            return;
+        }
+
+        //End of jump
+        if(this.jumpIndex > this.jumpHeights.length - 2) {
+            this.startVertMovement();
+            return;
         }
     }
 
@@ -408,9 +423,8 @@ export default class CharacterBot extends Character {
         //Only set state if it's different from the current
         if(this.stateIndex != index) {
 
-            this.timerSpc = 0;  //Timer reset incase we cancelled a previous animation
-            super.setStateIndex(index);
-            return; 
+            this.timerSpc = 0;          //Timer reset incase we cancelled a previous animation
+            super.setStateIndex(index); //Set index
         }
     }
 
@@ -424,7 +438,7 @@ export default class CharacterBot extends Character {
         //Hazard
         else if (mask & MASKS.death && this.stateIndex != 2) {
 
-            //Start flashing animation after taking damage
+            //Start or continue flash after taking armor damage
             if(this.armorState == ArmorState.ACTIVE) {
                 this.armorState = ArmorState.FLASH
             }
