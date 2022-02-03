@@ -111,11 +111,12 @@ export default class Character extends GameObject {
         //Normal or unique movement, shift grid/sub position after movement
         if(this.isNormalMovment) {
             this.handleNormalMovement(dt);
-            this.shift(true);
+            this.gridStep();
         }
         else {
             this.handleSpecialMovement(dt);
-            this.shift(false);
+            this.gridStep();
+            this.checkCollision = true;
         }
 
         //Handle collision, set zIndices for new position
@@ -124,14 +125,16 @@ export default class Character extends GameObject {
             this.handleCollision();
             this.handleBricks();
 
-            this.animationsCurr.forEach(s => s.reset(this.gpos));
+            if(this.isNormalMovment) {
+                this.animationsCurr.forEach(s => s.reset(this.gpos));
+            }
 
             this.checkCollision = false;
         }
     }
 
     //Shift to next grid position of the subposition extends too far
-    private shift(isCollideAfterShift : boolean) {
+    private gridStep() {
 
         var move = {
             x : Math.abs(this.spos.x) > GMULTX ? Math.sign(this.spos.x) : 0,
@@ -151,7 +154,7 @@ export default class Character extends GameObject {
                 a.gpos.add(move);
             });
 
-            this.checkCollision = isCollideAfterShift;
+            this.checkCollision = true;         //Set to check collision for the new step
             this.brickHandler.isRecheck = true; //Recheck bricks after every shift
         }
 

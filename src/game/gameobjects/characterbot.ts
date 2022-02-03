@@ -126,7 +126,6 @@ export default class CharacterBot extends Character {
             //Vertical
             case 3 : 
                 this.moveVertical(dt, this.vertMult);
-                this.vertMult = -1;
                 break;
 
             //Jump
@@ -241,29 +240,8 @@ export default class CharacterBot extends Character {
     //Vertical motion
     private moveVertical(dt: number, dir: number) {
 
-        
-        //If the direction has no obstacles
-        if (this.getCollisionVertical(dir)) {
-
-            this.spos.y -= dt * this.vertSpeed * dir;   //Move subposition vertically based on speed
-            this.animationsCurr.forEach(a => a.spos = this.spos);
-        }
-        //There is an obstacle, stop based on its direction
-        else {
-
-            //If going upwards, collide with ceiling
-            if(dir > 0) {
-                this.spos.y = this.ceilSubOffset;
-                this.animationsCurr.forEach(a => {
-                    a.zModifierPub = 0;
-                    a.spos.y = this.ceilSubOffset;
-                });
-            }
-            //If going downwards, reset to walking
-            else {
-                this.endVertMovement();
-            }
-        }
+        this.spos.y -= dt * this.vertSpeed * dir;   //Move subposition vertically based on speed
+        this.animationsCurr.forEach(a => a.spos = this.spos);
     }
 
     //Quickly shift fight to 
@@ -286,6 +264,8 @@ export default class CharacterBot extends Character {
     //Return true if the given vertical direction is free of bricks
     private getCollisionVertical(dir : number) : boolean {
 
+        console.log(dir);
+
         //If moving upward and hit the ceiling, return false
         if(dir > 0 && this.gpos.y <= this.height + 1) {
             return false;
@@ -306,7 +286,25 @@ export default class CharacterBot extends Character {
 
     //Check and resolve brick collisions
     protected handleCollision() {
-        
+
+        switch(this.stateIndex) {
+            case 0 :
+                this.handleBrickCollisionNormal();
+                break;
+
+            case 3 :
+                this.handleBrickCollisionVertical();
+                this.vertMult = -1;
+                break;
+
+            default :
+                break;
+        }
+    }
+
+    //Check and resolve brick collisions - Normal movement
+    protected handleBrickCollisionNormal() {
+
         //WALL BOUNDARY
         if (this.gpos.x - 1 < BOUNDARY.minx || 
             this.gpos.x + 1 > BOUNDARY.maxx) {
@@ -357,6 +355,31 @@ export default class CharacterBot extends Character {
             //VOID - REVERSE
             else {
                 this.reverse();
+            }
+        }
+    }
+
+    //Check and resolve brick collisions - Vertical movement
+    protected handleBrickCollisionVertical() {
+        
+        //If the direction has no obstacles
+        if (this.getCollisionVertical(this.vertMult)) {
+
+        }
+        //There is an obstacle, stop based on its direction
+        else {
+
+            //If going upwards, collide with ceiling
+            if(this.vertMult > 0) {
+                this.spos.y = this.ceilSubOffset;
+                this.animationsCurr.forEach(a => {
+                    a.zModifierPub = 0;
+                    a.spos.y = this.ceilSubOffset;
+                });
+            }
+            //If going downwards, reset to walking
+            else {
+                this.endVertMovement();
             }
         }
     }
