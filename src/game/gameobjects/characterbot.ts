@@ -9,6 +9,15 @@ enum ArmorState {
     FLASH
 }
 
+enum BotState {
+    NORMAL,
+    EATING,
+    HAZARD,
+    FLYING,
+    BOUNCE,
+    SHIELD
+}
+
 //Bot parameters
 const characterBotOverride = Object.freeze({
     //Main parameters
@@ -126,18 +135,18 @@ export default class CharacterBot extends Character {
         switch(this.stateIndex) {
 
             //Downward movement for mid-air bin eating.
-            case 1 :
+            case BotState.EATING :
                 this.moveVertical(dt, -1);
                 break;
 
             //Vertical
-            case 3 : 
+            case BotState.FLYING : 
                 this.moveVertical(dt, this.vertMult);
                 break;
 
-            //Jump
-            case 4 :
-                this.moveJump(dt);
+            //Bounce
+            case BotState.BOUNCE :
+                this.moveBounce(dt);
                 break;
 
             //Default - Do nothing
@@ -155,22 +164,22 @@ export default class CharacterBot extends Character {
             switch(this.stateIndex) {
 
                 //Dead - Deactivate this character
-                case 2 :
+                case BotState.HAZARD :
                     this.isActive = false;
                     break;
 
                 //Vertical - Reset up/down animation
-                case 3 :
+                case BotState.FLYING :
                     this.animationsCurr.forEach(a => a.reset());
                     break;
 
-                //Jump - Do nothing
-                case 4 :
+                //Bounce - Do nothing
+                case BotState.BOUNCE :
                     break;
                 
                 //Default - End animation, return to ground movement
                 default :
-                    this.setStateIndex(0);
+                    this.setStateIndex(BotState.NORMAL);
                     break;
             }
         }
@@ -184,7 +193,7 @@ export default class CharacterBot extends Character {
     }
 
     //Move in a jumping arc
-    private moveJump(dt: number) {
+    private moveBounce(dt: number) {
 
         this.jumpIndex = Math.abs(this.gpos.x - this.jumpOrigin.x); //Update index of current jump height
 
@@ -202,9 +211,9 @@ export default class CharacterBot extends Character {
     //Quick shift to downward vertical movement
     private startVertMovement() {
 
-        this.vertMult = -1;     //Default to downward movement to remove 1-frame hitch.
-        this.setStateIndex(3);  //Vertical movement
-        this.spos.x = 0;        //Reset horizontal position to grid
+        this.vertMult = -1;                     //Default to downward movement to remove 1-frame hitch.
+        this.setStateIndex(BotState.FLYING);    //Vertical movement
+        this.spos.x = 0;                        //Reset horizontal position to grid
     }
 
     //End vertical or jump movement
@@ -215,7 +224,7 @@ export default class CharacterBot extends Character {
 
         //Go from air state to walking state.
         if([3, 4].some(n => n == this.stateIndex)) {
-            this.setStateIndex(0);
+            this.setStateIndex(BotState.NORMAL);
         }
     }
 
@@ -244,17 +253,17 @@ export default class CharacterBot extends Character {
     protected handleCollision() {
 
         switch(this.stateIndex) {
-            case 0 :
+            case BotState.NORMAL :
                 this.handleBrickCollisionNormal();
                 break;
 
-            case 1 :    //Trash eating also has edge-case air movement
-            case 3 :
+            case BotState.EATING :    //Trash eating also has edge-case air movement
+            case BotState.FLYING :
                 this.handleBrickCollisionVertical();
                 break;
 
-            case 4 :
-                this.handleBrickCollisionJump();
+            case BotState.BOUNCE :
+                this.handleBrickCollisionBounce();
 
             default :
                 break;
@@ -342,8 +351,8 @@ export default class CharacterBot extends Character {
         this.vertMult = -1;
     }
 
-    //Check and resolve brick collisions - Jump movement
-    protected handleBrickCollisionJump() {
+    //Check and resolve brick collisions - Bounce movement
+    protected handleBrickCollisionBounce() {
 
         //Don't jump past the level boundary
         if ((this.jumpIndex > 0 || Math.abs(this.spos.x) > GMULTX / 2) && (
@@ -433,7 +442,7 @@ export default class CharacterBot extends Character {
 
         //Eat
         if (mask & MASKS.scrap) {
-            this.setStateIndex(1);
+            this.setStateIndex(BotState.EATING);
         }
         //Hazard
         else if (mask & MASKS.death && this.stateIndex != 2) {
@@ -444,24 +453,24 @@ export default class CharacterBot extends Character {
             }
             //If unarmored, die.
             else if(this.armorState == ArmorState.NONE) {
-                this.setStateIndex(2);
+                this.setStateIndex(BotState.HAZARD);
             }
         }
         //Vertical
         else if (mask & MASKS.float) {
-            this.vertMult = 1;
-            this.handleBricks(true); 
-            this.setStateIndex(3);
+            this.vertMult = 1;          //Default to upward movement
+            this.handleBricks(true);    //Release bricks before flying
+            this.setStateIndex(BotState.FLYING);
         }
-        //Jump
+        //Bounce
         else if (mask & MASKS.jumps) {
             this.jumpOrigin = this.gpos.get();
-            this.setStateIndex(4);
+            this.setStateIndex(BotState.BOUNCE);
         }
         //Armor
         else if (mask & MASKS.super) {
             this.armorState = ArmorState.ACTIVE;
-            this.setStateIndex(5);
+            this.setStateIndex(BotState.SHIELD);
         }
     }
 }

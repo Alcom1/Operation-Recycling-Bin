@@ -226,7 +226,7 @@ export default class Character extends GameObject {
         this.stateIndex = index ?? this.stateIndex;
         this.animations.forEach((sg, i) => sg.forEach(s => {
             s.isActive = i == this.stateAnimations[this.stateIndex];
-            s.spos.setToZero();   //Reset subposition
+            s.spos.setToZero(); //Reset subposition
             s.reset(this.gpos); //Make sure all sprites are in the character's position after set
         }));
         this.animationsCurr.forEach(x => x.setImageIndex(this.animImageIndex));
