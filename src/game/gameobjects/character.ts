@@ -112,13 +112,13 @@ export default class Character extends GameObject {
         //Normal or unique movement, shift grid/sub position after movement
         if(this.isNormalMovment) {
             this.handleNormalMovement(dt);
-            this.gridStep();
         }
         else {
             this.handleSpecialMovement(dt);
-            this.gridStep();
             this.checkCollision = true;
         }
+
+        this.gridStep();
 
         //Handle collision, set zIndices for new position
         if(this.checkCollision) {
