@@ -28,7 +28,7 @@ export interface AnimationParams extends GameObjectParams {
 }
 
 /** Animated image gameobject */
-export default class Animat extends GameObject {
+export default class Anim extends GameObject {
 
     //Set in constructor
     private gposOffset : Point;                     //Constant offset of the global position

@@ -3,7 +3,7 @@ import { GMULTX, GMULTY } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 import BrickHandler from "./brickhandler";
 import Brick from "./bricknormal";
-import Animat, { OffsetImageParams, AnimationParams } from "./animation";
+import Anim, { OffsetImageParams, AnimationParams } from "./anim";
 
 export interface CharacterParams extends GameObjectParams {
     height? : number;
@@ -32,12 +32,10 @@ export default class Character extends GameObject {
     private isGlide: boolean;                       //If the character sprite matches the character's subposition
     private underBricks: Brick[] = [];              //Bricks under pressure, under this character
 
-    //protected animatGroupsIndex = 0;
-    protected animations: Animat[][] = [[]];
+    protected animations: Anim[][] = [[]];
     protected stateAnimations: number[];
     protected stateIndex: number = 0;
-    protected get animationsCurr() : Animat[] { return this.animations[this.stateAnimations[this.stateIndex]]; }
-    //protected get animatGroupCurr() : Animat[] { return this.animations[this.animatGroupsIndex] }
+    protected get animationsCurr() : Anim[] { return this.animations[this.stateAnimations[this.stateIndex]]; }
     protected get isNormalMovment() : boolean { return this.stateIndex == 0 }
     protected get animImageIndex() : number { return this.move.x }
 
@@ -64,14 +62,14 @@ export default class Character extends GameObject {
         for(let i = -1; i <= 1; i ++) {
             
             // Add segment to scene and this character
-            this.animationsCurr.push(this.parent.pushGO(new Animat({
+            this.animationsCurr.push(this.parent.pushGO(new Anim({
                     ...params, 
                     isLoop : false,                                 //Remove looping to prevent stuttering. Loops are handled manually
                     zModifier : i < 1 ? mainZIndex : 29,            //Z-modifier for different slices
                     sliceIndex : i,                                 //This animation is sliced
                     framesSize : GMULTX * 2,                        //2x wide slices
                     gposOffset : { x : -1, y : 0 }                  //Move back by 1. Animations are centered around this character
-                } as AnimationParams)) as Animat);
+                } as AnimationParams)) as Anim);
         }
 
         //Setup miscellaneous animations.
@@ -83,7 +81,7 @@ export default class Character extends GameObject {
             //3 slices if sliced, 1 otherwise
             for(let i = -1; i <= (m.isSliced ? 1 : -1); i ++) {
 
-                this.animations[newIndex].push(new Animat({
+                this.animations[newIndex].push(new Anim({
                     ...params,
                     speed :      m.speed,
                     images :     m.images,

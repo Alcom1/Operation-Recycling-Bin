@@ -1,6 +1,6 @@
 import { Collider } from "engine/modules/collision";
 import { MASKS, Z_DEPTH } from "engine/utilities/math";
-import Animat, { AnimationParams } from "./animation";
+import Anim, { AnimationParams } from "./anim";
 import BrickHandler from "./brickhandler";
 import BrickPlate, { BrickPlateParams } from "./brickplate";
 import Character from "./character";
@@ -13,7 +13,7 @@ const brickPlateFanOverride = Object.freeze({
 export default class BrickPlateFan extends BrickPlate {
 
     private brickHandler!: BrickHandler;
-    private animations: Animat[] = [];
+    private animations: Anim[] = [];
     private beams: number[] = [];
     private characters: Character[] = [];
 
@@ -24,7 +24,7 @@ export default class BrickPlateFan extends BrickPlate {
         for(let j = this.gpos.y - 1; j > 0; j--) {
             //Generate a wind animation for each position
             [0,1].forEach(i => {
-                this.animations.push(this.parent.pushGO(new Animat({
+                this.animations.push(this.parent.pushGO(new Anim({
                     ...params,
                     position : {x : this.gpos.x + i + 1, y : j},
                     subPosition : { x : Z_DEPTH / 2 - 2, y : -Z_DEPTH / 2 + 2 }, 
@@ -33,7 +33,7 @@ export default class BrickPlateFan extends BrickPlate {
                     speed : 2,
                     frameCount : 6,
                     isLoop : true                                        
-                } as AnimationParams)) as Animat);
+                } as AnimationParams)) as Anim);
             })
         }
     }

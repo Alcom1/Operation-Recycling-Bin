@@ -1,6 +1,6 @@
 import { Collider } from "engine/modules/collision";
 import { MASKS } from "engine/utilities/math";
-import Animat, { AnimationParams } from "./animation";
+import Anim, { AnimationParams } from "./anim";
 import BrickPlate, { BrickPlateParams } from "./brickplate";
 
 const brickPlateHotOverride = Object.freeze({
@@ -10,12 +10,12 @@ const brickPlateHotOverride = Object.freeze({
 
 export default class BrickPlateHot extends BrickPlate {
 
-    private animation: Animat;
+    private animation: Anim;
 
     constructor(params: BrickPlateParams) {
         super(Object.assign(params, brickPlateHotOverride));
 
-        this.animation = this.parent.pushGO(new Animat({
+        this.animation = this.parent.pushGO(new Anim({
             ...params,
             subPosition : { x : 0, y : -25 },                       //For some reason, this animation appears super low by default.
             zModifier : 40,                                         //Z-index modifier of a 4-width brick
@@ -23,7 +23,7 @@ export default class BrickPlateHot extends BrickPlate {
             speed : 2,                                              //Hotplate animation is weirdly fast
             frameCount : 7,
             isVert : true                                           //Hotplate animation frames are stacked vertically
-        } as AnimationParams)) as Animat;
+        } as AnimationParams)) as Anim;
 
         this.animation.isActive == this.isOn;
     }

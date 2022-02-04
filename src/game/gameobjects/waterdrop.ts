@@ -2,7 +2,7 @@ import { GameObjectParams } from "engine/gameobjects/gameobject";
 import { Collider } from "engine/modules/collision";
 import { BOUNDARY, GMULTY, MASKS } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
-import Animat, { AnimationParams } from "./animation";
+import Anim, { AnimationParams } from "./anim";
 import BrickHandler from "./brickhandler";
 import Sprite from "./sprite";
 
@@ -17,15 +17,15 @@ export default class WaterDrop extends Sprite {
 
     private speed : number = 500;
     private brickHandler! : BrickHandler;
-    private animLand: Animat;
-    private animSlip: Animat;
+    private animLand: Anim;
+    private animSlip: Anim;
     private slipDuration : number = 0.4;
     private slipTimer: number = 0;
 
     constructor(params: GameObjectParams) {
         super(Object.assign(params, characterBotOverride));
 
-        this.animLand = this.parent.pushGO(new Animat({
+        this.animLand = this.parent.pushGO(new Anim({
             ...params,
             zModifier : 100,
             images : [{ name : "part_water_land" }],
@@ -34,9 +34,9 @@ export default class WaterDrop extends Sprite {
             isVert : true,
             isActive : false,
             isLoop : false
-        } as AnimationParams)) as Animat;
+        } as AnimationParams)) as Anim;
 
-        this.animSlip = this.parent.pushGO(new Animat({
+        this.animSlip = this.parent.pushGO(new Anim({
             ...params,
             zModifier : 100,
             images : [{ name : "part_water_slip" }],
@@ -45,7 +45,7 @@ export default class WaterDrop extends Sprite {
             isVert : true,
             isActive : false,
             isLoop : false
-        } as AnimationParams)) as Animat;
+        } as AnimationParams)) as Anim;
 
         this.isActive = false;  //Start deactivated
     }
