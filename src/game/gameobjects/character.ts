@@ -51,7 +51,10 @@ export default class Character extends GameObject {
         this._height = params.height ?? 2;                          //Default height for a character
         this.isGlide = params.isGlide ?? false;                     //Default glide state
         this.checkCollision = true;                                 //Force initial collision check
-        this.stateAnimations = [0, ...(params.stateAnimations ?? [])];
+        this.stateAnimations = [0, ...(
+            params.stateAnimations ?? (                                 //Get special state animations or...
+            params.animsMisc ? params.animsMisc.map((x, i) => i + 1) :  //Get default animations or...
+            []))];                                                      //There's only one animation.
 
         const mainZIndex =                                          //Z-index of main slices in the character sprite
             this.height * 100 - (

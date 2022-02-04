@@ -42,7 +42,6 @@ export default class CharacterRBC extends CharacterRB {
 
     public update(dt: number) {
         super.update(dt);
-        console.log(this.gpos.x, this.spos.x);
     }
 
     public handleSpecialMovement(dt : number) {
