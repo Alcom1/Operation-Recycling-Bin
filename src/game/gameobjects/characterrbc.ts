@@ -36,10 +36,11 @@ const characterRBCOverride = Object.freeze({
     }]
 });
 
-//Collision bitmasks for normal collisions
-const ncb = Object.freeze({
-    flor : bitStack([0, 3]),
-    face : bitStack([4, 5])
+//Collision bitmasks
+const gcb = Object.freeze({
+    flor : bitStack([3, 7]),
+    face : bitStack([9, 10]),
+    ceil : bitStack([0, 4])
 });
 
 export default class CharacterRBC extends CharacterRB {
@@ -90,12 +91,12 @@ export default class CharacterRBC extends CharacterRB {
         }
     }
 
-    //
-    protected handleCollisionNormal() {
+    //Collisions for normal movement
+    protected handleCollisionNormal(forceWall : boolean = false) {
         
         //WALL BOUNDARY
         if (this.gpos.x - 1 < BOUNDARY.minx || 
-            this.gpos.x + 1 > BOUNDARY.maxx) {
+            this.gpos.x > BOUNDARY.maxx) {
 
             this.reverse();
         }
@@ -103,63 +104,81 @@ export default class CharacterRBC extends CharacterRB {
         else {
 
             //Collision bitmask
-            const cbm = this.brickHandler.checkCollisionRange(
-                this.gpos.getSub({
-                    x : this.move.x > 0 ? 1 : 0, 
-                    y : this.height
-                }),             //Position
-                this.move.x,    //Direction
-                2,              //START :  n + 1
-                8,              //FINAL : (n + 3) * 2 + 1
-                3,              //HEIGHT:  n + 3
-                3);             
+            const cbm = this.getCollisionBitMask()
             
-            //
-            if(cbm & ncb.face) {
-                this.setStateIndex(1);
-                this.ground = this.gpos.y;
-            }
-            else if(!(cbm & ncb.flor)) {
+            //If there is no floor, start going down.
+            if(!(cbm & gcb.flor)) {
                 this.setStateIndex(2);
+            }
+            //Otherwise if there is a wall, try going above it.
+            else if((cbm & gcb.face) || forceWall) {
+
+                //If there is a ceiling blocking the ascent, reverse.
+                if(cbm & gcb.ceil) {
+                    this.reverse();
+                }
+                //Otherwise, go up.
+                else {
+                    this.setStateIndex(1);
+                    this.ground = this.gpos.y;
+                }
             }
         }
     }
 
-    //
+    //Collisions for downward movement
     protected handleCollisionUp() {
-        
-        if(this.ground - this.gpos.y >= this.climbLimit) {
+
+        //Collision bitmask
+        const cbm = this.getCollisionBitMask();
+
+        //If there is no longer a wall blocking, move forward.
+        if(!(cbm & gcb.face)) {
+            this.setStateIndex(0);
+        }
+        //Otherwise if the climbing limit is reached, start moving back down.
+        else if(cbm & gcb.ceil || this.ground - this.gpos.y >= this.climbLimit) {            
             this.setStateIndex(2);
         }
     }
 
-    //
+    //Collisions for upward movement
     protected handleCollisionDown() {
 
         //Collision bitmask
-        const cbm = this.brickHandler.checkCollisionRange(
-            this.gpos.getSub({
-                x : this.move.x > 0 ? 1 : 0, 
-                y : this.height
-            }),             //Position
-            this.move.x,    //Direction
-            2,              //START :  n + 1
-            8,              //FINAL : (n + 3) * 2 + 1
-            3,              //HEIGHT:  n + 3
-            3);
+        const cbm = this.getCollisionBitMask()
 
-        if(cbm & ncb.flor) {
+        //If there is a floor, land.
+        if(cbm & gcb.flor) {
 
-            if(cbm & ncb.face) {
-                this.setStateIndex(1);
+            //If there is a wall in the way while landing, turn around
+            if(cbm & gcb.face) {
+                this.setStateIndex(0);
+                this.reverse();
             }
+            //Oterwise, continue forward
             else {
                 this.setStateIndex(0);
             }
         }
     }
 
-    //Explode
+    //Get collision bitmask shared by all collisions here
+    private getCollisionBitMask() : number {
+
+        return this.brickHandler.checkCollisionRange(
+            this.gpos.getSub({
+                x : this.move.x > 0 ? 1 : 0, 
+                y : this.height + 1
+            }),             //Position
+            this.move.x,    //Direction
+            0,              //START :  n + 1
+            11,             //FINAL : (n + 3) * 2 + 1
+            4,              //HEIGHT:  n + 3
+            3);             
+    }
+
+    //Resolve collisions
     public resolveCollision(mask : number, other : GameObject) {
 
         //Reverse
@@ -168,8 +187,19 @@ export default class CharacterRBC extends CharacterRB {
             var targetDir = Math.sign(other.gpos.x - this.gpos.x)   //Direction of the target
             var facingDir = Math.sign(this.move.x);                 //Direction of this's movement  
 
+            //This doesn't work.
             if(targetDir == facingDir) {
-                this.reverse();
+                if(this.stateIndex == 0) {
+                    this.handleCollisionNormal(true);
+                }
+            }
+            else if(other.gpos.y != this.gpos.y) {
+                if(this.stateIndex == 1) {
+                    this.setStateIndex(2);
+                }
+                if(this.stateIndex == 2) {
+                    this.setStateIndex(1);
+                }
             }
         }
     }
