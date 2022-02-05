@@ -22,11 +22,13 @@ const characterRBCOverride = Object.freeze({
     
     //Misc animation parameters
     animsMisc : [{
+        speed : 2.0,
         images : [{ name : "char_rbg_left" }],
         frameCount : 2,
         gposOffset : { x : -1, y : 0},
         isSliced : true
     },{
+        speed : 2.0,
         images : [{ name : "char_rbg_right" }],
         frameCount : 2,
         gposOffset : { x : -1, y : 0},
@@ -40,14 +42,11 @@ const ncb = Object.freeze({
     face : bitStack([4, 5])
 });
 
-//Collision bitmasks for normal collisions
-const dcb = Object.freeze({
-    flor : bitStack([0, 1]),
-});
-
 export default class CharacterRBC extends CharacterRB {
 
     private vertSpeed : number = 50; 
+    private ground: number = 0;
+    private climbLimit: number = 3;
 
     constructor(params: CharacterParams) {
         super(Object.assign(params, characterRBCOverride));
@@ -69,10 +68,6 @@ export default class CharacterRBC extends CharacterRB {
                 this.spos.y += this.vertSpeed * dt;
                 break;
         }
-
-        this.animationsCurr.forEach(a => {
-            a.spos = this.spos;
-        });
     }
 
     //Check and resolve brick collisions
@@ -115,13 +110,14 @@ export default class CharacterRBC extends CharacterRB {
                 }),             //Position
                 this.move.x,    //Direction
                 2,              //START :  n + 1
-                9,              //FINAL : (n + 3) * 2 + 1
+                8,              //FINAL : (n + 3) * 2 + 1
                 3,              //HEIGHT:  n + 3
                 3);             
             
             //
             if(cbm & ncb.face) {
                 this.setStateIndex(1);
+                this.ground = this.gpos.y;
             }
             else if(!(cbm & ncb.flor)) {
                 this.setStateIndex(2);
@@ -132,6 +128,9 @@ export default class CharacterRBC extends CharacterRB {
     //
     protected handleCollisionUp() {
         
+        if(this.ground - this.gpos.y >= this.climbLimit) {
+            this.setStateIndex(2);
+        }
     }
 
     //
@@ -141,15 +140,22 @@ export default class CharacterRBC extends CharacterRB {
         const cbm = this.brickHandler.checkCollisionRange(
             this.gpos.getSub({
                 x : this.move.x > 0 ? 1 : 0, 
-                y : 0
+                y : this.height
             }),             //Position
             this.move.x,    //Direction
-            0,              //START :  n + 1
-            2,              //FINAL : (n + 3) * 2 + 1
-            1);             //HEIGHT:  n + 3
+            2,              //START :  n + 1
+            8,              //FINAL : (n + 3) * 2 + 1
+            3,              //HEIGHT:  n + 3
+            3);
 
-        if(cbm & dcb.flor) {
-            this.setStateIndex(0);
+        if(cbm & ncb.flor) {
+
+            if(cbm & ncb.face) {
+                this.setStateIndex(1);
+            }
+            else {
+                this.setStateIndex(0);
+            }
         }
     }
 

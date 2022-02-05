@@ -48,7 +48,7 @@ const characterBotOverride = Object.freeze({
         images : [  //Flying has left & right animations
             { name : "char_bot_fly_left", offsetX : 36 },
             { name : "char_bot_fly_right", offsetX : 14 }],
-        speed : 2.5,    //Bot moves fast
+        speed : 3,  //Bot moves fast
         gposOffset : { x : -1, y : 0},
         frameCount : 10,
         animsCount : 2,
