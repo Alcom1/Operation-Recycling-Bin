@@ -34,7 +34,7 @@ window.onload = function() {
         canvas, 
         "assets/scenes/",
         "scenes",
-        ["LevelInterface", "LEVEL_20"],
+        ["LevelInterface", "LEVEL_08"],
         [
             BrickHandler,
             BrickHandlerDebug,

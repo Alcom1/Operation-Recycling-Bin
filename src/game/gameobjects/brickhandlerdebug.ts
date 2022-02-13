@@ -1,5 +1,5 @@
 import { GameObjectParams } from "engine/gameobjects/gameobject";
-import { GMULTX, GMULTY } from "engine/utilities/math";
+import { col1D, GMULTX, GMULTY } from "engine/utilities/math";
 import { Point } from "engine/utilities/vect";
 import BrickHandler from "./brickhandler";
 
@@ -53,5 +53,45 @@ export default class BrickHandlerDebug extends BrickHandler {
 
         //Perform actual collision check
         return super.checkCollisionRange(pos, dir, start, final, height, width);
+    }
+
+    /** Check collisons for a square ring and return a bitmask */
+    public checkCollisionRing(pos: Point, size: number, dir : number = 1): number {
+
+        let collisions = 0; //Collision bitbask
+        let count = 0;      //Count gridspaces being checked
+
+        //Vertical travel
+        for(let j = pos.y; j < pos.y + size; j++) {
+
+            //Get this row
+            let row = this.rows.find(r => r.row == j)?.bricks.filter(b => !b.isSelected) || [];
+
+            //Horizontal travel, skip to end unless this is the first or last row to create a ring shape
+            for(let i = pos.x; i < pos.x + size; i += ((j > pos.y && j < pos.y + size - 1) ? size - 1 : 1)) {
+
+                //Reverse horizontally if the direction isn't positive.
+                let check = dir > 0 ? i : 2 * pos.x - i + size - 1;
+
+                this.debugPoints.push({ x : check, y : j, opacity : 1});
+
+                //Check each brick int his row.
+                row.forEach(brick => {
+
+                    if(col1D(
+                        brick.gpos.x - 1, 
+                        brick.gpos.x + brick.width,
+                        check,
+                        check
+                    )) {
+                        collisions += 1 << (count);
+                    }
+                });
+
+                count++;
+            }
+        }
+
+        return collisions;
     }
 }

@@ -183,7 +183,7 @@ export default class BrickHandler extends GameObject {
     /** Check collisons for a vertically-looping range and return a bitmask */
     public checkCollisionRange(pos: Point, dir: number, start: number, final: number, height: number, width: number = 2): number {
 
-        let collisions = 0;
+        let collisions = 0; //Collision bitbask
 
         for(let i = start; i < final; i++) {
 
@@ -200,6 +200,44 @@ export default class BrickHandler extends GameObject {
                 )) {
                     collisions += 1 << (i - start);
                 }
+            }
+        }
+
+        return collisions;
+    }
+
+    /** Check collisons for a square ring and return a bitmask */
+    public checkCollisionRing(pos: Point, size: number, dir : number = 1): number {
+
+        let collisions = 0; //Collision bitbask
+        let count = 0;      //Count gridspaces being checked
+
+        //Vertical travel
+        for(let j = pos.y; j < pos.y + size; j++) {
+
+            //Get this row
+            let row = this.rows.find(r => r.row == j)?.bricks.filter(b => !b.isSelected) || [];
+
+            //Horizontal travel, skip to end unless this is the first or last row to create a ring shape
+            for(let i = pos.x; i < pos.x + size; i += ((j > pos.y && j < pos.y + size - 1) ? size - 1 : 1)) {
+
+                //Reverse horizontally if the direction isn't positive.
+                let check = dir > 0 ? i : 2 * pos.x - i + size - 1;
+
+                //Check each brick int his row.
+                row.forEach(brick => {
+
+                    if(col1D(
+                        brick.gpos.x - 1, 
+                        brick.gpos.x + brick.width,
+                        check,
+                        check
+                    )) {
+                        collisions += 1 << (count);
+                    }
+                });
+
+                count++;
             }
         }
 

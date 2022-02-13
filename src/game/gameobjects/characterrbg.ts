@@ -17,8 +17,8 @@ const characterRBGOverride = Object.freeze({
 
 //Collision bitmasks for bot-brick collisions
 const gcb = Object.freeze({
-    flor : bitStack([2]),
-    face : bitStack([0, 1])
+    flor : bitStack([11]),
+    face : bitStack([5, 7])
 });
 
 export default class CharacterRBG extends CharacterRB {
@@ -39,16 +39,12 @@ export default class CharacterRBG extends CharacterRB {
         //Brick collisions
         else {
 
-            //Collision bitmask
-            const cbm = this.brickHandler.checkCollisionRange(
-                this.gpos.getSub({
-                    x : this.move.x > 0 ? -1 : 2, 
-                    y : this.height
-                }),             //Position
-                this.move.x,    //Direction
-                0,              //START :  n + 1
-                3,              //FINAL : (n + 3) * 2 + 1
-                3);             //HEIGHT:  n + 3
+            const cbm = this.brickHandler.checkCollisionRing(
+                this.gpos.getAdd({
+                    x : -2, 
+                    y : -this.height}), 
+                4, 
+                this.move.x);
 
             //
             if(cbm & gcb.face) {
