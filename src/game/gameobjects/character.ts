@@ -208,8 +208,8 @@ export default class Character extends GameObject {
     //Reverse the direction of this character
     protected reverse() {
 
-        this.move.x *= -1;                                                          //Reverse direction
-        this.animations[0].forEach(x => x.setImageIndex(this.animImageIndex));    //Establish sprites for new direction
+        this.move.x *= -1;                                                      //Reverse direction
+        this.animations[0].forEach(x => x.setImageIndex(this.animImageIndex));  //Establish sprites for new direction
         
         //If gliding force-reset the sprite to match its current position
         if(this.isGlide) {

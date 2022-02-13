@@ -92,7 +92,7 @@ export default class CharacterRBC extends CharacterRB {
     }
 
     //Collisions for normal movement
-    protected handleCollisionNormal(forceWall : boolean = false) {
+    protected handleCollisionNormal() {
         
         //WALL BOUNDARY
         if (this.gpos.x - 1 < BOUNDARY.minx || 
@@ -111,7 +111,7 @@ export default class CharacterRBC extends CharacterRB {
                 this.setStateIndex(2);
             }
             //Otherwise if there is a wall, try going above it.
-            else if((cbm & gcb.face) || forceWall) {
+            else if((cbm & gcb.face)) {
 
                 //If there is a ceiling blocking the ascent, reverse.
                 if(cbm & gcb.ceil) {
@@ -120,7 +120,6 @@ export default class CharacterRBC extends CharacterRB {
                 //Otherwise, go up.
                 else {
                     this.setStateIndex(1);
-                    this.ground = this.gpos.y;
                 }
             }
         }
@@ -178,6 +177,17 @@ export default class CharacterRBC extends CharacterRB {
             3);             
     }
 
+    //Set current & active group based on the group index
+    protected setStateIndex(index? : number) {
+
+        //Store the current ground position if we're starting to go up.
+        if(index == 1) {
+            this.ground = this.gpos.y;
+        }
+
+        super.setStateIndex(index);
+    }
+
     //Resolve collisions
     public resolveCollision(mask : number, other : GameObject) {
 
@@ -187,19 +197,22 @@ export default class CharacterRBC extends CharacterRB {
             var targetDir = Math.sign(other.gpos.x - this.gpos.x)   //Direction of the target
             var facingDir = Math.sign(this.move.x);                 //Direction of this's movement  
 
-            //This doesn't work.
-            if(targetDir == facingDir) {
-                if(this.stateIndex == 0) {
-                    this.handleCollisionNormal(true);
-                }
-            }
-            else if(other.gpos.y != this.gpos.y) {
-                if(this.stateIndex == 1) {
-                    this.setStateIndex(2);
-                }
-                if(this.stateIndex == 2) {
-                    this.setStateIndex(1);
-                }
+            switch(this.stateIndex) {
+                case ClimbState.NORMAL :
+                    //If there's a horizontal collision, reverse.
+                    if(targetDir == facingDir && other.gpos.y >= this.gpos.y - this.height) {
+                        this.reverse();
+                    }
+                    break;
+
+                case ClimbState.UP : break;
+                case ClimbState.DOWN : 
+
+                    //If there's a collision below, mover horizontally
+                    if(other.gpos.y > this.gpos.y) {
+                        this.setStateIndex(0);
+                    }
+                    break;
             }
         }
     }
