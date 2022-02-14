@@ -18,10 +18,16 @@ export default class CharacterRB extends Character {
                 .getMult(GMULTX, GMULTY)
                 .getAdd(this.spos),
             isSub : true
-        },{ 
+        },
+        this.getPassiveCollider()];
+    }
+
+    protected getPassiveCollider() : Collider {
+
+        return { 
             mask : 0,   //Passive
-            min : this.gpos.getAdd({ x : -1 - (this.move.x < 0 ? 1 : 0), y : 1 - this.height}),
-            max : this.gpos.getAdd({ x :  1 + (this.move.x < 0 ? 0 : 1), y : 1})
-        }];
+            min : this.gpos.getAdd({ x : - (this.move.x < 0 ? 2 : 0), y : 1 - this.height}),
+            max : this.gpos.getAdd({ x : + (this.move.x < 0 ? 0 : 2), y : 1})
+        }
     }
 }

@@ -38,9 +38,10 @@ const characterRBCOverride = Object.freeze({
 
 //Collision bitmasks
 const gcb = Object.freeze({
-    flor : bitStack([3, 7]),
-    face : bitStack([9, 10]),
-    ceil : bitStack([0, 4])
+    flor : bitStack([9, 10]),
+    face : bitStack([5, 7]),
+    ceil : bitStack([1, 2]),
+    back : bitStack([4, 6])
 });
 
 export default class CharacterRBC extends CharacterRB {
@@ -152,8 +153,14 @@ export default class CharacterRBC extends CharacterRB {
 
             //If there is a wall in the way while landing, turn around
             if(cbm & gcb.face) {
-                this.setStateIndex(0);
-                this.reverse();
+
+                if(cbm & gcb.back) {
+                    this.setStateIndex(1);
+                }
+                else {
+                    this.setStateIndex(0);
+                    this.reverse();
+                }
             }
             //Oterwise, continue forward
             else {
@@ -165,16 +172,12 @@ export default class CharacterRBC extends CharacterRB {
     //Get collision bitmask shared by all collisions here
     private getCollisionBitMask() : number {
 
-        return this.brickHandler.checkCollisionRange(
-            this.gpos.getSub({
-                x : this.move.x > 0 ? 1 : 0, 
-                y : this.height + 1
-            }),             //Position
-            this.move.x,    //Direction
-            0,              //START :  n + 1
-            11,             //FINAL : (n + 3) * 2 + 1
-            4,              //HEIGHT:  n + 3
-            3);             
+        return this.brickHandler.checkCollisionRing(
+            this.gpos.getAdd({
+                x : -2, 
+                y : -this.height}), 
+            4, 
+            this.move.x);
     }
 
     //Set current & active group based on the group index
@@ -186,6 +189,25 @@ export default class CharacterRBC extends CharacterRB {
         }
 
         super.setStateIndex(index);
+    }
+
+    //Get passive collider for normal or special movement
+    protected getPassiveCollider() : Collider {
+
+        if(this.stateIndex == ClimbState.NORMAL) {
+
+            return super.getPassiveCollider();
+        }
+        else {
+
+            let climbOffset = this.stateIndex == ClimbState.DOWN ? 2 : 0
+
+            return { 
+                mask : 0,   //Passive
+                min : this.gpos.getAdd({ x : -1, y : climbOffset - this.height}),
+                max : this.gpos.getAdd({ x :  1, y : climbOffset})
+            }
+        }
     }
 
     //Resolve collisions
