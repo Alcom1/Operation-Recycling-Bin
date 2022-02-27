@@ -68,12 +68,15 @@ export default class CollisionModule {
                 }
             });
 
-            //Stair loop for collisions
+            //Stair loop to set collisions
             for(var j = 0; j < gocs.length; j++) {
                 for(var i = 0; i < j; i++) {
                     this.compareGOColliders(gocs[i], gocs[j]);
                 }
             }
+
+            //Resolve all collisions
+            s.gameObjects.forEach(go => go.resolveClearCollisions());
         });
     }
 
@@ -139,8 +142,8 @@ export default class CollisionModule {
     //Check & resolve collision between two colliders
     private compareGOPair(c1 : Collider, c2 : Collider, g1 : GameObject, g2 : GameObject) {
         if((c1.mask & c2.mask) && this.compareColliders(c1, c2)) {
-            g1.resolveCollision(c1.mask & c2.mask, g2);
-            g2.resolveCollision(c1.mask & c2.mask, g1);
+            g1.setCollision(c1.mask & c2.mask, g2);
+            g2.setCollision(c1.mask & c2.mask, g1);
         }
     }
 

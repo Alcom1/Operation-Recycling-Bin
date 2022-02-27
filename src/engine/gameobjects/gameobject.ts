@@ -4,6 +4,11 @@ import Engine from "engine/engine";
 import { Collider } from "engine/modules/collision";
 import { getZIndex } from "engine/utilities/math";
 
+export interface Collision {
+    other : GameObject;
+    mask : number;
+}
+
 export interface GameObjectParams {
     engine: Engine;
     position?: Point;
@@ -26,6 +31,7 @@ export default class GameObject {
     public tags: string[];
     public parent: Scene;
     public isActive: Boolean;
+    private collisions: Collision[] = [];
 
     constructor(params: GameObjectParams) {
         this.gpos = new Vect(params.position?.x ?? 0, params.position?.y ?? 0);
@@ -76,9 +82,37 @@ export default class GameObject {
     }
 
     /**
+     * Set collision to be resolved
+     */
+    public setCollision(mask : number, other : GameObject) {
+
+        this.collisions.push({
+            mask : mask,
+            other : other
+        });
+    }    
+
+    /**
+     * Resolve and clear all collisions
+     */
+    public resolveClearCollisions() {
+
+        this.resolveCollisions();
+        this.collisions = [];
+    }
+
+    /**
+     * Resolve all collisions
+     */
+    protected resolveCollisions() {
+
+        this.collisions.forEach(c => this.resolveCollision(c.mask, c.other));
+    }    
+
+    /**
      * Resolve collision for this game object
      */
-    public resolveCollision(mask : number, other : GameObject) {
+    protected resolveCollision(mask : number, other : GameObject) {
 
     }
 
