@@ -97,16 +97,16 @@ export default class GameObject {
      */
     public resolveClearCollisions() {
 
-        this.resolveCollisions();
+        this.resolveCollisions(this.collisions);
         this.collisions = [];
     }
 
     /**
      * Resolve all collisions
      */
-    protected resolveCollisions() {
+    protected resolveCollisions(collisions : Collision[]) {
 
-        this.collisions.forEach(c => this.resolveCollision(c.mask, c.other));
+        collisions.forEach(c => this.resolveCollision(c.mask, c.other));
     }    
 
     /**

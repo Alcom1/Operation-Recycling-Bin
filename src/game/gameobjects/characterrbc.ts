@@ -1,6 +1,7 @@
-import GameObject from "engine/gameobjects/gameobject";
+import GameObject, { Collision } from "engine/gameobjects/gameobject";
 import { Collider } from "engine/modules/collision";
 import { bitStack, BOUNDARY, GMULTX, GMULTY, MASKS } from "engine/utilities/math";
+import Vect from "engine/utilities/vect";
 import { CharacterParams } from "./character";
 import CharacterRB from "./characterrb";
 
@@ -93,7 +94,7 @@ export default class CharacterRBC extends CharacterRB {
     }
 
     //Collisions for normal movement
-    protected handleCollisionNormal() {
+    protected handleCollisionNormal(preMask : number = 0) {
         
         //WALL BOUNDARY
         if (this.gpos.x - 1 < BOUNDARY.minx || 
@@ -105,7 +106,7 @@ export default class CharacterRBC extends CharacterRB {
         else {
 
             //Collision bitmask
-            const cbm = this.getCollisionBitMask()
+            const cbm = this.getCollisionBitMask() | preMask
             
             //If there is no floor, start going down.
             if(!(cbm & gcb.flor)) {
@@ -127,10 +128,10 @@ export default class CharacterRBC extends CharacterRB {
     }
 
     //Collisions for downward movement
-    protected handleCollisionUp() {
+    protected handleCollisionUp(preMask : number = 0) {
 
         //Collision bitmask
-        const cbm = this.getCollisionBitMask();
+        const cbm = this.getCollisionBitMask() | preMask;
 
         //If there is no longer a wall blocking, move forward.
         if(!(cbm & gcb.face)) {
@@ -143,10 +144,10 @@ export default class CharacterRBC extends CharacterRB {
     }
 
     //Collisions for upward movement
-    protected handleCollisionDown() {
+    protected handleCollisionDown(preMask : number = 0) {
 
         //Collision bitmask
-        const cbm = this.getCollisionBitMask()
+        const cbm = this.getCollisionBitMask() | preMask;
 
         //If there is a floor, land.
         if(cbm & gcb.flor) {
@@ -209,6 +210,65 @@ export default class CharacterRBC extends CharacterRB {
             }
         }
     }
+
+    //LOL
+    protected resolveCollisions(collisions : Collision[]) {
+
+        var preMask = 0;
+
+        collisions.forEach(c => {
+
+            if(c.mask & (MASKS.enemy | MASKS.block)) {
+
+                //Might need spos inclusion to reduce snapping
+                var diff = new Vect(
+                    Math.sign(c.other.gpos.x - this.gpos.x),
+                    Math.sign(c.other.gpos.y - this.gpos.y));
+                
+                //0123
+                //4  5
+                //6  7
+                //89AB
+
+                //Horizontal ALT
+                // newMask +=
+                //     diff.x == 0 ? 0 :
+                //     diff.x != this.move.x ? (1 << 4 + 1 << 6) :
+                //     diff.x == this.move.x ? (1 << 5 + 1 << 7) : 
+                //     0;
+
+                //Horizontal
+                preMask +=
+                    diff.x < 0 ? (this.move.x > 0 ? (1 << 4 + 1 << 6) : (1 << 5 + 1 << 7)) :
+                    diff.x > 0 ? (this.move.x > 0 ? (1 << 5 + 1 << 7) : (1 << 4 + 1 << 6)) :
+                    0;
+
+                //Vertical
+                preMask +=
+                    diff.y < 0 ? (1 << 1 + 1 << 2 ) :
+                    diff.y > 0 ? (1 << 9 + 1 << 10) :
+                    0;
+            }
+        });
+
+        if(preMask > 0) {
+            
+            switch(this.stateIndex) {
+    
+                case ClimbState.NORMAL :
+                    this.handleCollisionNormal(preMask);
+                    break;
+    
+                case ClimbState.UP :
+                    this.handleCollisionUp(preMask);
+                    break;
+    
+                case ClimbState.DOWN :
+                    this.handleCollisionDown(preMask);
+                    break;
+            }
+        }
+    }    
 
     //Resolve collisions
     public resolveCollision(mask : number, other : GameObject) {
