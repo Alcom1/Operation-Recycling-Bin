@@ -94,7 +94,7 @@ export default class CharacterRBC extends CharacterRB {
     }
 
     //Collisions for normal movement
-    protected handleCollisionNormal(preMask : number = 0) {
+    protected handleCollisionNormal() {
         
         //WALL BOUNDARY
         if (this.gpos.x - 1 < BOUNDARY.minx || 
@@ -106,7 +106,7 @@ export default class CharacterRBC extends CharacterRB {
         else {
 
             //Collision bitmask
-            const cbm = this.getCollisionBitMask() | preMask
+            const cbm = this.getCollisionBitMask()
             
             //If there is no floor, start going down.
             if(!(cbm & gcb.flor)) {
@@ -128,26 +128,26 @@ export default class CharacterRBC extends CharacterRB {
     }
 
     //Collisions for downward movement
-    protected handleCollisionUp(preMask : number = 0) {
+    protected handleCollisionUp() {
 
         //Collision bitmask
-        const cbm = this.getCollisionBitMask() | preMask;
+        const cbm = this.getCollisionBitMask();
 
         //If there is no longer a wall blocking, move forward.
         if(!(cbm & gcb.face)) {
             this.setStateIndex(0);
         }
-        //Otherwise if the climbing limit is reached, start moving back down.
+        //Otherwise if there is a ceiling or the climbing limit is reached, start moving back down.
         else if(cbm & gcb.ceil || this.ground - this.gpos.y >= this.climbLimit) {            
             this.setStateIndex(2);
         }
     }
 
     //Collisions for upward movement
-    protected handleCollisionDown(preMask : number = 0) {
+    protected handleCollisionDown() {
 
         //Collision bitmask
-        const cbm = this.getCollisionBitMask() | preMask;
+        const cbm = this.getCollisionBitMask();
 
         //If there is a floor, land.
         if(cbm & gcb.flor) {
@@ -214,7 +214,7 @@ export default class CharacterRBC extends CharacterRB {
     //LOL
     protected resolveCollisions(collisions : Collision[]) {
 
-        var preMask = 0;
+        var cbm = 0;
 
         collisions.forEach(c => {
 
@@ -224,78 +224,63 @@ export default class CharacterRBC extends CharacterRB {
                 var diff = new Vect(
                     Math.sign(c.other.gpos.x - this.gpos.x),
                     Math.sign(c.other.gpos.y - this.gpos.y));
-                
-                //0123
-                //4  5
-                //6  7
-                //89AB
-
-                //Horizontal ALT
-                // newMask +=
-                //     diff.x == 0 ? 0 :
-                //     diff.x != this.move.x ? (1 << 4 + 1 << 6) :
-                //     diff.x == this.move.x ? (1 << 5 + 1 << 7) : 
-                //     0;
 
                 //Horizontal
-                preMask +=
-                    diff.x < 0 ? (this.move.x > 0 ? (1 << 4 + 1 << 6) : (1 << 5 + 1 << 7)) :
-                    diff.x > 0 ? (this.move.x > 0 ? (1 << 5 + 1 << 7) : (1 << 4 + 1 << 6)) :
-                    0;
+                cbm = cbm | (
+                    diff.x < 0 ? (1 << 4 + 1 << 6) :
+                    diff.x > 0 ? (1 << 5 + 1 << 7) :
+                    0);
 
                 //Vertical
-                preMask +=
+                cbm = cbm | (
                     diff.y < 0 ? (1 << 1 + 1 << 2 ) :
                     diff.y > 0 ? (1 << 9 + 1 << 10) :
-                    0;
+                    0);
+
+                debugger;
             }
         });
 
-        if(preMask > 0) {
-            
-            switch(this.stateIndex) {
-    
-                case ClimbState.NORMAL :
-                    this.handleCollisionNormal(preMask);
-                    break;
-    
-                case ClimbState.UP :
-                    this.handleCollisionUp(preMask);
-                    break;
-    
-                case ClimbState.DOWN :
-                    this.handleCollisionDown(preMask);
-                    break;
-            }
+        if((cbm & gcb.face) && this.stateIndex == ClimbState.NORMAL && this.move.x > 1) {
+            this.reverse();
+        }
+        if((cbm & gcb.back) && this.stateIndex == ClimbState.NORMAL && this.move.x < 1) {
+            this.reverse();
+        }
+        if((cbm & gcb.ceil) && this.stateIndex == ClimbState.UP) {
+            this.setStateIndex(2);
+        }
+        if((cbm & gcb.flor) && this.stateIndex == ClimbState.DOWN) {
+            this.setStateIndex(0);
         }
     }    
 
-    //Resolve collisions
-    public resolveCollision(mask : number, other : GameObject) {
+    // //Resolve collisions
+    // public resolveCollision(mask : number, other : GameObject) {
 
-        //Reverse
-        if (mask & (MASKS.enemy | MASKS.block)){
+    //     //Reverse
+    //     if (mask & (MASKS.enemy | MASKS.block)){
 
-            var targetDir = Math.sign(other.gpos.x - this.gpos.x)   //Direction of the target
-            var facingDir = Math.sign(this.move.x);                 //Direction of this's movement  
+    //         var targetDir = Math.sign(other.gpos.x - this.gpos.x)   //Direction of the target
+    //         var facingDir = Math.sign(this.move.x);                 //Direction of this's movement  
 
-            switch(this.stateIndex) {
-                case ClimbState.NORMAL :
-                    //If there's a horizontal collision, reverse.
-                    if(targetDir == facingDir && other.gpos.y >= this.gpos.y - this.height) {
-                        this.reverse();
-                    }
-                    break;
+    //         switch(this.stateIndex) {
+    //             case ClimbState.NORMAL :
+    //                 //If there's a horizontal collision, reverse.
+    //                 if(targetDir == facingDir && other.gpos.y >= this.gpos.y - this.height) {
+    //                     this.reverse();
+    //                 }
+    //                 break;
 
-                case ClimbState.UP : break;
-                case ClimbState.DOWN : 
+    //             case ClimbState.UP : break;
+    //             case ClimbState.DOWN : 
 
-                    //If there's a collision below, mover horizontally
-                    if(other.gpos.y > this.gpos.y) {
-                        this.setStateIndex(0);
-                    }
-                    break;
-            }
-        }
-    }
+    //                 //If there's a collision below, mover horizontally
+    //                 if(other.gpos.y > this.gpos.y) {
+    //                     this.setStateIndex(0);
+    //                 }
+    //                 break;
+    //         }
+    //     }
+    // }
 }
