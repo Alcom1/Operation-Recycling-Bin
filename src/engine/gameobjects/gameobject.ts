@@ -2,7 +2,7 @@ import Vect, { Point } from "engine/utilities/vect";
 import Scene from "engine/scene/scene";
 import Engine from "engine/engine";
 import { Collider } from "engine/modules/collision";
-import { getZIndex } from "engine/utilities/math";
+import { getZIndex, GMULTX, GMULTY } from "engine/utilities/math";
 
 export interface Collision {
     other : GameObject;
@@ -27,6 +27,7 @@ export default class GameObject {
     public gpos: Vect;
     /** Sub-position */
     public spos: Vect;
+    public get pos() : Vect { return this.spos.getAdd({ x : this.gpos.x * GMULTX, y : this.gpos.y * GMULTY })}
     protected engine: Engine;
     public tags: string[];
     public parent: Scene;

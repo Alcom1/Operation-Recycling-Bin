@@ -1,7 +1,6 @@
 import GameObject, { Collision } from "engine/gameobjects/gameobject";
 import { Collider } from "engine/modules/collision";
-import { bitStack, BOUNDARY, GMULTX, GMULTY, MASKS } from "engine/utilities/math";
-import Vect from "engine/utilities/vect";
+import { bitStack, BOUNDARY, GMULTX, GMULTY, MASKS, round } from "engine/utilities/math";
 import { CharacterParams } from "./character";
 import CharacterRB from "./characterrb";
 
@@ -211,76 +210,42 @@ export default class CharacterRBC extends CharacterRB {
         }
     }
 
-    //LOL
-    protected resolveCollisions(collisions : Collision[]) {
+    //Resolve collisions
+    public resolveCollision(mask : number, other : GameObject) {
 
-        var cbm = 0;
+        //Reverse
+        if (mask & (MASKS.enemy | MASKS.block)) {
 
-        collisions.forEach(c => {
-
-            if(c.mask & (MASKS.enemy | MASKS.block)) {
-
-                //Might need spos inclusion to reduce snapping
-                var diff = new Vect(
-                    Math.sign(c.other.gpos.x - this.gpos.x),
-                    Math.sign(c.other.gpos.y - this.gpos.y));
-
-                //Horizontal
-                cbm = cbm | (
-                    diff.x < 0 ? (1 << 4 + 1 << 6) :
-                    diff.x > 0 ? (1 << 5 + 1 << 7) :
-                    0);
-
-                //Vertical
-                cbm = cbm | (
-                    diff.y < 0 ? (1 << 1 + 1 << 2 ) :
-                    diff.y > 0 ? (1 << 9 + 1 << 10) :
-                    0);
-
-                debugger;
+            var qq = other.pos.getSub(this.pos);
+            var qq2 = {
+                x : round(qq.x, GMULTX) / GMULTX,
+                y : round(qq.y, GMULTY) / GMULTY
             }
-        });
-
-        if((cbm & gcb.face) && this.stateIndex == ClimbState.NORMAL && this.move.x > 1) {
-            this.reverse();
+            
+            switch(this.stateIndex) {
+        
+                //If Normal movment, horizontally aligned, and the other character is in front, reverse
+                case ClimbState.NORMAL :
+                    if(Math.abs(qq2.y) <= 1 && Math.sign(qq.x) == this.move.x) {
+                        debugger;
+                        this.reverse();
+                    }
+                    break;
+                    
+                //If Upward movement, vertically aligned, and the other character is above, go down
+                case ClimbState.UP :
+                    if(Math.abs(qq2.x) <= 1 && qq2.y < 0) {
+                        this.setStateIndex(2);
+                    }
+                    break;
+    
+                //If Downward movement, vertically aligned, and the other character is below, land
+                case ClimbState.DOWN :
+                    if(Math.abs(qq2.x) <= 1 && qq2.y > 0) {
+                        this.setStateIndex(0);
+                    }
+                    break;
+            }
         }
-        if((cbm & gcb.back) && this.stateIndex == ClimbState.NORMAL && this.move.x < 1) {
-            this.reverse();
-        }
-        if((cbm & gcb.ceil) && this.stateIndex == ClimbState.UP) {
-            this.setStateIndex(2);
-        }
-        if((cbm & gcb.flor) && this.stateIndex == ClimbState.DOWN) {
-            this.setStateIndex(0);
-        }
-    }    
-
-    // //Resolve collisions
-    // public resolveCollision(mask : number, other : GameObject) {
-
-    //     //Reverse
-    //     if (mask & (MASKS.enemy | MASKS.block)){
-
-    //         var targetDir = Math.sign(other.gpos.x - this.gpos.x)   //Direction of the target
-    //         var facingDir = Math.sign(this.move.x);                 //Direction of this's movement  
-
-    //         switch(this.stateIndex) {
-    //             case ClimbState.NORMAL :
-    //                 //If there's a horizontal collision, reverse.
-    //                 if(targetDir == facingDir && other.gpos.y >= this.gpos.y - this.height) {
-    //                     this.reverse();
-    //                 }
-    //                 break;
-
-    //             case ClimbState.UP : break;
-    //             case ClimbState.DOWN : 
-
-    //                 //If there's a collision below, mover horizontally
-    //                 if(other.gpos.y > this.gpos.y) {
-    //                     this.setStateIndex(0);
-    //                 }
-    //                 break;
-    //         }
-    //     }
-    // }
+    }
 }
