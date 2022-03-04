@@ -73,64 +73,62 @@ export default class CharacterRBC extends CharacterRB {
     }
 
     //Check and resolve brick collisions
-    protected handleCollision() {        
-        
-        
+    protected handleCollision() {   
+
+        let premask = 0;
+
+        //WALL BOUNDARY
+        if (this.gpos.x - 1 < BOUNDARY.minx || 
+            this.gpos.x + 2 > BOUNDARY.maxx) {
+
+            premask |= gcb.face;
+        }
+
         switch(this.stateIndex) {
 
             case ClimbState.NORMAL :
-                this.handleCollisionNormal();
+                this.handleCollisionNormal(premask);
                 break;
 
             case ClimbState.UP :
-                this.handleCollisionUp();
+                this.handleCollisionUp(premask);
                 break;
 
             case ClimbState.DOWN :
-                this.handleCollisionDown();
+                this.handleCollisionDown(premask);
                 break;
         }
     }
 
     //Collisions for normal movement
-    protected handleCollisionNormal() {
+    protected handleCollisionNormal(premask : number) {
+
+        //Collision bitmask
+        const cbm = premask | this.getCollisionBitMask()
         
-        //WALL BOUNDARY
-        if (this.gpos.x - 1 < BOUNDARY.minx || 
-            this.gpos.x > BOUNDARY.maxx) {
-
-            this.reverse();
+        //If there is no floor, start going down.
+        if(!(cbm & gcb.flor)) {
+            this.setStateIndex(2);
         }
-        //Brick collisions
-        else {
+        //Otherwise if there is a wall, try going above it.
+        else if((cbm & gcb.face)) {
 
-            //Collision bitmask
-            const cbm = this.getCollisionBitMask()
-            
-            //If there is no floor, start going down.
-            if(!(cbm & gcb.flor)) {
-                this.setStateIndex(2);
+            //If there is a ceiling blocking the ascent, reverse.
+            if(cbm & gcb.ceil) {
+                this.reverse();
             }
-            //Otherwise if there is a wall, try going above it.
-            else if((cbm & gcb.face)) {
-
-                //If there is a ceiling blocking the ascent, reverse.
-                if(cbm & gcb.ceil) {
-                    this.reverse();
-                }
-                //Otherwise, go up.
-                else {
-                    this.setStateIndex(1);
-                }
+            //Otherwise, go up.
+            else {
+                this.setStateIndex(1);
             }
         }
     }
 
     //Collisions for downward movement
-    protected handleCollisionUp() {
+    protected handleCollisionUp(premask : number) {
 
         //Collision bitmask
-        const cbm = this.getCollisionBitMask();
+        const cbm = premask | this.getCollisionBitMask();
 
         //If there is no longer a wall blocking, move forward.
         if(!(cbm & gcb.face)) {
@@ -143,10 +141,10 @@ export default class CharacterRBC extends CharacterRB {
     }
 
     //Collisions for upward movement
-    protected handleCollisionDown() {
+    protected handleCollisionDown(premask : number) {
 
         //Collision bitmask
-        const cbm = this.getCollisionBitMask();
+        const cbm = premask | this.getCollisionBitMask();
 
         //If there is a floor, land.
         if(cbm & gcb.flor) {
@@ -227,7 +225,6 @@ export default class CharacterRBC extends CharacterRB {
                 //If Normal movment, horizontally aligned, and the other character is in front, reverse
                 case ClimbState.NORMAL :
                     if(Math.abs(qq2.y) <= 1 && Math.sign(qq.x) == this.move.x) {
-                        debugger;
                         this.reverse();
                     }
                     break;
