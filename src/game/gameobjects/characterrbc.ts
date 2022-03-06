@@ -49,6 +49,7 @@ export default class CharacterRBC extends CharacterRB {
     private vertSpeed : number = 50; 
     private ground: number = 0;
     private climbLimit: number = 3;
+    private colmask: number = 0;
 
     constructor(params: CharacterParams) {
         super(Object.assign(params, characterRBCOverride));
@@ -73,48 +74,49 @@ export default class CharacterRBC extends CharacterRB {
     }
 
     //Check and resolve brick collisions
-    protected handleCollision() {   
+    protected handleCollision() {
 
-        let premask = 0;
+        //Reset collision mask
+        this.colmask = 0;
 
         //WALL BOUNDARY
         if (this.gpos.x - 1 < BOUNDARY.minx || 
             this.gpos.x + 2 > BOUNDARY.maxx) {
 
-            premask |= gcb.face;
+            this.colmask |= gcb.face;
         }
 
         switch(this.stateIndex) {
 
             case ClimbState.NORMAL :
-                this.handleCollisionNormal(premask);
+                this.handleCollisionNormal();
                 break;
 
             case ClimbState.UP :
-                this.handleCollisionUp(premask);
+                this.handleCollisionUp();
                 break;
 
             case ClimbState.DOWN :
-                this.handleCollisionDown(premask);
+                this.handleCollisionDown();
                 break;
         }
     }
 
     //Collisions for normal movement
-    protected handleCollisionNormal(premask : number) {
+    protected handleCollisionNormal() {
 
         //Collision bitmask
-        const cbm = premask | this.getCollisionBitMask()
+        this.colmask = this.colmask | this.getCollisionBitMask()
         
         //If there is no floor, start going down.
-        if(!(cbm & gcb.flor)) {
+        if(!(this.colmask & gcb.flor)) {
             this.setStateIndex(2);
         }
         //Otherwise if there is a wall, try going above it.
-        else if((cbm & gcb.face)) {
+        else if((this.colmask & gcb.face)) {
 
             //If there is a ceiling blocking the ascent, reverse.
-            if(cbm & gcb.ceil) {
+            if(this.colmask & gcb.ceil) {
                 this.reverse();
             }
             //Otherwise, go up.
@@ -125,34 +127,34 @@ export default class CharacterRBC extends CharacterRB {
     }
 
     //Collisions for downward movement
-    protected handleCollisionUp(premask : number) {
+    protected handleCollisionUp() {
 
         //Collision bitmask
-        const cbm = premask | this.getCollisionBitMask();
+        this.colmask = this.colmask | this.getCollisionBitMask();
 
         //If there is no longer a wall blocking, move forward.
-        if(!(cbm & gcb.face)) {
+        if(!(this.colmask & gcb.face)) {
             this.setStateIndex(0);
         }
         //Otherwise if there is a ceiling or the climbing limit is reached, start moving back down.
-        else if(cbm & gcb.ceil || this.ground - this.gpos.y >= this.climbLimit) {            
+        else if(this.colmask & gcb.ceil || this.ground - this.gpos.y >= this.climbLimit) {            
             this.setStateIndex(2);
         }
     }
 
     //Collisions for upward movement
-    protected handleCollisionDown(premask : number) {
+    protected handleCollisionDown() {
 
         //Collision bitmask
-        const cbm = premask | this.getCollisionBitMask();
+        this.colmask = this.colmask | this.getCollisionBitMask();
 
         //If there is a floor, land.
-        if(cbm & gcb.flor) {
+        if(this.colmask & gcb.flor) {
 
             //If there is a wall in the way while landing, turn around
-            if(cbm & gcb.face) {
+            if(this.colmask & gcb.face) {
 
-                if(cbm & gcb.back) {
+                if(this.colmask & gcb.back) {
                     this.setStateIndex(1);
                 }
                 else {
@@ -214,32 +216,43 @@ export default class CharacterRBC extends CharacterRB {
         //Reverse
         if (mask & (MASKS.enemy | MASKS.block)) {
 
-            var qq = other.pos.getSub(this.pos);
-            var qq2 = {
-                x : round(qq.x, GMULTX) / GMULTX,
-                y : round(qq.y, GMULTY) / GMULTY
+            const tdiff = other.pos.getSub(this.pos);   //Difference between positions
+            const rdiff = {                             //Difference between positions, rounded to grid
+                x : round(tdiff.x, GMULTX) / GMULTX,
+                y : round(tdiff.y, GMULTY) / GMULTY
             }
             
             switch(this.stateIndex) {
         
                 //If Normal movment, horizontally aligned, and the other character is in front, reverse
                 case ClimbState.NORMAL :
-                    if(Math.abs(qq2.y) <= 1 && Math.sign(qq.x) == this.move.x) {
+                    if(Math.abs(rdiff.y) <= 1 && Math.sign(rdiff.x) == this.move.x) {
                         this.reverse();
                     }
                     break;
                     
                 //If Upward movement, vertically aligned, and the other character is above, go down
                 case ClimbState.UP :
-                    if(Math.abs(qq2.x) <= 1 && qq2.y < 0) {
+                    if(Math.abs(rdiff.x) <= 1 && rdiff.y < 0) {
                         this.setStateIndex(2);
                     }
                     break;
     
                 //If Downward movement, vertically aligned, and the other character is below, land
                 case ClimbState.DOWN :
-                    if(Math.abs(qq2.x) <= 1 && qq2.y > 0) {
+                    if(Math.abs(rdiff.x) <= 1 && rdiff.y > 0) {
+
+                        //Snap grid position.
+                        this.gpos.add({
+                            x : Math.round(this.spos.x / GMULTX),
+                            y : Math.round(this.spos.y / GMULTY)
+                        });
+
                         this.setStateIndex(0);
+
+                        if(this.colmask & gcb.face) {
+                            this.reverse();
+                        }
                     }
                     break;
             }
