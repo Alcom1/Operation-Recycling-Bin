@@ -1,6 +1,7 @@
 import GameObject, { Collision } from "engine/gameobjects/gameobject";
 import { Collider } from "engine/modules/collision";
 import { bitStack, BOUNDARY, GMULTX, GMULTY, MASKS, round } from "engine/utilities/math";
+import Vect, { Point } from "engine/utilities/vect";
 import { CharacterParams } from "./character";
 import CharacterRB from "./characterrb";
 
@@ -49,7 +50,8 @@ export default class CharacterRBC extends CharacterRB {
     private vertSpeed : number = 50; 
     private ground: number = 0;
     private climbLimit: number = 3;
-    private colmask: number = 0;
+    private storedCbm: number = 0;                  //Store Collision bitmask from collision for later resolution
+    private storedSpos: Point = { x : 0, y : 0};    //Store subposition for later restoration
 
     constructor(params: CharacterParams) {
         super(Object.assign(params, characterRBCOverride));
@@ -77,13 +79,20 @@ export default class CharacterRBC extends CharacterRB {
     protected handleCollision() {
 
         //Reset collision mask
-        this.colmask = 0;
+        this.storedCbm = 0;
+
+        //Store subposition before handling collisions.
+        this.storedSpos = this.spos.get();
 
         //WALL BOUNDARY
         if (this.gpos.x - 1 < BOUNDARY.minx || 
             this.gpos.x + 2 > BOUNDARY.maxx) {
 
-            this.colmask |= gcb.face;
+            this.storedCbm |= gcb.face;
+        }
+
+        if(this.isDebug) {
+            console.log(this.stateIndex);
         }
 
         switch(this.stateIndex) {
@@ -106,17 +115,17 @@ export default class CharacterRBC extends CharacterRB {
     protected handleCollisionNormal() {
 
         //Collision bitmask
-        this.colmask = this.colmask | this.getCollisionBitMask()
+        this.storedCbm = this.storedCbm | this.getCollisionBitMask()
         
         //If there is no floor, start going down.
-        if(!(this.colmask & gcb.flor)) {
+        if(!(this.storedCbm & gcb.flor)) {
             this.setStateIndex(2);
         }
         //Otherwise if there is a wall, try going above it.
-        else if((this.colmask & gcb.face)) {
+        else if((this.storedCbm & gcb.face)) {
 
             //If there is a ceiling blocking the ascent, reverse.
-            if(this.colmask & gcb.ceil) {
+            if(this.storedCbm & gcb.ceil) {
                 this.reverse();
             }
             //Otherwise, go up.
@@ -130,14 +139,14 @@ export default class CharacterRBC extends CharacterRB {
     protected handleCollisionUp() {
 
         //Collision bitmask
-        this.colmask = this.colmask | this.getCollisionBitMask();
+        this.storedCbm = this.storedCbm | this.getCollisionBitMask();
 
         //If there is no longer a wall blocking, move forward.
-        if(!(this.colmask & gcb.face)) {
+        if(!(this.storedCbm & gcb.face)) {
             this.setStateIndex(0);
         }
         //Otherwise if there is a ceiling or the climbing limit is reached, start moving back down.
-        else if(this.colmask & gcb.ceil || this.ground - this.gpos.y >= this.climbLimit) {            
+        else if(this.storedCbm & gcb.ceil || this.ground - this.gpos.y >= this.climbLimit) {            
             this.setStateIndex(2);
         }
     }
@@ -146,15 +155,15 @@ export default class CharacterRBC extends CharacterRB {
     protected handleCollisionDown() {
 
         //Collision bitmask
-        this.colmask = this.colmask | this.getCollisionBitMask();
+        this.storedCbm = this.storedCbm | this.getCollisionBitMask();
 
         //If there is a floor, land.
-        if(this.colmask & gcb.flor) {
+        if(this.storedCbm & gcb.flor) {
 
             //If there is a wall in the way while landing, turn around
-            if(this.colmask & gcb.face) {
+            if(this.storedCbm & gcb.face) {
 
-                if(this.colmask & gcb.back) {
+                if(this.storedCbm & gcb.back) {
                     this.setStateIndex(1);
                 }
                 else {
@@ -250,9 +259,20 @@ export default class CharacterRBC extends CharacterRB {
 
                         this.setStateIndex(0);
 
-                        if(this.colmask & gcb.face) {
-                            this.reverse();
+                        if(this.storedCbm & gcb.face) {
+
+                            //If there is a ceiling blocking the ascent, reverse.
+                            if(this.storedCbm & gcb.ceil) {
+                                this.reverse();
+                            }
+                            //Otherwise, go up.
+                            else {
+                                this.setStateIndex(1);
+                            }
                         }
+
+                        //Reset subposition to stored subposition to fix 
+                        this.spos.x = this.storedSpos.x;
                     }
                     break;
             }

@@ -18,6 +18,7 @@ export interface GameObjectParams {
     name: string;
     tags?: [string];
     isActive?: boolean;
+    isDebug: boolean;
 }
 
 /** Base game object */
@@ -32,6 +33,7 @@ export default class GameObject {
     public tags: string[];
     public parent: Scene;
     public isActive: Boolean;
+    public isDebug: Boolean;
     private collisions: Collision[] = [];
 
     constructor(params: GameObjectParams) {
@@ -41,6 +43,7 @@ export default class GameObject {
         this.parent = params.scene;
         this.engine = params.engine;
         this.isActive = params.isActive ?? true;
+        this.isDebug = params.isDebug ?? false;
     }
 
     /**
@@ -98,17 +101,9 @@ export default class GameObject {
      */
     public resolveClearCollisions() {
 
-        this.resolveCollisions(this.collisions);
+        this.collisions.forEach(c => this.resolveCollision(c.mask, c.other));
         this.collisions = [];
     }
-
-    /**
-     * Resolve all collisions
-     */
-    protected resolveCollisions(collisions : Collision[]) {
-
-        collisions.forEach(c => this.resolveCollision(c.mask, c.other));
-    }    
 
     /**
      * Resolve collision for this game object
