@@ -115,7 +115,11 @@ export default class Character extends GameObject {
         }
         else {
             this.handleSpecialMovement(dt);
-            this.checkCollision = true;
+
+            //Gliding characters should still wait for the next step.
+            if(!this.isGlide) {
+                this.checkCollision = true;
+            }
         }
 
         this.gridStep();
@@ -159,11 +163,12 @@ export default class Character extends GameObject {
             this.brickHandler.isRecheck = true; //Recheck bricks after every shift
         }
 
-        if(this.isGlide) {
-            this.animationsCurr.forEach(a => {
-                a.spos = this.spos;
-            });
-        }
+        // Not yet
+        // if(this.isGlide) {
+        //     this.animationsCurr.forEach(a => {
+        //         a.spos = this.spos;
+        //     });
+        // }
     }
 
     //Move forward and set collection check at each step.

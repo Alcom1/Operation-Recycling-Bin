@@ -8,29 +8,38 @@ import CharacterRB from "./characterrb";
 enum ClimbState {
     NORMAL,
     UP,
+    WAIT,
     DOWN
 }
 
 const characterRBCOverride = Object.freeze({
     height: 2,
     speed : 2.0,
-    images : [        
-        { name : "char_rbg_left", offsetX : 0 },
-        { name : "char_rbg_right", offsetX : 0}],
+    images : [
+        { name : "char_rbc_left", offsetX : 0 },
+        { name : "char_rbc_right", offsetX : 0}],
     frameCount : 2,
     animsCount : 1,
     isGlide : true,
-    
+
     //Misc animation parameters
     animsMisc : [{
         speed : 2.0,
-        images : [{ name : "char_rbg_left" }],
+        images : [{ name : "char_rbc_up" }],
         frameCount : 2,
         gposOffset : { x : -1, y : 0},
         isSliced : true
     },{
         speed : 2.0,
-        images : [{ name : "char_rbg_right" }],
+        images : [
+            { name : "char_rbc_left", offsetX : 0 },
+            { name : "char_rbc_right", offsetX : 0}],
+        frameCount : 2,
+        gposOffset : { x : -1, y : 0},
+        isSliced : true
+    },{
+        speed : 2.0,
+        images : [{ name : "char_rbc_down" }],
         frameCount : 2,
         gposOffset : { x : -1, y : 0},
         isSliced : true
@@ -47,14 +56,17 @@ const gcb = Object.freeze({
 
 export default class CharacterRBC extends CharacterRB {
 
-    private vertSpeed : number = 50; 
+    private vertSpeed : number = 72;
     private ground: number = 0;
     private climbLimit: number = 3;
+    private waitCount: number = 0;
+    private waitLimit: number;
     private storedCbm: number = 0;                  //Store Collision bitmask from collision for later resolution
-    private storedSpos: Point = { x : 0, y : 0};    //Store subposition for later restoration
 
     constructor(params: CharacterParams) {
         super(Object.assign(params, characterRBCOverride));
+
+        this.waitLimit = 1 / (params.speed ?? 1);
     }
 
     public update(dt: number) {
@@ -62,11 +74,19 @@ export default class CharacterRBC extends CharacterRB {
     }
 
     public handleSpecialMovement(dt : number) {
-        
+
         switch(this.stateIndex) {
 
             case ClimbState.UP :
                 this.spos.y -= this.vertSpeed * dt;
+                break;
+
+            case ClimbState.WAIT :
+                this.waitCount += dt;
+                if(this.waitCount >= this.waitLimit) {
+                    this.waitCount = 0;
+                    this.handleCollision();
+                }
                 break;
 
             case ClimbState.DOWN :
@@ -81,11 +101,8 @@ export default class CharacterRBC extends CharacterRB {
         //Reset collision mask
         this.storedCbm = 0;
 
-        //Store subposition before handling collisions.
-        this.storedSpos = this.spos.get();
-
         //WALL BOUNDARY
-        if (this.gpos.x - 1 < BOUNDARY.minx || 
+        if (this.gpos.x - 1 < BOUNDARY.minx ||
             this.gpos.x + 2 > BOUNDARY.maxx) {
 
             this.storedCbm |= gcb.face;
@@ -105,6 +122,10 @@ export default class CharacterRBC extends CharacterRB {
                 this.handleCollisionUp();
                 break;
 
+            case ClimbState.WAIT :
+                this.handleCollisionWait();
+                break;
+
             case ClimbState.DOWN :
                 this.handleCollisionDown();
                 break;
@@ -116,22 +137,31 @@ export default class CharacterRBC extends CharacterRB {
 
         //Collision bitmask
         this.storedCbm = this.storedCbm | this.getCollisionBitMask()
-        
+
         //If there is no floor, start going down.
         if(!(this.storedCbm & gcb.flor)) {
-            this.setStateIndex(2);
+            this.setStateIndex(ClimbState.DOWN);
         }
         //Otherwise if there is a wall, try going above it.
         else if((this.storedCbm & gcb.face)) {
+            this.setStateIndex(ClimbState.WAIT);
+        }
+    }
 
-            //If there is a ceiling blocking the ascent, reverse.
-            if(this.storedCbm & gcb.ceil) {
-                this.reverse();
-            }
-            //Otherwise, go up.
-            else {
-                this.setStateIndex(1);
-            }
+    //Collisions for downward movement
+    protected handleCollisionWait() {
+
+        //Collision bitmask
+        this.storedCbm = this.storedCbm | this.getCollisionBitMask();
+
+        //If there is a ceiling blocking the ascent, return to normal and reverse.
+        if(this.storedCbm & gcb.ceil) {
+            this.setStateIndex(ClimbState.NORMAL);
+            this.reverse();
+        }
+        //Otherwise, go up.
+        else {
+            this.setStateIndex(ClimbState.UP);
         }
     }
 
@@ -143,11 +173,11 @@ export default class CharacterRBC extends CharacterRB {
 
         //If there is no longer a wall blocking, move forward.
         if(!(this.storedCbm & gcb.face)) {
-            this.setStateIndex(0);
+            this.setStateIndex(ClimbState.NORMAL);
         }
         //Otherwise if there is a ceiling or the climbing limit is reached, start moving back down.
-        else if(this.storedCbm & gcb.ceil || this.ground - this.gpos.y >= this.climbLimit) {            
-            this.setStateIndex(2);
+        else if(this.storedCbm & gcb.ceil || this.ground - this.gpos.y >= this.climbLimit) {
+            this.setStateIndex(ClimbState.DOWN);
         }
     }
 
@@ -164,16 +194,16 @@ export default class CharacterRBC extends CharacterRB {
             if(this.storedCbm & gcb.face) {
 
                 if(this.storedCbm & gcb.back) {
-                    this.setStateIndex(1);
+                    this.setStateIndex(ClimbState.WAIT);
                 }
                 else {
-                    this.setStateIndex(0);
+                    this.setStateIndex(ClimbState.NORMAL);
                     this.reverse();
                 }
             }
             //Oterwise, continue forward
             else {
-                this.setStateIndex(0);
+                this.setStateIndex(ClimbState.NORMAL);
             }
         }
     }
@@ -183,9 +213,9 @@ export default class CharacterRBC extends CharacterRB {
 
         return this.brickHandler.checkCollisionRing(
             this.gpos.getAdd({
-                x : -2, 
-                y : -this.height}), 
-            4, 
+                x : -2,
+                y : -this.height}),
+            4,
             this.move.x);
     }
 
@@ -211,7 +241,7 @@ export default class CharacterRBC extends CharacterRB {
 
             let climbOffset = this.stateIndex == ClimbState.DOWN ? 2 : 0
 
-            return { 
+            return {
                 mask : 0,   //Passive
                 min : this.gpos.getAdd({ x : -1, y : climbOffset - this.height}),
                 max : this.gpos.getAdd({ x :  1, y : climbOffset})
@@ -222,60 +252,5 @@ export default class CharacterRBC extends CharacterRB {
     //Resolve collisions
     public resolveCollision(mask : number, other : GameObject) {
 
-        //Reverse
-        if (mask & (MASKS.enemy | MASKS.block)) {
-
-            const tdiff = other.pos.getSub(this.pos);   //Difference between positions
-            const rdiff = {                             //Difference between positions, rounded to grid
-                x : round(tdiff.x, GMULTX) / GMULTX,
-                y : round(tdiff.y, GMULTY) / GMULTY
-            }
-            
-            switch(this.stateIndex) {
-        
-                //If Normal movment, horizontally aligned, and the other character is in front, reverse
-                case ClimbState.NORMAL :
-                    if(Math.abs(rdiff.y) <= 1 && Math.sign(rdiff.x) == this.move.x) {
-                        this.reverse();
-                    }
-                    break;
-                    
-                //If Upward movement, vertically aligned, and the other character is above, go down
-                case ClimbState.UP :
-                    if(Math.abs(rdiff.x) <= 1 && rdiff.y < 0) {
-                        this.setStateIndex(2);
-                    }
-                    break;
-    
-                //If Downward movement, vertically aligned, and the other character is below, land
-                case ClimbState.DOWN :
-                    if(Math.abs(rdiff.x) <= 1 && rdiff.y > 0) {
-
-                        //Snap grid position.
-                        this.gpos.add({
-                            x : Math.round(this.spos.x / GMULTX),
-                            y : Math.round(this.spos.y / GMULTY)
-                        });
-
-                        this.setStateIndex(0);
-
-                        if(this.storedCbm & gcb.face) {
-
-                            //If there is a ceiling blocking the ascent, reverse.
-                            if(this.storedCbm & gcb.ceil) {
-                                this.reverse();
-                            }
-                            //Otherwise, go up.
-                            else {
-                                this.setStateIndex(1);
-                            }
-                        }
-
-                        //Reset subposition to stored subposition to fix 
-                        this.spos.x = this.storedSpos.x;
-                    }
-                    break;
-            }
-        }
     }
 }

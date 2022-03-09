@@ -11,14 +11,10 @@ export default class CharacterRB extends Character {
             mask : MASKS.block | MASKS.death | MASKS.enemy,
             min : this.gpos
                 .getAdd({ x : -1, y : 1 - this.height})
-                .getMult(GMULTX, GMULTY)
-                .getAdd(this.spos)
-                .getSub({ x : 2, y : 2}),   //Slight padding to ensure continuous parallel collisions
+                .getMult(GMULTX, GMULTY),
             max : this.gpos
                 .getAdd({ x :  1, y : 1})
-                .getMult(GMULTX, GMULTY)
-                .getAdd(this.spos)
-                .getAdd({ x : 2, y : 2}),   //Slight padding to ensure continuous parallel collisions
+                .getMult(GMULTX, GMULTY),
             isSub : true
         },
         this.getPassiveCollider()];
