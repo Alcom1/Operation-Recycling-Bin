@@ -56,6 +56,7 @@ const gcb = Object.freeze({
 
 export default class CharacterRBC extends CharacterRB {
 
+    private isStep: boolean = false;
     private vertSpeed : number = 72;
     private ground: number = 0;
     private climbLimit: number = 3;
@@ -99,6 +100,7 @@ export default class CharacterRBC extends CharacterRB {
     protected handleCollision() {
 
         //Reset collision mask
+        this.isStep = true;
         this.storedCbm = 0;
 
         //WALL BOUNDARY
@@ -106,10 +108,6 @@ export default class CharacterRBC extends CharacterRB {
             this.gpos.x + 2 > BOUNDARY.maxx) {
 
             this.storedCbm |= gcb.face;
-        }
-
-        if(this.isDebug) {
-            console.log(this.stateIndex);
         }
 
         switch(this.stateIndex) {
@@ -252,5 +250,58 @@ export default class CharacterRBC extends CharacterRB {
     //Resolve collisions
     public resolveCollision(mask : number, other : GameObject) {
 
+        //Reverse
+        if (this.isStep && mask & (MASKS.enemy | MASKS.block)) {
+
+            this.isStep = false;
+
+            const diff = other.gpos
+                .getSub(this.gpos)  //Difference between positions
+                .getAdd({           
+                    x : Math.round(other.spos.x / GMULTX),
+                    y : Math.round(other.spos.y / GMULTY)
+                });
+            
+            switch(this.stateIndex) {
+        
+                //If Normal movment, horizontally aligned, and the other character is in front, reverse
+                case ClimbState.NORMAL :
+                    if(Math.abs(diff.y) < 2 && Math.sign(diff.x) == this.move.x) {
+                        this.reverse();
+                        if(!this.isDebug) {
+                            console.log("REVERSE");
+                        }
+                    }
+                    break;
+                    
+                //If Upward movement, vertically aligned, and the other character is above, go down
+                case ClimbState.WAIT :
+                case ClimbState.UP :
+                    if(Math.abs(diff.x) < 2 && diff.y < 0) {
+                        if(this.storedCbm & gcb.flor) {
+                            this.setStateIndex(0);
+
+                            if(this.storedCbm & gcb.face) {
+                                this.reverse();
+                            }
+                        }
+                        else {
+                            this.setStateIndex(2);
+                        }
+                    }
+                    break;
+    
+                //If Downward movement, vertically aligned, and the other character is below, land
+                case ClimbState.DOWN :
+                    if(Math.abs(diff.x) < 2 && diff.y > 0) {
+                        this.setStateIndex(0);
+
+                        if(this.storedCbm & gcb.face) {
+                            this.reverse();
+                        }
+                    }
+                    break;
+            }
+        }
     }
 }

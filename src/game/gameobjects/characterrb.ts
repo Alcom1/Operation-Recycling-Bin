@@ -10,10 +10,10 @@ export default class CharacterRB extends Character {
         return [{ 
             mask : MASKS.block | MASKS.death | MASKS.enemy,
             min : this.gpos
-                .getAdd({ x : -1, y : 1 - this.height})
+                .getAdd({ x : -1 - 0.4, y : 1 - 0.4 - this.height})
                 .getMult(GMULTX, GMULTY),
             max : this.gpos
-                .getAdd({ x :  1, y : 1})
+                .getAdd({ x :  1 + 0.4, y : 1 + 0.4})
                 .getMult(GMULTX, GMULTY),
             isSub : true
         },

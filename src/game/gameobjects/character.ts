@@ -27,7 +27,7 @@ export default class Character extends GameObject {
     protected _height: number;
     protected move: Vect;                           //Movement direction of this character
     protected brickHandler!: BrickHandler;          //Brick handler for brick pressure (bricks under this character)
-    protected checkCollision: boolean;              //If collision needs to be checked
+    private checkCollision: boolean;                //If collision needs to be checked
     private speed: number;                          //Speed of this character
     private isGlide: boolean;                       //If the character sprite matches the character's subposition
     private underBricks: Brick[] = [];              //Bricks under pressure, under this character
