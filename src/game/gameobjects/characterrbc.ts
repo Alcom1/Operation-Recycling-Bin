@@ -31,9 +31,7 @@ const characterRBCOverride = Object.freeze({
         isSliced : true
     },{
         speed : 2.0,
-        images : [
-            { name : "char_rbc_left", offsetX : 0 },
-            { name : "char_rbc_right", offsetX : 0}],
+        images : [{ name : "char_rbc_up", offsetX : 0 }],
         frameCount : 2,
         gposOffset : { x : -1, y : 0},
         isSliced : true
@@ -62,7 +60,7 @@ export default class CharacterRBC extends CharacterRB {
     private climbLimit: number = 3;
     private waitCount: number = 0;
     private waitLimit: number;
-    private storedCbm: number = 0;                  //Store Collision bitmask from collision for later resolution
+    private storedCbm: number = 0;  //Store Collision bitmask from collision for later resolution
 
     constructor(params: CharacterParams) {
         super(Object.assign(params, characterRBCOverride));
@@ -109,33 +107,14 @@ export default class CharacterRBC extends CharacterRB {
 
             this.storedCbm |= gcb.face;
         }
-
-        switch(this.stateIndex) {
-
-            case ClimbState.NORMAL :
-                this.handleCollisionNormal();
-                break;
-
-            case ClimbState.UP :
-                this.handleCollisionUp();
-                break;
-
-            case ClimbState.WAIT :
-                this.handleCollisionWait();
-                break;
-
-            case ClimbState.DOWN :
-                this.handleCollisionDown();
-                break;
-        }
     }
 
     //Collisions for normal movement
     protected handleCollisionNormal() {
 
         //Collision bitmask
-        this.storedCbm = this.storedCbm | this.getCollisionBitMask()
-
+        this.storedCbm = this.storedCbm | this.getCollisionBitMask();
+        
         //If there is no floor, start going down.
         if(!(this.storedCbm & gcb.flor)) {
             this.setStateIndex(ClimbState.DOWN);
@@ -248,12 +227,39 @@ export default class CharacterRBC extends CharacterRB {
     }
 
     //Resolve collisions
+    public resolveCollisions(collisions : Collision[]) {
+
+        if(!this.isStep) {
+            return;
+        }
+
+        this.isStep = false;
+
+        super.resolveCollisions(collisions);
+
+        switch(this.stateIndex) {
+
+            case ClimbState.NORMAL :
+                this.handleCollisionNormal();
+                break;
+
+            case ClimbState.UP :
+                this.handleCollisionUp();
+                break;
+
+            case ClimbState.WAIT :
+                this.handleCollisionWait();
+                break;
+
+            case ClimbState.DOWN :
+                this.handleCollisionDown();
+                break;
+        }
+    }
+
     public resolveCollision(mask : number, other : GameObject) {
 
-        //Reverse
-        if (this.isStep && mask & (MASKS.enemy | MASKS.block)) {
-
-            this.isStep = false;
+        if (mask & (MASKS.enemy | MASKS.block)) {
 
             const diff = other.gpos
                 .getSub(this.gpos)  //Difference between positions
@@ -262,45 +268,17 @@ export default class CharacterRBC extends CharacterRB {
                     y : Math.round(other.spos.y / GMULTY)
                 });
             
-            switch(this.stateIndex) {
-        
-                //If Normal movment, horizontally aligned, and the other character is in front, reverse
-                case ClimbState.NORMAL :
-                    if(Math.abs(diff.y) < 2 && Math.sign(diff.x) == this.move.x) {
-                        this.reverse();
-                        if(!this.isDebug) {
-                            console.log("REVERSE");
-                        }
-                    }
-                    break;
-                    
-                //If Upward movement, vertically aligned, and the other character is above, go down
-                case ClimbState.WAIT :
-                case ClimbState.UP :
-                    if(Math.abs(diff.x) < 2 && diff.y < 0) {
-                        if(this.storedCbm & gcb.flor) {
-                            this.setStateIndex(0);
-
-                            if(this.storedCbm & gcb.face) {
-                                this.reverse();
-                            }
-                        }
-                        else {
-                            this.setStateIndex(2);
-                        }
-                    }
-                    break;
-    
-                //If Downward movement, vertically aligned, and the other character is below, land
-                case ClimbState.DOWN :
-                    if(Math.abs(diff.x) < 2 && diff.y > 0) {
-                        this.setStateIndex(0);
-
-                        if(this.storedCbm & gcb.face) {
-                            this.reverse();
-                        }
-                    }
-                    break;
+            //Face blocked by character
+            if(Math.abs(diff.y) < 2 && Math.sign(diff.x) == this.move.x) {
+                this.storedCbm = this.storedCbm | gcb.face
+            }
+            //Ceiling blocked by character
+            if(Math.abs(diff.x) < 2 && diff.y < 0) {
+                this.storedCbm = this.storedCbm | gcb.ceil
+            }
+            //Floor blocked by character
+            if(Math.abs(diff.x) < 2 && diff.y > 0) {
+                this.storedCbm = this.storedCbm | gcb.flor
             }
         }
     }
