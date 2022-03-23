@@ -49,7 +49,9 @@ const gcb = Object.freeze({
     flor : bitStack([9, 10]),
     face : bitStack([5, 7]),
     ceil : bitStack([1, 2]),
-    back : bitStack([4, 6])
+    back : bitStack([4, 6]),
+    land : bitStack([11]),
+    band : bitStack([8])
 });
 
 export default class CharacterRBC extends CharacterRB {
@@ -106,82 +108,6 @@ export default class CharacterRBC extends CharacterRB {
             this.gpos.x + 2 > BOUNDARY.maxx) {
 
             this.storedCbm |= gcb.face;
-        }
-    }
-
-    //Collisions for normal movement
-    protected handleCollisionNormal() {
-
-        //Collision bitmask
-        this.storedCbm = this.storedCbm | this.getCollisionBitMask();
-        
-        //If there is no floor, start going down.
-        if(!(this.storedCbm & gcb.flor)) {
-            this.setStateIndex(ClimbState.DOWN);
-        }
-        //Otherwise if there is a wall, try going above it.
-        else if((this.storedCbm & gcb.face)) {
-            this.setStateIndex(ClimbState.WAIT);
-        }
-    }
-
-    //Collisions for downward movement
-    protected handleCollisionWait() {
-
-        //Collision bitmask
-        this.storedCbm = this.storedCbm | this.getCollisionBitMask();
-
-        //If there is a ceiling blocking the ascent, return to normal and reverse.
-        if(this.storedCbm & gcb.ceil) {
-            this.setStateIndex(ClimbState.NORMAL);
-            this.reverse();
-        }
-        //Otherwise, go up.
-        else {
-            this.setStateIndex(ClimbState.UP);
-        }
-    }
-
-    //Collisions for downward movement
-    protected handleCollisionUp() {
-
-        //Collision bitmask
-        this.storedCbm = this.storedCbm | this.getCollisionBitMask();
-
-        //If there is no longer a wall blocking, move forward.
-        if(!(this.storedCbm & gcb.face)) {
-            this.setStateIndex(ClimbState.NORMAL);
-        }
-        //Otherwise if there is a ceiling or the climbing limit is reached, start moving back down.
-        else if(this.storedCbm & gcb.ceil || this.ground - this.gpos.y >= this.climbLimit) {
-            this.setStateIndex(ClimbState.DOWN);
-        }
-    }
-
-    //Collisions for upward movement
-    protected handleCollisionDown() {
-
-        //Collision bitmask
-        this.storedCbm = this.storedCbm | this.getCollisionBitMask();
-
-        //If there is a floor, land.
-        if(this.storedCbm & gcb.flor) {
-
-            //If there is a wall in the way while landing, turn around
-            if(this.storedCbm & gcb.face) {
-
-                if(this.storedCbm & gcb.back) {
-                    this.setStateIndex(ClimbState.WAIT);
-                }
-                else {
-                    this.setStateIndex(ClimbState.NORMAL);
-                    this.reverse();
-                }
-            }
-            //Oterwise, continue forward
-            else {
-                this.setStateIndex(ClimbState.NORMAL);
-            }
         }
     }
 
@@ -254,6 +180,87 @@ export default class CharacterRBC extends CharacterRB {
             case ClimbState.DOWN :
                 this.handleCollisionDown();
                 break;
+        }
+    }
+
+    //Collisions for normal movement
+    protected handleCollisionNormal() {
+
+        //Collision bitmask
+        this.storedCbm = this.storedCbm | this.getCollisionBitMask();
+        
+        //If there is no floor, start going down.
+        if(!(this.storedCbm & gcb.flor)) {
+            this.setStateIndex(ClimbState.DOWN);
+        }
+        //Otherwise if there is a wall, try going above it.
+        else if((this.storedCbm & gcb.face)) {
+            this.setStateIndex(ClimbState.WAIT);
+        }
+    }
+
+    //Collisions for downward movement
+    protected handleCollisionWait() {
+
+        //Collision bitmask
+        this.storedCbm = this.storedCbm | this.getCollisionBitMask();
+
+        //If there is a ceiling blocking the ascent, return to normal and reverse.
+        if(this.storedCbm & gcb.ceil) {
+            this.setStateIndex(ClimbState.NORMAL);
+            this.reverse();
+        }
+        //Otherwise, go up.
+        else {
+            this.setStateIndex(ClimbState.UP);
+        }
+    }
+
+    //Collisions for downward movement
+    protected handleCollisionUp() {
+
+        //Collision bitmask
+        this.storedCbm = this.storedCbm | this.getCollisionBitMask();
+
+        //If forward landing is available, move forward
+        if(!(this.storedCbm & gcb.face) && (this.storedCbm & gcb.land)) {
+            this.setStateIndex(ClimbState.NORMAL);
+        }
+        //Otherwise if forward landing is available behind, move backward
+        else if(!(this.storedCbm & gcb.back) && (this.storedCbm & gcb.band)) {
+            this.setStateIndex(ClimbState.NORMAL);
+            this.reverse();
+        }
+        //Otherwise if there is a ceiling or the climbing limit is reached, start moving back down.
+        else if(this.storedCbm & gcb.ceil || this.ground - this.gpos.y >= this.climbLimit) {
+            this.setStateIndex(ClimbState.DOWN);
+        }
+    }
+
+    //Collisions for upward movement
+    protected handleCollisionDown() {
+
+        //Collision bitmask
+        this.storedCbm = this.storedCbm | this.getCollisionBitMask();
+
+        //If there is a floor, land.
+        if(this.storedCbm & gcb.flor) {
+
+            //If there is a wall in the way while landing, turn around
+            if(this.storedCbm & gcb.face) {
+
+                if(this.storedCbm & gcb.back) {
+                    this.setStateIndex(ClimbState.WAIT);
+                }
+                else {
+                    this.setStateIndex(ClimbState.NORMAL);
+                    this.reverse();
+                }
+            }
+            //Oterwise, continue forward
+            else {
+                this.setStateIndex(ClimbState.NORMAL);
+            }
         }
     }
 
