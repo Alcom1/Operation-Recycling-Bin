@@ -195,7 +195,15 @@ export default class CharacterRBC extends CharacterRB {
         }
         //Otherwise if there is a wall, try going above it.
         else if((this.storedCbm & gcb.face)) {
-            this.setStateIndex(ClimbState.WAIT);
+
+            //Blocked by ceiling, reverse
+            if(this.storedCbm & gcb.ceil) {
+                this.reverse();
+            }
+            //Wait to go up
+            else {
+                this.setStateIndex(ClimbState.WAIT);
+            }
         }
     }
 
@@ -264,6 +272,7 @@ export default class CharacterRBC extends CharacterRB {
         }
     }
 
+    //Add additional bitmasks from character collisions
     public resolveCollision(mask : number, other : GameObject) {
 
         if (mask & (MASKS.enemy | MASKS.block)) {
