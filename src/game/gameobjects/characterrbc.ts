@@ -271,8 +271,8 @@ export default class CharacterRBC extends CharacterRB {
             const diff = other.gpos
                 .getSub(this.gpos)  //Difference between positions
                 .getAdd({           
-                    x : Math.round(other.spos.x / GMULTX),
-                    y : Math.round(other.spos.y / GMULTY)
+                    x : Math.sign(other.spos.x),
+                    y : Math.sign(other.spos.y)
                 });
             
             //Face blocked by character
