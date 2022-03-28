@@ -9,6 +9,7 @@ enum ClimbState {
     NORMAL,
     UP,
     WAIT,
+    HALT,
     DOWN
 }
 
@@ -32,6 +33,14 @@ const characterRBCOverride = Object.freeze({
     },{
         speed : 2.0,
         images : [{ name : "char_rbc_up", offsetX : 0 }],
+        frameCount : 2,
+        gposOffset : { x : -1, y : 0},
+        isSliced : true
+    },{
+        speed : 2.0,
+        images : [
+            { name : "char_rbc_left", offsetX : 0 },
+            { name : "char_rbc_right", offsetX : 0}],
         frameCount : 2,
         gposOffset : { x : -1, y : 0},
         isSliced : true
@@ -90,6 +99,14 @@ export default class CharacterRBC extends CharacterRB {
                 }
                 break;
 
+            case ClimbState.HALT :
+                this.waitCount += dt;
+                if(this.waitCount >= this.waitLimit) {
+                    this.waitCount = 0;
+                    this.handleCollision();
+                }
+                break;
+
             case ClimbState.DOWN :
                 this.spos.y += this.vertSpeed * dt;
                 break;
@@ -104,10 +121,13 @@ export default class CharacterRBC extends CharacterRB {
         this.storedCbm = 0;
 
         //WALL BOUNDARY
-        if (this.gpos.x - 1 < BOUNDARY.minx ||
-            this.gpos.x + 2 > BOUNDARY.maxx) {
+        if (this.gpos.x - 1 < BOUNDARY.minx) {
 
-            this.storedCbm |= gcb.face;
+            this.storedCbm |= (this.move.x > 0 ? gcb.back : gcb.face);
+        }        
+        else if (this.gpos.x + 2 > BOUNDARY.maxx) {
+
+            this.storedCbm |= (this.move.x > 0 ? gcb.face : gcb.back);
         }
     }
 
@@ -128,6 +148,11 @@ export default class CharacterRBC extends CharacterRB {
         //Store the current ground position if we're starting to go up.
         if(index == 1) {
             this.ground = this.gpos.y;
+        }
+        
+        //Force climb state to match direction. (This is weird.)
+        if(index == ClimbState.HALT) {
+            this.animations[ClimbState.HALT].forEach(x => x.setImageIndex(this.animImageIndex));
         }
 
         super.setStateIndex(index);
@@ -163,6 +188,9 @@ export default class CharacterRBC extends CharacterRB {
 
         super.resolveCollisions(collisions);
 
+        //Collision bitmask
+        this.storedCbm = this.storedCbm | this.getCollisionBitMask();
+
         switch(this.stateIndex) {
 
             case ClimbState.NORMAL :
@@ -175,6 +203,10 @@ export default class CharacterRBC extends CharacterRB {
 
             case ClimbState.WAIT :
                 this.handleCollisionWait();
+                break;            
+                
+            case ClimbState.HALT :
+                this.handleCollisionHalt();
                 break;
 
             case ClimbState.DOWN :
@@ -185,9 +217,6 @@ export default class CharacterRBC extends CharacterRB {
 
     //Collisions for normal movement
     protected handleCollisionNormal() {
-
-        //Collision bitmask
-        this.storedCbm = this.storedCbm | this.getCollisionBitMask();
         
         //If there is no floor, start going down.
         if(!(this.storedCbm & gcb.flor)) {
@@ -198,7 +227,14 @@ export default class CharacterRBC extends CharacterRB {
 
             //Blocked by ceiling, reverse
             if(this.storedCbm & gcb.ceil) {
-                this.reverse();
+
+                //Blocked backwards, can't move. Halt.
+                if(this.storedCbm & gcb.back) {
+                    this.setStateIndex(ClimbState.HALT);
+                }
+                else {
+                    this.reverse();
+                }
             }
             //Wait to go up
             else {
@@ -209,9 +245,6 @@ export default class CharacterRBC extends CharacterRB {
 
     //Collisions for downward movement
     protected handleCollisionWait() {
-
-        //Collision bitmask
-        this.storedCbm = this.storedCbm | this.getCollisionBitMask();
 
         //If there is a ceiling blocking the ascent, return to normal and reverse.
         if(this.storedCbm & gcb.ceil) {
@@ -225,10 +258,14 @@ export default class CharacterRBC extends CharacterRB {
     }
 
     //Collisions for downward movement
-    protected handleCollisionUp() {
+    protected handleCollisionHalt() {
 
-        //Collision bitmask
-        this.storedCbm = this.storedCbm | this.getCollisionBitMask();
+        this.reverse();
+        this.setStateIndex(ClimbState.HALT);
+    }
+
+    //Collisions for downward movement
+    protected handleCollisionUp() {
 
         //If forward landing is available, move forward
         if(!(this.storedCbm & gcb.face) && (this.storedCbm & gcb.land)) {
@@ -248,17 +285,22 @@ export default class CharacterRBC extends CharacterRB {
     //Collisions for upward movement
     protected handleCollisionDown() {
 
-        //Collision bitmask
-        this.storedCbm = this.storedCbm | this.getCollisionBitMask();
-
         //If there is a floor, land.
         if(this.storedCbm & gcb.flor) {
 
             //If there is a wall in the way while landing, turn around
             if(this.storedCbm & gcb.face) {
 
+                //If there is a wall in the other direction, attempt to go up.
                 if(this.storedCbm & gcb.back) {
-                    this.setStateIndex(ClimbState.WAIT);
+
+                    //If the ceiling has suddenly been blocked, HALT. Otherwise, wait to go back up.
+                    if(this.storedCbm & gcb.ceil) {
+                        this.setStateIndex(ClimbState.HALT);
+                    }
+                    else {
+                        this.setStateIndex(ClimbState.WAIT);
+                    }
                 }
                 else {
                     this.setStateIndex(ClimbState.NORMAL);
