@@ -260,8 +260,30 @@ export default class CharacterRBC extends CharacterRB {
     //Collisions for downward movement
     protected handleCollisionHalt() {
 
-        this.reverse();
-        this.setStateIndex(ClimbState.HALT);
+        //Go down if no floor
+        if(!(this.storedCbm & gcb.flor)) {
+
+            this.setStateIndex(ClimbState.DOWN);
+        }
+        //Otherwise go forward if no forward wall
+        else if(!(this.storedCbm & gcb.face)) {
+
+            this.setStateIndex(ClimbState.NORMAL);
+        }
+        //Otherwise go up if forward wall but no ceiling
+        else if(!(this.storedCbm & gcb.ceil)) {
+            this.setStateIndex(ClimbState.WAIT);
+        }
+        //Otherwise go backwards if there is no wall behind
+        else if(!(this.storedCbm & gcb.back)) {
+            this.reverse();
+            this.setStateIndex(ClimbState.NORMAL);
+        }
+        //Otherwise remain halted
+        else {
+            this.reverse();
+            this.setStateIndex(ClimbState.HALT);
+        }
     }
 
     //Collisions for downward movement
