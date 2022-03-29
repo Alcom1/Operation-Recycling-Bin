@@ -10,7 +10,8 @@ enum ClimbState {
     UP,
     WAIT,
     HALT,
-    DOWN
+    DOWN,
+    REVERSE
 }
 
 const characterRBCOverride = Object.freeze({
@@ -146,7 +147,7 @@ export default class CharacterRBC extends CharacterRB {
     protected setStateIndex(index? : number) {
 
         //Store the current ground position if we're starting to go up.
-        if(index == 1) {
+        if(index == ClimbState.UP) {
             this.ground = this.gpos.y;
         }
         
@@ -272,15 +273,18 @@ export default class CharacterRBC extends CharacterRB {
         }
         //Otherwise go up if forward wall but no ceiling
         else if(!(this.storedCbm & gcb.ceil)) {
+
             this.setStateIndex(ClimbState.WAIT);
         }
         //Otherwise go backwards if there is no wall behind
         else if(!(this.storedCbm & gcb.back)) {
+
             this.reverse();
             this.setStateIndex(ClimbState.NORMAL);
         }
         //Otherwise remain halted
         else {
+
             this.reverse();
             this.setStateIndex(ClimbState.HALT);
         }
@@ -349,16 +353,24 @@ export default class CharacterRBC extends CharacterRB {
                 });
             
             //Face blocked by character
-            if(Math.abs(diff.y) < 2 && Math.sign(diff.x) == this.move.x) {
-                this.storedCbm = this.storedCbm | gcb.face
+            if(Math.abs(diff.y) < 2 && diff.x <= 2) {
+
+                //In front
+                if(Math.sign(diff.x) == this.move.x) {
+                    this.storedCbm = this.storedCbm | gcb.face;
+                }
+                //Behind
+                else {
+                    this.storedCbm = this.storedCbm | gcb.back;
+                }
             }
             //Ceiling blocked by character
             if(Math.abs(diff.x) < 2 && diff.y < 0) {
-                this.storedCbm = this.storedCbm | gcb.ceil
+                this.storedCbm = this.storedCbm | gcb.ceil;
             }
             //Floor blocked by character
             if(Math.abs(diff.x) < 2 && diff.y > 0) {
-                this.storedCbm = this.storedCbm | gcb.flor
+                this.storedCbm = this.storedCbm | gcb.flor;
             }
         }
     }
