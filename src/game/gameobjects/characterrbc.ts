@@ -353,7 +353,7 @@ export default class CharacterRBC extends CharacterRB {
                 });
             
             //Face blocked by character
-            if(Math.abs(diff.y) < 2 && diff.x <= 2) {
+            if(Math.abs(diff.y) < 2 && Math.abs(diff.x) <= 2) {
 
                 //In front
                 if(Math.sign(diff.x) == this.move.x) {
@@ -365,11 +365,11 @@ export default class CharacterRBC extends CharacterRB {
                 }
             }
             //Ceiling blocked by character
-            if(Math.abs(diff.x) < 2 && diff.y < 0) {
+            if(Math.abs(diff.x) < 2 && diff.y < 0 && diff.y >= -2) {
                 this.storedCbm = this.storedCbm | gcb.ceil;
             }
             //Floor blocked by character
-            if(Math.abs(diff.x) < 2 && diff.y > 0) {
+            if(Math.abs(diff.x) < 2 && diff.y > 0 && diff.y <= 2) {
                 this.storedCbm = this.storedCbm | gcb.flor;
             }
         }
