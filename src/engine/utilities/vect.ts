@@ -121,4 +121,8 @@ export default class Vect implements Point {
         this.x = 0;
         this.y = 0;
     }
+
+    public static get zero() : Vect {
+        return new Vect(0, 0);
+    }
 }

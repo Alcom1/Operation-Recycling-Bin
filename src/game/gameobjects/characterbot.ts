@@ -285,7 +285,7 @@ export default class CharacterBot extends Character {
             //Collision bitmask
             const cbm = this.brickHandler.checkCollisionRange(
                 this.gpos.getSub({
-                    x : this.move.x > 0 ? 1 : 0, 
+                    x : this.move.x > 0 ? 0 : 1, 
                     y : 1 + this.height
                 }),             //Position
                 this.move.x,    //Direction
@@ -309,22 +309,31 @@ export default class CharacterBot extends Character {
                     this.reverse();
                 }
                 else {
-                    this.gpos.y -= 1;
+                    this.walkstep(-1);
                 }
             }
             //FLOOR - DO NOTHING
             else if(cbm & gcb.flor) {
-
+                this.walkstep(0);
             }
             //DOWN-STEP - GO DOWN
             else if(cbm & gcb.down) {
-                this.gpos.y += 1;
+                this.walkstep(1);
             }
             //VOID - REVERSE
             else {
                 this.reverse();
             }
         }
+    }
+
+    //
+    private walkstep(vOffset : number) {
+        
+        this.gpos.add({
+            x : this.move.x,
+            y : vOffset
+        })
     }
 
     //Check and resolve brick collisions - Vertical movement

@@ -138,7 +138,7 @@ export default class Engine {
 
     /** Perform both an update and draw */
     private updateDrawScenes(scenes : Scene[], dt: number): void {
-        this.collision.update();    //Handle collisions before update/draw
+        this.collision.update(dt);  //Handle collisions before update/draw
         scenes.forEach(s => s.update(dt));
         scenes.forEach(s => s.draw(this.ctx));
         scenes.forEach(s => s.superDraw(this.ctx));

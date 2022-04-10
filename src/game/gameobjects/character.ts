@@ -1,4 +1,4 @@
-import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
+import GameObject, { Collision, GameObjectParams } from "engine/gameobjects/gameobject";
 import { GMULTX, GMULTY } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 import BrickHandler from "./brickhandler";
@@ -121,48 +121,7 @@ export default class Character extends GameObject {
                 this.checkCollision = true;
             }
         }
-
-        this.gridStep();
-
-        //Handle collision, set zIndices for new position
-        if(this.checkCollision) {
-
-            this.handleCollision();
-            this.handleBricks();
-
-            if(this.isNormalMovment) {
-                this.animationsCurr.forEach(s => s.reset(this.gpos));
-            }
-
-            this.checkCollision = false;
-        }
-    }
-
-    //Shift to next grid position of the subposition extends too far
-    private gridStep() {
-
-        var move = {
-            x : Math.abs(this.spos.x) > GMULTX ? Math.sign(this.spos.x) : 0,
-            y : Math.abs(this.spos.y) > GMULTY ? Math.sign(this.spos.y) : 0
-        };
-
-        if(move.x || move.y) {
-    
-            this.gpos.add(move);    //Go up or down to new grid position
-            this.spos.sub({         //Reset subposition to match new grid position
-                x : move.x * GMULTX,
-                y : move.y * GMULTY
-            });            
-    
-            //Update animations to match
-            this.animationsCurr.forEach(a => {
-                a.gpos.add(move);
-            });
-
-            this.checkCollision = true;         //Set to check collision for the new step
-            this.brickHandler.isRecheck = true; //Recheck bricks after every shift
-        }
-
+        
         // Not yet
         // if(this.isGlide) {
         //     this.animationsCurr.forEach(a => {
@@ -220,10 +179,6 @@ export default class Character extends GameObject {
         if(this.isGlide) {
             this.animationsCurr.forEach(a => a.reset(this.gpos));
         }
-        //Otherwise move the sprite over in its movement direction
-        if(!this.isGlide) {
-            this.gpos.x += this.move.x;
-        }
     }
 
     //Set current & active group based on the group index
@@ -244,5 +199,20 @@ export default class Character extends GameObject {
         this.animations.forEach(sg => sg.forEach(s => s.isActive = false));
         this.underBricks.forEach(b => b.pressure -= 1);
         this.underBricks = [];
+    }
+
+    //
+    public resolveCollisions(collisions : Collision[]) {
+
+        this.spos = Vect.zero;
+
+        this.handleCollision();
+        this.handleBricks();
+        
+        super.resolveCollisions(collisions);
+
+        if(this.isNormalMovment) {
+            this.animationsCurr.forEach(s => s.reset(this.gpos));
+        }
     }
 }

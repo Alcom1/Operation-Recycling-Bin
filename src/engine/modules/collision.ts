@@ -25,6 +25,8 @@ interface CollidersScene {
 export default class CollisionModule {
 
     private scenes : CollidersScene[] = [];
+    private timer : number = 0;
+    private step : number = 1/3;
 
     public pushGOs(sceneName : string, sceneObjects : GameObject[]) {
 
@@ -55,29 +57,38 @@ export default class CollisionModule {
     }
 
     //Update - check and trigger collisions for all game objects in all scenes
-    public update() {
+    public update(dt : number) {
 
-        //Trigger collisions for each scene. Scenes don't interact with each other.
-        this.scenes.forEach(s => {
+        this.timer += dt;
 
-            //Get all active game objects with colliders
-            const gocs : GameObjectCollider[] = s.gameObjects.filter(go => go.isActive).map(go => {
-                return {
-                    colliders : go.getColliders(),
-                    gameObject : go
+        if(this.timer < this.step) {
+            return;
+        }
+        else {
+            this.timer -= this.step;
+
+            //Trigger collisions for each scene. Scenes don't interact with each other.
+            this.scenes.forEach(s => {
+
+                //Get all active game objects with colliders
+                const gocs : GameObjectCollider[] = s.gameObjects.filter(go => go.isActive).map(go => {
+                    return {
+                        colliders : go.getColliders(),
+                        gameObject : go
+                    }
+                });
+
+                //Stair loop to set collisions
+                for(var j = 0; j < gocs.length; j++) {
+                    for(var i = 0; i < j; i++) {
+                        this.compareGOColliders(gocs[i], gocs[j]);
+                    }
                 }
+
+                //Resolve all collisions
+                s.gameObjects.forEach(go => go.resolveClearCollisions());
             });
-
-            //Stair loop to set collisions
-            for(var j = 0; j < gocs.length; j++) {
-                for(var i = 0; i < j; i++) {
-                    this.compareGOColliders(gocs[i], gocs[j]);
-                }
-            }
-
-            //Resolve all collisions
-            s.gameObjects.forEach(go => go.resolveClearCollisions());
-        });
+        }
     }
 
     //Debug Draw
