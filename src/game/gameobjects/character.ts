@@ -111,15 +111,12 @@ export default class Character extends GameObject {
 
         //Normal or unique movement, shift grid/sub position after movement
         if(this.isNormalMovment) {
-            this.handleNormalMovement(dt);
+            if(this.isGlide) {
+                this.spos.x += this.move.x * this.speed * GMULTX * dt;
+            }
         }
         else {
             this.handleSpecialMovement(dt);
-
-            //Gliding characters should still wait for the next step.
-            if(!this.isGlide) {
-                this.checkCollision = true;
-            }
         }
         
         // Not yet
@@ -128,13 +125,6 @@ export default class Character extends GameObject {
         //         a.spos = this.spos;
         //     });
         // }
-    }
-
-    //Move forward and set collection check at each step.
-    private handleNormalMovement(dt: number) {
-
-        //Increment position by speed
-        this.spos.x += this.move.x * this.speed * GMULTX * dt;
     }
 
     //Do nothing - override
@@ -202,12 +192,16 @@ export default class Character extends GameObject {
     }
 
     //
-    public resolveCollisions(collisions : Collision[]) {
+    public updateCollisions() {
 
         this.spos = Vect.zero;
 
         this.handleCollision();
         this.handleBricks();
+    }
+
+    //
+    public resolveCollisions(collisions : Collision[]) {
         
         super.resolveCollisions(collisions);
 

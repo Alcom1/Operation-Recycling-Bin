@@ -134,11 +134,6 @@ export default class CharacterBot extends Character {
         //Perform special movement
         switch(this.stateIndex) {
 
-            //Downward movement for mid-air bin eating.
-            case BotState.EATING :
-                this.moveVertical(dt, -1);
-                break;
-
             //Vertical
             case BotState.FLYING : 
                 this.moveVertical(dt, this.vertMult);
@@ -274,8 +269,8 @@ export default class CharacterBot extends Character {
     protected handleBrickCollisionNormal() {
 
         //WALL BOUNDARY
-        if (this.gpos.x - 1 < BOUNDARY.minx || 
-            this.gpos.x + 1 > BOUNDARY.maxx) {
+        if (this.gpos.x - 2 < BOUNDARY.minx && this.move.x < 0 || 
+            this.gpos.x + 2 > BOUNDARY.maxx && this.move.x > 0) {
 
             this.reverse();
         }

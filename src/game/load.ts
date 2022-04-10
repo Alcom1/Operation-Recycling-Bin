@@ -34,7 +34,7 @@ window.onload = function() {
         canvas, 
         "assets/scenes/",
         "scenes",
-        ["LevelInterface", "LEVEL_00"],
+        ["LevelInterface", "LEVEL_01"],
         [
             BrickHandler,
             BrickHandlerDebug,
@@ -62,6 +62,6 @@ window.onload = function() {
             Sprite,
             Stud
         ],
-        false
+        true
     );    
 }

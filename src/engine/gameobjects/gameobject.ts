@@ -72,6 +72,13 @@ export default class GameObject {
     }
 
     /**
+     * Update positions for collisions step
+     */
+    public updateCollisions() {
+
+    }
+
+    /**
      * Get all colliders for this game object
      */
     public getColliders() : Collider[] {

@@ -72,6 +72,9 @@ export default class CollisionModule {
 
                 //Get all active game objects with colliders
                 const gocs : GameObjectCollider[] = s.gameObjects.filter(go => go.isActive).map(go => {
+
+                    go.updateCollisions();
+
                     return {
                         colliders : go.getColliders(),
                         gameObject : go
