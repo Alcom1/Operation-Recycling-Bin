@@ -6,7 +6,7 @@ import CharacterRB from "./characterrb";
 
 const characterRBGOverride = Object.freeze({
     height: 2,
-    speed : 5.0,
+    speed : 3.0,
     images : [        
         { name : "char_rbg_left", offsetX : 0 },
         { name : "char_rbg_right", offsetX : 0}],
@@ -53,6 +53,10 @@ export default class CharacterRBG extends CharacterRB {
             //
             else if(!(cbm & gcb.flor)) {
                 this.reverse();
+            }
+            //
+            else {
+                this.gpos.x += this.move.x;
             }
         }
     }

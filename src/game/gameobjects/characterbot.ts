@@ -1,6 +1,6 @@
 import Character, { CharacterParams } from "./character";
 import { BOUNDARY, bitStack, GMULTY, GMULTX, MASKS} from "engine/utilities/math";
-import { Collider } from "engine/modules/collision";
+import { Collider, Step, StepType } from "engine/modules/collision";
 import { Point } from "engine/utilities/vect";
 
 enum ArmorState {
@@ -441,9 +441,46 @@ export default class CharacterBot extends Character {
         }
     }
 
+    //
+    public updateCollisions(step : Step) {
+
+        super.updateCollisions(step);
+
+        if(step.stepType == StepType.FRAME) {
+
+            switch(this.stateIndex) {
+
+                case BotState.BOUNCE :
+                    if(Math.abs(this.spos.x) > GMULTX) {
+                        this.gpos.x += this.move.x;
+                        this.spos.x -= this.move.x * GMULTX;
+                        this.spos.y = 0;
+                        this.gpos.y -= (this.jumpHeights[this.jumpIndex + 1] ?? 0) - this.jumpHeights[this.jumpIndex];
+                    }
+                    this.handleBrickCollisionBounce();
+                    this.animationsCurr.forEach(a => a.reset(this.gpos, false));
+                    this.animationsCurr.forEach(a => a.spos = this.spos);
+                    break;
+
+                case BotState.FLYING :
+                    if(Math.abs(this.spos.y) > GMULTY) {
+                        this.gpos.y += Math.sign(this.spos.y)
+                        this.spos.y -= Math.sign(this.spos.y) * GMULTY;
+                    }
+                    this.handleBrickCollisionVertical();
+                    this.animationsCurr.forEach(a => a.reset(this.gpos, false));
+                    this.animationsCurr.forEach(a => a.spos = this.spos);
+                    break;
+    
+                default :
+                    break;
+            }
+        }
+    }
+
     //Collisions
     public resolveCollision(mask : number) {
-
+        
         //Eat
         if (mask & MASKS.scrap) {
             this.setStateIndex(BotState.EATING);

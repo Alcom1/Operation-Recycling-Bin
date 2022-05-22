@@ -1,5 +1,5 @@
 import GameObject, { Collision } from "engine/gameobjects/gameobject";
-import { Collider } from "engine/modules/collision";
+import { Collider, Step } from "engine/modules/collision";
 import { bitStack, BOUNDARY, GMULTX, GMULTY, MASKS, round } from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 import { CharacterParams } from "./character";
@@ -179,7 +179,7 @@ export default class CharacterRBC extends CharacterRB {
     }
 
     //Resolve collisions
-    public resolveCollisions(collisions : Collision[]) {
+    public resolveCollisions(collisions : Collision[], step : Step) {
 
         if(!this.isStep) {
             return;
@@ -187,7 +187,7 @@ export default class CharacterRBC extends CharacterRB {
 
         this.isStep = false;
 
-        super.resolveCollisions(collisions);
+        super.resolveCollisions(collisions, step);
 
         //Collision bitmask
         this.storedCbm = this.storedCbm | this.getCollisionBitMask();

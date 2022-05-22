@@ -4,6 +4,7 @@ import Vect from "engine/utilities/vect";
 import BrickHandler from "./brickhandler";
 import Brick from "./bricknormal";
 import Anim, { OffsetImageParams, AnimationParams } from "./anim";
+import { Step, StepType } from "engine/modules/collision";
 
 export interface CharacterParams extends GameObjectParams {
     height? : number;
@@ -120,11 +121,11 @@ export default class Character extends GameObject {
         }
         
         // Not yet
-        // if(this.isGlide) {
-        //     this.animationsCurr.forEach(a => {
-        //         a.spos = this.spos;
-        //     });
-        // }
+        if(this.isGlide) {
+            this.animationsCurr.forEach(a => {
+                a.spos = this.spos;
+            });
+        }
     }
 
     //Do nothing - override
@@ -195,21 +196,24 @@ export default class Character extends GameObject {
     }
 
     //
-    public updateCollisions() {
+    public updateCollisions(step : Step) {
 
-        this.spos = Vect.zero;
+        if(this.isNormalMovment && step.stepType == StepType.SYNC) {
+            
+            this.spos = Vect.zero;
+    
+            this.handleCollision();
+            this.handleBricks();
 
-        this.handleCollision();
-        this.handleBricks();
+            if(this.isNormalMovment) {
+                this.animationsCurr.forEach(s => s.reset(this.gpos));
+            }
+        }
     }
 
     //
-    public resolveCollisions(collisions : Collision[]) {
+    public resolveCollisions(collisions : Collision[], step : Step) {
         
-        super.resolveCollisions(collisions);
-
-        if(this.isNormalMovment) {
-            this.animationsCurr.forEach(s => s.reset(this.gpos));
-        }
+        super.resolveCollisions(collisions, step);
     }
 }

@@ -143,11 +143,18 @@ export default class Anim extends GameObject {
     }
 
     //Reset timer, update position, and switch current animation.
-    public reset(gpos? : Vect) {
+    public reset(gpos? : Vect, isTimerReset : boolean = true) {
 
-        this.timer = 0;
-        if(gpos) { this.gpos = gpos.getAdd(this.gposOffset); }
-        this.animsIndex = ++this.animsIndex % this.animsCount;
+        //Reset gpos if available
+        if(gpos) { 
+            this.gpos = gpos.getAdd(this.gposOffset); 
+        }
+
+        //Reset timer
+        if(isTimerReset) {
+            this.timer = 0;
+            this.animsIndex = ++this.animsIndex % this.animsCount;
+        }
     }
 
     //Get z-index for draw sorting
