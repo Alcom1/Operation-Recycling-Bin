@@ -6,7 +6,7 @@ import CharacterRB from "./characterrb";
 
 const characterRBGOverride = Object.freeze({
     height: 2,
-    speed : 3.0,
+    speed : 5.0,
     images : [        
         { name : "char_rbg_left", offsetX : 0 },
         { name : "char_rbg_right", offsetX : 0}],

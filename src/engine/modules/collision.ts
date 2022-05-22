@@ -34,10 +34,10 @@ interface CollidersScene {
 /** Module that handles tags and game objects grouped by tag. */
 export default class CollisionModule {
 
-    private scenes : CollidersScene[] = [];
-    private timer : number = 0;
-    private step : number = 1/3;
-    private counter : number = 0;
+    private scenes          : CollidersScene[] = [];
+    private timer           : number = 0;
+    private stepInterval    : number = 1/15;
+    private counter         : number = 0;
 
     public pushGOs(sceneName : string, sceneObjects : GameObject[]) {
 
@@ -74,8 +74,8 @@ export default class CollisionModule {
 
         let isSync = false;
 
-        if(this.timer >= this.step) {
-            this.timer -= this.step;
+        if(this.timer >= this.stepInterval) {
+            this.timer -= this.stepInterval;
             this.counter++;
             isSync = true;
         }
@@ -91,7 +91,7 @@ export default class CollisionModule {
             //Get all active game objects with colliders
             const gocs : GameObjectCollider[] = s.gameObjects.filter(go => go.isActive).map(go => {
 
-                go.updateCollisions(step);
+                go.updateCollisions(step, 1 / this.stepInterval);
 
                 return {
                     colliders : go.getColliders(),
