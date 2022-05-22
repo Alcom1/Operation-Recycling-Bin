@@ -152,6 +152,9 @@ export default class Character extends GameObject {
             //Set new pressures
             this.underBricks.forEach(b => b.pressure += 1);
         }
+
+        //Cursor must perform a recheck.
+        this.brickHandler.isRecheck = true;
     }
 
     //Do nothing - override
