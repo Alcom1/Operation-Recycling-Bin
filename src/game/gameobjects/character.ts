@@ -198,10 +198,8 @@ export default class Character extends GameObject {
     //
     public updateCollisions(step : Step, loopLength : number) {
 
-        console.log(loopLength);
+        if(step.stepType == StepType.SYNC && step.counter % (loopLength / this.speed) == 0) {
 
-        if(this.isNormalMovment && step.stepType == StepType.SYNC && step.counter % (loopLength / this.speed) == 0) {
-            
             this.spos = Vect.zero;
     
             this.handleCollision();

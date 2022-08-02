@@ -1,5 +1,5 @@
-import GameObject from "engine/gameobjects/gameobject";
-import { Collider } from "engine/modules/collision";
+import GameObject, { Collision } from "engine/gameobjects/gameobject";
+import { Collider, Step } from "engine/modules/collision";
 import { bitStack, BOUNDARY, GMULTX, GMULTY, MASKS } from "engine/utilities/math";
 import { CharacterParams } from "./character";
 import CharacterRB from "./characterrb";
@@ -15,13 +15,20 @@ const characterRBGOverride = Object.freeze({
     isGlide : true
 });
 
-//Collision bitmasks for bot-brick collisions
+//Collision bitmasks
 const gcb = Object.freeze({
-    flor : bitStack([11]),
-    face : bitStack([5, 7])
+    flor : bitStack([9, 10]),
+    face : bitStack([5, 7]),
+    ceil : bitStack([1, 2]),
+    back : bitStack([4, 6]),
+    land : bitStack([11]),
+    band : bitStack([8])
 });
 
 export default class CharacterRBG extends CharacterRB {
+
+    private storedCbm: number = 0;      //Store Collision bitmask from collision for later resolution
+    private isStep: boolean = false;    //True on frames where a character step has occured
 
     constructor(params: CharacterParams) {
         super(Object.assign(params, characterRBGOverride));
@@ -29,35 +36,45 @@ export default class CharacterRBG extends CharacterRB {
 
     //Check and resolve brick collisions
     protected handleCollision() {
-    
+
+        this.isStep = true;
+        this.storedCbm = 0;
+
         //WALL BOUNDARY
-        if (this.gpos.x - 1 < BOUNDARY.minx || 
-            this.gpos.x + 1 > BOUNDARY.maxx) {
+        if (this.gpos.x - 2 < BOUNDARY.minx) {
 
-            this.reverse();
+            this.storedCbm |= (this.move.x > 0 ? gcb.back : gcb.face);
+        }        
+        else if (this.gpos.x + 2 > BOUNDARY.maxx) {
+
+            this.storedCbm |= (this.move.x > 0 ? gcb.face : gcb.back);
         }
-        //Brick collisions
-        else {
 
-            const cbm = this.brickHandler.checkCollisionRing(
-                this.gpos.getAdd({
-                    x : -2, 
-                    y : -this.height}), 
-                4, 
-                this.move.x);
+        this.storedCbm |= this.brickHandler.checkCollisionRing(
+            this.gpos.getAdd({
+                x : -2, 
+                y : -this.height}), 
+            4, 
+            this.move.x);
+    }
 
-            //
-            if(cbm & gcb.face) {
+    public resolveCollisions(collisions : Collision[], step : Step) {
+        
+        if(this.isStep)
+        {
+            this.isStep = false;
+            super.resolveCollisions(collisions, step);
+        
+            //Brick collisions
+            if(this.storedCbm & gcb.face) {
                 this.reverse();
             }
             //
-            else if(!(cbm & gcb.flor)) {
+            else if(!(this.storedCbm & gcb.flor)) {
                 this.reverse();
             }
-            //
-            else {
-                this.gpos.x += this.move.x;
-            }
+
+            this.gpos.x += this.move.x;
         }
     }
 
@@ -68,10 +85,10 @@ export default class CharacterRBG extends CharacterRB {
         if (mask & (MASKS.enemy | MASKS.block)){
 
             var targetDir = Math.sign(other.gpos.x - this.gpos.x)   //Direction of the target
-            var facingDir = Math.sign(this.move.x);                 //Direction of this's movement  
+            var facingDir = Math.sign(this.move.x);                 //Direction of this's movement
 
             if(targetDir == facingDir) {
-                this.reverse();
+                this.storedCbm |= gcb.face;
             }
         }
     }
