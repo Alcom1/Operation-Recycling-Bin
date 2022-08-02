@@ -66,7 +66,7 @@ export function floor(val: number, target: number): number {
 }
 
 /** Stack an array of integers into a bitmask */
-export function bitStack(numbers: number[]): number {
+export function bitStack(...numbers: number[]): number {
 
     var ret = 0;
     numbers.forEach(n => ret += 1 << n);

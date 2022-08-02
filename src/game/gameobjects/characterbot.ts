@@ -65,21 +65,21 @@ const characterBotOverride = Object.freeze({
 
 //Collision bitmasks for bot-brick collisions
 const gcb = Object.freeze({
-    flor : bitStack([0, 7]),
-    down : bitStack([1, 8]),
-    ceil : bitStack([2, 9]),
-    head : bitStack([3]),
-    wall : bitStack([4, 5]),
-    step : bitStack([6])
+    flor : bitStack(0, 7),
+    down : bitStack(1, 8),
+    ceil : bitStack(2, 9),
+    head : bitStack(3),
+    wall : bitStack(4, 5),
+    step : bitStack(6)
 });
 
 //Collision bitmasks for bot-brick collisions in air
 const acb = Object.freeze({
-    flor : bitStack([0, 6]),
-    head : bitStack([1, 7]),
-    face : bitStack([8, 9, 10]),
-    shin : bitStack([11]),
-    foot : bitStack([12])
+    flor : bitStack(0, 6),
+    head : bitStack(1, 7),
+    face : bitStack(8, 9, 10),
+    shin : bitStack(11),
+    foot : bitStack(12)
 });
 
 export default class CharacterBot extends Character {
