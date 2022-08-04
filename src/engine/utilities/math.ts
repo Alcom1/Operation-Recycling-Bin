@@ -43,6 +43,16 @@ export const MASKS = Object.freeze({
     enemy: 0b100000000,
 })
 
+//Collision bitmasks
+export const FOUR_BITSTACK = Object.freeze({
+    flor : bitStack(9, 10),
+    face : bitStack(5, 7),
+    ceil : bitStack(1, 2),
+    back : bitStack(4, 6),
+    land : bitStack(11),
+    band : bitStack(8)
+});
+
 /** Handles file extension - image */
 export function pathImg(fileName : string, extension?: string) {
 

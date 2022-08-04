@@ -245,7 +245,7 @@ export default class CharacterBot extends Character {
     }
 
     //Check and resolve brick collisions
-    protected handleCollision() {
+    protected handleStep() {
 
         switch(this.stateIndex) {
             case BotState.NORMAL :

@@ -159,7 +159,7 @@ export default class Character extends GameObject {
     }
 
     //Do nothing - override
-    protected handleCollision() {
+    protected handleStep() {
 
     }
 
@@ -202,7 +202,7 @@ export default class Character extends GameObject {
 
             this.spos = Vect.zero;
     
-            this.handleCollision();
+            this.handleStep();
             this.handleBricks();
 
             if(this.isNormalMovment) {

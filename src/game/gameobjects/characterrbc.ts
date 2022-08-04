@@ -105,7 +105,7 @@ export default class CharacterRBC extends CharacterRB {
     }
 
     //Check and resolve brick collisions
-    protected handleCollision() {
+    protected handleStep() {
 
         //Reset collision mask
         this.isStep = true;
@@ -128,23 +128,23 @@ export default class CharacterRBC extends CharacterRB {
 
             case ClimbState.NORMAL :
                 this.gpos.x += this.move.x;
-                this.handleCollisionNormal();
+                this.handleStepNormal();
                 break;
 
             case ClimbState.UP :
-                this.handleCollisionUp();
+                this.handleStepUp();
                 break;
 
             case ClimbState.WAIT :
-                this.handleCollisionWait();
+                this.handleStepWait();
                 break;            
                 
             case ClimbState.HALT :
-                this.handleCollisionHalt();
+                this.handleStepHalt();
                 break;
 
             case ClimbState.DOWN :
-                this.handleCollisionDown();
+                this.handleStepDown();
                 break;
         }
     }
@@ -202,23 +202,23 @@ export default class CharacterRBC extends CharacterRB {
     }
 
     //Collisions for normal movement
-    protected handleCollisionNormal() {
+    protected handleStepNormal() {
     }
 
     //Collisions for downward movement
-    protected handleCollisionWait() {
+    protected handleStepWait() {
     }
 
     //Collisions for downward movement
-    protected handleCollisionHalt() {
+    protected handleStepHalt() {
     }
 
     //Collisions for downward movement
-    protected handleCollisionUp() {
+    protected handleStepUp() {
     }
 
     //Collisions for upward movement
-    protected handleCollisionDown() {
+    protected handleStepDown() {
     }
 
     //Add additional bitmasks from character collisions

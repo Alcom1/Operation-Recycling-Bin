@@ -1,16 +1,6 @@
 import { Collider } from "engine/modules/collision";
-import { bitStack, BOUNDARY, GMULTX, GMULTY, MASKS } from "engine/utilities/math";
+import { bitStack, BOUNDARY, FOUR_BITSTACK as gcb, GMULTX, GMULTY, MASKS } from "engine/utilities/math";
 import Character from "./character";
-
-//Collision bitmasks
-export const gcb = Object.freeze({
-    flor : bitStack(9, 10),
-    face : bitStack(5, 7),
-    ceil : bitStack(1, 2),
-    back : bitStack(4, 6),
-    land : bitStack(11),
-    band : bitStack(8)
-});
 
 export default class CharacterRB extends Character {
 
@@ -34,10 +24,12 @@ export default class CharacterRB extends Character {
     }
 
     //Check and resolve brick collisions
-    protected handleCollision() {
+    protected handleStep() {
 
         this.isStep = true;
         this.storedCbm = 0;
+
+        this.updatePosition();
 
         //WALL BOUNDARY
         if (this.gpos.x - 2 < BOUNDARY.minx) {
@@ -55,6 +47,11 @@ export default class CharacterRB extends Character {
                 y : -this.height}), 
             4, 
             this.move.x);
+    }
+
+    protected updatePosition() 
+    {
+
     }
 
     protected getPassiveCollider() : Collider {

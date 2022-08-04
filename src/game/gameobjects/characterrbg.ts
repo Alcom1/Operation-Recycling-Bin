@@ -1,8 +1,8 @@
 import GameObject, { Collision } from "engine/gameobjects/gameobject";
-import { Collider, Step } from "engine/modules/collision";
-import { bitStack, BOUNDARY, GMULTX, GMULTY, MASKS } from "engine/utilities/math";
+import { Step } from "engine/modules/collision";
+import { FOUR_BITSTACK as gcb, MASKS } from "engine/utilities/math";
 import { CharacterParams } from "./character";
-import CharacterRB, { gcb } from "./characterrb";
+import CharacterRB from "./characterrb";
 
 const characterRBGOverride = Object.freeze({
     height: 2,
@@ -21,31 +21,16 @@ export default class CharacterRBG extends CharacterRB {
         super(Object.assign(params, characterRBGOverride));
     }
 
-    //Check and resolve brick collisions
-    protected handleCollision() {
-
-        this.isStep = true;
-        this.storedCbm = 0;
-
-        //WALL BOUNDARY
-        if (this.gpos.x - 2 < BOUNDARY.minx) {
-
-            this.storedCbm |= (this.move.x > 0 ? gcb.back : gcb.face);
-        }        
-        else if (this.gpos.x + 2 > BOUNDARY.maxx) {
-
-            this.storedCbm |= (this.move.x > 0 ? gcb.face : gcb.back);
-        }
-
-        this.storedCbm |= this.brickHandler.checkCollisionRing(
-            this.gpos.getAdd({
-                x : -2, 
-                y : -this.height}), 
-            4, 
-            this.move.x);
+    //Update position to move forward
+    protected updatePosition()
+    {
+        //Move forward, please.
+        this.gpos.x += this.move.x;
     }
 
     public resolveCollisions(collisions : Collision[], step : Step) {
+
+        console.log(step);
         
         if(this.isStep)
         {
@@ -60,8 +45,6 @@ export default class CharacterRBG extends CharacterRB {
             else if(!(this.storedCbm & gcb.flor)) {
                 this.reverse();
             }
-
-            this.gpos.x += this.move.x;
         }
     }
 
