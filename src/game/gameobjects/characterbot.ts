@@ -442,9 +442,9 @@ export default class CharacterBot extends Character {
     }
 
     //
-    public updateCollisions(step : Step, loopLength : number) {
+    public updateSync(step : Step, loopLength : number) {
 
-        super.updateCollisions(step, loopLength);
+        super.updateSync(step, loopLength);
 
         if(step.stepType == StepType.FRAME) {
 

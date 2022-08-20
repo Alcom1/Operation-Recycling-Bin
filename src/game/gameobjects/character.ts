@@ -196,7 +196,7 @@ export default class Character extends GameObject {
     }
 
     //
-    public updateCollisions(step : Step, loopLength : number) {
+    public updateSync(step : Step, loopLength : number) {
 
         if(step.stepType == StepType.SYNC && step.counter % (loopLength / this.speed) == 0) {
 

@@ -30,8 +30,6 @@ export default class CharacterRBG extends CharacterRB {
 
     public resolveCollisions(collisions : Collision[], step : Step) {
 
-        console.log(step);
-        
         if(this.isStep)
         {
             this.isStep = false;
@@ -48,10 +46,10 @@ export default class CharacterRBG extends CharacterRB {
         }
     }
 
-    //Explode
+    //Store front collisions in bitmask
     public resolveCollision(mask : number, other : GameObject) {
 
-        //Reverse
+        //Block face if there's something in front
         if (mask & (MASKS.enemy | MASKS.block)){
 
             var targetDir = Math.sign(other.gpos.x - this.gpos.x)   //Direction of the target
