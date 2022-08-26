@@ -40,7 +40,7 @@ export default class CharacterRBG extends CharacterRB {
                 this.reverse();
             }
             //
-            else if(!(this.storedCbm & gcb.flor)) {
+            else if(!(this.storedCbm & gcb.land)) {
                 this.reverse();
             }
         }
