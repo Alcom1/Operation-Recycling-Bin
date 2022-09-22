@@ -1,6 +1,7 @@
 import Character, { CharacterParams } from "./character";
 import { BOUNDARY, bitStack, GMULTY, GMULTX, MASKS} from "engine/utilities/math";
-import { Collider, Step, StepType } from "engine/modules/collision";
+import { Collider } from "engine/modules/collision";
+import { Step, StepType } from "engine/modules/sync";
 import { Point } from "engine/utilities/vect";
 
 enum ArmorState {

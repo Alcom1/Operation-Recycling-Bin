@@ -3,6 +3,7 @@ import BakerModule from "./modules/baker";
 import CollisionModule from "./modules/collision";
 import LibraryModule from "./modules/library";
 import MouseModule from "./modules/mouse";
+import SyncModule from "./modules/sync";
 import TagModule from "./modules/tag";
 import Scene, {SceneParams} from "./scene/scene";
 import {clamp} from "./utilities/math";
@@ -45,6 +46,7 @@ export default class Engine {
     public collision: CollisionModule;
     public library: LibraryModule;
     public mouse: MouseModule;
+    public sync: SyncModule;
     public tag: TagModule;
 
     constructor(
@@ -75,6 +77,7 @@ export default class Engine {
         this.library = new LibraryModule();
         this.mouse = new MouseModule(this.canvas);
         this.mouse.setResolution(this.canvas.width, this.canvas.height);
+        this.sync = new SyncModule();
         this.tag = new TagModule();
 
         // Register available game object types
@@ -138,6 +141,7 @@ export default class Engine {
 
     /** Perform both an update and draw */
     private updateDrawScenes(scenes : Scene[], dt: number): void {
+        this.sync.update(dt);
         this.collision.update(dt);  //Handle collisions before update/draw
         scenes.forEach(s => s.update(dt));
         scenes.forEach(s => s.draw(this.ctx));
@@ -189,6 +193,7 @@ export default class Engine {
             // Clear scene names from core
             this.scenesActive = this.scenesActive.filter(s => !this.killSceneNames.includes(s.name)); 
             this.tag.clear(this.killSceneNames);
+            this.sync.clear(this.killSceneNames);
             this.collision.clear(this.killSceneNames);
             this.killSceneNames = [];
         }

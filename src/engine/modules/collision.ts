@@ -10,16 +10,6 @@ export interface Collider {
     isSub? : Boolean
 }
 
-export enum StepType {
-    FRAME,
-    SYNC
-}
-
-export interface Step {
-    stepType : StepType,
-    counter : number
-}
-
 interface GameObjectCollider {
     colliders : Collider[],
     gameObject : GameObject
@@ -35,9 +25,6 @@ interface CollidersScene {
 export default class CollisionModule {
 
     private scenes          : CollidersScene[] = [];
-    private timer           : number = 0;
-    private stepInterval    : number = 1/15;
-    private counter         : number = 0;
 
     public pushGOs(sceneName : string, sceneObjects : GameObject[]) {
 
@@ -70,29 +57,11 @@ export default class CollisionModule {
     //Update - check and trigger collisions for all game objects in all scenes
     public update(dt : number) {
 
-        this.timer += dt;
-
-        let isSync = false;
-
-        if(this.timer >= this.stepInterval) {
-            this.timer -= this.stepInterval;
-            this.counter++;
-            isSync = true;
-        }
-
-        let step = {
-            stepType : isSync ? StepType.SYNC : StepType.FRAME,
-            counter : this.counter
-        } as Step
-
         //Trigger collisions for each scene. Scenes don't interact with each other.
         this.scenes.forEach(s => {
 
             //Get all active game objects with colliders
             const gocs : GameObjectCollider[] = s.gameObjects.filter(go => go.isActive).map(go => {
-
-                go.updateSync(step, 1 / this.stepInterval);
-
                 return {
                     colliders : go.getColliders(),
                     gameObject : go
@@ -107,7 +76,7 @@ export default class CollisionModule {
             }
 
             //Resolve all collisions
-            s.gameObjects.forEach(go => go.resolveClearCollisions(step));
+            s.gameObjects.forEach(go => go.resolveClearCollisions());
         });
     }
 

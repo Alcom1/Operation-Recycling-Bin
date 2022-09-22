@@ -1,7 +1,8 @@
 import Vect, { Point } from "engine/utilities/vect";
 import Scene from "engine/scene/scene";
 import Engine from "engine/engine";
-import { Collider, Step } from "engine/modules/collision";
+import { Collider } from "engine/modules/collision";
+import { Step } from "engine/modules/sync";
 import { getZIndex, GMULTX, GMULTY } from "engine/utilities/math";
 
 export interface Collision {
@@ -75,7 +76,6 @@ export default class GameObject {
      * Update positions for collisions step
      */
     public updateSync(step : Step, loopLength : number) {
-
     }
 
     /**
@@ -106,24 +106,24 @@ export default class GameObject {
     /**
      * Resolve and clear all collisions
      */
-    public resolveClearCollisions(step : Step) {
+    public resolveClearCollisions() {
 
-        this.resolveCollisions(this.collisions, step);
+        this.resolveCollisions(this.collisions);
         this.collisions = [];
     }
 
     /**
      * Resolve all collisions
      */
-    protected resolveCollisions(collisions : Collision[], step : Step) {
+    protected resolveCollisions(collisions : Collision[]) {
 
-        collisions.forEach(c => this.resolveCollision(c.mask, c.other, step));
+        collisions.forEach(c => this.resolveCollision(c.mask, c.other));
     }
 
     /**
      * Resolve collision for this game object
      */
-    protected resolveCollision(mask : number, other : GameObject, step : Step) {
+    protected resolveCollision(mask : number, other : GameObject) {
 
     }
 

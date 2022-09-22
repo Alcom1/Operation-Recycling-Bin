@@ -4,7 +4,7 @@ import Vect from "engine/utilities/vect";
 import BrickHandler from "./brickhandler";
 import Brick from "./bricknormal";
 import Anim, { OffsetImageParams, AnimationParams } from "./anim";
-import { Step, StepType } from "engine/modules/collision";
+import { Step, StepType } from "engine/modules/sync";
 
 export interface CharacterParams extends GameObjectParams {
     height? : number;
@@ -212,8 +212,8 @@ export default class Character extends GameObject {
     }
 
     //
-    public resolveCollisions(collisions : Collision[], step : Step) {
+    public resolveCollisions(collisions : Collision[]) {
         
-        super.resolveCollisions(collisions, step);
+        super.resolveCollisions(collisions);
     }
 }

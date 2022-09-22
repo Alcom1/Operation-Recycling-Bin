@@ -46,6 +46,7 @@ export default class Scene {
                 this.gameObjects.forEach(go =>  go.init(ctx));
             ctx.restore();
 
+            this.engine.sync.pushGOs(this.name, this.gameObjects);
             this.engine.collision.pushGOs(this.name, this.gameObjects);
 
             this.initialized = true;

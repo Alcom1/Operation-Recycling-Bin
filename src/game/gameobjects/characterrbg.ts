@@ -1,5 +1,4 @@
 import GameObject, { Collision } from "engine/gameobjects/gameobject";
-import { Step } from "engine/modules/collision";
 import { FOUR_BITSTACK as gcb, MASKS } from "engine/utilities/math";
 import { CharacterParams } from "./character";
 import CharacterRB from "./characterrb";
@@ -28,12 +27,12 @@ export default class CharacterRBG extends CharacterRB {
         this.gpos.x += this.move.x;
     }
 
-    public resolveCollisions(collisions : Collision[], step : Step) {
+    public resolveCollisions(collisions : Collision[]) {
 
         if(this.isStep)
         {
             this.isStep = false;
-            super.resolveCollisions(collisions, step);
+            super.resolveCollisions(collisions);
         
             //Brick collisions
             if(this.storedCbm & gcb.face) {
