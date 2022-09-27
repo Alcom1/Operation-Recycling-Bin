@@ -64,8 +64,9 @@ export default class Character extends GameObject {
             
             // Add segment to scene and this character
             this.animationsCurr.push(this.parent.pushGO(new Anim({
-                    ...params, 
-                    isLoop : false,                                 //Remove looping to prevent stuttering. Loops are handled manually
+                    ...params,
+                    speed : this.isGlide ? 5 : params.speed, 
+                    isLoop : this.isGlide,                          //Loops are handled manually by non-gliders to prevent stuttering
                     zModifier : i < 1 ? mainZIndex : 29,            //Z-modifier for different slices
                     sliceIndex : i,                                 //This animation is sliced
                     framesSize : GMULTX * 2,                        //2x wide slices
