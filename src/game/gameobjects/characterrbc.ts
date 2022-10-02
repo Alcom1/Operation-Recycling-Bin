@@ -54,6 +54,8 @@ const characterRBCOverride = Object.freeze({
 
 export default class CharacterRBC extends CharacterRB {
 
+    private vertSpeed : number = 72;
+
     constructor(params: CharacterParams) {
         super(Object.assign(params, characterRBCOverride));
     }
@@ -61,25 +63,77 @@ export default class CharacterRBC extends CharacterRB {
     //Update position to move forward
     protected updatePosition()
     {
-        //Move forward, please.
-        this.gpos.x += this.move.x;
+        //Move in different directions based on state
+        switch(this.stateIndex) {
+
+            //Move forward, please.
+            case ClimbState.NORMAL : 
+                this.gpos.x += this.move.x;
+                break;
+
+            //Move up
+            case ClimbState.UP : 
+                this.gpos.y -= 1;
+                break;
+
+            //Move down
+            case ClimbState.DOWN : 
+                this.gpos.y += 1;
+                break;
+        }
+
     }
 
+    //
+    protected handleSpecialMovement(dt: number) {
+        
+        switch(this.stateIndex) {
+
+            case ClimbState.UP :
+                this.spos.y -= this.vertSpeed * dt;
+                break;
+
+            case ClimbState.WAIT :
+                break;
+
+            case ClimbState.HALT :
+                break;
+
+            case ClimbState.DOWN :
+                this.spos.y += this.vertSpeed * dt;
+                break;
+        }
+    }
+
+    //
     public resolveCollisions(collisions : Collision[]) {
 
+        //
         if(this.isStep)
         {
             this.isStep = false;
             super.resolveCollisions(collisions);
-        
-            //Brick collisions
-            if(this.storedCbm & gcb.face) {
-                this.reverse();
+
+            switch(this.stateIndex) {
+    
+                case ClimbState.NORMAL :
+                    this.resolveCollisionsNormal();
+                    break;
             }
-            //
-            else if(!(this.storedCbm & gcb.flor)) {
-                this.reverse();
-            }
+        }
+    }
+
+    //
+    public resolveCollisionsNormal()
+    {
+        //Brick collisions
+        //Reverse for walls
+        if(this.storedCbm & gcb.face) {
+            this.reverse();
+        }
+        //Reverse for cliffs
+        else if(!(this.storedCbm & gcb.flor)) {
+            this.setStateIndex(ClimbState.DOWN)
         }
     }
 
