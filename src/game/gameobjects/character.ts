@@ -121,7 +121,7 @@ export default class Character extends GameObject {
             this.handleSpecialMovement(dt);
         }
         
-        // Not yet
+        // Glide characters move gradually, continously set the animation to match its subposition
         if(this.isGlide) {
             this.animationsCurr.forEach(a => {
                 a.spos = this.spos;
@@ -206,7 +206,8 @@ export default class Character extends GameObject {
             this.handleStep();
             this.handleBricks();
 
-            if(this.isNormalMovment) {
+            //Normal movement and all gliding movement demands a grid-position reset for all animations
+            if(this.isNormalMovment || this.isGlide) {
                 this.animationsCurr.forEach(s => s.reset(this.gpos));
             }
         }

@@ -1,3 +1,4 @@
+import { Collision } from "engine/gameobjects/gameobject";
 import { Collider } from "engine/modules/collision";
 import { bitStack, BOUNDARY, FOUR_BITSTACK as gcb, GMULTX, GMULTY, MASKS } from "engine/utilities/math";
 import Character from "./character";
@@ -49,9 +50,27 @@ export default class CharacterRB extends Character {
             this.move.x);
     }
 
+    //Special collision resolving
+    public resolveCollisions(collisions : Collision[]) {
+
+        if(this.isStep)
+        {
+            this.isStep = false;                    //Reset step state
+            super.resolveCollisions(collisions);    //Perform standard resolve to set bitmask for actual collisions
+            this.resolveCollisionBitmask();         //Handle collisions based on the bitmask
+        }
+    }
+
+    //
+    protected resolveCollisionBitmask()
+    {
+        throw new Error("Not implemented!");
+    }
+
+    //
     protected updatePosition() 
     {
-
+        throw new Error("Not implemented!");
     }
 
     protected getPassiveCollider() : Collider {

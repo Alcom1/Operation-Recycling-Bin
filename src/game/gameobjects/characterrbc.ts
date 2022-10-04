@@ -54,7 +54,7 @@ const characterRBCOverride = Object.freeze({
 
 export default class CharacterRBC extends CharacterRB {
 
-    private vertSpeed : number = 72;
+    private vertSpeed : number = 108;
 
     constructor(params: CharacterParams) {
         super(Object.assign(params, characterRBCOverride));
@@ -81,7 +81,6 @@ export default class CharacterRBC extends CharacterRB {
                 this.gpos.y += 1;
                 break;
         }
-
     }
 
     //
@@ -105,35 +104,56 @@ export default class CharacterRBC extends CharacterRB {
         }
     }
 
-    //
-    public resolveCollisions(collisions : Collision[]) {
-
-        //
-        if(this.isStep)
-        {
-            this.isStep = false;
-            super.resolveCollisions(collisions);
-
-            switch(this.stateIndex) {
+    //Resolve collisions based on the current stored bitmask
+    public resolveCollisionBitmask()
+    {
+        switch(this.stateIndex) {
     
-                case ClimbState.NORMAL :
-                    this.resolveCollisionsNormal();
-                    break;
-            }
+            case ClimbState.NORMAL :
+                this.resolveCollisionsNormal();
+                break;
+
+            case ClimbState.UP :
+                this.resolveCollisionsUp();
+                break;
+
+            case ClimbState.WAIT :
+                break;
+
+            case ClimbState.HALT :
+                break;
+
+            case ClimbState.DOWN :
+                this.resolveCollisionsDown();
+                break;
         }
     }
 
-    //
+    //Resolve collisions for normal movement
     public resolveCollisionsNormal()
     {
-        //Brick collisions
         //Reverse for walls
         if(this.storedCbm & gcb.face) {
-            this.reverse();
+            this.setStateIndex(ClimbState.UP);
         }
         //Reverse for cliffs
         else if(!(this.storedCbm & gcb.flor)) {
-            this.setStateIndex(ClimbState.DOWN)
+            this.setStateIndex(ClimbState.DOWN);
+        }
+    }
+
+    //Resolve collisions for upward movement
+    public resolveCollisionsUp()
+    {
+
+    }
+
+    //Resolve collisions for downward movement
+    public resolveCollisionsDown()
+    {
+        //Return to normal movement if there is a floor
+        if(this.storedCbm & gcb.flor) {
+            this.setStateIndex(ClimbState.NORMAL);
         }
     }
 

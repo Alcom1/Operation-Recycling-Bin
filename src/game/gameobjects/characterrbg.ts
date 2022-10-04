@@ -27,21 +27,16 @@ export default class CharacterRBG extends CharacterRB {
         this.gpos.x += this.move.x;
     }
 
-    public resolveCollisions(collisions : Collision[]) {
-
-        if(this.isStep)
-        {
-            this.isStep = false;
-            super.resolveCollisions(collisions);
-        
-            //Brick collisions
-            if(this.storedCbm & gcb.face) {
-                this.reverse();
-            }
-            //
-            else if(!(this.storedCbm & gcb.land)) {
-                this.reverse();
-            }
+    //Resolve collisions based on the current stored bitmask
+    public resolveCollisionBitmask()
+    {
+        //Brick collisions
+        if(this.storedCbm & gcb.face) {
+            this.reverse();
+        }
+        //
+        else if(!(this.storedCbm & gcb.land)) {
+            this.reverse();
         }
     }
 
