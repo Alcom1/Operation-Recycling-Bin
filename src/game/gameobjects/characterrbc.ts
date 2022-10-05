@@ -55,14 +55,16 @@ const characterRBCOverride = Object.freeze({
 export default class CharacterRBC extends CharacterRB {
 
     private vertSpeed : number = 108;
+    private vertMax :   number = 3;
+    private vertCount : number = 0;
 
     constructor(params: CharacterParams) {
         super(Object.assign(params, characterRBCOverride));
     }
 
     //Update position to move forward
-    protected updatePosition()
-    {
+    protected updatePosition() {
+
         //Move in different directions based on state
         switch(this.stateIndex) {
 
@@ -74,6 +76,7 @@ export default class CharacterRBC extends CharacterRB {
             //Move up
             case ClimbState.UP : 
                 this.gpos.y -= 1;
+                this.vertCount ++;
                 break;
 
             //Move down
@@ -105,8 +108,8 @@ export default class CharacterRBC extends CharacterRB {
     }
 
     //Resolve collisions based on the current stored bitmask
-    public resolveCollisionBitmask()
-    {
+    public resolveCollisionBitmask() {
+
         switch(this.stateIndex) {
     
             case ClimbState.NORMAL :
@@ -129,31 +132,57 @@ export default class CharacterRBC extends CharacterRB {
         }
     }
 
+    //Index reset with unique behaviors
+    public setStateIndex(index? : number) {
+        this.vertCount = 0;         //Reset vertical counter
+        super.setStateIndex(index); //Set index
+    }
+
     //Resolve collisions for normal movement
-    public resolveCollisionsNormal()
-    {
-        //Reverse for walls
-        if(this.storedCbm & gcb.face) {
-            this.setStateIndex(ClimbState.UP);
-        }
-        //Reverse for cliffs
-        else if(!(this.storedCbm & gcb.flor)) {
+    public resolveCollisionsNormal() {
+
+        //Go down for cliffs
+        if(!(this.storedCbm & gcb.flor)) {
             this.setStateIndex(ClimbState.DOWN);
+        }
+        //Go up for walls
+        else if(this.storedCbm & gcb.face) {
+
+            //Unless there's an immediate ceiling, then reverse instead
+            if(this.storedCbm & gcb.ceil) {
+                this.reverse();
+            }
+            //actually go up
+            else {
+                this.setStateIndex(ClimbState.UP);
+            }
         }
     }
 
     //Resolve collisions for upward movement
-    public resolveCollisionsUp()
-    {
+    public resolveCollisionsUp() {
 
+        //Go forward if an opening is available
+        if(!(this.storedCbm & gcb.face)) {
+            this.setStateIndex(ClimbState.NORMAL);
+        }
+        //Go back down if a ceiling is hit, or if the height limit is reached
+        else if(this.storedCbm & gcb.ceil || this.vertCount >= this.vertMax) {
+            this.setStateIndex(ClimbState.DOWN);
+        }
     }
 
     //Resolve collisions for downward movement
-    public resolveCollisionsDown()
-    {
-        //Return to normal movement if there is a floor
+    public resolveCollisionsDown() {
+
+        //Land & return to normal movement if there is a floor
         if(this.storedCbm & gcb.flor) {
             this.setStateIndex(ClimbState.NORMAL);
+
+            //Reverse if there is wall ahead upon landing
+            if(this.storedCbm & gcb.face) {
+                this.reverse();
+            }
         }
     }
 

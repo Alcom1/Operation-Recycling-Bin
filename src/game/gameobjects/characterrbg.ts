@@ -21,15 +21,14 @@ export default class CharacterRBG extends CharacterRB {
     }
 
     //Update position to move forward
-    protected updatePosition()
-    {
+    protected updatePosition() {
         //Move forward, please.
         this.gpos.x += this.move.x;
     }
 
     //Resolve collisions based on the current stored bitmask
-    public resolveCollisionBitmask()
-    {
+    public resolveCollisionBitmask()  {
+        
         //Brick collisions
         if(this.storedCbm & gcb.face) {
             this.reverse();

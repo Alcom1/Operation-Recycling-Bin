@@ -62,14 +62,12 @@ export default class CharacterRB extends Character {
     }
 
     //
-    protected resolveCollisionBitmask()
-    {
+    protected resolveCollisionBitmask() {
         throw new Error("Not implemented!");
     }
 
     //
-    protected updatePosition() 
-    {
+    protected updatePosition()  {
         throw new Error("Not implemented!");
     }
 
