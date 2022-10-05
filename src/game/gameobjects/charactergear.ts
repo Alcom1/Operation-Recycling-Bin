@@ -3,7 +3,7 @@ import { Collider } from "engine/modules/collision";
 import { bitStack, BOUNDARY, FOUR_BITSTACK as gcb, GMULTX, GMULTY, MASKS } from "engine/utilities/math";
 import Character from "./character";
 
-export default class CharacterRB extends Character {
+export default class CharacterGear extends Character {
 
     protected storedCbm: number = 0;      //Store Collision bitmask from collision for later resolution
     protected isStep: boolean = false;    //True on frames where a character step has occured

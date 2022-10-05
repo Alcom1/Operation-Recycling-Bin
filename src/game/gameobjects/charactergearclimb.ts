@@ -1,7 +1,7 @@
 import GameObject, { Collision } from "engine/gameobjects/gameobject";
 import { FOUR_BITSTACK as gcb, MASKS } from "engine/utilities/math";
 import { CharacterParams } from "./character";
-import CharacterRB from "./characterrb";
+import CharacterGear from "./charactergear";
 
 enum ClimbState {
     NORMAL,
@@ -12,7 +12,7 @@ enum ClimbState {
     REVERSE
 }
 
-const characterRBCOverride = Object.freeze({
+const CharacterGearClimbOverride = Object.freeze({
     height: 2,
     speed : 3.0,
     images : [
@@ -52,14 +52,14 @@ const characterRBCOverride = Object.freeze({
     }]
 });
 
-export default class CharacterRBC extends CharacterRB {
+export default class CharacterGearClimb extends CharacterGear {
 
     private vertSpeed : number = 108;
     private vertMax :   number = 3;
     private vertCount : number = 0;
 
     constructor(params: CharacterParams) {
-        super(Object.assign(params, characterRBCOverride));
+        super(Object.assign(params, CharacterGearClimbOverride));
     }
 
     //Update position to move forward

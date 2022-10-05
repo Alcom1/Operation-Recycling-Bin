@@ -1,9 +1,9 @@
 import GameObject, { Collision } from "engine/gameobjects/gameobject";
 import { FOUR_BITSTACK as gcb, MASKS } from "engine/utilities/math";
 import { CharacterParams } from "./character";
-import CharacterRB from "./characterrb";
+import CharacterGear from "./charactergear";
 
-const characterRBGOverride = Object.freeze({
+const CharacterGearGroundOverride = Object.freeze({
     height: 2,
     speed : 5.0,
     images : [        
@@ -14,10 +14,10 @@ const characterRBGOverride = Object.freeze({
     isGlide : true
 });
 
-export default class CharacterRBG extends CharacterRB {
+export default class CharacterGearGround extends CharacterGear {
 
     constructor(params: CharacterParams) {
-        super(Object.assign(params, characterRBGOverride));
+        super(Object.assign(params, CharacterGearGroundOverride));
     }
 
     //Update position to move forward
@@ -28,7 +28,7 @@ export default class CharacterRBG extends CharacterRB {
 
     //Resolve collisions based on the current stored bitmask
     public resolveCollisionBitmask()  {
-        
+
         //Brick collisions
         if(this.storedCbm & gcb.face) {
             this.reverse();
