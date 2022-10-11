@@ -185,19 +185,4 @@ export default class CharacterGearClimb extends CharacterGear {
             }
         }
     }
-
-    //Store front collisions in bitmask
-    public resolveCollision(mask : number, other : GameObject) {
-
-        //Block face if there's something in front
-        if (mask & (MASKS.enemy | MASKS.block)){
-
-            var targetDir = Math.sign(other.gpos.x - this.gpos.x)   //Direction of the target
-            var facingDir = Math.sign(this.move.x);                 //Direction of this's movement
-
-            if(targetDir == facingDir) {
-                this.storedCbm |= gcb.face;
-            }
-        }
-    }
 }

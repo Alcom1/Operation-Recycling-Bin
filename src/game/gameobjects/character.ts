@@ -159,9 +159,9 @@ export default class Character extends GameObject {
         this.brickHandler.isRecheck = true;
     }
 
-    //Do nothing - override
+    //Handle synchronized step movement
     protected handleStep() {
-
+        throw new Error("Not implemented!");
     }
 
     //Reverse the direction of this character
@@ -196,9 +196,10 @@ export default class Character extends GameObject {
         this.underBricks = [];
     }
 
-    //
+    //Perform a sychronized update
     public updateSync(step : Step, loopLength : number) {
 
+        //The step matches this character's speed, perform an update
         if(step.stepType == StepType.SYNC && step.counter % (loopLength / this.speed) == 0) {
 
             this.spos = Vect.zero;
