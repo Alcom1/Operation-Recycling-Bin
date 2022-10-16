@@ -33,12 +33,17 @@ export default class Character extends GameObject {
     private isGlide: boolean;                       //If the character sprite matches the character's subposition
     private underBricks: Brick[] = [];              //Bricks under pressure, under this character
 
-    protected animations: Anim[][] = [[]];
-    protected stateAnimations: number[];
-    protected stateIndex: number = 0;
-    protected get animationsCurr() : Anim[] { return this.animations[this.stateAnimations[this.stateIndex]]; }
-    protected get isNormalMovment() : boolean { return this.stateIndex == 0 }
-    protected get animImageIndex() : number { return this.move.x }
+    protected animations: Anim[][] = [[]];          //Animations, 2D array for character-states and then sub-states
+    protected stateAnimations: number[];            //Array of which animation each state uses. Sometimes it's not 1:1.
+    protected stateIndex: number = 0;               //Current state
+
+    //Getters
+    protected get animationsCurr() : Anim[] {                               //The animations for the current state
+        return this.animations[this.stateAnimations[this.stateIndex]]; 
+    }  
+    public get isNormalMovment() : boolean { return this.stateIndex == 0 }  //If the current state is normal movment
+    protected get animationSubindex() : number { return this.move.x }       //Sub-index for animations
+    public get movex() : number { return this.move.x }                      //This almost looks redundant except Subindex will be overridden.
 
     constructor(params: CharacterParams) {
         super(params);
@@ -167,8 +172,8 @@ export default class Character extends GameObject {
     //Reverse the direction of this character
     protected reverse() {
 
-        this.move.x *= -1;                                                      //Reverse direction
-        this.animations[0].forEach(x => x.setImageIndex(this.animImageIndex));  //Establish sprites for new direction
+        this.move.x *= -1;                                                          //Reverse direction
+        this.animations[0].forEach(x => x.setImageIndex(this.animationSubindex));   //Establish sprites for new direction
         
         //If gliding force-reset the sprite to match its current position
         if(this.isGlide) {
@@ -185,7 +190,7 @@ export default class Character extends GameObject {
             s.spos.setToZero(); //Reset subposition
             s.reset(this.gpos); //Make sure all sprites are in the character's position after set
         }));
-        this.animationsCurr.forEach(x => x.setImageIndex(this.animImageIndex));
+        this.animationsCurr.forEach(x => x.setImageIndex(this.animationSubindex));
     }
 
     //Deactivate this gameObject

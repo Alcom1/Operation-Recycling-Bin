@@ -14,7 +14,7 @@ enum ClimbState {
 
 const CharacterGearClimbOverride = Object.freeze({
     height: 2,
-    speed : 3.0,
+    speed : 1.0,
     images : [
         { name : "char_rbc_left", offsetX : 0 },
         { name : "char_rbc_right", offsetX : 0}],
@@ -54,7 +54,7 @@ const CharacterGearClimbOverride = Object.freeze({
 
 export default class CharacterGearClimb extends CharacterGear {
 
-    private vertSpeed : number = 108;
+    private vertSpeed : number = 108/3;
     private vertMax :   number = 3;
     private vertCount : number = 0;
 
@@ -121,6 +121,7 @@ export default class CharacterGearClimb extends CharacterGear {
                 break;
 
             case ClimbState.WAIT :
+                this.resolveCollisionsNormal();
                 break;
 
             case ClimbState.HALT :
@@ -150,11 +151,25 @@ export default class CharacterGearClimb extends CharacterGear {
 
             //Unless there's an immediate ceiling, then reverse instead
             if(this.storedCbm & gcb.ceil) {
-                this.reverse();
+
+                //If back is also blocked, completely stuck, halt.
+                if(this.storedCbm & gcb.back)  {
+
+                    this.setStateIndex(ClimbState.HALT);
+                }
+                else {
+
+                    this.reverse();
+                }
             }
             //actually go up
             else {
-                this.setStateIndex(ClimbState.UP);
+
+                //Wait a step, then go up if waiting
+                this.setStateIndex(
+                    this.stateIndex == ClimbState.WAIT ? 
+                        ClimbState.UP : 
+                        ClimbState.WAIT);
             }
         }
     }
@@ -177,11 +192,30 @@ export default class CharacterGearClimb extends CharacterGear {
 
         //Land & return to normal movement if there is a floor
         if(this.storedCbm & gcb.flor) {
-            this.setStateIndex(ClimbState.NORMAL);
 
-            //Reverse if there is wall ahead upon landing
-            if(this.storedCbm & gcb.face) {
-                this.reverse();
+            //Both face and back are blocked, go up again
+            if(this.storedCbm & gcb.face && this.storedCbm & gcb.back) {
+
+                //Edge case, ceiling is blocked too, halt
+                if(this.storedCbm & gcb.ceil) {
+
+                    this.setStateIndex(ClimbState.HALT);
+                }
+                //Go up
+                else {
+                    
+                    this.setStateIndex(ClimbState.WAIT);
+                }
+            }
+            //Otherwise, Go forward
+            else {
+
+                this.setStateIndex(ClimbState.NORMAL);
+    
+                //Reverse if there is wall ahead upon landing
+                if(this.storedCbm & gcb.face) {
+                    this.reverse();
+                }
             }
         }
     }

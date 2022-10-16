@@ -98,7 +98,7 @@ export default class CharacterBot extends Character {
     private armorFlashRate : number = 8;                    //Rate of the armor flashing effect
     private armorState : ArmorState = ArmorState.NONE;      //Current state of the armor
 
-    protected get animImageIndex() : number {               //Adjust animation index for armor flash effect
+    protected get animationSubindex() : number {               //Adjust animation index for armor flash effect
         return this.move.x * (
             this.armorState == ArmorState.ACTIVE ? 2 :
             this.armorState == ArmorState.FLASH  ? (1 + Math.floor(this.timerArm * this.armorFlashRate) % 2) : 
@@ -117,7 +117,7 @@ export default class CharacterBot extends Character {
         //Update armor flash
         if(this.armorState == ArmorState.FLASH) {
             this.timerArm += dt;
-            this.animationsCurr.forEach(x => x.setImageIndex(this.animImageIndex));
+            this.animationsCurr.forEach(x => x.setImageIndex(this.animationSubindex));
 
             //Remove armor after a duration and reset timer
             if(this.timerArm > this.armorDelay) {

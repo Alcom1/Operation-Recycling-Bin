@@ -82,21 +82,46 @@ export default class CharacterGear extends Character {
                 other.gpos.x,
                 other.gpos.x + 2)
 
-            //If a vertically-blocking character is ahead
-            if(vertBlock && diff.x > 0) {
+            //If a vertically-blocking character...
+            if (vertBlock) {
 
-                this.storedCbm |= gcb.face; //Block face
+                //Is ahead
+                if( diff.x > 0) {
+
+                    //If there is a gap between these characters
+                    if (Math.abs(this.gpos.x - other.gpos.x) > 2) {
+    
+                        //Check if they're moving toward each other
+                        if ((other as Character).isNormalMovment &&
+                            (other as Character).movex != this.move.x) {
+    
+                            this.storedCbm |= gcb.face; //Block face
+                        }
+                    }
+                    //If 
+                    else {
+    
+                        this.storedCbm |= gcb.face; //Block face
+                    }
+                }
+                //Is behind
+                else {
+
+                    this.storedCbm |= gcb.back;
+                }
             }
             //If a horizontally-blocking character...
             if(horzBlock) {
 
                 //Is above
                 if(diff.y < 0) {
+
                     this.storedCbm |= gcb.ceil;
                 }
                 
                 //Is below
                 else if(diff.y > 0) {
+
                     this.storedCbm |= gcb.flor;
                 }
             }
