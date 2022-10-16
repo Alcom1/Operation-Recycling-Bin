@@ -54,23 +54,29 @@ export default class SyncModule {
 
     //Update - check and trigger collisions for all game objects in all scenes
     public update(dt : number) {
+
+        //Do nothing if there are no scenes, stops updates before scenes load, stops early stutter
+        if(this.scenes.length == 0) {
+            return;
+        }
         
-        this.timer += dt;
+        this.timer += dt;   //Advance timer
+        let isSync = false; //If the next step is sychronous (not just an ordinary frame)
 
-        let isSync = false;
-
-        if(this.timer >= this.stepInterval) {
+        //Check sync
+        if(this.timer >= this.stepInterval) {   
             this.timer -= this.stepInterval;
             this.counter++;
             isSync = true;
         }
 
+        //Create step object
         let step = {
             stepType : isSync ? StepType.SYNC : StepType.FRAME,
             counter : this.counter
         } as Step
 
-        //Trigger collisions for each scene. Scenes don't interact with each other.
+        //Trigger updates for each scene.
         this.scenes.forEach(s => {
 
             //Get all active game objects with colliders
@@ -82,6 +88,8 @@ export default class SyncModule {
 
     //Remove scene reference from colliders
     public clear(sceneNames: string[]) {
+        this.timer = 0;     //Reset timer for next scene
+        this.counter = 0;   //Reset counter for next scene
         this.scenes = this.scenes.filter(sg => !sceneNames.some(sn => sg.name == sn));
     }
 }
