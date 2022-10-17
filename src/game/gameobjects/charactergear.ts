@@ -25,12 +25,14 @@ export default class CharacterGear extends Character {
     }
 
     //Check and resolve brick collisions
-    protected handleStep() {
+    protected handleStep(isStart : boolean = false) {
 
         this.isStep = true;
         this.storedCbm = 0;
 
-        this.updatePosition();
+        if(!isStart) {
+            this.updatePosition();
+        }
 
         //WALL BOUNDARY
         if (this.gpos.x - 2 < BOUNDARY.minx) {

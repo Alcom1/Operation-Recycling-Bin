@@ -11,6 +11,7 @@ export interface Collider {
 }
 
 export enum StepType {
+    START,
     FRAME,
     SYNC
 }
@@ -60,11 +61,12 @@ export default class SyncModule {
             return;
         }
         
-        this.timer += dt;   //Advance timer
-        let isSync = false; //If the next step is sychronous (not just an ordinary frame)
+        let isStart = this.timer == 0;
+        this.timer += dt;               //Advance timer
+        let isSync = false;             //If the next step is sychronous (not just an ordinary frame)
 
         //Check sync
-        if(this.timer >= this.stepInterval) {   
+        if (this.timer >= this.stepInterval) {
             this.timer -= this.stepInterval;
             this.counter++;
             isSync = true;
@@ -72,7 +74,9 @@ export default class SyncModule {
 
         //Create step object
         let step = {
-            stepType : isSync ? StepType.SYNC : StepType.FRAME,
+            stepType : 
+                isSync ? StepType.SYNC : 
+                isStart ? StepType.START : StepType.FRAME,
             counter : this.counter
         } as Step
 

@@ -137,6 +137,7 @@ export default class Character extends GameObject {
     //Do nothing - override
     protected handleSpecialMovement(dt: number) {
 
+        throw new Error("Not implemented!");
     }
 
     //Manage bricks underneath this character, set pressure
@@ -165,8 +166,8 @@ export default class Character extends GameObject {
     }
 
     //Handle synchronized step movement
-    protected handleStep() {
-        throw new Error("Not implemented!");
+    protected handleStep(isStart : boolean = false) {
+        
     }
 
     //Reverse the direction of this character
@@ -203,6 +204,12 @@ export default class Character extends GameObject {
 
     //Perform a sychronized update
     public updateSync(step : Step, loopLength : number) {
+
+        //Special start-step for gliders. Used for when nearby geometry must be detected.
+        if(step.stepType == StepType.START && this.isGlide) {
+    
+            this.handleStep(true);
+        }
 
         //The step matches this character's speed, perform an update
         if(step.stepType == StepType.SYNC && step.counter % (loopLength / this.speed) == 0) {
