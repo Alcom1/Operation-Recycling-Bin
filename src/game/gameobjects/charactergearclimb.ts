@@ -14,7 +14,7 @@ enum ClimbState {
 
 const CharacterGearClimbOverride = Object.freeze({
     height: 2,
-    speed : 1.0,
+    speed : 3.0,
     images : [
         { name : "char_rbc_left", offsetX : 0 },
         { name : "char_rbc_right", offsetX : 0}],
@@ -54,7 +54,7 @@ const CharacterGearClimbOverride = Object.freeze({
 
 export default class CharacterGearClimb extends CharacterGear {
 
-    private vertSpeed : number = 108/3;
+    private vertSpeed : number = 108;
     private vertMax :   number = 3;
     private vertCount : number = 0;
 
@@ -125,6 +125,7 @@ export default class CharacterGearClimb extends CharacterGear {
                 break;
 
             case ClimbState.HALT :
+                this.resolveCollisionsNormal();
                 break;
 
             case ClimbState.DOWN :
@@ -171,6 +172,11 @@ export default class CharacterGearClimb extends CharacterGear {
                         ClimbState.UP : 
                         ClimbState.WAIT);
             }
+        }
+        //Default to normal state
+        else {
+
+            this.setStateIndex(ClimbState.NORMAL);
         }
     }
 

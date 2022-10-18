@@ -44,6 +44,12 @@ export default class CharacterGear extends Character {
             this.storedCbm |= (this.move.x > 0 ? gcb.face : gcb.back);
         }
 
+        //Ceiling boundary
+        if(this.gpos.y - 2 < BOUNDARY.miny) {
+
+            this.storedCbm |= gcb.ceil;
+        }
+
         this.storedCbm |= this.brickHandler.checkCollisionRing(
             this.gpos.getAdd({
                 x : -2, 
@@ -72,12 +78,14 @@ export default class CharacterGear extends Character {
             //Get position difference relative to this's forward facing direction
             var diff = other.gpos.getSub(this.gpos).getMult(this.move.x, 1);
 
+            //1D vertical collision
             var vertBlock = col1D(
                 this.gpos.y - this.height,
                 this.gpos.y,
                 other.gpos.y - (other as Character).height ?? 1,
                 other.gpos.y);
 
+            //1D horizontal collision
             var horzBlock = col1D(
                 this.gpos.x,
                 this.gpos.x + 2,
@@ -113,7 +121,23 @@ export default class CharacterGear extends Character {
                 }
             }
             //If a horizontally-blocking character...
-            if(horzBlock) {
+            if (horzBlock && Math.abs(diff.y) < 3) {
+
+                //Is above
+                if(diff.y < 0) {
+
+                    this.storedCbm |= gcb.ceil;
+                }
+                
+                //Is below
+                else if(diff.y > 0) {
+
+                    this.storedCbm |= gcb.flor;
+                }
+            }
+            //If diagonal, and one character is moving above/below the other
+            if (Math.abs(diff.x) == 2 && Math.abs(diff.y) == 2 &&                                   //Diagonal check
+                Math.sign((other as Character).movex) == Math.sign(this.gpos.x - other.gpos.x)) {   //Move check
 
                 //Is above
                 if(diff.y < 0) {
@@ -140,6 +164,7 @@ export default class CharacterGear extends Character {
         throw new Error("Not implemented!");
     }
 
+    //Get passive collider (blocks bricks)
     protected getPassiveCollider() : Collider {
 
         return { 
