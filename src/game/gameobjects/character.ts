@@ -116,13 +116,25 @@ export default class Character extends GameObject {
 
     public update(dt: number) {
 
-        //Normal or unique movement, shift grid/sub position after movement
-        if(this.isNormalMovment) {
-            if(this.isGlide) {
-                this.spos.x += this.move.x * this.speed * GMULTX * dt;
+        //Normal movement
+        if (this.isNormalMovment) {
+
+            //Only gliders have gradual normal movement
+            if (this.isGlide) {
+
+                //Horizontal movement
+                if (this.move.y == 0) {
+                    this.spos.x += this.move.x * this.speed * GMULTX * dt;
+                }
+                //Vertical movement
+                else {
+                    this.spos.y += this.move.y * this.speed * GMULTY * dt;
+                }
             }
         }
+        //Movement for special states
         else {
+
             this.handleSpecialMovement(dt);
         }
         
@@ -136,8 +148,7 @@ export default class Character extends GameObject {
 
     //Do nothing - override
     protected handleSpecialMovement(dt: number) {
-
-        throw new Error("Not implemented!");
+        
     }
 
     //Manage bricks underneath this character, set pressure

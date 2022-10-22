@@ -61,7 +61,6 @@ export function pathImg(fileName : string, extension?: string) {
 
 /** Constrain value between min and max (inclusive) */
 export function clamp(val: number, min: number, max: number): number {
-
     return Math.max(min, Math.min(max, val));
 }
 
@@ -73,6 +72,11 @@ export function round(val: number, target: number): number {
 /** Floor a value to the nearest target */
 export function floor(val: number, target: number): number {
     return Math.floor(val / target) * target;
+}
+
+/** Zipper an integer (0, 1, 2, 3) => (-1, 1, -2, 2) or 0 if negative */
+export function zip(val: number) {
+    return val >= 0 ? OPPOSITE_DIRS[val % 2] * Math.ceil((val + 1) / 2) : 0
 }
 
 /** Stack an array of integers into a bitmask */

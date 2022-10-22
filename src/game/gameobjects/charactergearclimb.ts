@@ -1,35 +1,35 @@
 import GameObject, { Collision } from "engine/gameobjects/gameobject";
-import { FOUR_BITSTACK as gcb, MASKS } from "engine/utilities/math";
+import { FOUR_BITSTACK as gcb, MASKS, zip } from "engine/utilities/math";
 import { CharacterParams } from "./character";
 import CharacterGear from "./charactergear";
 
 enum ClimbState {
     NORMAL,
-    UP,
     WAIT,
     HALT,
-    DOWN,
     REVERSE
+}
+
+enum VertState {
+    UP,
+    DOWN
 }
 
 const CharacterGearClimbOverride = Object.freeze({
     height: 2,
     speed : 3.0,
     images : [
-        { name : "char_rbc_left", offsetX : 0 },
-        { name : "char_rbc_right", offsetX : 0}],
+        { name : "char_rbc_left",   offsetX : 0 },
+        { name : "char_rbc_right",  offsetX : 0},
+        { name : "char_rbc_up",     offsetX : 0},
+        { name : "char_rbc_down",   offsetX : 0}],
     frameCount : 2,
     animsCount : 1,
     isGlide : true,
 
     //Misc animation parameters
-    animsMisc : [{
-        speed : 3.0,
-        images : [{ name : "char_rbc_up" }],
-        frameCount : 2,
-        gposOffset : { x : -1, y : 0},
-        isSliced : true
-    },{
+    animsMisc : [
+    {
         speed : 3.0,
         images : [{ name : "char_rbc_up", offsetX : 0 }],
         frameCount : 2,
@@ -43,66 +43,74 @@ const CharacterGearClimbOverride = Object.freeze({
         frameCount : 2,
         gposOffset : { x : -1, y : 0},
         isSliced : true
-    },{
-        speed : 3.0,
-        images : [{ name : "char_rbc_down" }],
-        frameCount : 2,
-        gposOffset : { x : -1, y : 0},
-        isSliced : true
     }]
 });
 
 export default class CharacterGearClimb extends CharacterGear {
 
-    private vertSpeed : number = 108;
-    private vertMax :   number = 3;
-    private vertCount : number = 0;
+    private vertMax :   number = 3;                 //Maximum vertical climb height
+    private vertCount : number = 0;                 //Vertical climb tracker
+
+    protected get animationSubindex() : number {    //Include up & down animations (reminder : animation arrays are zippered)
+
+        var qq = 0;
+
+        switch(this.move.y) {
+
+            //Move forward, please.
+            case 0 :
+                return this.move.x;
+
+            //Move up
+            case -1 : 
+                return zip(2);
+
+            //Move down
+            default : 
+                return zip(3);
+        }
+    }
 
     constructor(params: CharacterParams) {
         super(Object.assign(params, CharacterGearClimbOverride));
+    }
+
+    //Index reset with unique behaviors
+    protected setStateIndex(index? : number) {
+        this.vertCount = 0;         //Reset vertical counter
+        super.setStateIndex(index); //Set index
+    }
+
+    //
+    private setNormalState(vertState? : VertState) {
+
+        this.move.y =
+            vertState == VertState.UP   ? -1 :
+            vertState == VertState.DOWN ?  1 : 0 
+
+        this.setStateIndex(ClimbState.NORMAL);
     }
 
     //Update position to move forward
     protected updatePosition() {
 
         //Move in different directions based on state
-        switch(this.stateIndex) {
+        switch(this.move.y) {
 
             //Move forward, please.
-            case ClimbState.NORMAL : 
+            case 0 : 
                 this.gpos.x += this.move.x;
                 break;
 
             //Move up
-            case ClimbState.UP : 
+            case -1 : 
                 this.gpos.y -= 1;
                 this.vertCount ++;
                 break;
 
             //Move down
-            case ClimbState.DOWN : 
+            case 1 : 
                 this.gpos.y += 1;
-                break;
-        }
-    }
-
-    //
-    protected handleSpecialMovement(dt: number) {
-        
-        switch(this.stateIndex) {
-
-            case ClimbState.UP :
-                this.spos.y -= this.vertSpeed * dt;
-                break;
-
-            case ClimbState.WAIT :
-                break;
-
-            case ClimbState.HALT :
-                break;
-
-            case ClimbState.DOWN :
-                this.spos.y += this.vertSpeed * dt;
                 break;
         }
     }
@@ -113,11 +121,22 @@ export default class CharacterGearClimb extends CharacterGear {
         switch(this.stateIndex) {
     
             case ClimbState.NORMAL :
-                this.resolveCollisionsNormal();
-                break;
+                switch(this.move.y) {
+                    //Move forward, please.
+                    case 0 : 
+                        this.resolveCollisionsNormal();
+                        break;
 
-            case ClimbState.UP :
-                this.resolveCollisionsUp();
+                    //Move up
+                    case -1 : 
+                        this.resolveCollisionsUp();
+                        break;
+
+                    //Move down
+                    case 1 : 
+                        this.resolveCollisionsDown();
+                        break;
+                }
                 break;
 
             case ClimbState.WAIT :
@@ -127,17 +146,7 @@ export default class CharacterGearClimb extends CharacterGear {
             case ClimbState.HALT :
                 this.resolveCollisionsNormal();
                 break;
-
-            case ClimbState.DOWN :
-                this.resolveCollisionsDown();
-                break;
         }
-    }
-
-    //Index reset with unique behaviors
-    public setStateIndex(index? : number) {
-        this.vertCount = 0;         //Reset vertical counter
-        super.setStateIndex(index); //Set index
     }
 
     //Resolve collisions for normal movement
@@ -145,7 +154,7 @@ export default class CharacterGearClimb extends CharacterGear {
 
         //Go down for cliffs
         if(!(this.storedCbm & gcb.flor)) {
-            this.setStateIndex(ClimbState.DOWN);
+            this.setNormalState(VertState.DOWN);
         }
         //Go up for walls
         else if(this.storedCbm & gcb.face) {
@@ -165,18 +174,19 @@ export default class CharacterGearClimb extends CharacterGear {
             }
             //actually go up
             else {
-
-                //Wait a step, then go up if waiting
-                this.setStateIndex(
-                    this.stateIndex == ClimbState.WAIT ? 
-                        ClimbState.UP : 
-                        ClimbState.WAIT);
+                this.setNormalState(VertState.UP);
+                // if(this.stateIndex == ClimbState.WAIT) {
+                //     this.setNormalState(VertState.UP);
+                // }
+                // else {
+                //     this.setStateIndex(ClimbState.WAIT);
+                // }
             }
         }
         //Default to normal state
         else {
 
-            this.setStateIndex(ClimbState.NORMAL);
+            this.setNormalState();
         }
     }
 
@@ -185,11 +195,11 @@ export default class CharacterGearClimb extends CharacterGear {
 
         //Go forward if an opening is available
         if(!(this.storedCbm & gcb.face)) {
-            this.setStateIndex(ClimbState.NORMAL);
+            this.setNormalState();
         }
         //Go back down if a ceiling is hit, or if the height limit is reached
         else if(this.storedCbm & gcb.ceil || this.vertCount >= this.vertMax) {
-            this.setStateIndex(ClimbState.DOWN);
+            this.setNormalState(VertState.DOWN);
         }
     }
 
@@ -216,7 +226,7 @@ export default class CharacterGearClimb extends CharacterGear {
             //Otherwise, Go forward
             else {
 
-                this.setStateIndex(ClimbState.NORMAL);
+                this.setNormalState();
     
                 //Reverse if there is wall ahead upon landing
                 if(this.storedCbm & gcb.face) {

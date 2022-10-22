@@ -1,5 +1,5 @@
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
-import { floor, getZIndex, GMULTX, GMULTY, OPPOSITE_DIRS } from "engine/utilities/math";
+import { floor, getZIndex, GMULTX, GMULTY, OPPOSITE_DIRS, zip } from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 
 export interface OffsetImageParams {
@@ -88,11 +88,11 @@ export default class Anim extends GameObject {
                 });
                 break;
 
-            //Many images
+            //Many images, use zipper indicies (-1, 1, -2, 2...)
             default:
                 this.imageIndex = 1;
                 params.images.forEach((x, i) => {
-                    this.images[OPPOSITE_DIRS[i % 2] * Math.ceil((i + 1) / 2)] = this.getImage(x);
+                    this.images[zip(i)] = this.getImage(x);
                 });
         }
 

@@ -22,8 +22,8 @@ import BrickJump from "./gameobjects/brickjump";
 import BrickHandlerDebug from "./gameobjects/brickhandlerdebug";
 import BrickJumpMove from "./gameobjects/brickjumpmove";
 import BrickPlateButton from "./gameobjects/brickplatebutton";
-import CharacterRBG from "./gameobjects/characterrbg";
-import CharacterRBC from "./gameobjects/characterrbc";
+import CharacterRBG from "./gameobjects/charactergearclimb";
+import CharacterRBC from "./gameobjects/charactergearground";
 
 //Load
 window.onload = function() {
@@ -34,7 +34,7 @@ window.onload = function() {
         canvas, 
         "assets/scenes/",
         "scenes",
-        ["LevelInterface", "LEVEL_08"],
+        ["LevelInterface", "LEVEL_17"],
         [
             BrickHandler,
             BrickHandlerDebug,
@@ -62,6 +62,6 @@ window.onload = function() {
             Sprite,
             Stud
         ],
-        true
+        false
     );    
 }
