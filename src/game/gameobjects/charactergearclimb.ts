@@ -53,8 +53,7 @@ export default class CharacterGearClimb extends CharacterGear {
 
     protected get animationSubindex() : number {    //Include up & down animations (reminder : animation arrays are zippered)
 
-        var qq = 0;
-
+        //Animation is based on up/down movement
         switch(this.move.y) {
 
             //Move forward, please.
@@ -81,14 +80,16 @@ export default class CharacterGearClimb extends CharacterGear {
         super.setStateIndex(index); //Set index
     }
 
-    //
+    //Sets a normal state with a vertical direction
     private setNormalState(vertState? : VertState) {
 
+        //Go up, down, or horizontal
         this.move.y =
             vertState == VertState.UP   ? -1 :
             vertState == VertState.DOWN ?  1 : 0 
 
-        this.setStateIndex(ClimbState.NORMAL);
+        this.setStateIndex(ClimbState.NORMAL);                                          //Set normal state
+        this.animationsCurr.forEach(x => x.zModifierPub = vertState == null ? 0 : 20);  //Clipping fix for up/down movement
     }
 
     //Update position to move forward

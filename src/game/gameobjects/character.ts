@@ -60,10 +60,8 @@ export default class Character extends GameObject {
             params.animsMisc ? params.animsMisc.map((x, i) => i + 1) :  //Get default animations or...
             []))];                                                      //There's only one animation.
 
-        const mainZIndex =                                          //Z-index of main slices in the character sprite
-            this.height * 100 - (
-            this.isGlide ? 100 : 0);
-
+        const mainZIndex = this.height * 100;                           //Z-index of main slices in the character sprite
+        
         //Spawn 3 animations, the sprite is sliced vertically into 2x wide segments for proper z-indexing
         for(let i = -1; i <= 1; i ++) {
             
