@@ -90,11 +90,16 @@ export default class CharacterGearClimb extends CharacterGear {
 
         this.setStateIndex(ClimbState.NORMAL);  //Set normal state
         this.animationsCurr.forEach(x =>        //Adjust clipping for up/down movement
-            x.zModifierPub = (vertState == null || x.isBackSlice) ? 0 : 2);  
+            x.zModifierPub = (vertState == null || x.isBackSlice) ? 0 : 2);
     }
 
     //Update position to move forward
     protected updatePosition() {
+
+        //Don't update position for special states (WAIT, HALT, etc)
+        if(this.stateIndex != ClimbState.NORMAL) {
+            return;
+        }
 
         //Move in different directions based on state
         switch(this.move.y) {
@@ -176,13 +181,13 @@ export default class CharacterGearClimb extends CharacterGear {
             }
             //actually go up
             else {
-                this.setNormalState(VertState.UP);
-                // if(this.stateIndex == ClimbState.WAIT) {
-                //     this.setNormalState(VertState.UP);
-                // }
-                // else {
-                //     this.setStateIndex(ClimbState.WAIT);
-                // }
+                //this.setNormalState(VertState.UP);
+                if(this.stateIndex == ClimbState.WAIT) {
+                    this.setNormalState(VertState.UP);
+                }
+                else {
+                    this.setStateIndex(ClimbState.WAIT);
+                }
             }
         }
         //Default to normal state
