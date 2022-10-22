@@ -86,10 +86,11 @@ export default class CharacterGearClimb extends CharacterGear {
         //Go up, down, or horizontal
         this.move.y =
             vertState == VertState.UP   ? -1 :
-            vertState == VertState.DOWN ?  1 : 0 
+            vertState == VertState.DOWN ?  1 : 0;
 
-        this.setStateIndex(ClimbState.NORMAL);                                          //Set normal state
-        this.animationsCurr.forEach(x => x.zModifierPub = vertState == null ? 0 : 20);  //Clipping fix for up/down movement
+        this.setStateIndex(ClimbState.NORMAL);  //Set normal state
+        this.animationsCurr.forEach(x =>        //Adjust clipping for up/down movement
+            x.zModifierPub = (vertState == null || x.isBackSlice) ? 0 : 2);  
     }
 
     //Update position to move forward

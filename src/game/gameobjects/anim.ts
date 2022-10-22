@@ -55,6 +55,7 @@ export default class Anim extends GameObject {
 
     //get
     public get duration() : number { return 1 / this.speed; }
+    public get isBackSlice() : boolean { return (this.sliceIndex ?? 1) == 1; }
 
     constructor(params : AnimationParams) {
         super(params);
@@ -214,7 +215,11 @@ export default class Anim extends GameObject {
             this.isVert ? 0 : GMULTY - this.fullSize.y,
             this.isVert ? oppoSize : size,  
             this.isVert ? size : oppoSize);
+    }
 
+    public superDraw(ctx: CanvasRenderingContext2D) {
+
+        // Debug size
         // ctx.globalAlpha = 0.5;
         // ctx.strokeStyle = "#F00"
         // ctx.lineWidth = 4;
@@ -223,6 +228,16 @@ export default class Anim extends GameObject {
         //     this.isVert ? 0 : GMULTY, 
         //     this.isVert ? oppoSize : size, 
         //     this.isVert ? size : -oppoSize);
+
+        // Debug Z-index
+        // var indexDisplay = "" + (2500 + this.getGOZIndex());
+        // let indexPos : Point = { x : GMULTX * 2 * (this.sliceIndex ?? 0), y : GMULTY - 15};
+        // ctx.strokeStyle = "#000";
+        // ctx.fillStyle = "#FFF"
+        // ctx.lineWidth = 2;
+        // ctx.font = " 20px Monospace"
+        // ctx.strokeText(indexDisplay, indexPos.x, indexPos.y);
+        // ctx.fillText(indexDisplay, indexPos.x, indexPos.y);
     }
 
     private getAnimationOffset(checkVert : boolean) : number {

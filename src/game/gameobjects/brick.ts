@@ -91,6 +91,16 @@ export default class Brick extends GameObject {
 
     public superDraw(ctx: CanvasRenderingContext2D): void {
 
+        // Debug Z-index
+        // var indexDisplay = "" + (2500 + this.getGOZIndex());
+        // let indexPos : Point = { x : 5, y : GMULTY - 15};
+        // ctx.strokeStyle = "#000";
+        // ctx.fillStyle = "#FFF"
+        // ctx.lineWidth = 2;
+        // ctx.font = " 20px Monospace"
+        // ctx.strokeText(indexDisplay, indexPos.x, indexPos.y);
+        // ctx.fillText(indexDisplay, indexPos.x, indexPos.y);
+
         if (this.engine.mouse.getMouseType() == "mouse" ||
            !this.isSelected || 
            !MOBILE_PREVIEW_MAX.getLessOrEqual(this.mobilePreviewSize)) {
