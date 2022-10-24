@@ -5,16 +5,19 @@ import BrickHandler from "./brickhandler";
 import BrickTile, { BrickTileParams } from "./bricktile";
 import Character from "./character";
 
+/** Fan tile parameters */
 const BrickTileFanOverride = Object.freeze({
-    images : ["brick_plate", "brick_plate_fan"],
+    images : ["brick_tile", "brick_tile_fan"],
     width : 4
 });
 
+/** Tile with a fan effect */
 export default class BrickTileFan extends BrickTile {
-    private brickHandler!: BrickHandler;
-    private animations: Anim[] = [];
-    private beams: number[] = [];
-    private characters: Character[] = [];
+
+    private brickHandler!: BrickHandler;    //Brickhandler to get bricks to block wind effects
+    private animations: Anim[] = [];        //Wind animations
+    private beams: number[] = [];           //Beams of wind effects
+    private characters: Character[] = [];   //Characters being tracked to block wind effects
 
     /** Constructor */
     constructor(params: BrickTileParams) {
@@ -37,6 +40,8 @@ export default class BrickTileFan extends BrickTile {
             })
         }
     }
+
+    /** Initialize this fan */
     public init() {
 
         //Get brick handler to to check brick-wind collisions

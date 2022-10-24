@@ -24775,7 +24775,7 @@
         }
       },
       {
-        "name": "BrickTileSuper",
+        "name": "BrickSuper",
         "position": {
           "x": 31,
           "y": 17
@@ -24798,7 +24798,7 @@
         }
       },
       {
-        "name": "BrickTileSuper",
+        "name": "BrickSuper",
         "position": {
           "x": 2,
           "y": 17
@@ -24906,7 +24906,7 @@
         }
       },
       {
-        "name": "BrickTileSuper",
+        "name": "BrickSuper",
         "position": {
           "x": 8,
           "y": 11
@@ -27202,7 +27202,7 @@
         }
       },
       {
-        "name": "BrickTileSuper",
+        "name": "BrickSuper",
         "position": {
           "x": 7,
           "y": 17
@@ -27819,7 +27819,7 @@
         }
       },
       {
-        "name": "BrickTileSuper",
+        "name": "BrickSuper",
         "position": {
           "x": 1,
           "y": 23
@@ -28073,7 +28073,7 @@
         }
       },
       {
-        "name": "BrickTileSuper",
+        "name": "BrickSuper",
         "position": {
           "x": 30,
           "y": 8

@@ -16,7 +16,7 @@ import Sprite from "./gameobjects/sprite";
 import BrickNormal from "game/gameobjects/bricknormal";
 import BrickTileHot from "./gameobjects/bricktilehot";
 import BrickTileFan from "./gameobjects/bricktilefan";
-import BrickSuper from "./gameobjects/bricktilesuper";
+import BrickSuper from "./gameobjects/bricksuper";
 import BrickPipe from "./gameobjects/brickpipe";
 import BrickJump from "./gameobjects/brickjump";
 import BrickHandlerDebug from "./gameobjects/brickhandlerdebug";

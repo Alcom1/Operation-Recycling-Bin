@@ -3,13 +3,16 @@ import { MASKS } from "engine/utilities/math";
 import Anim, { AnimationParams } from "./anim";
 import BrickTile, { BrickTileParams } from "./bricktile";
 
+/** Parameters for a hot tile */
 const BrickTileHotOverride = Object.freeze({
-    images : ["brick_plate", "brick_plate_hot"],
+    images : ["brick_tile", "brick_tile_hot"],
     width : 4
 });
 
+/** A tile with a HOT effect */
 export default class BrickTileHot extends BrickTile {
-    private animation: Anim;
+
+    private animation: Anim;    //Tile is animated
 
     /** Constructor */
     constructor(params: BrickTileParams) {
@@ -17,21 +20,22 @@ export default class BrickTileHot extends BrickTile {
 
         this.animation = this.parent.pushGO(new Anim({
             ...params,
-            subPosition : { x : 0, y : -25 },                       //For some reason, this animation appears super low by default.
-            zModifier : 40,                                         //Z-index modifier of a 4-width brick
-            images : [{ name : "brick_plate_hot" }],   //Single hotplate animation image
-            speed : 2,                                              //Hotplate animation is weirdly fast
+            subPosition : { x : 0, y : -25 },       //For some reason, this animation appears super low by default.
+            zModifier : 40,                         //Z-index modifier of a 4-width brick
+            images : [{ name : "brick_tile_hot" }], //Single hotplate animation image
+            speed : 2,                              //Hotplate animation is weirdly fast
             frameCount : 7,
-            isVert : true                                           //Hotplate animation frames are stacked vertically
+            isVert : true                           //Hotplate animation frames are stacked vertically
         } as AnimationParams)) as Anim;
 
-        this.animation.isActive == this.isOn;
+        this.animation.isActive == this.isOn;       //Animation only applies to active hot tiles
     }
     
-    /** draw nothing */
+    /** draw off tile */
     public draw(ctx : CanvasRenderingContext2D) {
-        if (!this.isOn) {
-            super.draw(ctx);
+
+        if (!this.isOn) {       //Tile is off
+            super.draw(ctx);    //Draw the off tile instead of the animation
         }
     }
 

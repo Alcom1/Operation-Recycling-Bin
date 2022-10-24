@@ -7,7 +7,7 @@ import BrickTileTop from "./bricktiletop";
 const brickJumpOverride = Object.freeze({
     images : ["brick_jump_up", "brick_jump"],
     imageTop : "brick_jump_top",
-    isOnShowTop : false
+    isShowTopIfOn : false
 });
 
 /** Jump brick, has an extra plate on top for the jump animation */
@@ -77,7 +77,7 @@ export default class BrickJump extends BrickTileTop {
     /** Get hazard and passive colliders of this brick. */
     public getColliders() : Collider[] {
 
-        //Combine with passive collider from base class, only return jump hitbox if this plate is on and not selected
+        //Combine with passive collider from base class, only return jump hitbox if the plate is on and not selected
         return super.getColliders().concat(this.isOn && this.timer2 == 0 && !this.isSelected && !this.isBlocked() ? [{
             mask : MASKS.jumps,
             min : this.gpos.getAdd({ x : 0,          y : -1}),

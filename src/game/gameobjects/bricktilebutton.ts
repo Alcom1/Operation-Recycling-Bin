@@ -17,6 +17,8 @@ export default class BrickTileButton extends BrickTile {
     constructor(params: BrickTileParams) {
         super(Object.assign(params, brickButtonOverride));
     }
+
+    /** Initialize this button, get all tiles with matching curcuits */
     public init() {
 
         //Get plates affected by this button (also includes self?)
