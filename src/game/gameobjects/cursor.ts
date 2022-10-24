@@ -92,7 +92,7 @@ export default class Cursor extends GameObject {
         // Set current position
         this.spos = tempSpos;
 
-        //Handle mouse state
+        // Handle mouse state
         switch (this.engine.mouse.getMouseState()) {
 
             // MOBILE - If a press event occurs in a NONE state/without a press (Only occurs on Mobile)
@@ -119,7 +119,7 @@ export default class Cursor extends GameObject {
                 }
                 break;
 
-            //Reset state upon release
+            // Reset state upon release
             // If the current state is not carrying or if the bricks are snapped to a valid location
             case MouseState.WASRELEASED:
 

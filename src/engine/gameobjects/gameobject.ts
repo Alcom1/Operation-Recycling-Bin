@@ -63,7 +63,7 @@ export default class GameObject {
      * @returns Whether or not the game objects are the same
     */
     public compare(gameObject: GameObject): boolean {
-        //Default compare uses grid positions
+        // Default compare uses grid positions
         return gameObject.gpos.x == this.gpos.x && gameObject.gpos.y == this.gpos.y;
     }
 

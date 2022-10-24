@@ -9,7 +9,7 @@ export interface ZGameObjectParams extends GameObjectParams {
 /** Game object with a static z-index */
 export default class ZGameObject extends GameObject {
 
-    private zIndex : number;    //The Z-Index in question.
+    private zIndex : number;    // The Z-Index in question.
 
     /** Constructor */
     constructor(params: ZGameObjectParams) {

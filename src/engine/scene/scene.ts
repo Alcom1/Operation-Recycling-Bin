@@ -60,14 +60,14 @@ export default class Scene {
     }
     public update(dt: number) {
 
-        //Update all game objects
+        // Update all game objects
         if (this.initialized) {
             this.gameObjects.forEach(go => { if (!go.isActive) { return; }
                 go.update(dt)
             });
         }
 
-        //Sort all game objects for drawing - unconditionally
+        // Sort all game objects for drawing - unconditionally
         this.gameObjects.sort((a, b) => a.getGOZIndex() - b.getGOZIndex());
     }
     public draw(ctx: CanvasRenderingContext2D) {

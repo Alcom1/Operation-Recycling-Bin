@@ -187,12 +187,12 @@ export default class BrickHandler extends GameObject {
     /** Check collisons for a vertically-looping range and return a bitmask */
     public checkCollisionRange(pos: Point, dir: number, start: number, final: number, height: number, width: number = 2): number {
 
-        let collisions = 0; //Collision bitbask
+        let collisions = 0; // Collision bitbask
 
         for(let i = start; i < final; i++) {
 
-            let y = i % height;                     //Wrap by height
-            let x = Math.floor(i / height) % width; //Wrap by width to go back and check ceiling
+            let y = i % height;                     // Wrap by height
+            let x = Math.floor(i / height) % width; // Wrap by width to go back and check ceiling
 
             for (const brick of this.rows.find(r => r.row == pos.y + y + 1)?.bricks.filter(b => !b.isSelected) || []) {
 
@@ -213,22 +213,22 @@ export default class BrickHandler extends GameObject {
     /** Check collisons for a square ring and return a bitmask */
     public checkCollisionRing(pos: Point, size: number, dir : number = 1): number {
 
-        let collisions = 0; //Collision bitbask
-        let count = 0;      //Count gridspaces being checked
+        let collisions = 0; // Collision bitbask
+        let count = 0;      // Count gridspaces being checked
 
-        //Vertical travel
+        // Vertical travel
         for(let j = pos.y; j < pos.y + size; j++) {
 
-            //Get this row
+            // Get this row
             let row = this.rows.find(r => r.row == j)?.bricks.filter(b => !b.isSelected) || [];
 
-            //Horizontal travel, skip to end unless this is the first or last row to create a ring shape
+            // Horizontal travel, skip to end unless this is the first or last row to create a ring shape
             for(let i = pos.x; i < pos.x + size; i += ((j > pos.y && j < pos.y + size - 1) ? size - 1 : 1)) {
 
-                //Reverse horizontally if the direction isn't positive.
+                // Reverse horizontally if the direction isn't positive.
                 let check = dir > 0 ? i : 2 * pos.x - i + size - 1;
 
-                //Check each brick int his row.
+                // Check each brick int his row.
                 row.forEach(brick => {
 
                     if (col1D(
@@ -273,7 +273,7 @@ export default class BrickHandler extends GameObject {
 
         this.bricks.filter(b => !b.isSelected && b.hasTag("BrickNormal")).forEach(b => {
 
-            //Hide studs based on above row
+            // Hide studs based on above row
             b.hideStuds(this.rows.find(r => r.row == b.gpos.y - 1)?.bricks.filter(b => b.hasTag("BrickNormal")) || [])
         });
 
@@ -327,7 +327,7 @@ export default class BrickHandler extends GameObject {
         // Sort
         this.sortRows();
 
-        //Disable mobile indicator
+        // Disable mobile indicator
         this.mobileIndicator!.isActive = false;
     }
 

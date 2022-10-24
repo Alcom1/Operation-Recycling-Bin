@@ -8,7 +8,7 @@ export default class ButtonScene extends Button {
     public init(ctx: CanvasRenderingContext2D) {
         super.init(ctx);
 
-        //Get level sequence for the current level
+        // Get level sequence for the current level
         const levelSequence = this.engine.tag.get("LevelSequence", "Level")[0] as LevelSequence;
 
         // If the current level has a sequence,

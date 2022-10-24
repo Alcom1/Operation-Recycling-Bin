@@ -19,7 +19,7 @@ export default class BrickSuper extends BrickTileTop {
     /** Get hazard and passive colliders of this brick. */
     public getColliders() : Collider[] {
 
-        //Combine with passive collider from base class, only return jump hitbox if this plate is on and not selected
+        // Combine with passive collider from base class, only return jump hitbox if this plate is on and not selected
         return super.getColliders().concat(this.isOn && !this.isSelected ? [{
             mask : MASKS.super,
             min : this.gpos.getAdd({ x : 0,          y : -1}),
@@ -30,7 +30,7 @@ export default class BrickSuper extends BrickTileTop {
     /** Turn off */
     public resolveCollision(mask : number) {
 
-        //Turn off
+        // Turn off
         if (mask & MASKS.super) {
             this.setOnOff(false);
         }

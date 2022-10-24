@@ -107,14 +107,14 @@ export default class Brick extends GameObject {
         // ctx.strokeText(indexDisplay, indexPos.x, indexPos.y);
         // ctx.fillText(indexDisplay, indexPos.x, indexPos.y);
 
-        //Only draw preview if on browser, this brick is selected, and the selection size is large enough
+        // Only draw preview if on browser, this brick is selected, and the selection size is large enough
         if (this.engine.mouse.getMouseType() == "mouse" ||
            !this.isSelected || 
            !MOBILE_PREVIEW_MAX.getLessOrEqual(this.mobilePreviewSize)) {
             return;
         }
 
-        //Draw mobile view
+        // Draw mobile view
         ctx.drawImage(
             this.image, 
             0, 
@@ -142,7 +142,7 @@ export default class Brick extends GameObject {
         if (this.isSelected) {
             return UNDER_CURSOR_Z_INDEX;
         }
-        //Normal z-index
+        // Normal z-index
         else {
             return getZIndex(this.gpos, this.width * 10);
         }
@@ -184,7 +184,7 @@ export default class Brick extends GameObject {
         this.isPressed = false;
         this.isSelected = false;
         this.isSnapped = false;
-        this.isChecked = false; //Fixed bug where selections dragged offscreen wouldn't clear correctly.
+        this.isChecked = false; // Fixed bug where selections dragged offscreen wouldn't clear correctly.
         this.spos.set(0, 0);
         this.selectedPos.set(0, 0);
         // Reset studs to match the final brick position
@@ -240,7 +240,7 @@ export default class Brick extends GameObject {
         this.minCarry = min;
         this.maxCarry = max;
 
-        this.mobilePreviewSize = max.getSub(min); //asdf
+        this.mobilePreviewSize = max.getSub(min); // asdf
     }
 
     /** Set the flipped state for the mobile preview */

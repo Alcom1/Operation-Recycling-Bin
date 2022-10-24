@@ -25,14 +25,14 @@ export default class CharacterGearGround extends CharacterGear {
 
     /** Update position to move forward */
     protected updatePosition() {
-        //Move forward, please.
+        // Move forward, please.
         this.gpos.x += this.move.x;
     }
 
     /** Resolve collisions based on the current stored bitmask */
     public resolveCollisionBitmask()  {
 
-        //Obstacle in front OR floor stops, reverse
+        // Obstacle in front OR floor stops, reverse
         if (this.isColFace || !this.isColLand) {
             this.reverse();
         }

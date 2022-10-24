@@ -43,11 +43,11 @@ export const MASKS = Object.freeze({
     enemy: 0b100000000,
 })
 
-//4x4 Collision bitmasks
-//0123
-//4  5
-//6  7
-//89AB
+// 4x4 Collision bitmasks
+// 0123
+// 4  5
+// 6  7
+// 89AB
 export const RING_BITSTACK = Object.freeze({
     flor : bitStack(9, 10),
     roof : bitStack(1, 2),
@@ -60,7 +60,7 @@ export const RING_BITSTACK = Object.freeze({
 /** Handles file extension - image */
 export function pathImg(fileName : string, extension?: string) {
 
-    return `${PATH_IMG}${fileName}.${extension ?? "png"}`;    //Default to png
+    return `${PATH_IMG}${fileName}.${extension ?? "png"}`;    // Default to png
 }
 
 /** Constrain value between min and max (inclusive) */
@@ -168,9 +168,9 @@ export function colPointRectGrid(px: number, py: number, rx: number, ry: number,
 /** Point-parallelogram (Horizontal) collision */
 export function colPointParH(px: number, py: number, rx: number, ry: number, rw: number, rh: number): boolean {
     return (
-        px >= rx      - py + ry &&  //Horizontal tilt
+        px >= rx      - py + ry &&  // Horizontal tilt
         py >= ry                &&
-        px <  rx + rw - py + ry &&  //Horizontal tilt
+        px <  rx + rw - py + ry &&  // Horizontal tilt
         py <  ry + rh
     );
 }
@@ -178,12 +178,12 @@ export function colPointParH(px: number, py: number, rx: number, ry: number, rw:
 /** Point-parallelogram (Horizontal) collision but with grid coordinates */
 export function colPointParHGrid(px: number, py: number, rx: number, ry: number, rw: number): boolean {
     return colPointParH(
-        px,                     //Point-X
-        py,                     //Point-y
-        rx * GMULTX + Z_DEPTH,  //Para-x
-        ry * GMULTY - Z_DEPTH,  //Para-y
-        rw * GMULTX,            //Para-width
-        Z_DEPTH                 //Para-height
+        px,                     // Point-X
+        py,                     // Point-y
+        rx * GMULTX + Z_DEPTH,  // Para-x
+        ry * GMULTY - Z_DEPTH,  // Para-y
+        rw * GMULTX,            // Para-width
+        Z_DEPTH                 // Para-height
     );
 }
 

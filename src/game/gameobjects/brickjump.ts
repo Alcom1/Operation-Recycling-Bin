@@ -15,10 +15,10 @@ const brickJumpOverride = Object.freeze({
 export default class BrickJump extends BrickTileTop {
 
     private brickHandler!: BrickHandler;
-    private timer : number = 0;             //Timer 1 for jump animation
-    private timerDuration : number = 0.1;   //Timer 1 duration
-    private timer2 : number = 0;            //Timer 2 for jump cooldown
-    private timer2Duration : number = 1.2;  //Timer 2 duration
+    private timer : number = 0;             // Timer 1 for jump animation
+    private timerDuration : number = 0.1;   // Timer 1 duration
+    private timer2 : number = 0;            // Timer 2 for jump cooldown
+    private timer2Duration : number = 1.2;  // Timer 2 duration
 
     /** Constructor */
     constructor(params: BrickTileParams) {
@@ -28,7 +28,7 @@ export default class BrickJump extends BrickTileTop {
     /** Initialize Jump Brick */
     public init() {
 
-        //Get brick handler to to check if this jump is blocked by other bricks
+        // Get brick handler to to check if this jump is blocked by other bricks
         this.brickHandler = this.engine.tag.get(
             "BrickHandler", 
             "LevelInterface")[0] as BrickHandler;
@@ -37,7 +37,7 @@ export default class BrickJump extends BrickTileTop {
     /** Update jump brick for timer */
     public update(dt : number) {
 
-        //Update Timer
+        // Update Timer
         if (this.timer > 0) {
             this.timer -= dt;
         }
@@ -46,7 +46,7 @@ export default class BrickJump extends BrickTileTop {
             this.setOnOff(true);
         }
 
-        //Update Timer 2
+        // Update Timer 2
         if (this.timer2 > 0) {
             this.timer2 -= dt;
         }
@@ -58,27 +58,27 @@ export default class BrickJump extends BrickTileTop {
     /** Check if this brick is blocked by bricks on top */
     public isBlocked() : boolean {
 
-        //Grey bricks probably shouldn't perform this check.
+        // Grey bricks probably shouldn't perform this check.
         if (this.isGrey) {
             return false;
         }
 
-        //Check for bricks
+        // Check for bricks
         return !!this.brickHandler.checkCollisionRange(
             this.gpos.getAdd({
                 x : 0,
                 y : -2
-            }), //Position
-            1,  //Direction
-            0,  //START
-            2,  //FINAL
-            1); //HEIGHT
+            }), // Position
+            1,  // Direction
+            0,  // START
+            2,  // FINAL
+            1); // HEIGHT
     }
 
     /** Get hazard and passive colliders of this brick. */
     public getColliders() : Collider[] {
 
-        //Combine with passive collider from base class, only return jump hitbox if the plate is on and not selected
+        // Combine with passive collider from base class, only return jump hitbox if the plate is on and not selected
         return super.getColliders().concat(this.isOn && this.timer2 == 0 && !this.isSelected && !this.isBlocked() ? [{
             mask : MASKS.jumps,
             min : this.gpos.getAdd({ x : 0,          y : -1}),
@@ -89,7 +89,7 @@ export default class BrickJump extends BrickTileTop {
     /** Turn off */
     public resolveCollision(mask : number) {
 
-        //Turn off when a jump is triggered
+        // Turn off when a jump is triggered
         if (mask & MASKS.jumps) {
             this.setOnOff(false);
             this.timer = this.timerDuration;

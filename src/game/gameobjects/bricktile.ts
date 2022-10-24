@@ -3,17 +3,17 @@ import Brick, { BrickParams } from "./brick";
 
 /** Parameters for a tile */
 export interface BrickTileParams extends BrickParams {
-    isOn?: boolean;     //If the tile starts on or off
-    images: string[];   //Images for the tile on/off states
-    circuit: number;    //Circuit number that turns the tile on/off
+    isOn?: boolean;     // If the tile starts on or off
+    images: string[];   // Images for the tile on/off states
+    circuit: number;    // Circuit number that turns the tile on/off
 }
 
 /** A tile, a brick without studs */
 export default class BrickTile extends Brick {
 
-    protected isOn : boolean = false;       //If the effects for this
-    protected images : HTMLImageElement[];  //Images for this tile
-    public circuit : number;                //Curcuit for this tile, which can externally turn it on or off.
+    protected isOn : boolean = false;       // If the effects for this
+    protected images : HTMLImageElement[];  // Images for this tile
+    public circuit : number;                // Curcuit for this tile, which can externally turn it on or off.
 
     /** Constructor */
     constructor(params: BrickTileParams) {
@@ -37,7 +37,7 @@ export default class BrickTile extends Brick {
     /** Get passive collider of this brick. */
     public getColliders() : Collider[] {
         return !this.isGrey || this.isSelected ? [] : [{ 
-            mask : 0,               //Passive
+            mask : 0,               // Passive
             min : this.gpos.getAdd({ x : 0,              y : -1}),
             max : this.gpos.getAdd({ x : this.width,     y :  2}) 
         }];

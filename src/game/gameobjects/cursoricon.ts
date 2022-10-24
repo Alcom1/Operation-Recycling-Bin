@@ -27,7 +27,7 @@ export default class CursorIcon extends GameObject {
     public constructor(params: GameObjectParams) {
         super(params);
         
-        //Convert cursor image names to filepaths
+        // Convert cursor image names to filepaths
         this.cursorImages.forEach((v, k) => this.cursorImages.set(k, pathImg(v)));
 
         this.setCursor(CursorIconState.NONE);

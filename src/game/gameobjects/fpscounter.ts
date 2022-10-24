@@ -22,7 +22,7 @@ export default class FPSCounter extends GameObject {
 
     /** Update FPS display text */
     public update(dt: number) {
-        //FPS is inverted delta time, measure to a single decimal point.
+        // FPS is inverted delta time, measure to a single decimal point.
         let fps = (1 / dt).toFixed(1);
         this.text = "fps:" + this.getSpaces(6 - fps.length) + fps;
     }

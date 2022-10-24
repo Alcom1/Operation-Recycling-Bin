@@ -38,12 +38,12 @@ export default class SyncModule {
 
         const gameObjects : GameObject[] = [];
 
-        //Assign all game objects with colliders in this scene as passive or normal.
+        // Assign all game objects with colliders in this scene as passive or normal.
         sceneObjects.forEach(go => {
             gameObjects.push(go);
         });
 
-        //Only add scene if it has collidables
+        // Only add scene if it has collidables
         if (gameObjects.length > 0) {
 
             this.scenes.push({
@@ -56,23 +56,23 @@ export default class SyncModule {
     /** Update - check and trigger collisions for all game objects in all scenes */
     public update(dt : number) {
 
-        //Do nothing if there are no scenes, stops updates before scenes load, stops early stutter
+        // Do nothing if there are no scenes, stops updates before scenes load, stops early stutter
         if (this.scenes.length == 0) {
             return;
         }
         
         let isStart = this.timer == 0;
-        this.timer += dt;               //Advance timer
-        let isSync = false;             //If the next step is sychronous (not just an ordinary frame)
+        this.timer += dt;               // Advance timer
+        let isSync = false;             // If the next step is sychronous (not just an ordinary frame)
 
-        //Check sync
+        // Check sync
         if (this.timer >= this.stepInterval) {
             this.timer -= this.stepInterval;
             this.counter++;
             isSync = true;
         }
 
-        //Create step object
+        // Create step object
         let step = {
             stepType : 
                 isSync ? StepType.SYNC : 
@@ -80,10 +80,10 @@ export default class SyncModule {
             counter : this.counter
         } as Step
 
-        //Trigger updates for each scene.
+        // Trigger updates for each scene.
         this.scenes.forEach(s => {
 
-            //Get all active game objects with colliders
+            // Get all active game objects with colliders
             s.gameObjects.filter(go => go.isActive).forEach(go => {
                 go.updateSync(step, 1 / this.stepInterval);
             });
@@ -92,8 +92,8 @@ export default class SyncModule {
 
     /** Remove scene reference from colliders */
     public clear(sceneNames: string[]) {
-        this.timer = 0;     //Reset timer for next scene
-        this.counter = 0;   //Reset counter for next scene
+        this.timer = 0;     // Reset timer for next scene
+        this.counter = 0;   // Reset counter for next scene
         this.scenes = this.scenes.filter(sg => !sceneNames.some(sn => sg.name == sn));
     }
 }

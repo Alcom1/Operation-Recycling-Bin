@@ -38,7 +38,7 @@ export default class LevelSequence extends ZGameObject {
         this.color = params.color || "white";
         this.levelName = params.levelName;
 
-        //Map levels to array of name-level objects
+        // Map levels to array of name-level objects
         this.levels = Object.entries(params.levels ?? {}).map(l => ({
             label : l[0],
             level : l[1]

@@ -47,13 +47,13 @@ export default class WaterDrop extends Sprite {
             isLoop : false
         } as AnimationParams)) as Anim;
 
-        this.isActive = false;  //Start deactivated
+        this.isActive = false;  // Start deactivated
     }
 
     /** Get brick handler for brick collisions */
     public init() {
 
-        //Get brick handler to to check brick-wind collisions
+        // Get brick handler to to check brick-wind collisions
         this.brickHandler = this.engine.tag.get(
             "BrickHandler", 
             "LevelInterface")[0] as BrickHandler;
@@ -76,14 +76,14 @@ export default class WaterDrop extends Sprite {
             this.spos.y -= GMULTY;
             this.gpos.y += 1;
 
-            //Collide with lower boundary or bricks
+            // Collide with lower boundary or bricks
             if (this.gpos.y > BOUNDARY.maxy || 
                 this.brickHandler.checkCollisionRange(
-                this.gpos,  //Position
-                1,          //Direction
-                0,          //START
-                2,          //FINAL
-                1))         //HEIGHT
+                this.gpos,  // Position
+                1,          // Direction
+                0,          // START
+                2,          // FINAL
+                1))         // HEIGHT
                 {
                       
 
@@ -126,7 +126,7 @@ export default class WaterDrop extends Sprite {
     /** Get hazard and passive colliders of this brick. */
     public getColliders() : Collider[] {
 
-        //Return hazard hitbox
+        // Return hazard hitbox
         return [{
             mask : MASKS.water | MASKS.death,
             min : this.gpos,

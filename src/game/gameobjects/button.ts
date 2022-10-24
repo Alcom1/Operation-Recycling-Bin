@@ -56,33 +56,33 @@ export default class Button extends GameObject {
     constructor(params: ButtonParams) {
         super(params);
         
-        //Set default color
+        // Set default color
         this.bgColor = colorTranslate(params.backgroundColor ?? "#DDDDDD");
         this.bgColorDark = colorMult(this.bgColor, 0.75);
         this.bgColorBright = colorAdd(this.bgColor, 48);
 
-        //Set hover color
+        // Set hover color
         this.bhColor = colorTranslate(params.hoverColor || "#DDDD00");
         this.bhColorDark = colorMult(this.bhColor, 0.75);
         this.bhColorBright = colorAdd(this.bhColor, 48);
 
-        //Set size & depth
+        // Set size & depth
         this.size = new Vect(params.size?.x ?? 0, params.size?.y ?? 0);
         this.depth = params.depth || Z_DEPTH / 4;
 
-        //Set style
+        // Set style
         this.font = params.font ?? "16px Font04b_08";
         this.color = params.color ?? "#333333";
         this.text = params.text ?? "";
 
-        //Set special position
+        // Set special position
         this.isCenterUI = !!params.isCenterUI;
 
         // Bake buttons
         // Bake press & unpress
         for (const press of [false, true]) {
 
-            //Back hover & not-hover
+            // Back hover & not-hover
             for (const hover of [false, true]) {
 
                 const img = new Image();
@@ -111,7 +111,7 @@ export default class Button extends GameObject {
     /** Update this button to match current cursor position & state */
     public update(dt: number): void {
 
-        var pos = this.engine.mouse.getPos();   //Get mouse position
+        var pos = this.engine.mouse.getPos();   // Get mouse position
         
         // Set hover if the cursor is inside the button area
         this.hover = colPointRect(
@@ -123,7 +123,7 @@ export default class Button extends GameObject {
             this.size.y + this.depth            // Button height with depth compensation
         );
         
-        //If mouse cursor is hovering over this button
+        // If mouse cursor is hovering over this button
         if (this.hover) {
 
             // Mouse states
@@ -147,7 +147,7 @@ export default class Button extends GameObject {
             }
 
         } 
-        //If mouse cursor outside this button
+        // If mouse cursor outside this button
         else {
 
             // Go from pressed state to none state if cursor is released outside the button

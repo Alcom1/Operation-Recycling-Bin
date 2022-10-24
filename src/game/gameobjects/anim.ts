@@ -33,27 +33,27 @@ export interface AnimationParams extends GameObjectParams {
 export default class Anim extends GameObject {
 
     /** Set in constructor */
-    private gposOffset : Point;                     //Constant offset of the global position */
-    private zModifier : number;                     //Modifier value added to the zIndex */
-    private images : OffsetImageElement[] = [];            //Animation images with a horizontal offset */
-    private speed : number;                         //Speed of the animation */
-    public  isLoop : boolean;                       //If this animation is looped */
-    private isVert : boolean;                       //If this animation is arranged vertically */
-    private framesSize? : number;                   //The Horizontal/Vertical size of each frame */
-    private frameCount : number;                    //The Quantity of frames for this animation */
-    private animsCount : number;                    //The number of animations per image */
-    private sliceIndex? : number;                   //The index of this animation, if it's been sliced
+    private gposOffset : Point;                     // Constant offset of the global position */
+    private zModifier : number;                     // Modifier value added to the zIndex */
+    private images : OffsetImageElement[] = [];            // Animation images with a horizontal offset */
+    private speed : number;                         // Speed of the animation */
+    public  isLoop : boolean;                       // If this animation is looped */
+    private isVert : boolean;                       // If this animation is arranged vertically */
+    private framesSize? : number;                   // The Horizontal/Vertical size of each frame */
+    private frameCount : number;                    // The Quantity of frames for this animation */
+    private animsCount : number;                    // The number of animations per image */
+    private sliceIndex? : number;                   // The index of this animation, if it's been sliced
 
     /** Set in init */
-    private fullSize : Point = { x : 0, y : 0 };    //The full dimensions of this animation's images
+    private fullSize : Point = { x : 0, y : 0 };    // The full dimensions of this animation's images
 
     /** Set here */
-    public  zModifierPub : number = 0;              //Public z-modifier */
-    public  isVisible : boolean = true;             //If this animation is visible */
-    private timer : number = 0;                     //Timer to track frames */
-    private imageIndex: number = 0;                 //Index of the current image */
-    private animsIndex : number = 0;                //Index of the current animation */
-    private sposYFix : number = -101;               //Z-index offset to fix vertical clipping
+    public  zModifierPub : number = 0;              // Public z-modifier */
+    public  isVisible : boolean = true;             // If this animation is visible */
+    private timer : number = 0;                     // Timer to track frames */
+    private imageIndex: number = 0;                 // Index of the current image */
+    private animsIndex : number = 0;                // Index of the current animation */
+    private sposYFix : number = -101;               // Z-index offset to fix vertical clipping
 
     /** get */
     public get duration() : number { return 1 / this.speed; }
@@ -63,7 +63,7 @@ export default class Anim extends GameObject {
     constructor(params : AnimationParams) {
         super(params);
 
-        //Set properties
+        // Set properties
         this.speed = params.speed ?? 1;
         this.isLoop = params.isLoop ?? true;
         this.isVert = params.isVert ?? false;
@@ -74,19 +74,19 @@ export default class Anim extends GameObject {
         this.animsCount = params.animsCount ?? 1;
         this.sliceIndex = params.sliceIndex;
 
-        //Store images with different 
+        // Store images with different 
         switch(params.images.length) {
 
-            //No images (why?)
+            // No images (why?)
             case 0:
                 break;
 
-            //Single images
+            // Single images
             case 1:
                 this.images[0] = this.getImage(params.images[0]);
                 break;
 
-            //Many images, use zipper indicies (-1, 1, -2, 2...)
+            // Many images, use zipper indicies (-1, 1, -2, 2...)
             default:
                 this.imageIndex = 1;
                 params.images.forEach((x, i) => {
@@ -110,13 +110,13 @@ export default class Anim extends GameObject {
     /** Init is called after images are retrieved.  */
     public init(ctx : CanvasRenderingContext2D) {
 
-        //Get the size of the default image, a basis for the whole animation
+        // Get the size of the default image, a basis for the whole animation
         this.fullSize = {
             x : this.images[this.imageIndex].width,
             y : this.images[this.imageIndex].height
         }
 
-        //Default frame size based on the image size and number of frames
+        // Default frame size based on the image size and number of frames
         if(!this.framesSize) {
             this.framesSize = (this.isVert ? this.fullSize.y : this.fullSize.x) * this.animsCount / this.frameCount
         }
@@ -125,15 +125,15 @@ export default class Anim extends GameObject {
     /** Update and track timer for this animation */
     public update(dt: number) {
 
-        //For all moving animations
+        // For all moving animations
         if(this.speed > 0) {
 
-            //Increment timer by delta-time
+            // Increment timer by delta-time
             this.timer += dt;
     
             if(this.isLoop && this.timer > 1 / this.speed) {
 
-                this.timer -= 1 / this.speed;   //May cause frame skipping
+                this.timer -= 1 / this.speed;   // May cause frame skipping
             }
         }
     }
@@ -141,12 +141,12 @@ export default class Anim extends GameObject {
     /** Reset timer, update position, and switch current animation. */
     public reset(gpos? : Vect, isTimerReset : boolean = true) {
 
-        //Reset gpos if available
+        // Reset gpos if available
         if(gpos) { 
             this.gpos = gpos.getAdd(this.gposOffset); 
         }
 
-        //Reset timer
+        // Reset timer
         if(isTimerReset) {
             this.timer = 0;
             this.animsIndex = ++this.animsIndex % this.animsCount;
@@ -160,21 +160,21 @@ export default class Anim extends GameObject {
             this.gpos,
             this.zModifier + 
             this.zModifierPub + (
-            this.spos.y > 0 ? this.sposYFix : 0 ))    //Fix clipping while moving upwards
+            this.spos.y > 0 ? this.sposYFix : 0 ))    // Fix clipping while moving upwards
     }
 
     /** Set the image index, swapping the image for this animation. */
     public setImageIndex(index : number) {
 
-        //This animation has many images
+        // This animation has many images
         if(this.images[index]) {
             this.imageIndex = index;
         }
-        //This animation has 2 images
+        // This animation has 2 images
         else if(this.images[Math.sign(index)]) {
             this.imageIndex = Math.sign(index);
         }
-        //This animation has 1 image
+        // This animation has 1 image
         else if(this.images[0]) {
             this.imageIndex = 0;
         }
@@ -183,30 +183,30 @@ export default class Anim extends GameObject {
     /** Draw this animation */
     public draw(ctx : CanvasRenderingContext2D) {
 
-        //Stop if this animation is not visible
+        // Stop if this animation is not visible
         if(!this.isVisible) {
             return;
         }
 
-        const size = this.framesSize ?? 0;                                  //Size (horizontal or vertical) of this frame
-        const image = this.images[this.imageIndex];                         //Current image
-        const widthSlice = size * (this.sliceIndex ?? 0);                   //Slice width, or 0 if this animation isn't sliced
-        const oppoSize = this.isVert ? this.fullSize.x : this.fullSize.y;   //Full width or height (the non-animated direction)
+        const size = this.framesSize ?? 0;                                  // Size (horizontal or vertical) of this frame
+        const image = this.images[this.imageIndex];                         // Current image
+        const widthSlice = size * (this.sliceIndex ?? 0);                   // Slice width, or 0 if this animation isn't sliced
+        const oppoSize = this.isVert ? this.fullSize.x : this.fullSize.y;   // Full width or height (the non-animated direction)
 
         ctx.drawImage(
-            //Greater image
+            // Greater image
             image,                    
 
-            //Slice position & size 
-            widthSlice +                    //Move segment forward based on which slice this is.
-            image.offsetX +                 //Move segment forward based on the X-offset of the current image  
+            // Slice position & size 
+            widthSlice +                    // Move segment forward based on which slice this is.
+            image.offsetX +                 // Move segment forward based on the X-offset of the current image  
             this.getAnimationOffset(false),
             this.getAnimationOffset(true),  
             this.isVert ? oppoSize : size,  
             this.isVert ? size : oppoSize,    
 
-            //Greater image position & size
-            widthSlice,                     //Move segment forward based on which slice this is. Unused(?) for vertical animations.
+            // Greater image position & size
+            widthSlice,                     // Move segment forward based on which slice this is. Unused(?) for vertical animations.
             this.isVert ? 0 : GMULTY - this.fullSize.y,
             this.isVert ? oppoSize : size,  
             this.isVert ? size : oppoSize);
@@ -215,17 +215,17 @@ export default class Anim extends GameObject {
     /** Get position offset for the current animation frame within the full image */
     private getAnimationOffset(isVert : boolean) : number {
 
-        //If the animation direction matches the checked direction, return an animation offset, 0 otherwise.
+        // If the animation direction matches the checked direction, return an animation offset, 0 otherwise.
         if(isVert == this.isVert) {
 
             const fullSize = this.isVert ? this.fullSize.y : this.fullSize.x;
 
-            return floor((                  //Move segment forward to the current animation and current frame
-                this.animsIndex +           //Move segment forward to the current animation
-                Math.min(                   //Get current frame based on the timer and speed of the animation
+            return floor((                  // Move segment forward to the current animation and current frame
+                this.animsIndex +           // Move segment forward to the current animation
+                Math.min(                   // Get current frame based on the timer and speed of the animation
                     this.timer *        
                     this.speed,         
-                    1 - Number.EPSILON)) *  //Subtract epsilon to prevent grabbing the next frame at max value
+                    1 - Number.EPSILON)) *  // Subtract epsilon to prevent grabbing the next frame at max value
                 fullSize / this.animsCount,             
                 fullSize / this.frameCount)
         }

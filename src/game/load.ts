@@ -25,7 +25,7 @@ import BrickTileButton from "./gameobjects/bricktilebutton";
 import CharacterRBG from "./gameobjects/charactergearclimb";
 import CharacterRBC from "./gameobjects/charactergearground";
 
-//Load
+// Load
 window.onload = function() {
     const canvas = document.querySelector('canvas');
     if (!canvas) throw new Error("Can't get canvas");

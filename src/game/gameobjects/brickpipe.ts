@@ -10,9 +10,9 @@ const brickPipeOverride = Object.freeze({
 /** A brick with a dripping pipe */
 export default class BrickPipe extends BrickTile {
 
-    private drop : WaterDrop;           //This pipe's water drop
-    private rate : number = 2.5;        //Rate at which drop falls
-    private minDelay : number = 1;      //Minimum value for the initial timer
+    private drop : WaterDrop;           // This pipe's water drop
+    private rate : number = 2.5;        // Rate at which drop falls
+    private minDelay : number = 1;      // Minimum value for the initial timer
     private timer : number = this.minDelay + Math.random() * (this.rate - this.minDelay);
 
     /** Constructor */
@@ -25,9 +25,9 @@ export default class BrickPipe extends BrickTile {
     /** Update timer, reset drop when timer reaches rate */
     public update(dt : number) {
 
-        this.timer += dt;               //Update timer
+        this.timer += dt;               // Update timer
 
-        //Reset drop
+        // Reset drop
         if (this.timer > this.rate) {
             this.timer = 0;
             this.drop.reset(this.gpos);

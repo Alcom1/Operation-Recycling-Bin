@@ -9,9 +9,9 @@ interface CounterParams extends GameObjectParams {
 
 /** Counter that keeps track of the move count */
 export default class Counter extends GameObject {
-    private count : number = 0;         //Current count */
-    private fontFamily: string = "";    //Font for count display */
-    private par: number = 1;            //Current par
+    private count : number = 0;         // Current count */
+    private fontFamily: string = "";    // Font for count display */
+    private par: number = 1;            // Current par
     
     /** Constructor */
     constructor(params: CounterParams) {
@@ -37,17 +37,17 @@ export default class Counter extends GameObject {
     public draw(ctx: CanvasRenderingContext2D): void {
         ctx.textAlign = "right";
         
-        //Current score
+        // Current score
         ctx.fillStyle = "#DD9C00";
         ctx.font = "32px " + this.fontFamily;
         ctx.fillText("" + this.count, GMULTX * 35 + 200, 450);
         
-        //Par
+        // Par
         ctx.fillStyle = "#000";
         ctx.font = "16px " + this.fontFamily;
         ctx.fillText(this.par + " or fewer", GMULTX * 35 + 203.5, 484);
 
-        //Par checkbox
+        // Par checkbox
         if (this.par >= this.count) {
             ctx.fillStyle = "#FFCC00"
             ctx.fillRect(GMULTX * 35 + 56, 472, 12, 12);

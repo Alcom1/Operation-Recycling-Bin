@@ -6,15 +6,15 @@ import Character from "./character";
 /** Base gear character */
 export default class CharacterGear extends Character {
 
-    protected storedCbm: number = 0;      //Store Collision bitmask from collision for later resolution
-    protected isStep: boolean = false;    //True on frames where a character step has occured
+    protected storedCbm: number = 0;      // Store Collision bitmask from collision for later resolution
+    protected isStep: boolean = false;    // True on frames where a character step has occured
     
-    protected get isColFlor() : boolean { return !!(this.storedCbm & ring.flor); }  //Collision below
-    protected get isColRoof() : boolean { return !!(this.storedCbm & ring.roof); }  //Collision above
-    protected get isColFace() : boolean { return !!(this.storedCbm & ring.face); }  //Collision front
-    protected get isColBack() : boolean { return !!(this.storedCbm & ring.back); }  //Collision back
-    protected get isColLand() : boolean { return !!(this.storedCbm & ring.land); }  //Collision front-low corner
-    protected get isColBand() : boolean { return !!(this.storedCbm & ring.band); }  //Collision front-rear corner
+    protected get isColFlor() : boolean { return !!(this.storedCbm & ring.flor); }  // Collision below
+    protected get isColRoof() : boolean { return !!(this.storedCbm & ring.roof); }  // Collision above
+    protected get isColFace() : boolean { return !!(this.storedCbm & ring.face); }  // Collision front
+    protected get isColBack() : boolean { return !!(this.storedCbm & ring.back); }  // Collision back
+    protected get isColLand() : boolean { return !!(this.storedCbm & ring.land); }  // Collision front-low corner
+    protected get isColBand() : boolean { return !!(this.storedCbm & ring.band); }  // Collision front-rear corner
 
     /** Get colliders */
     public getColliders() : Collider[] {
@@ -38,12 +38,12 @@ export default class CharacterGear extends Character {
         this.isStep = true;
         this.storedCbm = 0;
 
-        //Update position if this is not a starting step
+        // Update position if this is not a starting step
         if (!isStart) {
             this.updatePosition();
         }
 
-        //WALL BOUNDARY
+        // WALL BOUNDARY
         if (this.gpos.x - 2 < BOUNDARY.minx) {
 
             this.storedCbm |= (this.move.x > 0 ? ring.back : ring.face);
@@ -53,7 +53,7 @@ export default class CharacterGear extends Character {
             this.storedCbm |= (this.move.x > 0 ? ring.face : ring.back);
         }
 
-        //Ceiling boundary
+        // Ceiling boundary
         if (this.gpos.y - 2 < BOUNDARY.miny) {
 
             this.storedCbm |= ring.roof;
@@ -72,90 +72,90 @@ export default class CharacterGear extends Character {
 
         if (this.isStep)
         {
-            this.isStep = false;                    //Reset step state
-            super.resolveCollisions(collisions);    //Perform standard resolve to set bitmask for actual collisions
-            this.resolveCollisionBitmask();         //Handle collisions based on the bitmask
+            this.isStep = false;                    // Reset step state
+            super.resolveCollisions(collisions);    // Perform standard resolve to set bitmask for actual collisions
+            this.resolveCollisionBitmask();         // Handle collisions based on the bitmask
         }
     }
 
     /** Store front collisions in bitmask */
     public resolveCollision(mask : number, other : GameObject) {
 
-        //Block face if there's something in front
+        // Block face if there's something in front
         if (mask & (MASKS.enemy | MASKS.block)){
 
-            //Get position difference
+            // Get position difference
             let diff = other.gpos.getSub(this.gpos);
-            //Get position difference relative to this's forward facing direction
+            // Get position difference relative to this's forward facing direction
             let diffRel = diff.getMult(this.move.x, 1);
 
-            //other object as character to get its movement directions
+            // other object as character to get its movement directions
             let otherChar = other as Character
 
-            //If the other character is moving towards this one, horizontally
-            let isHorzOppose =                          //This probably doesn't properly handle the HALT state.
-                otherChar.move.y == 0 &&                //Other is moving horizontally
-                Math.sign(diff.x) == -otherChar.move.x; //Other is moving towards self
+            // If the other character is moving towards this one, horizontally
+            let isHorzOppose =                          // This probably doesn't properly handle the HALT state.
+                otherChar.move.y == 0 &&                // Other is moving horizontally
+                Math.sign(diff.x) == -otherChar.move.x; // Other is moving towards self
 
-            //If the other character is moving towards this one, vertically
+            // If the other character is moving towards this one, vertically
             let isVertOppose = Math.sign(diff.y) == -otherChar.move.y;
 
-            //If character is blocking horizontally
-            let horzBlock = col1D(      //1D vertical collision
+            // If character is blocking horizontally
+            let horzBlock = col1D(      // 1D vertical collision
                 this.gpos.y - this.height,
                 this.gpos.y,
                 other.gpos.y - (other as Character).height ?? 1,
-                other.gpos.y) && (      //Check if close enough to collide, if other character is adjacent or 1x away and approaching
+                other.gpos.y) && (      // Check if close enough to collide, if other character is adjacent or 1x away and approaching
                     Math.abs(diff.x) <= 2 || isHorzOppose && Math.abs(diff.x) == 3);
 
-            //If character is blocking horizontally
-            let vertBlock = col1D(      //1D horizontal collision
+            // If character is blocking horizontally
+            let vertBlock = col1D(      // 1D horizontal collision
                 this.gpos.x,
                 this.gpos.x + 2,
                 other.gpos.x,
-                other.gpos.x + 2) && (  //Check if close enough to collide, if other character is adjacent or 1x away and approaching
+                other.gpos.x + 2) && (  // Check if close enough to collide, if other character is adjacent or 1x away and approaching
                     Math.abs(diff.y) <= 2 || isVertOppose && Math.abs(diff.y) == 3);
             
-            //If a horizontally-blocking character...
+            // If a horizontally-blocking character...
             if (horzBlock) {
 
-                //Is ahead
+                // Is ahead
                 if ( diffRel.x > 0) {
 
                     this.storedCbm |= ring.face;
                 }
-                //Is behind
+                // Is behind
                 else {
 
                     this.storedCbm |= ring.back;
                 }
             }
-            //If a vertically-blocking character...
+            // If a vertically-blocking character...
             if (vertBlock) {
 
-                //Is above
+                // Is above
                 if (diffRel.y < 0) {
 
                     this.storedCbm |= ring.roof;
                 }
-                //Is below
+                // Is below
                 else {
 
                     this.storedCbm |= ring.flor;
                 }
             }
-            //If diagonal, and one character is moving above/below the other
+            // If diagonal, and one character is moving above/below the other
             if (Math.abs(diff.x) == 2 && 
                 Math.abs(diff.y) && 
                 Math.sign(otherChar.move.y) == -Math.sign(diff.y)) {
                  
-                //Is above
+                // Is above
                 if (diffRel.y < 0) {
 
                     this.storedCbm |= ring.roof;
                 }
                 
-                //Is below
+                // Is below
                 else if (diff.y > 0) {
 
                     this.storedCbm |= ring.flor;
@@ -178,7 +178,7 @@ export default class CharacterGear extends Character {
     protected getPassiveCollider() : Collider {
 
         return { 
-            mask : 0,   //Passive
+            mask : 0,   // Passive
             min : this.gpos.getAdd({ x : - (this.move.x < 0 ? 2 : 0), y : 1 - this.height}),
             max : this.gpos.getAdd({ x : + (this.move.x < 0 ? 0 : 2), y : 1})
         }

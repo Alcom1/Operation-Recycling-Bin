@@ -79,7 +79,7 @@ export default class Stud extends GameObject {
         if (this.isSelected) {
             return UNDER_CURSOR_Z_INDEX;
         }
-        //Normal z-index
+        // Normal z-index
         else {
             return getZIndex(this.gpos, 1);
         }
