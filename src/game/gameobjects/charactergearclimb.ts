@@ -147,7 +147,7 @@ export default class CharacterGearClimb extends CharacterGear {
                 break;
 
             case ClimbState.WAIT :
-                this.resolveCollisionsNormal();
+                this.resolveCollisionsWait();
                 break;
 
             case ClimbState.HALT :
@@ -181,19 +181,30 @@ export default class CharacterGearClimb extends CharacterGear {
             }
             //actually go up
             else {
-                //this.setNormalState(VertState.UP);
-                if(this.stateIndex == ClimbState.WAIT) {
-                    this.setNormalState(VertState.UP);
-                }
-                else {
-                    this.setStateIndex(ClimbState.WAIT);
-                }
+                this.setStateIndex(ClimbState.WAIT);
             }
         }
         //Default to normal state
         else {
 
             this.setNormalState();
+        }
+    }
+
+    //
+    public resolveCollisionsWait() {
+
+        //Go up if not blocked
+        if(!(this.storedCbm & gcb.ceil)) {
+            this.setNormalState(VertState.UP);
+        }
+        else {
+            this.setNormalState();
+
+            if(this.storedCbm & gcb.face) {
+                this.reverse();
+            }
+            //Need a super-edge case for when face & back is blocked, maybe a shared sub-funtion?
         }
     }
 

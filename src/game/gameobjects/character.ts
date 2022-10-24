@@ -1,6 +1,6 @@
 import GameObject, { Collision, GameObjectParams } from "engine/gameobjects/gameobject";
 import { GMULTX, GMULTY } from "engine/utilities/math";
-import Vect from "engine/utilities/vect";
+import Vect, { Point } from "engine/utilities/vect";
 import BrickHandler from "./brickhandler";
 import Brick from "./bricknormal";
 import Anim, { OffsetImageParams, AnimationParams } from "./anim";
@@ -26,7 +26,8 @@ export default class Character extends GameObject {
 
     public get height() { return this._height; }    //Collision height of this character
     protected _height: number;
-    protected move: Vect;                           //Movement direction of this character
+    public get move() { return this._move; }        //Movement direction of this character
+    protected _move: Vect;                          
     protected brickHandler!: BrickHandler;          //Brick handler for brick pressure (bricks under this character)
     private checkCollision: boolean;                //If collision needs to be checked
     private speed: number;                          //Speed of this character
@@ -42,19 +43,18 @@ export default class Character extends GameObject {
         return this.animations[this.stateAnimations[this.stateIndex]]; 
     }  
     public get isNormalMovment() : boolean { return this.stateIndex == 0 }  //If the current state is normal movment
-    protected get animationSubindex() : number { return this.move.x }       //Sub-index for animations
-    public get movex() : number { return this.move.x }                      //This almost looks redundant except Subindex will be overridden.
+    protected get animationSubindex() : number { return this.move.x }       //Sub-index for animations (by default, based on horizontal movement)
 
     constructor(params: CharacterParams) {
         super(params);
 
-        this.tags.push("Character");                                //All characters need to share a tag
+        this.tags.push("Character");                                    //All characters need to share a tag
         
-        this.speed = params.speed ?? 1;                             //Default speed
-        this.move = new Vect(params.isForward ?? true ? 1 : -1, 0); //Default move direction
-        this._height = params.height ?? 2;                          //Default height for a character
-        this.isGlide = params.isGlide ?? false;                     //Default glide state
-        this.checkCollision = true;                                 //Force initial collision check
+        this.speed = params.speed ?? 1;                                 //Default speed
+        this._move = new Vect(params.isForward ?? true ? 1 : -1, 0);    //Default move direction
+        this._height = params.height ?? 2;                              //Default height for a character
+        this.isGlide = params.isGlide ?? false;                         //Default glide state
+        this.checkCollision = true;                                     //Force initial collision check
         this.stateAnimations = [0, ...(
             params.stateAnimations ?? (                                 //Get special state animations or...
             params.animsMisc ? params.animsMisc.map((x, i) => i + 1) :  //Get default animations or...

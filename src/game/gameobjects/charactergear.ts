@@ -75,44 +75,45 @@ export default class CharacterGear extends Character {
         //Block face if there's something in front
         if (mask & (MASKS.enemy | MASKS.block)){
 
+            //Get position difference
+            let diff = other.gpos.getSub(this.gpos);
             //Get position difference relative to this's forward facing direction
-            var diff = other.gpos.getSub(this.gpos).getMult(this.move.x, 1);
+            let diffRel = diff.getMult(this.move.x, 1);
 
-            //1D vertical collision
-            var vertBlock = col1D(
+            //other object as character to get its movement directions
+            let otherChar = other as Character
+
+            //If the other character is moving towards this one, horizontally
+            let isHorzOppose =                          //This probably doesn't properly handle the HALT state.
+                otherChar.move.y == 0 &&                //Other is moving horizontally
+                Math.sign(diff.x) == -otherChar.move.x; //Other is moving towards self
+
+            //If the other character is moving towards this one, vertically
+            let isVertOppose = Math.sign(diff.y) == -otherChar.move.y;
+
+            //If character is blocking horizontally
+            let horzBlock = col1D(      //1D vertical collision
                 this.gpos.y - this.height,
                 this.gpos.y,
                 other.gpos.y - (other as Character).height ?? 1,
-                other.gpos.y);
+                other.gpos.y) && (      //Check if close enough to collide, if other character is adjacent or 1x away and approaching
+                    Math.abs(diff.x) <= 2 || isHorzOppose && Math.abs(diff.x) == 3);
 
-            //1D horizontal collision
-            var horzBlock = col1D(
+            //If character is blocking horizontally
+            let vertBlock = col1D(      //1D horizontal collision
                 this.gpos.x,
                 this.gpos.x + 2,
                 other.gpos.x,
-                other.gpos.x + 2)
-
-            //If a vertically-blocking character...
-            if (vertBlock) {
+                other.gpos.x + 2) && (  //Check if close enough to collide, if other character is adjacent or 1x away and approaching
+                    Math.abs(diff.y) <= 2 || isVertOppose && Math.abs(diff.y) == 3);
+            
+            //If a horizontally-blocking character...
+            if (horzBlock) {
 
                 //Is ahead
-                if( diff.x > 0) {
+                if( diffRel.x > 0) {
 
-                    //If there is a gap between these characters
-                    if (Math.abs(this.gpos.x - other.gpos.x) > 2) {
-    
-                        //Check if they're moving toward each other
-                        if ((other as Character).isNormalMovment &&
-                            (other as Character).movex != this.move.x) {
-    
-                            this.storedCbm |= gcb.face; //Block face
-                        }
-                    }
-                    //If 
-                    else {
-    
-                        this.storedCbm |= gcb.face; //Block face
-                    }
+                    this.storedCbm |= gcb.face;
                 }
                 //Is behind
                 else {
@@ -120,27 +121,27 @@ export default class CharacterGear extends Character {
                     this.storedCbm |= gcb.back;
                 }
             }
-            //If a horizontally-blocking character...
-            if (horzBlock && Math.abs(diff.y) < 3) {
+            //If a vertically-blocking character...
+            if (vertBlock) {
 
                 //Is above
-                if(diff.y < 0) {
+                if(diffRel.y < 0) {
 
                     this.storedCbm |= gcb.ceil;
                 }
-                
                 //Is below
-                else if(diff.y > 0) {
+                else {
 
                     this.storedCbm |= gcb.flor;
                 }
             }
             //If diagonal, and one character is moving above/below the other
-            if (Math.abs(diff.x) == 2 && Math.abs(diff.y) == 2 &&                                   //Diagonal check
-                Math.sign((other as Character).movex) == Math.sign(this.gpos.x - other.gpos.x)) {   //Move check
-
+            if (Math.abs(diff.x) == 2 && 
+                Math.abs(diff.y) && 
+                Math.sign(otherChar.move.y) == -Math.sign(diff.y)) {
+                 
                 //Is above
-                if(diff.y < 0) {
+                if(diffRel.y < 0) {
 
                     this.storedCbm |= gcb.ceil;
                 }
