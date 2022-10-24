@@ -4,12 +4,14 @@ import { Collider } from "engine/modules/collision";
 import { Step, StepType } from "engine/modules/sync";
 import { Point } from "engine/utilities/vect";
 
+/** Armor states of a bot character */
 enum ArmorState {
     NONE,
     ACTIVE,
     FLASH
 }
 
+/** States of a bot character */
 enum BotState {
     NORMAL,
     EATING,
@@ -19,7 +21,7 @@ enum BotState {
     SHIELD
 }
 
-//Bot parameters
+/** Specifications of THE bot character */
 const characterBotOverride = Object.freeze({
     // Main parameters
     height: 4,      //Bot is this tall
@@ -83,8 +85,9 @@ const acb = Object.freeze({
     foot : bitStack(12)
 });
 
+/** The one and only. */
 export default class CharacterBot extends Character {
-    
+
     private timerSpc : number = 0;                          //Timer to track duration of special movements */
     private timerArm : number = 0;                          //Timer to track armor flash */
     private ceilSubOffset : number = -6;                    //Offset for up/down movement */
@@ -323,7 +326,7 @@ export default class CharacterBot extends Character {
         }
     }
 
-    /** */
+    /** Shift forward, with a vertical offset to handle steps */
     private walkstep(vOffset : number) {
         
         this.gpos.add({

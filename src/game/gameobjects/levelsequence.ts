@@ -1,5 +1,6 @@
 import ZGameObject, { ZGameObjectParams } from "./zgameobject";
 
+/** Parameters for a level sequence */
 interface LevelSequenceParams extends ZGameObjectParams {
     font?: string;
     color?: string;
@@ -8,16 +9,25 @@ interface LevelSequenceParams extends ZGameObjectParams {
     par: number;
 }
 
+/** */
 export default class LevelSequence extends ZGameObject {
+
+    /** Level name display font */
     private font: string;
+    /** Level name display color */
     private color: string;
+    /** Level name */
     private levelName: string;
+
+    /** Publicly exposed level names for next & prev */
     public levels: {
         /** Level label */
         label: string;
         /** Level name */
         level: string;
     }[];
+
+    /** Publically exposed par for counter */
     public par: number;
 
     /** Constructor */
@@ -36,6 +46,8 @@ export default class LevelSequence extends ZGameObject {
 
         this.par = params.par;
     }
+
+    /** Draw the level name */
     public draw(ctx: CanvasRenderingContext2D) {
 
         ctx.textBaseline = "top";

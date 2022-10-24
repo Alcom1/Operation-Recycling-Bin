@@ -2,6 +2,7 @@ import { Collider } from "engine/modules/collision";
 import { MASKS } from "engine/utilities/math";
 import Character, { CharacterParams } from "./character";
 
+/** Specifications of a Bin character */
 const characterBinOverride = Object.freeze({
     height: 3,                                      //Bins are this tall
     speed : 0,                                      //Bins aren't animated
@@ -10,6 +11,7 @@ const characterBinOverride = Object.freeze({
     animsCount : 1
 });
 
+/** A bin full of junk. Eat it. */
 export default class CharacterBin extends Character {
 
     /** Constructor */

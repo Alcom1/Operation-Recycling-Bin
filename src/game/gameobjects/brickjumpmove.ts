@@ -1,7 +1,7 @@
 import BrickJump from "./brickjump";
 import { BrickTileParams } from "./bricktile";
 
-/** Brick jump parameters (Non-grey color means it can be moved) */
+/** Specifications of a moving jump brick (Non-grey color means it can be moved) */
 const brickJumpMoveOverride = Object.freeze({
     color : "yellow",
     images : ["brick_jump_move_up", "brick_jump_move"],

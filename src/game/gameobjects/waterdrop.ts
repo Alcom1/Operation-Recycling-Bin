@@ -6,7 +6,7 @@ import Anim, { AnimationParams } from "./anim";
 import BrickHandler from "./brickhandler";
 import Sprite from "./sprite";
 
-//Water drop params
+/** Specifications of a water drop */
 const characterBotOverride = Object.freeze({
     image: "part_water",
     zIndex: 0,

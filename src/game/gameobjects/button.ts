@@ -15,15 +15,25 @@ interface ButtonParams extends GameObjectParams {
 }
 
 export default class Button extends GameObject {
+
+    
+    /** If button is pressed */
     private press = false;
+    /** If button is hovered over */
     private hover = false;
     
+    /** Button size */
     private size: Vect;
+    /** Button z-axis depth */
     private depth: number;
 
+    /** Button default color */
     private bgColor: string;
+    /** Button default shaded color */
     private bgColorDark: string;
+    /** Button default light color */
     private bgColorBright: string;
+
     /** Button hover color */
     private bhColor: string;
     /** Button hover shaded color */
@@ -31,8 +41,11 @@ export default class Button extends GameObject {
     /** Button hover light color */
     private bhColorBright: string;
 
+    /** Button font */
     private font: string;
+    /** Button color */
     private color: string;
+    /** Button text */
     protected text: string;
 
     /* If this button is horizontally centered around the UI */
@@ -43,46 +56,62 @@ export default class Button extends GameObject {
     constructor(params: ButtonParams) {
         super(params);
         
+        //Set default color
         this.bgColor = colorTranslate(params.backgroundColor ?? "#DDDDDD");
         this.bgColorDark = colorMult(this.bgColor, 0.75);
         this.bgColorBright = colorAdd(this.bgColor, 48);
 
+        //Set hover color
         this.bhColor = colorTranslate(params.hoverColor || "#DDDD00");
         this.bhColorDark = colorMult(this.bhColor, 0.75);
         this.bhColorBright = colorAdd(this.bhColor, 48);
 
+        //Set size & depth
         this.size = new Vect(params.size?.x ?? 0, params.size?.y ?? 0);
         this.depth = params.depth || Z_DEPTH / 4;
 
+        //Set style
         this.font = params.font ?? "16px Font04b_08";
         this.color = params.color ?? "#333333";
         this.text = params.text ?? "";
 
+        //Set special position
         this.isCenterUI = !!params.isCenterUI;
 
         // Bake buttons
+        // Bake press & unpress
         for (const press of [false, true]) {
+
+            //Back hover & not-hover
             for (const hover of [false, true]) {
+
                 const img = new Image();
+
                 img.src = this.engine.baker.bake(
                     ctx => this.drawButton(ctx, press, hover),
                     this.size.x + this.depth,   
                     this.size.y + this.depth,   
                     `BUTTON.${this.text}.${press ? "PRESS" : "UNPRS"}.${hover ? "HOVER" : "OUTSD"}`            
                 );
+
                 this.images.get(press)?.set(hover, img);
             }
         }
     }
+
+    /** Initialize this button */
     public init(ctx: CanvasRenderingContext2D) {
         
-        // Center button horizontally around the UI
+        // Center button horizontally around the sidepanel UI
         if (this.isCenterUI) {
             this.spos.x = ctx.canvas.width - WIDTH_SIDEPANEL / 2;
         }
     }
+
+    /** Update this button to match current cursor position & state */
     public update(dt: number): void {
-        var pos = this.engine.mouse.getPos();
+
+        var pos = this.engine.mouse.getPos();   //Get mouse position
         
         // Set hover if the cursor is inside the button area
         this.hover = colPointRect(
@@ -94,44 +123,62 @@ export default class Button extends GameObject {
             this.size.y + this.depth            // Button height with depth compensation
         );
         
+        //If mouse cursor is hovering over this button
         if (this.hover) {
+
             // Mouse states
-            switch(this.engine.mouse.getMouseState()) {     // Get mouse state for different cursor-buttone events
+            // Get mouse state for different cursor-button events
+            switch(this.engine.mouse.getMouseState()) {
+
                 case MouseState.ISRELEASED:
-                    this.press = false;                     // NONE state
+                    this.press = false;         // NONE state
                     break;
+
                 case MouseState.WASPRESSED:
-                    this.press = true;                      // PRESS state
+                    this.press = true;          // PRESS state
                     break;
+
                 case MouseState.WASRELEASED :
                     if (this.press) {
-                        this.doButtonAction();              // Do the button's action
-                        this.press = false;                 // Return to NONE state
+                        this.doButtonAction();  // Do the button's action
+                        this.press = false;     // Return to NONE state
                     }
                     break;
             }
-        } else {
+
+        } 
+        //If mouse cursor outside this button
+        else {
+
             // Go from pressed state to none state if cursor is released outside the button
             if (this.press && this.engine.mouse.getMouseState() == MouseState.ISRELEASED) {
-                this.press = false;                         // NONE state
+
+                this.press = false;             // NONE state
             }
         }
     }
+
+    /** Draw the current image for this button */
     public draw(ctx: CanvasRenderingContext2D): void {
+
         ctx.drawImage(
             this.images.get(this.press)?.get(this.hover)!,
             -this.size.x / 2, 
             -this.size.y / 2
         );
     }
+
+    /** Default button action */
     protected doButtonAction(): void {
+
         console.log(this.text);
     }
 
     /* Button draw */
     private drawButton(ctx: CanvasRenderingContext2D, press: boolean, hover: boolean): void {
+
         // Handle button depth
-        var currentDepth = press ? this.depth / 2 : this.depth;        // Depth for pressed or unpressed state
+        var currentDepth = press ? this.depth / 2 : this.depth;             // Depth for pressed or unpressed state
         ctx.translate(this.depth - currentDepth, currentDepth);             // Translate by depth
 
         // Button top face color

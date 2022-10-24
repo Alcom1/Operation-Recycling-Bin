@@ -3,6 +3,7 @@ import { Collider } from "engine/modules/collision";
 import { bitStack, BOUNDARY, col1D, RING_BITSTACK as ring, GMULTX, GMULTY, MASKS } from "engine/utilities/math";
 import Character from "./character";
 
+/** Base gear character */
 export default class CharacterGear extends Character {
 
     protected storedCbm: number = 0;      //Store Collision bitmask from collision for later resolution
@@ -37,6 +38,7 @@ export default class CharacterGear extends Character {
         this.isStep = true;
         this.storedCbm = 0;
 
+        //Update position if this is not a starting step
         if (!isStart) {
             this.updatePosition();
         }
@@ -162,12 +164,12 @@ export default class CharacterGear extends Character {
         }
     }
 
-    /** */
+    /** Resolve collisions in the stored bitmask. Not implemented for base class. */
     protected resolveCollisionBitmask() {
         throw new Error("Not implemented!");
     }
 
-    /** */
+    /** Update position. Not implemented for base class. */
     protected updatePosition()  {
         throw new Error("Not implemented!");
     }

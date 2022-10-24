@@ -3,6 +3,7 @@ import { RING_BITSTACK as gcb, MASKS } from "engine/utilities/math";
 import { CharacterParams } from "./character";
 import CharacterGear from "./charactergear";
 
+/** Specifications of a grounded gearbot */
 const CharacterGearGroundOverride = Object.freeze({
     height: 2,
     speed : 5.0,
@@ -14,6 +15,7 @@ const CharacterGearGroundOverride = Object.freeze({
     isGlide : true
 });
 
+/**A normal grounded gearbot */
 export default class CharacterGearGround extends CharacterGear {
 
     /** Constructor */

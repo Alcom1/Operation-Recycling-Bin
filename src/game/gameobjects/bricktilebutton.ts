@@ -2,11 +2,13 @@ import { Collider } from "engine/modules/collision";
 import { MASKS } from "engine/utilities/math";
 import BrickTile, { BrickTileParams } from "./bricktile";
 
+/** Specifications of a button tile */
 const brickButtonOverride = Object.freeze({
     images : ["brick_button_off", "brick_button_on"],
     width : 2
 });
 
+/** A tile with a button effect */
 export default class BrickTileButton extends BrickTile {
 
     plates: BrickTile[] = [];
@@ -18,7 +20,7 @@ export default class BrickTileButton extends BrickTile {
         super(Object.assign(params, brickButtonOverride));
     }
 
-    /** Initialize this button, get all tiles with matching curcuits */
+    /** Initialize this button, get all tiles with matching circuits */
     public init() {
 
         //Get plates affected by this button (also includes self?)

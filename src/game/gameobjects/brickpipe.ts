@@ -1,6 +1,7 @@
 import BrickTile, { BrickTileParams } from "./bricktile";
 import WaterDrop from "./waterdrop";
 
+/** Specifications of a pipe brick */
 const brickPipeOverride = Object.freeze({
     images : ["brick_pipe", "brick_pipe"],
     width : 2

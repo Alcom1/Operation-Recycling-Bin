@@ -1,6 +1,7 @@
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import { pathImg } from "engine/utilities/math";
 
+/** Cursor icon states, one per image */
 export enum CursorIconState {
     NONE,
     DRAG,
@@ -21,6 +22,8 @@ export default class CursorIcon extends GameObject {
         [CursorIconState.HOVERDOWN, "cursor_down"],
         [CursorIconState.HOVERUP,   "cursor_up"]
     ]);
+
+    /** Constructor */
     public constructor(params: GameObjectParams) {
         super(params);
         
@@ -32,6 +35,7 @@ export default class CursorIcon extends GameObject {
 
     /** Sets the cursor to match the provided state */
     public setCursor(state: CursorIconState): void {
+        
         this.engine.mouse.setCursorURL(this.cursorImages.get(state));
     }
 }

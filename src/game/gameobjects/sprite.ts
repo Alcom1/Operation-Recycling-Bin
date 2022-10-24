@@ -1,5 +1,6 @@
 import ZGameObject, { ZGameObjectParams } from "./zgameobject";
 
+/** Sprite parameters */
 export interface SpriteParams extends ZGameObjectParams {
     image: string;
     extension?: string;
@@ -15,6 +16,8 @@ export default class Sprite extends ZGameObject {
 
         this.image = this.engine.library.getImage(params.image, params.extension);
     }
+
+    /** Draw this sprite */
     public draw(ctx: CanvasRenderingContext2D): void {
         ctx.drawImage(this.image, 0, 0);
     }

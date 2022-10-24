@@ -4,6 +4,7 @@ import BrickHandler from "./brickhandler";
 import { BrickTileParams } from "./bricktile";
 import BrickTileTop from "./bricktiletop";
 
+/** Specifications of a jump brick */
 const brickJumpOverride = Object.freeze({
     images : ["brick_jump_up", "brick_jump"],
     imageTop : "brick_jump_top",

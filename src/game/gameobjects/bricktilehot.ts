@@ -3,7 +3,7 @@ import { MASKS } from "engine/utilities/math";
 import Anim, { AnimationParams } from "./anim";
 import BrickTile, { BrickTileParams } from "./bricktile";
 
-/** Parameters for a hot tile */
+/** Specifications of a hot tile */
 const BrickTileHotOverride = Object.freeze({
     images : ["brick_tile", "brick_tile_hot"],
     width : 4

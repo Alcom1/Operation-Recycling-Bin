@@ -6,6 +6,7 @@ import Brick from "./bricknormal";
 import Anim, { OffsetImageParams, AnimationParams } from "./anim";
 import { Step, StepType } from "engine/modules/sync";
 
+/** Parameters for a character */
 export interface CharacterParams extends GameObjectParams {
     height? : number;
     speed? : number;
@@ -18,10 +19,12 @@ export interface CharacterParams extends GameObjectParams {
     animsMisc : AnimationInputParams[];
 }
 
+/** Animation parameters with a sliced option */
 interface AnimationInputParams extends AnimationParams {
     isSliced? : boolean;
 }
 
+/** Base character */
 export default class Character extends GameObject {
 
     public get height() { return this._height; }    //Collision height of this character
@@ -103,6 +106,8 @@ export default class Character extends GameObject {
             this.animations[newIndex].forEach(a => this.parent.pushGO(a));
         });
     }
+
+    /** Initialize this character. Get brick handler & set the default state */
     public init() {
 
         // Get brickhandler for pressure checks
@@ -111,6 +116,8 @@ export default class Character extends GameObject {
         // Set active groups
         this.setStateIndex();
     }
+
+    /** Update this character */
     public update(dt: number) {
 
         //Normal movement
@@ -143,7 +150,7 @@ export default class Character extends GameObject {
         }
     }
 
-    /** Do nothing - override */
+    /** Special movement. Do nothing - override */
     protected handleSpecialMovement(dt: number) {
         
     }
@@ -173,7 +180,7 @@ export default class Character extends GameObject {
         this.brickHandler.isRecheck = true;
     }
 
-    /** Handle synchronized step movement */
+    /** Handle synchronized step movement. Do nothing - override */
     protected handleStep(isStart : boolean = false) {
         
     }
@@ -202,8 +209,9 @@ export default class Character extends GameObject {
         this.animationsCurr.forEach(x => x.setImageIndex(this.animationSubindex));
     }
 
-    /** Deactivate this gameObject */
+    /** Deactivate this character */
     public deactivate() {
+
         this.isActive = false;
         this.animations.forEach(sg => sg.forEach(s => s.isActive = false));
         this.underBricks.forEach(b => b.pressure -= 1);
@@ -232,11 +240,5 @@ export default class Character extends GameObject {
                 this.animationsCurr.forEach(s => s.reset(this.gpos));
             }
         }
-    }
-
-    /** */
-    public resolveCollisions(collisions : Collision[]) {
-        
-        super.resolveCollisions(collisions);
     }
 }

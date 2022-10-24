@@ -2,21 +2,22 @@ import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import { colorTranslate, getZIndex, GMULTX, GMULTY, MOBILE_PREVIEW_MAX, UNDER_CURSOR_Z_INDEX, Z_DEPTH } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 
+/** Stud parameters */
 interface StudParams extends GameObjectParams {
     color?: string;
 }
 
-/** Series of studs for a brick */
+/** Pair of studs for a brick */
 export default class Stud extends GameObject {
-    color: string;
 
-    image : HTMLImageElement;
-    private isPressed : boolean = false;
-    private isSelected : boolean = false;
-    private isSnapped : boolean = false;
-    public isVisible : boolean = true;
-    public mobilePreviewSize : Vect = new Vect(0, 0);
-    private isMobileFlipped : boolean = false;
+    private color: string;                              // Stud color
+    private image : HTMLImageElement;                   // Image of a pair of studs
+    private isPressed : boolean = false;                // Brick is pressed
+    private isSelected : boolean = false;               // Brick is selected
+    private isSnapped : boolean = false;                // Brick is snapped
+    public isVisible : boolean = true;                  // Stud is visible and should be drawn
+    public mobilePreviewSize : Vect = new Vect(0, 0);   // Size for mobile preview
+    private isMobileFlipped : boolean = false;          // flipped state for mobile preview
 
     /** Constructor */
     constructor(params: StudParams) {
@@ -26,6 +27,8 @@ export default class Stud extends GameObject {
 
         this.image = this.engine.library.getImage(`stud_${this.color.replace("#", "").toLowerCase()}`);
     }
+
+    /** Draw studs */
     public draw(ctx: CanvasRenderingContext2D): void {
 
         if (this.isVisible) {
@@ -42,6 +45,7 @@ export default class Stud extends GameObject {
         }
     }    
 
+    /** Draw mobile preview */
     public superDraw(ctx: CanvasRenderingContext2D): void {
 
         if (this.engine.mouse.getMouseType() == "mouse" ||
@@ -55,7 +59,7 @@ export default class Stud extends GameObject {
             Z_DEPTH - 13.5, 
             - GMULTY * (
                 this.isMobileFlipped ? 
-                -this.mobilePreviewSize.y - 3.2 :
+               -this.mobilePreviewSize.y - 3.2 :
                 this.mobilePreviewSize.y + 3.5 ));
     }
 

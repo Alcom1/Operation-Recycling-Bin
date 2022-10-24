@@ -2,7 +2,7 @@ import { Collider } from "engine/modules/collision";
 import { MASKS } from "engine/utilities/math";
 import BrickTileTop, { BrickTileTopParams } from "./bricktiletop";
 
-/** Parameters for a super brick */
+/** Specifications of a super brick */
 const brickSuperOverride = Object.freeze({
     images : ["brick_super_off", "brick_super"],
     imageTop : "brick_super_top"

@@ -5,7 +5,7 @@ import BrickHandler from "./brickhandler";
 import BrickTile, { BrickTileParams } from "./bricktile";
 import Character from "./character";
 
-/** Fan tile parameters */
+/** Specifications of a fan tile */
 const BrickTileFanOverride = Object.freeze({
     images : ["brick_tile", "brick_tile_fan"],
     width : 4

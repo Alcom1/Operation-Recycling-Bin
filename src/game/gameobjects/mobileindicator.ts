@@ -3,9 +3,14 @@ import { BOUNDARY, GMULTX, GMULTY, MOBILE_PREVIEW_MAX, round } from "engine/util
 import Vect, { Point }  from "engine/utilities/vect";
 import Brick from "./bricknormal";
 
+/** Selection indicator for mobile devices */
 export default class MobileIndicator extends GameObject {
+    
+    /** Position offset of the indicator */
     private mobileOffset : Vect = new Vect(0, 0);
+    /** If selection is snapped */
     private isSnapped : boolean = false;
+    /** If indicator is flipped to fit in window */
     private isFlipped : boolean = false;
 
     /** Boundary offset for minimum carried position */
@@ -29,14 +34,19 @@ export default class MobileIndicator extends GameObject {
 
         this.isActive = false;
     }
+
+    /** initialize */
     public init(ctx: CanvasRenderingContext2D) {
         
         this.bricks = this.engine.tag.get(  // Get bricks from scene
             "Brick", 
             "Level") as Brick[];
     }    
+
+    /** Update the indicator to match mouse position. */
     public update(dt: number) {
 
+        //Get mouse position, clamped within level borders.
         this.spos = this.engine.mouse.getPos().getSub(this.mobileOffset).getClamp({
             // Clamp above minimum-x position
             x: (BOUNDARY.minx) * GMULTX,
@@ -57,9 +67,12 @@ export default class MobileIndicator extends GameObject {
             });
         }
 
-        this.isFlipped = this.spos.y < GMULTY * (this.box.y + 5);
-        this.bricks.filter(b => b.isSelected).forEach(b => b.flipMobile(this.isFlipped));
+        //Flip check
+        this.isFlipped = this.spos.y < GMULTY * (this.box.y + 5);                           //Flip if mouse is too high
+        this.bricks.filter(b => b.isSelected).forEach(b => b.flipMobile(this.isFlipped));   //Flip all bricks
     }
+    
+    /** Draw this preview */
     public draw(ctx: CanvasRenderingContext2D) {
         
         if (this.engine.mouse.getMouseType() == "mouse" ||
@@ -107,6 +120,8 @@ export default class MobileIndicator extends GameObject {
         ctx.shadowColor = "rgba(0, 0, 0, 0)";
         ctx.stroke();
     }
+    
+    /** Set selection boundaries */
     public setMinMax(min: Vect, max: Vect): void {
 
         //Activate
@@ -121,6 +136,8 @@ export default class MobileIndicator extends GameObject {
             y : min.y * GMULTY
         });
     }
+    
+    /** Set snapped state (should be a setter?) */
     public snap(state : boolean) {
 
         this.isSnapped = state;

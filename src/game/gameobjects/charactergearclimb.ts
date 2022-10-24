@@ -16,6 +16,7 @@ enum VertState {
     DOWN
 }
 
+/** Specifications of a climb character */
 const CharacterGearClimbOverride = Object.freeze({
     height: 2,
     speed : 3.0,
@@ -47,6 +48,7 @@ const CharacterGearClimbOverride = Object.freeze({
     }]
 });
 
+/** A New Kind of Gearbot!  */
 export default class CharacterGearClimb extends CharacterGear {
     
     private vertMax :   number = 3;                 //Maximum vertical climb height */

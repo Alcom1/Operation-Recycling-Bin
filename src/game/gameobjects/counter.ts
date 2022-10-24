@@ -2,12 +2,12 @@ import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import { GMULTX } from "engine/utilities/math";
 import LevelSequence from "./levelsequence";
 
-//Counter parameters
+/** Counter parameters */
 interface CounterParams extends GameObjectParams {
     fontFamily?: string;
 }
 
-//Counter that keeps track of the move count 
+/** Counter that keeps track of the move count */
 export default class Counter extends GameObject {
     private count : number = 0;         //Current count */
     private fontFamily: string = "";    //Font for count display */
