@@ -37,7 +37,7 @@ export default class CharacterGear extends Character {
         this.isStep = true;
         this.storedCbm = 0;
 
-        if(!isStart) {
+        if (!isStart) {
             this.updatePosition();
         }
 
@@ -52,7 +52,7 @@ export default class CharacterGear extends Character {
         }
 
         //Ceiling boundary
-        if(this.gpos.y - 2 < BOUNDARY.miny) {
+        if (this.gpos.y - 2 < BOUNDARY.miny) {
 
             this.storedCbm |= ring.roof;
         }
@@ -68,7 +68,7 @@ export default class CharacterGear extends Character {
     //Special collision resolving
     public resolveCollisions(collisions : Collision[]) {
 
-        if(this.isStep)
+        if (this.isStep)
         {
             this.isStep = false;                    //Reset step state
             super.resolveCollisions(collisions);    //Perform standard resolve to set bitmask for actual collisions
@@ -118,7 +118,7 @@ export default class CharacterGear extends Character {
             if (horzBlock) {
 
                 //Is ahead
-                if( diffRel.x > 0) {
+                if ( diffRel.x > 0) {
 
                     this.storedCbm |= ring.face;
                 }
@@ -132,7 +132,7 @@ export default class CharacterGear extends Character {
             if (vertBlock) {
 
                 //Is above
-                if(diffRel.y < 0) {
+                if (diffRel.y < 0) {
 
                     this.storedCbm |= ring.roof;
                 }
@@ -148,13 +148,13 @@ export default class CharacterGear extends Character {
                 Math.sign(otherChar.move.y) == -Math.sign(diff.y)) {
                  
                 //Is above
-                if(diffRel.y < 0) {
+                if (diffRel.y < 0) {
 
                     this.storedCbm |= ring.roof;
                 }
                 
                 //Is below
-                else if(diff.y > 0) {
+                else if (diff.y > 0) {
 
                     this.storedCbm |= ring.flor;
                 }

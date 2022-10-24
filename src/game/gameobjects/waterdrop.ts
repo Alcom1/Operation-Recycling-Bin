@@ -62,7 +62,7 @@ export default class WaterDrop extends Sprite {
     //Move waterdrop down.
     public update(dt : number) {
 
-        if(this.slipTimer < this.slipDuration) {
+        if (this.slipTimer < this.slipDuration) {
             this.slipTimer += dt;
             return;
         }
@@ -72,7 +72,7 @@ export default class WaterDrop extends Sprite {
 
         this.spos.y += dt * this.speed;
 
-        if(this.spos.y > GMULTY) {
+        if (this.spos.y > GMULTY) {
             this.spos.y -= GMULTY;
             this.gpos.y += 1;
 
@@ -94,7 +94,7 @@ export default class WaterDrop extends Sprite {
 
     //Draw only after slip animation ends
     public draw(ctx : CanvasRenderingContext2D) {
-        if(this.slipTimer >= this.slipDuration) {
+        if (this.slipTimer >= this.slipDuration) {
             super.draw(ctx);
         }
     }

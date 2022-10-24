@@ -88,7 +88,7 @@ export default class Cursor extends GameObject {
 
                     this.hoverBricks(this.spos);
 
-                } else if(this.state == CursorState.HOVER) {
+                } else if (this.state == CursorState.HOVER) {
 
                     // If pressing the brick returns true (Indeterminate state)
                     if (this.brickHandler.pressBricks(this.spos)) {
@@ -147,7 +147,7 @@ export default class Cursor extends GameObject {
     private selectBricks(dir: -1 | 1): void {
 
         // Initialize the selection. If doing so caused bricks to be carried, enter carry state
-        if(this.brickHandler.initSelection(this.ppos, dir)) {
+        if (this.brickHandler.initSelection(this.ppos, dir)) {
 
             this.carry();
         }  
@@ -156,7 +156,7 @@ export default class Cursor extends GameObject {
     /** Set cursor to no state */
     private resetState(): void {
 
-        if(this.state != CursorState.NONE) {
+        if (this.state != CursorState.NONE) {
 
             this.cursorIcon.setCursor(CursorIconState.NONE);
             // Ensure no brick is selected in the NONE state
@@ -193,7 +193,7 @@ export default class Cursor extends GameObject {
     /** Set the cursor to its drag state */
     private drag(): void {
 
-        if(this.state != CursorState.DRAG) {
+        if (this.state != CursorState.DRAG) {
 
             this.cursorIcon.setCursor(CursorIconState.DRAG);
             this.brickHandler.cullBrickStuds();

@@ -123,7 +123,7 @@ export default class Brick extends GameObject {
     public getGOZIndex() : number {
 
         // Set z-index to draw this brick in its snapped position
-        if(this.isSnapped) {
+        if (this.isSnapped) {
             return getZIndex(
                 this.gpos.getAdd({
                     x : Math.round(this.spos.x / GMULTX),
@@ -132,7 +132,7 @@ export default class Brick extends GameObject {
                 this.width * 10);
         }        
         // Set z-index to draw this brick under the cursor
-        if(this.isSelected) {
+        if (this.isSelected) {
             return UNDER_CURSOR_Z_INDEX;
         }
         //Normal z-index
@@ -216,7 +216,7 @@ export default class Brick extends GameObject {
         this.isSnapped = state;
 
         // Reposition for unsnapped state to fix 1-frame jump on pickup
-        if(!this.isSnapped) {            
+        if (!this.isSnapped) {            
             this.setToCursor();
         }
     }

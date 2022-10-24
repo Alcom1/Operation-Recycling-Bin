@@ -78,7 +78,7 @@ export default class BrickHandlerDebug extends BrickHandler {
                 //Check each brick int his row.
                 row.forEach(brick => {
 
-                    if(col1D(
+                    if (col1D(
                         brick.gpos.x - 1, 
                         brick.gpos.x + brick.width,
                         check,

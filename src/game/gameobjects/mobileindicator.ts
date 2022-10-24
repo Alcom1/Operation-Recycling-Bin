@@ -76,7 +76,7 @@ export default class MobileIndicator extends GameObject {
             GMULTY * this.box.y / 2 - 15);
 
         //Rotate if cursor is too high
-        if(this.isFlipped) {
+        if (this.isFlipped) {
             ctx.rotate(Math.PI);
         }
 

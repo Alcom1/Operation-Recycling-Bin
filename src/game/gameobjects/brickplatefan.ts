@@ -60,7 +60,7 @@ export default class BrickPlateFan extends BrickPlate {
         //Set animations
         this.beams.forEach((y, x) => {
             this.animations.forEach(a => {
-                if(a.gpos.x == this.gpos.x + x + 1) {
+                if (a.gpos.x == this.gpos.x + x + 1) {
                     a.isVisible = this.isOn && a.gpos.y >= y
                 }
             });

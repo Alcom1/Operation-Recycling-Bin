@@ -22,7 +22,7 @@ export default class BrickPipe extends BrickPlate {
     update(dt : number) {
         this.timer += dt;
 
-        if(this.timer > this.rate) {
+        if (this.timer > this.rate) {
             this.timer = 0;
             this.drop.reset(this.gpos);
         }

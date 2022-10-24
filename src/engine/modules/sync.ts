@@ -44,7 +44,7 @@ export default class SyncModule {
         });
 
         //Only add scene if it has collidables
-        if(gameObjects.length > 0) {
+        if (gameObjects.length > 0) {
 
             this.scenes.push({
                 name : sceneName,
@@ -57,7 +57,7 @@ export default class SyncModule {
     public update(dt : number) {
 
         //Do nothing if there are no scenes, stops updates before scenes load, stops early stutter
-        if(this.scenes.length == 0) {
+        if (this.scenes.length == 0) {
             return;
         }
         

@@ -32,14 +32,14 @@ export default class BrickJump extends BrickPlateTop {
 
     public update(dt : number) {
 
-        if(this.timer2 > 0) {
+        if (this.timer2 > 0) {
             this.timer2 -= dt;
         }
         else {
             this.timer2 = 0;
         }
 
-        if(this.timer > 0) {
+        if (this.timer > 0) {
             this.timer -= dt;
         }
         else {
@@ -52,7 +52,7 @@ export default class BrickJump extends BrickPlateTop {
     public isBlocked() : boolean {
 
         //Grey bricks probably shouldn't perform this check.
-        if(this.isGrey) {
+        if (this.isGrey) {
             return false;
         }
 

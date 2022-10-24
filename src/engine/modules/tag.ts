@@ -26,7 +26,7 @@ export default class TagModule {
         const curr = this.scenes.find(sg => sg.name == sceneName );
 
         // Store new scene or push gameObject to existing scene  
-        if(curr == null) {
+        if (curr == null) {
             
             this.scenes.push({
                 name : sceneName,

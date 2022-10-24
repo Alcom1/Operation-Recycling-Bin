@@ -63,8 +63,8 @@ export default class Scene {
     public update(dt: number) {
 
         //Update all game objects
-        if(this.initialized) {
-            this.gameObjects.forEach(go => { if(!go.isActive) { return; }
+        if (this.initialized) {
+            this.gameObjects.forEach(go => { if (!go.isActive) { return; }
                 go.update(dt)
             });
         }

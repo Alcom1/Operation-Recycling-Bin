@@ -30,7 +30,7 @@ export default class BrickPlateHot extends BrickPlate {
     
     //draw nothing
     public draw(ctx : CanvasRenderingContext2D) {
-        if(!this.isOn) {
+        if (!this.isOn) {
             super.draw(ctx);
         }
     }

@@ -115,12 +115,12 @@ export default class CharacterBot extends Character {
         super.update(dt);
 
         //Update armor flash
-        if(this.armorState == ArmorState.FLASH) {
+        if (this.armorState == ArmorState.FLASH) {
             this.timerArm += dt;
             this.animationsCurr.forEach(x => x.setImageIndex(this.animationSubindex));
 
             //Remove armor after a duration and reset timer
-            if(this.timerArm > this.armorDelay) {
+            if (this.timerArm > this.armorDelay) {
                 this.armorState = ArmorState.NONE;
                 this.timerArm = 0;
             }
@@ -151,7 +151,7 @@ export default class CharacterBot extends Character {
         }
 
         //If the current animation has ended
-        if(this.timerSpc > this.animationsCurr[0].duration) {
+        if (this.timerSpc > this.animationsCurr[0].duration) {
 
             //Reset timer
             this.timerSpc = 0;
@@ -219,7 +219,7 @@ export default class CharacterBot extends Character {
         this.handleBricks();    //Handle bricks now under this character
 
         //Go from air state to walking state.
-        if([3, 4].some(n => n == this.stateIndex)) {
+        if ([3, 4].some(n => n == this.stateIndex)) {
             this.setStateIndex(BotState.NORMAL);
         }
     }
@@ -228,7 +228,7 @@ export default class CharacterBot extends Character {
     private getCollisionVertical(dir : number) : boolean {
 
         //If moving upward and hit the ceiling, return true
-        if(dir > 0 && this.gpos.y <= this.height + 1) {
+        if (dir > 0 && this.gpos.y <= this.height + 1) {
             return true;
         }
 
@@ -290,18 +290,18 @@ export default class CharacterBot extends Character {
                 7);             //HEIGHT:  n + 3
 
             //WALL - REVERSE
-            if(cbm & gcb.wall) {
+            if (cbm & gcb.wall) {
                 this.reverse();
             }
             //HEAD-WALL - REVERSE
-            else if(cbm & gcb.head && cbm & gcb.flor) {
+            else if (cbm & gcb.head && cbm & gcb.flor) {
                 this.reverse();
             }
             //UP-STEP - GO UP
-            else if(cbm & gcb.step) {
+            else if (cbm & gcb.step) {
 
                 //BLOCKED BY CEILING
-                if(cbm & gcb.ceil || this.gpos.y <= BOUNDARY.miny + 3) {
+                if (cbm & gcb.ceil || this.gpos.y <= BOUNDARY.miny + 3) {
                     this.reverse();
                 }
                 else {
@@ -309,11 +309,11 @@ export default class CharacterBot extends Character {
                 }
             }
             //FLOOR - DO NOTHING
-            else if(cbm & gcb.flor) {
+            else if (cbm & gcb.flor) {
                 this.walkstep(0);
             }
             //DOWN-STEP - GO DOWN
-            else if(cbm & gcb.down) {
+            else if (cbm & gcb.down) {
                 this.walkstep(1);
             }
             //VOID - REVERSE
@@ -336,10 +336,10 @@ export default class CharacterBot extends Character {
     protected handleBrickCollisionVertical() {
         
         //There is an obstacle, stop based on its direction
-        if(this.getCollisionVertical(this.vertMult)) {
+        if (this.getCollisionVertical(this.vertMult)) {
 
             //If going upwards, collide with ceiling
-            if(this.vertMult > 0) {
+            if (this.vertMult > 0) {
                 this.spos.y = this.ceilSubOffset;   //Block vertical movement
                 this.animationsCurr.forEach(a => {  //Adjust animations to match
                     a.zModifierPub = 0;
@@ -381,12 +381,12 @@ export default class CharacterBot extends Character {
             3);             //Width
         
         //Collide face if we're past the first step
-        if(cbm & acb.face && (this.jumpIndex > 1)) {
+        if (cbm & acb.face && (this.jumpIndex > 1)) {
             this.startVertMovement();
             return;
         }
         //Collide head if not at the peak of the jump
-        else if((cbm & acb.head || this.gpos.y <= BOUNDARY.miny + 3) && this.jumpIndex < 1) {
+        else if ((cbm & acb.head || this.gpos.y <= BOUNDARY.miny + 3) && this.jumpIndex < 1) {
             this.startVertMovement();
             return;
         }
@@ -407,7 +407,7 @@ export default class CharacterBot extends Character {
         }
 
         //End of jump
-        if(this.jumpIndex > this.jumpHeights.length - 2) {
+        if (this.jumpIndex > this.jumpHeights.length - 2) {
             this.startVertMovement();
             return;
         }
@@ -435,7 +435,7 @@ export default class CharacterBot extends Character {
     public setStateIndex(index? : number) {
 
         //Only set state if it's different from the current
-        if(this.stateIndex != index) {
+        if (this.stateIndex != index) {
 
             this.timerSpc = 0;          //Timer reset incase we cancelled a previous animation
             super.setStateIndex(index); //Set index
@@ -447,12 +447,12 @@ export default class CharacterBot extends Character {
 
         super.updateSync(step, loopLength);
 
-        if(step.stepType == StepType.FRAME) {
+        if (step.stepType == StepType.FRAME) {
 
             switch(this.stateIndex) {
 
                 case BotState.BOUNCE :
-                    if(Math.abs(this.spos.x) > GMULTX) {
+                    if (Math.abs(this.spos.x) > GMULTX) {
                         this.gpos.x += this.move.x;
                         this.spos.x -= this.move.x * GMULTX;
                         this.spos.y = 0;
@@ -464,7 +464,7 @@ export default class CharacterBot extends Character {
                     break;
 
                 case BotState.FLYING :
-                    if(Math.abs(this.spos.y) > GMULTY) {
+                    if (Math.abs(this.spos.y) > GMULTY) {
                         this.gpos.y += Math.sign(this.spos.y)
                         this.spos.y -= Math.sign(this.spos.y) * GMULTY;
                     }
@@ -490,11 +490,11 @@ export default class CharacterBot extends Character {
         else if (mask & MASKS.death && this.stateIndex != 2) {
 
             //Start or continue flash after taking armor damage
-            if(this.armorState == ArmorState.ACTIVE) {
+            if (this.armorState == ArmorState.ACTIVE) {
                 this.armorState = ArmorState.FLASH
             }
             //If unarmored, die.
-            else if(this.armorState == ArmorState.NONE) {
+            else if (this.armorState == ArmorState.NONE) {
                 this.setStateIndex(BotState.HAZARD);
             }
         }

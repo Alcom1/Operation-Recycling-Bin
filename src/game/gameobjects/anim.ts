@@ -83,7 +83,7 @@ export default class Anim extends GameObject {
                 this.imageIndex = 1;
                 OPPOSITE_DIRS.forEach(d => {
                     const index = Math.max(d, 0);
-                    if(params.images[index]) {
+                    if (params.images[index]) {
                         this.images[d] = this.getImage(params.images[index]);
                     }
                 });
@@ -122,7 +122,7 @@ export default class Anim extends GameObject {
         }
 
         //Default frame size based on the image size and number of frames
-        if(!this.framesSize) {
+        if (!this.framesSize) {
             this.framesSize = (this.isVert ? this.fullSize.y : this.fullSize.x) * this.animsCount / this.frameCount
         }
     }
@@ -131,12 +131,12 @@ export default class Anim extends GameObject {
     public update(dt: number) {
 
         //For all moving animations
-        if(this.speed > 0) {
+        if (this.speed > 0) {
 
             //Increment timer by delta-time
             this.timer += dt;
     
-            if(this.isLoop && this.timer > 1 / this.speed) {
+            if (this.isLoop && this.timer > 1 / this.speed) {
 
                 this.timer -= 1 / this.speed;   //May cause frame skipping
             }
@@ -147,12 +147,12 @@ export default class Anim extends GameObject {
     public reset(gpos? : Vect, isTimerReset : boolean = true) {
 
         //Reset gpos if available
-        if(gpos) { 
+        if (gpos) { 
             this.gpos = gpos.getAdd(this.gposOffset); 
         }
 
         //Reset timer
-        if(isTimerReset) {
+        if (isTimerReset) {
             this.timer = 0;
             this.animsIndex = ++this.animsIndex % this.animsCount;
         }
@@ -172,15 +172,15 @@ export default class Anim extends GameObject {
     public setImageIndex(index : number) {
 
         //This animation has many images
-        if(this.images[index]) {
+        if (this.images[index]) {
             this.imageIndex = index;
         }
         //This animation has 2 images
-        else if(this.images[Math.sign(index)]) {
+        else if (this.images[Math.sign(index)]) {
             this.imageIndex = Math.sign(index);
         }
         //This animation has 1 image
-        else if(this.images[0]) {
+        else if (this.images[0]) {
             this.imageIndex = 0;
         }
     }
@@ -189,7 +189,7 @@ export default class Anim extends GameObject {
     public draw(ctx : CanvasRenderingContext2D) {
 
         //Stop if this animation is not visible
-        if(!this.isVisible) {
+        if (!this.isVisible) {
             return;
         }
 
@@ -243,7 +243,7 @@ export default class Anim extends GameObject {
     private getAnimationOffset(checkVert : boolean) : number {
 
         //If the animation direction matches the checked direction, return an animation offset, 0 otherwise.
-        if(checkVert == this.isVert) {
+        if (checkVert == this.isVert) {
 
             const fullSize = this.isVert ? this.fullSize.y : this.fullSize.x;
 

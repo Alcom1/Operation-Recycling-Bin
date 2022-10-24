@@ -98,7 +98,7 @@ export default class CharacterGearClimb extends CharacterGear {
     protected updatePosition() {
 
         //Don't update position for special states (WAIT, HALT, etc)
-        if(this.stateIndex != ClimbState.NORMAL) {
+        if (this.stateIndex != ClimbState.NORMAL) {
             return;
         }
 
@@ -187,7 +187,7 @@ export default class CharacterGearClimb extends CharacterGear {
             this.setStateIndex(ClimbState.WAIT);
         }
         //No back wall, go back
-        else if(!this.isColBack) {
+        else if (!this.isColBack) {
             this.setNormalState();
             this.reverse();
         }
@@ -200,7 +200,7 @@ export default class CharacterGearClimb extends CharacterGear {
     //Downward BACK -> UP -> HALT check
     private resolveCollisionsDown() {
 
-        if(!this.isColBack) {
+        if (!this.isColBack) {
             this.setNormalState();
             this.reverse();
         }
@@ -218,16 +218,16 @@ export default class CharacterGearClimb extends CharacterGear {
     private resolveCollisionUp() {
 
         //Land
-        if(!this.isColFace && this.isColLand) {
+        if (!this.isColFace && this.isColLand) {
             this.setNormalState();
         }
         //Backwards land
-        else if(!this.isColBack && this.isColBand) {
+        else if (!this.isColBack && this.isColBand) {
             this.setNormalState();
             this.reverse();
         }
         //Continue upwards
-        else if(!this.isColRoof && this.vertCount < this.vertMax) {
+        else if (!this.isColRoof && this.vertCount < this.vertMax) {
             //Here be dragons!
         }
         //Default to standard if there's no land, band, or continue

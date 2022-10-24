@@ -121,7 +121,7 @@ export default class Engine {
         this.pushSceneNames = [];
 
         // Scene actions
-        if(this.library.getLoaded()) {
+        if (this.library.getLoaded()) {
             this.initScenes();
             this.updateDrawScenes(this.scenesActive, dt);
         }
@@ -148,7 +148,7 @@ export default class Engine {
         scenes.forEach(s => s.superDraw(this.ctx));
 
         //Debug views
-        if(this.debug) {
+        if (this.debug) {
             this.collision.draw(this.ctx);
         }
     }
@@ -165,7 +165,7 @@ export default class Engine {
 
         const sceneData = this.sceneDatas.find(s => s.scene.tag == sceneName);
 
-        if(sceneData) {
+        if (sceneData) {
 
             const scene = new Scene(this, sceneData.scene);
 
@@ -238,7 +238,7 @@ export default class Engine {
      * @param sceneName Scene name of scene to unload
      */
     private killScene(sceneName: string): void {
-        if(!this.killSceneNames.includes(sceneName)) {
+        if (!this.killSceneNames.includes(sceneName)) {
             this.killSceneNames.push(sceneName);
         }
     }

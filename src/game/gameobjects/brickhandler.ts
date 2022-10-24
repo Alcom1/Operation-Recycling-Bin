@@ -70,7 +70,7 @@ export default class BrickHandler extends GameObject {
             var b2 = r.bricks[i - 1];
 
             // If this brick overlaps with the previous, log it.
-            if(i > 0 && col1D(
+            if (i > 0 && col1D(
                 b1.gpos.x, b1.gpos.x + b1.width, 
                 b2.gpos.x, b2.gpos.x + b2.width)) {
                 console.log(`OVERLAPPING BRICK AT {"x" : ${b1.gpos.x}, "y" : ${r.row}}`);
@@ -192,7 +192,7 @@ export default class BrickHandler extends GameObject {
 
             for (const brick of this.rows.find(r => r.row == pos.y + y + 1)?.bricks.filter(b => !b.isSelected) || []) {
 
-                if(col1D(
+                if (col1D(
                     brick.gpos.x - 1, 
                     brick.gpos.x + brick.width, 
                     pos.x + x * dir,
@@ -227,7 +227,7 @@ export default class BrickHandler extends GameObject {
                 //Check each brick int his row.
                 row.forEach(brick => {
 
-                    if(col1D(
+                    if (col1D(
                         brick.gpos.x - 1, 
                         brick.gpos.x + brick.width,
                         check,
@@ -251,7 +251,7 @@ export default class BrickHandler extends GameObject {
 
         for (const brick of this.rows.find(r => r.row == pos.y)?.bricks.filter(b => !b.isSelected) || []) {
 
-            if(col1D(
+            if (col1D(
                 brick.gpos.x, 
                 brick.gpos.x + brick.width, 
                 pos.x,
@@ -332,7 +332,7 @@ export default class BrickHandler extends GameObject {
         const currRow = this.rows.find(r => r.row == brick.gpos.y);
 
         // Create a new row or add a brick to the existing row
-        if(currRow == null) {
+        if (currRow == null) {
             this.rows.push({
                 row : brick.gpos.y, // Assign its first brick's position to the new row
                 bricks : [brick]
@@ -379,8 +379,7 @@ export default class BrickHandler extends GameObject {
 
         // Top and side face check
         for (var brick of this.bricks) {
-            if (
-                // Top Face - if position is over this face
+            if (// Top Face - if position is over this face
                 colPointParHGrid(
                     pos.x,
                     pos.y,
@@ -423,12 +422,12 @@ export default class BrickHandler extends GameObject {
             let selectionNew = this.recurseBrick(brick, [dir], true) ?? [];
 
             // If there are bricks to select
-            if(selectionNew!.length > 0) {
+            if (selectionNew!.length > 0) {
 
                 let floats = this.getFloatingBricks();
 
                 // If every floating brick
-                if(floats.every(b => b.pressure == 0)) {
+                if (floats.every(b => b.pressure == 0)) {
 
                     this.selections[dir] = selectionNew.concat(floats);
                 }

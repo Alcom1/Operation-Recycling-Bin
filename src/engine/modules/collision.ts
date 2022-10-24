@@ -38,13 +38,13 @@ export default class CollisionModule {
             
             gameObjects.push(go);
 
-            if(colliders.some(c => c.mask == 0)) {
+            if (colliders.some(c => c.mask == 0)) {
                 passObjects.push(go);
             }
         });
 
         //Only add scene if it has collidables
-        if(gameObjects.length > 0 || passObjects.length > 0) {
+        if (gameObjects.length > 0 || passObjects.length > 0) {
 
             this.scenes.push({
                 name : sceneName,
@@ -90,7 +90,7 @@ export default class CollisionModule {
             s.gameObjects.filter(go => go.isActive).forEach(go =>
                 go.getColliders().forEach(c => {
 
-                    if(c.isSub) {
+                    if (c.isSub) {
                         ctx.strokeStyle = '#000'
                         ctx.strokeRect(
                             c.min.x,
@@ -141,7 +141,7 @@ export default class CollisionModule {
 
     //Check & resolve collision between two colliders
     private compareGOPair(c1 : Collider, c2 : Collider, g1 : GameObject, g2 : GameObject) {
-        if((c1.mask & c2.mask) && this.compareColliders(c1, c2)) {
+        if ((c1.mask & c2.mask) && this.compareColliders(c1, c2)) {
             g1.setCollision(c1.mask & c2.mask, g2);
             g2.setCollision(c1.mask & c2.mask, g1);
         }
@@ -151,7 +151,7 @@ export default class CollisionModule {
     private compareColliders(c1 : Collider, c2 : Collider) : boolean {
 
         //Collider subtypes match. No need to convert
-        if(c1.isSub == c2.isSub) {
+        if (c1.isSub == c2.isSub) {
             return colRectRectCorners(
                 c1.min, 
                 c1.max, 

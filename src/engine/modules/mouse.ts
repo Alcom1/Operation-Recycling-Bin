@@ -63,7 +63,7 @@ export default class MouseModule {
             return MouseState.WASPRESSED;                       // Mouse was pressed this frame
         } else if (this.mousePressed) {                         // If mouse is pressed and afterPressed is same
             return MouseState.ISPRESSED;                        // Mouse is currently pressed
-        } else if(!this.mousePressed && this.afterPressed) {    // If mouse is released and afterPressed is different
+        } else if (!this.mousePressed && this.afterPressed) {   // If mouse is released and afterPressed is different
             return MouseState.WASRELEASED;                      // Mouse was released this frame
         } else {                                                // If mouse is released and afterPressed is same
             return MouseState.ISRELEASED;                       // Mouse is currently released

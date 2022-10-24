@@ -43,7 +43,7 @@ export default class BrickNormal extends Brick {
         
         //Get image for each brick sprite key
         this.brickSpriteKeys.forEach((needsGrey, spriteKey) => {
-            if(!needsGrey || this.isGrey) { //Check if the key is grey-brick exclusive
+            if (!needsGrey || this.isGrey) {    //Check if the key is grey-brick exclusive
                 this.brickSprites.set(
                     spriteKey, 
                     this.engine.library.getImage(`brick_${spriteKey}_${this.color.replace("#", "").toLowerCase()}`));
@@ -149,7 +149,7 @@ export default class BrickNormal extends Brick {
             // Set stud sub pos to match this brick
             stud.spos.set(this.spos);
             // Deselect this stud
-            if(isDeselect) {
+            if (isDeselect) {
                 stud.deselect();
             }
         }

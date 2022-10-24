@@ -137,7 +137,7 @@ export default class Character extends GameObject {
         }
         
         // Glide characters move gradually, continously set the animation to match its subposition
-        if(this.isGlide) {
+        if (this.isGlide) {
             this.animationsCurr.forEach(a => {
                 a.spos = this.spos;
             });
@@ -156,7 +156,7 @@ export default class Character extends GameObject {
         this.underBricks.forEach(b => b.pressure -= 1);
 
         //Reset underbricks if we are clearing unconditionally.
-        if(isClear) {
+        if (isClear) {
             this.underBricks = [];
         }
         //Otherwise, get a new set.
@@ -186,7 +186,7 @@ export default class Character extends GameObject {
         this.animations[0].forEach(x => x.setImageIndex(this.animationSubindex));   //Establish sprites for new direction
         
         //If gliding force-reset the sprite to match its current position
-        if(this.isGlide) {
+        if (this.isGlide) {
             this.animationsCurr.forEach(a => a.reset(this.gpos));
         }
     }
@@ -215,13 +215,13 @@ export default class Character extends GameObject {
     public updateSync(step : Step, loopLength : number) {
 
         //Special start-step for gliders. Used for when nearby geometry must be detected.
-        if(step.stepType == StepType.START && this.isGlide) {
+        if (step.stepType == StepType.START && this.isGlide) {
     
             this.handleStep(true);
         }
 
         //The step matches this character's speed, perform an update
-        if(step.stepType == StepType.SYNC && step.counter % (loopLength / this.speed) == 0) {
+        if (step.stepType == StepType.SYNC && step.counter % (loopLength / this.speed) == 0) {
 
             this.spos = Vect.zero;
     
@@ -229,7 +229,7 @@ export default class Character extends GameObject {
             this.handleBricks();
 
             //Normal movement and all gliding movement demands a grid-position reset for all animations
-            if(this.isNormalMovment || this.isGlide) {
+            if (this.isNormalMovment || this.isGlide) {
                 this.animationsCurr.forEach(s => s.reset(this.gpos));
             }
         }

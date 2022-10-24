@@ -29,7 +29,7 @@ export default class Stud extends GameObject {
 
     public draw(ctx: CanvasRenderingContext2D): void {
 
-        if(this.isVisible) {
+        if (this.isVisible) {
             
             // Global transparency for selection states
             ctx.globalAlpha =
@@ -64,7 +64,7 @@ export default class Stud extends GameObject {
     public getGOZIndex() : number {
 
         // Set z-index to draw this brick in its snapped position
-        if(this.isSnapped) {
+        if (this.isSnapped) {
             return getZIndex(
                 this.gpos.getAdd({
                     x : Math.round(this.spos.x / GMULTX),
@@ -73,7 +73,7 @@ export default class Stud extends GameObject {
                 1);
         }        
         // Set z-index to draw this brick under the cursor
-        if(this.isSelected) {
+        if (this.isSelected) {
             return UNDER_CURSOR_Z_INDEX;
         }
         //Normal z-index
