@@ -14,14 +14,14 @@ import LevelSequence from "./gameobjects/levelsequence";
 import MobileIndicator from "./gameobjects/mobileindicator";
 import Sprite from "./gameobjects/sprite";
 import BrickNormal from "game/gameobjects/bricknormal";
-import BrickPlateHot from "./gameobjects/brickplatehot";
-import BrickPlateFan from "./gameobjects/brickplatefan";
-import BrickSuper from "./gameobjects/bricksuper";
+import BrickTileHot from "./gameobjects/bricktilehot";
+import BrickTileFan from "./gameobjects/bricktilefan";
+import BrickSuper from "./gameobjects/bricktilesuper";
 import BrickPipe from "./gameobjects/brickpipe";
 import BrickJump from "./gameobjects/brickjump";
 import BrickHandlerDebug from "./gameobjects/brickhandlerdebug";
 import BrickJumpMove from "./gameobjects/brickjumpmove";
-import BrickPlateButton from "./gameobjects/brickplatebutton";
+import BrickTileButton from "./gameobjects/bricktilebutton";
 import CharacterRBG from "./gameobjects/charactergearclimb";
 import CharacterRBC from "./gameobjects/charactergearground";
 
@@ -42,9 +42,9 @@ window.onload = function() {
             BrickJumpMove,
             BrickNormal,
             BrickPipe,
-            BrickPlateButton,
-            BrickPlateFan,
-            BrickPlateHot,
+            BrickTileButton,
+            BrickTileFan,
+            BrickTileHot,
             BrickSuper,
             Button,
             ButtonScene,

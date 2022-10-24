@@ -2,23 +2,23 @@ import { Collider } from "engine/modules/collision";
 import { MASKS, Z_DEPTH } from "engine/utilities/math";
 import Anim, { AnimationParams } from "./anim";
 import BrickHandler from "./brickhandler";
-import BrickPlate, { BrickPlateParams } from "./brickplate";
+import BrickTile, { BrickTileParams } from "./bricktile";
 import Character from "./character";
 
-const brickPlateFanOverride = Object.freeze({
+const BrickTileFanOverride = Object.freeze({
     images : ["brick_plate", "brick_plate_fan"],
     width : 4
 });
 
-export default class BrickPlateFan extends BrickPlate {
+export default class BrickTileFan extends BrickTile {
     private brickHandler!: BrickHandler;
     private animations: Anim[] = [];
     private beams: number[] = [];
     private characters: Character[] = [];
 
     /** Constructor */
-    constructor(params: BrickPlateParams) {
-        super(Object.assign(params, brickPlateFanOverride));
+    constructor(params: BrickTileParams) {
+        super(Object.assign(params, BrickTileFanOverride));
 
         //Going up to the ceiling
         for(let j = this.gpos.y - 1; j > 0; j--) {

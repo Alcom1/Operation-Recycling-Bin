@@ -1,28 +1,28 @@
 import { Collider } from "engine/modules/collision";
 import { MASKS } from "engine/utilities/math";
-import BrickPlate, { BrickPlateParams } from "./brickplate";
+import BrickTile, { BrickTileParams } from "./bricktile";
 
 const brickButtonOverride = Object.freeze({
     images : ["brick_button_off", "brick_button_on"],
     width : 2
 });
 
-export default class BrickPlateButton extends BrickPlate {
+export default class BrickTileButton extends BrickTile {
 
-    plates: BrickPlate[] = [];
+    plates: BrickTile[] = [];
     private isLock : boolean = false;   //If this button is locked and can't be flipped again */
     private isLeft : boolean = false;   //If the presser of this button left and it *can* be flipped again
 
     /** Constructor */
-    constructor(params: BrickPlateParams) {
+    constructor(params: BrickTileParams) {
         super(Object.assign(params, brickButtonOverride));
     }
     public init() {
 
         //Get plates affected by this button (also includes self?)
         this.plates = (this.engine.tag.get(
-            "BrickPlate", 
-            "Level") as BrickPlate[]).filter(p => p.circuit == this.circuit);
+            "BrickTile", 
+            "Level") as BrickTile[]).filter(p => p.circuit == this.circuit);
     }
 
     /** Update timer */

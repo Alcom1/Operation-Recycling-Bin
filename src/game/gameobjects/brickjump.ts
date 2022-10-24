@@ -1,8 +1,8 @@
 import { Collider } from "engine/modules/collision";
 import { MASKS } from "engine/utilities/math";
 import BrickHandler from "./brickhandler";
-import { BrickPlateParams } from "./brickplate";
-import BrickPlateTop from "./brickplatetop";
+import { BrickTileParams } from "./bricktile";
+import BrickTileTop from "./bricktiletop";
 
 const brickJumpOverride = Object.freeze({
     images : ["brick_jump_up", "brick_jump"],
@@ -10,17 +10,21 @@ const brickJumpOverride = Object.freeze({
     isOnShowTop : false
 });
 
-export default class BrickJump extends BrickPlateTop {
+/** Jump brick, has an extra plate on top for the jump animation */
+export default class BrickJump extends BrickTileTop {
+
     private brickHandler!: BrickHandler;
-    private timer : number = 0;
-    private offDuration : number = 0.1;
-    private timer2 : number = 0;
-    private offDuration2 : number = 1.2;
+    private timer : number = 0;             //Timer 1 for jump animation
+    private timerDuration : number = 0.1;   //Timer 1 duration
+    private timer2 : number = 0;            //Timer 2 for jump cooldown
+    private timer2Duration : number = 1.2;  //Timer 2 duration
 
     /** Constructor */
-    constructor(params: BrickPlateParams) {
+    constructor(params: BrickTileParams) {
         super(Object.assign({}, brickJumpOverride, params));
     }
+
+    /** Initialize Jump Brick */
     public init() {
 
         //Get brick handler to to check if this jump is blocked by other bricks
@@ -28,21 +32,25 @@ export default class BrickJump extends BrickPlateTop {
             "BrickHandler", 
             "LevelInterface")[0] as BrickHandler;
     }
+
+    /** Update jump brick for timer */
     public update(dt : number) {
 
-        if (this.timer2 > 0) {
-            this.timer2 -= dt;
-        }
-        else {
-            this.timer2 = 0;
-        }
-
+        //Update Timer
         if (this.timer > 0) {
             this.timer -= dt;
         }
         else {
             this.timer = 0;
             this.setOnOff(true);
+        }
+
+        //Update Timer 2
+        if (this.timer2 > 0) {
+            this.timer2 -= dt;
+        }
+        else {
+            this.timer2 = 0;
         }
     }
 
@@ -80,11 +88,11 @@ export default class BrickJump extends BrickPlateTop {
     /** Turn off */
     public resolveCollision(mask : number) {
 
-        //Turn off
+        //Turn off when a jump is triggered
         if (mask & MASKS.jumps) {
             this.setOnOff(false);
-            this.timer = this.offDuration;
-            this.timer2 = this.offDuration2;
+            this.timer = this.timerDuration;
+            this.timer2 = this.timer2Duration;
         }
     }
 }

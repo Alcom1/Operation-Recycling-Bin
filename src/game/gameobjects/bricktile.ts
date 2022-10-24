@@ -1,22 +1,25 @@
 import { Collider } from "engine/modules/collision";
 import Brick, { BrickParams } from "./brick";
 
-export interface BrickPlateParams extends BrickParams {
+/** Parameters for a plate */
+export interface BrickTileParams extends BrickParams {
     isOn?: boolean;     //If the plate starts on or off
     images: string[];   //Images for the plate on/off states
     circuit: number;    //Circuit number that turns the plate on/off
 }
 
-export default class BrickPlate extends Brick {
+/** */
+export default class BrickTile extends Brick {
+
     protected isOn : boolean = false;
     protected images : HTMLImageElement[];
     public circuit : number;
 
     /** Constructor */
-    constructor(params: BrickPlateParams) {
+    constructor(params: BrickTileParams) {
         super(params);
 
-        this.tags.push("BrickPlate");
+        this.tags.push("BrickTile");
 
         this.images = params.images.map(i => i ? this.engine.library.getImage(i) : {} as HTMLImageElement);
 

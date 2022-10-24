@@ -1,19 +1,19 @@
 import { Point } from "engine/utilities/vect";
-import BrickPlate, { BrickPlateParams } from "./brickplate";
+import BrickTile, { BrickTileParams } from "./BrickTile";
 import Sprite, { SpriteParams } from "./sprite";
 
-export interface BrickPlateTopParams extends BrickPlateParams {
+export interface BrickTileTopParams extends BrickTileParams {
     imageTop : string
     isOnShowTop? : boolean
 }
 
 //Brick with a top sprite, like a jump
-export default class BrickPlateTop extends BrickPlate {
+export default class BrickTileTop extends BrickTile {
     private topSprite : Sprite;             //The sprite to be shown on top of this brick */
     private isOnShowTop : boolean = true;   //If the top sprite should be active for the ON or OFF state.
 
     /** Constructor */
-    constructor(params: BrickPlateTopParams) {
+    constructor(params: BrickTileTopParams) {
         super(Object.assign(params, { width : 2 }));
 
         //Create top sprite

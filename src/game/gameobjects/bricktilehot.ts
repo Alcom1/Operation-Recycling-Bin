@@ -1,19 +1,19 @@
 import { Collider } from "engine/modules/collision";
 import { MASKS } from "engine/utilities/math";
 import Anim, { AnimationParams } from "./anim";
-import BrickPlate, { BrickPlateParams } from "./brickplate";
+import BrickTile, { BrickTileParams } from "./bricktile";
 
-const brickPlateHotOverride = Object.freeze({
+const BrickTileHotOverride = Object.freeze({
     images : ["brick_plate", "brick_plate_hot"],
     width : 4
 });
 
-export default class BrickPlateHot extends BrickPlate {
+export default class BrickTileHot extends BrickTile {
     private animation: Anim;
 
     /** Constructor */
-    constructor(params: BrickPlateParams) {
-        super(Object.assign(params, brickPlateHotOverride));
+    constructor(params: BrickTileParams) {
+        super(Object.assign(params, BrickTileHotOverride));
 
         this.animation = this.parent.pushGO(new Anim({
             ...params,

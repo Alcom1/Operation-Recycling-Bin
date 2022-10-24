@@ -1,16 +1,16 @@
 import { Collider } from "engine/modules/collision";
 import { MASKS } from "engine/utilities/math";
-import BrickPlateTop, { BrickPlateTopParams } from "./brickplatetop";
+import BrickTileTop, { BrickTileTopParams } from "./bricktiletop";
 
 const brickSuperOverride = Object.freeze({
     images : ["brick_super_off", "brick_super"],
     imageTop : "brick_super_top"
 });
 
-export default class BrickSuper extends BrickPlateTop {
+export default class BrickTileSuper extends BrickTileTop {
 
     /** Constructor */
-    constructor(params: BrickPlateTopParams) {
+    constructor(params: BrickTileTopParams) {
         super(Object.assign(params, brickSuperOverride));
     }
 

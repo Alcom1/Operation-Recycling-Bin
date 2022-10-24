@@ -3,6 +3,7 @@ import Vect, { Point } from "engine/utilities/vect";
 import Brick, { BrickParams } from "./brick";
 import Stud from "./stud";
 
+/** Ordinary brick with studs */
 export default class BrickNormal extends Brick {
 
     /** The stud objects for this brick */
@@ -112,10 +113,12 @@ export default class BrickNormal extends Brick {
     /** Hide this brick's studs based on a given above row */
     public hideStuds(rowBricks: Brick[]) {
 
+        // For each stud
         this.studs.forEach(s => {
 
-            s.isVisible = true;
+            s.isVisible = true;             // Default to visible
 
+            //For each brick in the above row
             for (const brick of rowBricks) {
                 
                 if (!brick.isSelected &&    // Don't cull based on selected bricks
@@ -127,7 +130,7 @@ export default class BrickNormal extends Brick {
                         s.gpos.x
                     )) {
 
-                    s.isVisible = false;
+                    s.isVisible = false;    // Hide this stud if it's overlapped
                     break;                  // Stop all checks once the stud is hidden
                 }
             }
@@ -143,6 +146,7 @@ export default class BrickNormal extends Brick {
     /** Reset studs to match the position of this brick */
     private resetStuds(isDeselect : boolean): void {
 
+        //For each stud with index
         for (const [idx, stud] of this.studs.entries()) {
 
             // Set stud global pos to match this brick
@@ -158,6 +162,7 @@ export default class BrickNormal extends Brick {
 
     /** Set the minimum and maximum carry positions of this brick */
     public setMinMax(min: Vect, max: Vect): void {
+
         super.setMinMax(min, max);
 
         this.studs.forEach(s => s.mobilePreviewSize = this.mobilePreviewSize);
@@ -165,6 +170,7 @@ export default class BrickNormal extends Brick {
 
     /** Set the flipped state for the mobile preview */
     public flipMobile(isFlipped : boolean) {
+        
         super.flipMobile(isFlipped);
 
         this.studs.forEach(s => s.flipMobile(isFlipped));
