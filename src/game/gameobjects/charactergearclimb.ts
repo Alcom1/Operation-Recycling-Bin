@@ -1,15 +1,16 @@
 import GameObject, { Collision } from "engine/gameobjects/gameobject";
-import { FOUR_BITSTACK as gcb, MASKS, zip } from "engine/utilities/math";
+import { RING_BITSTACK as gcb, MASKS, zip } from "engine/utilities/math";
 import { CharacterParams } from "./character";
 import CharacterGear from "./charactergear";
 
+//Character states
 enum ClimbState {
     NORMAL,
     WAIT,
-    HALT,
-    REVERSE
+    HALT
 }
 
+//Character sub-states for vertical movement
 enum VertState {
     UP,
     DOWN
@@ -125,132 +126,126 @@ export default class CharacterGearClimb extends CharacterGear {
     //Resolve collisions based on the current stored bitmask
     public resolveCollisionBitmask() {
 
+        //Different collision sequences based on state & vertical sub-state
         switch(this.stateIndex) {
     
             case ClimbState.NORMAL :
                 switch(this.move.y) {
                     //Move forward, please.
                     case 0 : 
-                        this.resolveCollisionsNormal();
+                        this.resolveCollisionNormal();
                         break;
 
                     //Move up
                     case -1 : 
-                        this.resolveCollisionsUp();
+                        this.resolveCollisionUp();
                         break;
 
                     //Move down
                     case 1 : 
-                        this.resolveCollisionsDown();
+                        this.resolveCollisionNormal(true);
                         break;
                 }
                 break;
 
             case ClimbState.WAIT :
-                this.resolveCollisionsWait();
+                this.resolveCollisionWait();
                 break;
 
             case ClimbState.HALT :
-                this.resolveCollisionsNormal();
+                this.resolveCollisionNormal();
                 break;
         }
     }
 
-    //Resolve collisions for normal movement
-    public resolveCollisionsNormal() {
+    //Standard collision resolution
+    private resolveCollisionNormal(isDownSwap : Boolean = false) {
 
-        //Go down for cliffs
-        if(!(this.storedCbm & gcb.flor)) {
+        //No floor, go down
+        if (!this.isColFlor) {
             this.setNormalState(VertState.DOWN);
         }
-        //Go up for walls
-        else if(this.storedCbm & gcb.face) {
-
-            //Unless there's an immediate ceiling, then reverse instead
-            if(this.storedCbm & gcb.ceil) {
-
-                //If back is also blocked, completely stuck, halt.
-                if(this.storedCbm & gcb.back)  {
-
-                    this.setStateIndex(ClimbState.HALT);
-                }
-                else {
-
-                    this.reverse();
-                }
-            }
-            //actually go up
-            else {
-                this.setStateIndex(ClimbState.WAIT);
-            }
-        }
-        //Default to normal state
-        else {
-
+        //No front wall, go forward
+        else if (!this.isColFace) {
             this.setNormalState();
+        }
+        //Downward movement does back THEN wall check
+        else if (isDownSwap) {
+            this.resolveCollisionsDown();
+        }
+        //Standard wall THEN back check
+        else {
+            this.resolveCollisionStandard();
         }
     }
 
-    //
-    public resolveCollisionsWait() {
+    //Standard UP -> BACK -> HALT check
+    private resolveCollisionStandard() {
+        
+        //No roof, go up
+        if (!this.isColRoof) {
+            this.setStateIndex(ClimbState.WAIT);
+        }
+        //No back wall, go back
+        else if(!this.isColBack) {
+            this.setNormalState();
+            this.reverse();
+        }
+        //Completely boxed in, halt
+        else {
+            this.setStateIndex(ClimbState.HALT);
+        }
+    }
 
-        //Go up if not blocked
-        if(!(this.storedCbm & gcb.ceil)) {
+    //Downward BACK -> UP -> HALT check
+    private resolveCollisionsDown() {
+
+        if(!this.isColBack) {
+            this.setNormalState();
+            this.reverse();
+        }
+        //No roof, go up
+        else if (!this.isColRoof) {
+            this.setStateIndex(ClimbState.WAIT);
+        }
+        //Completely boxed in, halt
+        else {
+            this.setStateIndex(ClimbState.HALT);
+        }
+    }
+
+    //Upward collision resolution
+    private resolveCollisionUp() {
+
+        //Land
+        if(!this.isColFace && this.isColLand) {
+            this.setNormalState();
+        }
+        //Backwards land
+        else if(!this.isColBack && this.isColBand) {
+            this.setNormalState();
+            this.reverse();
+        }
+        //Continue upwards
+        else if(!this.isColRoof && this.vertCount < this.vertMax) {
+            //Here be dragons!
+        }
+        //Default to standard if there's no land, band, or continue
+        else {
+            this.resolveCollisionNormal();
+        }
+    }
+
+    //Waiting collision resolution
+    private resolveCollisionWait() {
+        
+        //Go up
+        if (!this.isColRoof) {
             this.setNormalState(VertState.UP);
         }
+        //Default to standard if there's a roof
         else {
-            this.setNormalState();
-
-            if(this.storedCbm & gcb.face) {
-                this.reverse();
-            }
-            //Need a super-edge case for when face & back is blocked, maybe a shared sub-funtion?
-        }
-    }
-
-    //Resolve collisions for upward movement
-    public resolveCollisionsUp() {
-
-        //Go forward if an opening is available
-        if(!(this.storedCbm & gcb.face)) {
-            this.setNormalState();
-        }
-        //Go back down if a ceiling is hit, or if the height limit is reached
-        else if(this.storedCbm & gcb.ceil || this.vertCount >= this.vertMax) {
-            this.setNormalState(VertState.DOWN);
-        }
-    }
-
-    //Resolve collisions for downward movement
-    public resolveCollisionsDown() {
-
-        //Land & return to normal movement if there is a floor
-        if(this.storedCbm & gcb.flor) {
-
-            //Both face and back are blocked, go up again
-            if(this.storedCbm & gcb.face && this.storedCbm & gcb.back) {
-
-                //Edge case, ceiling is blocked too, halt
-                if(this.storedCbm & gcb.ceil) {
-
-                    this.setStateIndex(ClimbState.HALT);
-                }
-                //Go up
-                else {
-                    
-                    this.setStateIndex(ClimbState.WAIT);
-                }
-            }
-            //Otherwise, Go forward
-            else {
-
-                this.setNormalState();
-    
-                //Reverse if there is wall ahead upon landing
-                if(this.storedCbm & gcb.face) {
-                    this.reverse();
-                }
-            }
+            this.resolveCollisionNormal();
         }
     }
 }

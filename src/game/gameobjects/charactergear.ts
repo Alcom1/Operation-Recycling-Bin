@@ -1,12 +1,19 @@
 import GameObject, { Collision } from "engine/gameobjects/gameobject";
 import { Collider } from "engine/modules/collision";
-import { bitStack, BOUNDARY, col1D, FOUR_BITSTACK as gcb, GMULTX, GMULTY, MASKS } from "engine/utilities/math";
+import { bitStack, BOUNDARY, col1D, RING_BITSTACK as ring, GMULTX, GMULTY, MASKS } from "engine/utilities/math";
 import Character from "./character";
 
 export default class CharacterGear extends Character {
 
     protected storedCbm: number = 0;      //Store Collision bitmask from collision for later resolution
     protected isStep: boolean = false;    //True on frames where a character step has occured
+    
+    protected get isColFlor() : boolean { return !!(this.storedCbm & ring.flor); }  //Collision below
+    protected get isColRoof() : boolean { return !!(this.storedCbm & ring.roof); }  //Collision above
+    protected get isColFace() : boolean { return !!(this.storedCbm & ring.face); }  //Collision front
+    protected get isColBack() : boolean { return !!(this.storedCbm & ring.back); }  //Collision back
+    protected get isColLand() : boolean { return !!(this.storedCbm & ring.land); }  //Collision front-low corner
+    protected get isColBand() : boolean { return !!(this.storedCbm & ring.band); }  //Collision front-rear corner
 
     //Get colliders
     public getColliders() : Collider[] {
@@ -37,17 +44,17 @@ export default class CharacterGear extends Character {
         //WALL BOUNDARY
         if (this.gpos.x - 2 < BOUNDARY.minx) {
 
-            this.storedCbm |= (this.move.x > 0 ? gcb.back : gcb.face);
+            this.storedCbm |= (this.move.x > 0 ? ring.back : ring.face);
         }        
         else if (this.gpos.x + 2 > BOUNDARY.maxx) {
 
-            this.storedCbm |= (this.move.x > 0 ? gcb.face : gcb.back);
+            this.storedCbm |= (this.move.x > 0 ? ring.face : ring.back);
         }
 
         //Ceiling boundary
         if(this.gpos.y - 2 < BOUNDARY.miny) {
 
-            this.storedCbm |= gcb.ceil;
+            this.storedCbm |= ring.roof;
         }
 
         this.storedCbm |= this.brickHandler.checkCollisionRing(
@@ -113,12 +120,12 @@ export default class CharacterGear extends Character {
                 //Is ahead
                 if( diffRel.x > 0) {
 
-                    this.storedCbm |= gcb.face;
+                    this.storedCbm |= ring.face;
                 }
                 //Is behind
                 else {
 
-                    this.storedCbm |= gcb.back;
+                    this.storedCbm |= ring.back;
                 }
             }
             //If a vertically-blocking character...
@@ -127,12 +134,12 @@ export default class CharacterGear extends Character {
                 //Is above
                 if(diffRel.y < 0) {
 
-                    this.storedCbm |= gcb.ceil;
+                    this.storedCbm |= ring.roof;
                 }
                 //Is below
                 else {
 
-                    this.storedCbm |= gcb.flor;
+                    this.storedCbm |= ring.flor;
                 }
             }
             //If diagonal, and one character is moving above/below the other
@@ -143,13 +150,13 @@ export default class CharacterGear extends Character {
                 //Is above
                 if(diffRel.y < 0) {
 
-                    this.storedCbm |= gcb.ceil;
+                    this.storedCbm |= ring.roof;
                 }
                 
                 //Is below
                 else if(diff.y > 0) {
 
-                    this.storedCbm |= gcb.flor;
+                    this.storedCbm |= ring.flor;
                 }
             }
         }

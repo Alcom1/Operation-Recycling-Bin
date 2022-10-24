@@ -1,5 +1,5 @@
 import GameObject, { Collision } from "engine/gameobjects/gameobject";
-import { FOUR_BITSTACK as gcb, MASKS } from "engine/utilities/math";
+import { RING_BITSTACK as gcb, MASKS } from "engine/utilities/math";
 import { CharacterParams } from "./character";
 import CharacterGear from "./charactergear";
 
@@ -29,12 +29,8 @@ export default class CharacterGearGround extends CharacterGear {
     //Resolve collisions based on the current stored bitmask
     public resolveCollisionBitmask()  {
 
-        //Brick collisions
-        if(this.storedCbm & gcb.face) {
-            this.reverse();
-        }
-        //
-        else if(!(this.storedCbm & gcb.land)) {
+        //Obstacle in front OR floor stops, reverse
+        if(this.isColFace || !this.isColLand) {
             this.reverse();
         }
     }
