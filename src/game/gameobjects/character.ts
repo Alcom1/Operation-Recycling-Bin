@@ -45,6 +45,7 @@ export default class Character extends GameObject {
     public get isNormalMovment() : boolean { return this.stateIndex == 0 }  //If the current state is normal movment
     protected get animationSubindex() : number { return this.move.x }       //Sub-index for animations (by default, based on horizontal movement)
 
+    /** Constructor */
     constructor(params: CharacterParams) {
         super(params);
 

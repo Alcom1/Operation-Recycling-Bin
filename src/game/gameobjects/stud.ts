@@ -19,6 +19,7 @@ export default class Stud extends GameObject {
     public mobilePreviewSize : Vect = new Vect(0, 0);
     private isMobileFlipped : boolean = false;
 
+    /** Constructor */
     constructor(params: StudParams) {
         super(params);
 

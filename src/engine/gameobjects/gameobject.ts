@@ -37,6 +37,7 @@ export default class GameObject {
     public isDebug: Boolean;
     private collisions: Collision[] = [];
 
+    /** Constructor */
     constructor(params: GameObjectParams) {
         this.gpos = new Vect(params.position?.x ?? 0, params.position?.y ?? 0);
         this.spos = new Vect(params.subPosition?.x ?? 0, params.subPosition?.y ?? 0);

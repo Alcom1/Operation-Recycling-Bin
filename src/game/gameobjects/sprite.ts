@@ -10,6 +10,7 @@ export default class Sprite extends ZGameObject {
 
     private image : HTMLImageElement;
 
+    /** Constructor */
     constructor(params: SpriteParams) {
         super(params);
 

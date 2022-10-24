@@ -105,7 +105,7 @@ export default class CharacterBot extends Character {
             1)
     }
 
-    //Constructor
+    /** Constructor */
     constructor(params: CharacterParams) {
         super(Object.assign(params, characterBotOverride));
     }

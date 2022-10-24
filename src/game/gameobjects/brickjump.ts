@@ -18,6 +18,7 @@ export default class BrickJump extends BrickPlateTop {
     private timer2 : number = 0;
     private offDuration2 : number = 1.2;
 
+    /** Constructor */
     constructor(params: BrickPlateParams) {
         super(Object.assign({}, brickJumpOverride, params));
     }

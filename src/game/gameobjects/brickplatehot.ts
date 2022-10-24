@@ -12,6 +12,7 @@ export default class BrickPlateHot extends BrickPlate {
 
     private animation: Anim;
 
+    /** Constructor */
     constructor(params: BrickPlateParams) {
         super(Object.assign(params, brickPlateHotOverride));
 

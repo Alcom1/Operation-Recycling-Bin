@@ -71,6 +71,7 @@ export default class CharacterGearClimb extends CharacterGear {
         }
     }
 
+    /** Constructor */
     constructor(params: CharacterParams) {
         super(Object.assign(params, CharacterGearClimbOverride));
     }

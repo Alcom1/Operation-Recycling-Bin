@@ -22,6 +22,7 @@ export default class WaterDrop extends Sprite {
     private slipDuration : number = 0.4;
     private slipTimer: number = 0;
 
+    /** Constructor */
     constructor(params: GameObjectParams) {
         super(Object.assign(params, characterBotOverride));
 

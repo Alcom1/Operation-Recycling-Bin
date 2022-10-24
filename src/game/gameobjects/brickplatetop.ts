@@ -13,6 +13,7 @@ export default class BrickPlateTop extends BrickPlate {
     private topSprite : Sprite;             //The sprite to be shown on top of this brick
     private isOnShowTop : boolean = true;   //If the top sprite should be active for the ON or OFF state.
 
+    /** Constructor */
     constructor(params: BrickPlateTopParams) {
         super(Object.assign(params, { width : 2 }));
 

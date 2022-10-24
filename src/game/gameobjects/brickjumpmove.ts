@@ -9,6 +9,7 @@ const brickJumpMoveOverride = Object.freeze({
 
 export default class BrickJumpMove extends BrickJump {
 
+    /** Constructor */
     constructor(params: BrickPlateParams) {
         super(Object.assign(params, brickJumpMoveOverride));
     }

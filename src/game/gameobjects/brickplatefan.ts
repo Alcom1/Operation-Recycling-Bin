@@ -17,6 +17,7 @@ export default class BrickPlateFan extends BrickPlate {
     private beams: number[] = [];
     private characters: Character[] = [];
 
+    /** Constructor */
     constructor(params: BrickPlateParams) {
         super(Object.assign(params, brickPlateFanOverride));
 

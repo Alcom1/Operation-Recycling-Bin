@@ -16,6 +16,7 @@ const CharacterGearGroundOverride = Object.freeze({
 
 export default class CharacterGearGround extends CharacterGear {
 
+    /** Constructor */
     constructor(params: CharacterParams) {
         super(Object.assign(params, CharacterGearGroundOverride));
     }

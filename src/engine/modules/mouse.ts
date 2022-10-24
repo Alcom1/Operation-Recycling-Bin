@@ -20,6 +20,7 @@ export default class MouseModule {
     private mouseType = "";
     private resolution = new Vect(0, 0);
 
+    /** Constructor */
     constructor(element: HTMLElement) {
         this.mouseElement = element;
         this.mouseElement.style.touchAction = 'none';

@@ -9,6 +9,7 @@ const brickSuperOverride = Object.freeze({
 
 export default class BrickSuper extends BrickPlateTop {
 
+    /** Constructor */
     constructor(params: BrickPlateTopParams) {
         super(Object.assign(params, brickSuperOverride));
     }

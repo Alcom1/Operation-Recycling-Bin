@@ -12,6 +12,7 @@ const characterBinOverride = Object.freeze({
 
 export default class CharacterBin extends Character {
 
+    /** Constructor */
     constructor(params: CharacterParams) {
         super(Object.assign(params, characterBinOverride));
     }

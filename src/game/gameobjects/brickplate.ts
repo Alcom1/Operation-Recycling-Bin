@@ -13,6 +13,7 @@ export default class BrickPlate extends Brick {
     protected images : HTMLImageElement[];
     public circuit : number;
 
+    /** Constructor */
     constructor(params: BrickPlateParams) {
         super(params);
 

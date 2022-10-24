@@ -2,17 +2,19 @@ import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import { floor, getZIndex, GMULTX, GMULTY, OPPOSITE_DIRS, zip } from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 
+/** Parameters for an offset image */
 export interface OffsetImageParams {
     name : string;
     extension? : string;
     offsetX? : number;
 }
 
-export interface OffsetImage {
-    image : HTMLImageElement;
+/** An image element with a horizontal offset for positioning (Is extending like this a good idea?) */
+export interface OffsetImageElement extends HTMLImageElement {
     offsetX : number;
 }
 
+/** Parameters for an animation */
 export interface AnimationParams extends GameObjectParams {
     images : OffsetImageParams[];
     speed? : number;
@@ -33,7 +35,7 @@ export default class Anim extends GameObject {
     //Set in constructor
     private gposOffset : Point;                     //Constant offset of the global position
     private zModifier : number;                     //Modifier value added to the zIndex
-    private images : OffsetImage[] = [];            //Animation images with a horizontal offset
+    private images : OffsetImageElement[] = [];            //Animation images with a horizontal offset
     private speed : number;                         //Speed of the animation
     public  isLoop : boolean;                       //If this animation is looped
     private isVert : boolean;                       //If this animation is arranged vertically
@@ -57,16 +59,22 @@ export default class Anim extends GameObject {
     public get duration() : number { return 1 / this.speed; }
     public get isBackSlice() : boolean { return (this.sliceIndex ?? 1) == 1; }
 
+    /** Constructor */
     constructor(params : AnimationParams) {
         super(params);
 
+        //Set properties
         this.speed = params.speed ?? 1;
         this.isLoop = params.isLoop ?? true;
         this.isVert = params.isVert ?? false;
         this.framesSize = params.framesSize;
         this.gposOffset = params.gposOffset ?? { x : 0, y : 0 }
         this.zModifier = (params.zModifier ?? 300) + (this.spos.y > 0 ? this.sposYFix : 0);
+        this.frameCount = params.frameCount;
+        this.animsCount = params.animsCount ?? 1;
+        this.sliceIndex = params.sliceIndex;
 
+        //Store images with different 
         switch(params.images.length) {
 
             //No images (why?)
@@ -77,17 +85,6 @@ export default class Anim extends GameObject {
             case 1:
                 this.images[0] = this.getImage(params.images[0]);
                 break;
-            
-            //Pair of images with opposing directions
-            case 2:
-                this.imageIndex = 1;
-                OPPOSITE_DIRS.forEach(d => {
-                    const index = Math.max(d, 0);
-                    if (params.images[index]) {
-                        this.images[d] = this.getImage(params.images[index]);
-                    }
-                });
-                break;
 
             //Many images, use zipper indicies (-1, 1, -2, 2...)
             default:
@@ -96,33 +93,31 @@ export default class Anim extends GameObject {
                     this.images[zip(i)] = this.getImage(x);
                 });
         }
-
-        this.frameCount = params.frameCount;
-        this.animsCount = params.animsCount ?? 1;
-        this.sliceIndex = params.sliceIndex;
     }
 
-    //Retrieve an image from the library
-    private getImage(params : OffsetImageParams) : OffsetImage {
+    //Retrieve an image from the library, set its X Offset
+    private getImage(params : OffsetImageParams) : OffsetImageElement {
 
-        return {
-            image : this.engine.library.getImage(
-                params.name, 
-                params.extension),
-            offsetX : params.offsetX ?? 0
-        }
+        var image = this.engine.library.getImage(
+            params.name, 
+            params.extension) as OffsetImageElement
+
+        image.offsetX = params.offsetX ?? 0;
+
+        return image;
     }
 
     //Init is called after images are retrieved. 
     public init(ctx : CanvasRenderingContext2D) {
 
+        //Get the size of the default image, a basis for the whole animation
         this.fullSize = {
-            x : this.images[this.imageIndex].image.width,
-            y : this.images[this.imageIndex].image.height
+            x : this.images[this.imageIndex].width,
+            y : this.images[this.imageIndex].height
         }
 
         //Default frame size based on the image size and number of frames
-        if (!this.framesSize) {
+        if(!this.framesSize) {
             this.framesSize = (this.isVert ? this.fullSize.y : this.fullSize.x) * this.animsCount / this.frameCount
         }
     }
@@ -131,12 +126,12 @@ export default class Anim extends GameObject {
     public update(dt: number) {
 
         //For all moving animations
-        if (this.speed > 0) {
+        if(this.speed > 0) {
 
             //Increment timer by delta-time
             this.timer += dt;
     
-            if (this.isLoop && this.timer > 1 / this.speed) {
+            if(this.isLoop && this.timer > 1 / this.speed) {
 
                 this.timer -= 1 / this.speed;   //May cause frame skipping
             }
@@ -147,12 +142,12 @@ export default class Anim extends GameObject {
     public reset(gpos? : Vect, isTimerReset : boolean = true) {
 
         //Reset gpos if available
-        if (gpos) { 
+        if(gpos) { 
             this.gpos = gpos.getAdd(this.gposOffset); 
         }
 
         //Reset timer
-        if (isTimerReset) {
+        if(isTimerReset) {
             this.timer = 0;
             this.animsIndex = ++this.animsIndex % this.animsCount;
         }
@@ -172,15 +167,15 @@ export default class Anim extends GameObject {
     public setImageIndex(index : number) {
 
         //This animation has many images
-        if (this.images[index]) {
+        if(this.images[index]) {
             this.imageIndex = index;
         }
         //This animation has 2 images
-        else if (this.images[Math.sign(index)]) {
+        else if(this.images[Math.sign(index)]) {
             this.imageIndex = Math.sign(index);
         }
         //This animation has 1 image
-        else if (this.images[0]) {
+        else if(this.images[0]) {
             this.imageIndex = 0;
         }
     }
@@ -189,7 +184,7 @@ export default class Anim extends GameObject {
     public draw(ctx : CanvasRenderingContext2D) {
 
         //Stop if this animation is not visible
-        if (!this.isVisible) {
+        if(!this.isVisible) {
             return;
         }
 
@@ -200,7 +195,7 @@ export default class Anim extends GameObject {
 
         ctx.drawImage(
             //Greater image
-            image.image,                    
+            image,                    
 
             //Slice position & size 
             widthSlice +                    //Move segment forward based on which slice this is.
@@ -217,6 +212,29 @@ export default class Anim extends GameObject {
             this.isVert ? size : oppoSize);
     }
 
+    //Get position offset for the current animation frame within the full image
+    private getAnimationOffset(isVert : boolean) : number {
+
+        //If the animation direction matches the checked direction, return an animation offset, 0 otherwise.
+        if(isVert == this.isVert) {
+
+            const fullSize = this.isVert ? this.fullSize.y : this.fullSize.x;
+
+            return floor((                  //Move segment forward to the current animation and current frame
+                this.animsIndex +           //Move segment forward to the current animation
+                Math.min(                   //Get current frame based on the timer and speed of the animation
+                    this.timer *        
+                    this.speed,         
+                    1 - Number.EPSILON)) *  //Subtract epsilon to prevent grabbing the next frame at max value
+                fullSize / this.animsCount,             
+                fullSize / this.frameCount)
+        }
+        else {
+            return 0;
+        }
+    }
+
+    //Debug draw
     public superDraw(ctx: CanvasRenderingContext2D) {
 
         // Debug size
@@ -238,26 +256,5 @@ export default class Anim extends GameObject {
         // ctx.font = " 20px Monospace"
         // ctx.strokeText(indexDisplay, indexPos.x, indexPos.y);
         // ctx.fillText(indexDisplay, indexPos.x, indexPos.y);
-    }
-
-    private getAnimationOffset(checkVert : boolean) : number {
-
-        //If the animation direction matches the checked direction, return an animation offset, 0 otherwise.
-        if (checkVert == this.isVert) {
-
-            const fullSize = this.isVert ? this.fullSize.y : this.fullSize.x;
-
-            return floor((                  //Move segment forward to the current animation and current frame
-                this.animsIndex +           //Move segment forward to the current animation
-                Math.min(                   //Get current frame based on the timer and speed of the animation
-                    this.timer *        
-                    this.speed,         
-                    1 - Number.EPSILON)) *  //Subtract epsilon to prevent grabbing the next frame at max value
-                fullSize / this.animsCount,             
-                fullSize / this.frameCount)
-        }
-        else {
-            return 0;
-        }
     }
 }

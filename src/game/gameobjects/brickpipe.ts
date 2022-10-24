@@ -13,6 +13,7 @@ export default class BrickPipe extends BrickPlate {
     private antiDelay : number = 1;
     private timer : number = this.antiDelay + Math.random() * (this.rate - this.antiDelay);
 
+    /** Constructor */
     constructor(params: BrickPlateParams) {
         super(Object.assign(params, brickPipeOverride));
 

@@ -3,14 +3,17 @@ import { col1D, GMULTX, GMULTY } from "engine/utilities/math";
 import { Point } from "engine/utilities/vect";
 import BrickHandler from "./brickhandler";
 
+/** A point with an opacity for fade effects */
 interface PointDebug extends Point {
     opacity : number;
 }
 
+/** Brickhander extension with debug methods */
 export default class BrickHandlerDebug extends BrickHandler {
 
     private debugPoints : PointDebug[] = [];
 
+    /** Constructor */
     constructor(params: GameObjectParams) {
         super(params);
 

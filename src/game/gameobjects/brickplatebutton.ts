@@ -13,6 +13,7 @@ export default class BrickPlateButton extends BrickPlate {
     private isLock : boolean = false;   //If this button is locked and can't be flipped again
     private isLeft : boolean = false;   //If the presser of this button left and it *can* be flipped again
 
+    /** Constructor */
     constructor(params: BrickPlateParams) {
         super(Object.assign(params, brickButtonOverride));
     }

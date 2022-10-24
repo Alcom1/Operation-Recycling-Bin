@@ -5,6 +5,7 @@ import Brick from "./bricknormal";
 import Counter from "./counter";
 import MobileIndicator from "./mobileindicator";
 
+/** States for the brick handler's selection */
 export enum BrickHandlerState {
     /** Empty */
     NONE,
@@ -18,12 +19,14 @@ export enum BrickHandlerState {
     SAME
 }
 
+/** A row of bricks */
 interface BrickRow {
     /** Row (y) position */
     row: number;
     bricks: Brick[];
 }
 
+/** Handler for brick selection, movement, etc. */
 export default class BrickHandler extends GameObject {
 
     /** */
@@ -50,6 +53,7 @@ export default class BrickHandler extends GameObject {
     /** If a brick has been stepped on or off */
     public isRecheck = false;
 
+    /** Initalize the brick handler, get related bricks & game objects, manage bricks */
     public init(ctx: CanvasRenderingContext2D) {
         
         this.mobileIndicator = this.engine.tag.get(         // Get mobile indicator from scene

@@ -49,6 +49,7 @@ export default class Engine {
     public sync: SyncModule;
     public tag: TagModule;
 
+    /** Constructor */
     constructor(
         element: HTMLCanvasElement,
         scenePathName: string,

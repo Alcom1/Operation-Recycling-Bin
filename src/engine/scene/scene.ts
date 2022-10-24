@@ -19,6 +19,7 @@ export default class Scene {
     private initialized: boolean;
     private isSortNext: boolean = false;
 
+    /** Constructor */
     constructor(
         private engine: Engine,
         {

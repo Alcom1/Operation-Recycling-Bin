@@ -40,6 +40,7 @@ export default class Button extends GameObject {
 
     private images = new Map<boolean, Map<boolean, HTMLImageElement>>([[false, new Map()], [true, new Map()]]);
 
+    /** Constructor */
     constructor(params: ButtonParams) {
         super(params);
         

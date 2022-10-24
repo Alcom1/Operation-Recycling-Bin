@@ -1,12 +1,14 @@
 import GameObject, {GameObjectParams} from "engine/gameobjects/gameobject";
 import { colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX, getZIndex, MOBILE_PREVIEW_MAX } from "engine/utilities/math";
 import Vect, {Point} from "engine/utilities/vect";
+import Anim from "./anim";
 
 export interface BrickParams extends GameObjectParams {
     color?: string;
     width?: number;
 }
 
+/** Base class for all bricks */
 export default class Brick extends GameObject {
 
     /** The color of this brick */
@@ -57,6 +59,7 @@ export default class Brick extends GameObject {
     /** If the mobile preview is flipped */
     private isMobileFlipped : Boolean = false;
 
+    /** Constructor */
     constructor(params: BrickParams) {
         super(params);
         
@@ -68,6 +71,7 @@ export default class Brick extends GameObject {
         this.width = params.width || 1;
     }
 
+    //Update brick, move it along the cursor if it's selected.
     public update(dt: number): void {
 
         // Follow mouse if selected
@@ -76,6 +80,7 @@ export default class Brick extends GameObject {
         }
     }
 
+    //Draw brick
     public draw(ctx: CanvasRenderingContext2D): void {
 
         // Global transparency for selection states
@@ -89,6 +94,7 @@ export default class Brick extends GameObject {
         ctx.drawImage(this.image, 0, -Z_DEPTH - 3);
     }
 
+    //Draw mobile preview above everything
     public superDraw(ctx: CanvasRenderingContext2D): void {
 
         // Debug Z-index
@@ -101,6 +107,7 @@ export default class Brick extends GameObject {
         // ctx.strokeText(indexDisplay, indexPos.x, indexPos.y);
         // ctx.fillText(indexDisplay, indexPos.x, indexPos.y);
 
+        //Only draw preview if on browser, this brick is selected, and the selection size is large enough
         if (this.engine.mouse.getMouseType() == "mouse" ||
            !this.isSelected || 
            !MOBILE_PREVIEW_MAX.getLessOrEqual(this.mobilePreviewSize)) {

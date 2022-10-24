@@ -19,6 +19,7 @@ export default class BrickNormal extends Brick {
         ["h", true]
     ]);
 
+    /** Constructor */
     constructor(params: BrickParams) {
         super(params);
 

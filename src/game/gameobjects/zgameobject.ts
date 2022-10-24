@@ -10,6 +10,7 @@ export default class ZGameObject extends GameObject {
 
     private zIndex : number;
 
+    /** Constructor */
     constructor(params: ZGameObjectParams) {
         super(params);
 

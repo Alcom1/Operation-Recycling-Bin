@@ -20,6 +20,7 @@ export default class LevelSequence extends ZGameObject {
     }[];
     public par: number;
 
+    /** Constructor */
     constructor(params: LevelSequenceParams) {
         super(params);
 
