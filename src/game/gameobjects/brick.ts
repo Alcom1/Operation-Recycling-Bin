@@ -71,7 +71,7 @@ export default class Brick extends GameObject {
         this.width = params.width || 1;
     }
 
-    //Update brick, move it along the cursor if it's selected.
+    /** Update brick, move it along the cursor if it's selected. */
     public update(dt: number): void {
 
         // Follow mouse if selected
@@ -80,7 +80,7 @@ export default class Brick extends GameObject {
         }
     }
 
-    //Draw brick
+    /** Draw brick */
     public draw(ctx: CanvasRenderingContext2D): void {
 
         // Global transparency for selection states
@@ -94,7 +94,7 @@ export default class Brick extends GameObject {
         ctx.drawImage(this.image, 0, -Z_DEPTH - 3);
     }
 
-    //Draw mobile preview above everything
+    /** Draw mobile preview above everything */
     public superDraw(ctx: CanvasRenderingContext2D): void {
 
         // Debug Z-index

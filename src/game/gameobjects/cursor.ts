@@ -37,7 +37,6 @@ export default class Cursor extends GameObject {
         if (!cursorIcon) throw new Error("Can't find CursorIcon");
         this.cursorIcon = cursorIcon as CursorIcon;
     }
-
     public update(dt: number): void {
         var tempSpos = this.engine.mouse.getPos();
 

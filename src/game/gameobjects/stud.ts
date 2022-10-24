@@ -11,7 +11,6 @@ export default class Stud extends GameObject {
     color: string;
 
     image : HTMLImageElement;
-
     private isPressed : boolean = false;
     private isSelected : boolean = false;
     private isSnapped : boolean = false;
@@ -27,7 +26,6 @@ export default class Stud extends GameObject {
 
         this.image = this.engine.library.getImage(`stud_${this.color.replace("#", "").toLowerCase()}`);
     }
-
     public draw(ctx: CanvasRenderingContext2D): void {
 
         if (this.isVisible) {
@@ -43,7 +41,7 @@ export default class Stud extends GameObject {
             ctx.drawImage(this.image, Z_DEPTH - 13, 0);
         }
     }    
-    
+
     public superDraw(ctx: CanvasRenderingContext2D): void {
 
         if (this.engine.mouse.getMouseType() == "mouse" ||
@@ -94,7 +92,7 @@ export default class Stud extends GameObject {
         this.isPressed = true;
     }
 
-    /** Setup this stud for selecting */ 
+    /** Setup this stud for selecting */
     public select(): void {
         this.isSelected = true;
     }

@@ -7,7 +7,6 @@ const brickPipeOverride = Object.freeze({
 });
 
 export default class BrickPipe extends BrickPlate {
-
     private drop : WaterDrop;
     private rate : number = 2.5;
     private antiDelay : number = 1;

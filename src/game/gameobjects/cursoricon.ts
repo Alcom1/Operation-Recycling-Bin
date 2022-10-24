@@ -12,7 +12,7 @@ export enum CursorIconState {
 
 export default class CursorIcon extends GameObject {
 
-    /**Set of cursor images for each cursor state */
+    /** Set of cursor images for each cursor state */
     private cursorImages: Map<CursorIconState, string> = new Map<CursorIconState, string>([
         [CursorIconState.NONE,      "cursor_none"],
         [CursorIconState.DRAG,      "cursor_drag"],
@@ -21,7 +21,6 @@ export default class CursorIcon extends GameObject {
         [CursorIconState.HOVERDOWN, "cursor_down"],
         [CursorIconState.HOVERUP,   "cursor_up"]
     ]);
-
     public constructor(params: GameObjectParams) {
         super(params);
         

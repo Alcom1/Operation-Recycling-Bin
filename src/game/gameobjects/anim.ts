@@ -32,30 +32,30 @@ export interface AnimationParams extends GameObjectParams {
 /** Animated image gameobject */
 export default class Anim extends GameObject {
 
-    //Set in constructor
-    private gposOffset : Point;                     //Constant offset of the global position
-    private zModifier : number;                     //Modifier value added to the zIndex
-    private images : OffsetImageElement[] = [];            //Animation images with a horizontal offset
-    private speed : number;                         //Speed of the animation
-    public  isLoop : boolean;                       //If this animation is looped
-    private isVert : boolean;                       //If this animation is arranged vertically
-    private framesSize? : number;                   //The Horizontal/Vertical size of each frame
-    private frameCount : number;                    //The Quantity of frames for this animation
-    private animsCount : number;                    //The number of animations per image
+    /** Set in constructor */
+    private gposOffset : Point;                     //Constant offset of the global position */
+    private zModifier : number;                     //Modifier value added to the zIndex */
+    private images : OffsetImageElement[] = [];            //Animation images with a horizontal offset */
+    private speed : number;                         //Speed of the animation */
+    public  isLoop : boolean;                       //If this animation is looped */
+    private isVert : boolean;                       //If this animation is arranged vertically */
+    private framesSize? : number;                   //The Horizontal/Vertical size of each frame */
+    private frameCount : number;                    //The Quantity of frames for this animation */
+    private animsCount : number;                    //The number of animations per image */
     private sliceIndex? : number;                   //The index of this animation, if it's been sliced
 
-    //Set in init
+    /** Set in init */
     private fullSize : Point = { x : 0, y : 0 };    //The full dimensions of this animation's images
 
-    //Set here
-    public  zModifierPub : number = 0;              //Public z-modifier
-    public  isVisible : boolean = true;             //If this animation is visible
-    private timer : number = 0;                     //Timer to track frames
-    private imageIndex: number = 0;                 //Index of the current image
-    private animsIndex : number = 0;                //Index of the current animation
+    /** Set here */
+    public  zModifierPub : number = 0;              //Public z-modifier */
+    public  isVisible : boolean = true;             //If this animation is visible */
+    private timer : number = 0;                     //Timer to track frames */
+    private imageIndex: number = 0;                 //Index of the current image */
+    private animsIndex : number = 0;                //Index of the current animation */
     private sposYFix : number = -101;               //Z-index offset to fix vertical clipping
 
-    //get
+    /** get */
     public get duration() : number { return 1 / this.speed; }
     public get isBackSlice() : boolean { return (this.sliceIndex ?? 1) == 1; }
 
@@ -95,7 +95,7 @@ export default class Anim extends GameObject {
         }
     }
 
-    //Retrieve an image from the library, set its X Offset
+    /** Retrieve an image from the library, set its X Offset */
     private getImage(params : OffsetImageParams) : OffsetImageElement {
 
         var image = this.engine.library.getImage(
@@ -107,7 +107,7 @@ export default class Anim extends GameObject {
         return image;
     }
 
-    //Init is called after images are retrieved. 
+    /** Init is called after images are retrieved.  */
     public init(ctx : CanvasRenderingContext2D) {
 
         //Get the size of the default image, a basis for the whole animation
@@ -122,7 +122,7 @@ export default class Anim extends GameObject {
         }
     }
 
-    //Update and track timer for this animation
+    /** Update and track timer for this animation */
     public update(dt: number) {
 
         //For all moving animations
@@ -138,7 +138,7 @@ export default class Anim extends GameObject {
         }
     }
 
-    //Reset timer, update position, and switch current animation.
+    /** Reset timer, update position, and switch current animation. */
     public reset(gpos? : Vect, isTimerReset : boolean = true) {
 
         //Reset gpos if available
@@ -153,7 +153,7 @@ export default class Anim extends GameObject {
         }
     }
 
-    //Get z-index for draw sorting
+    /** Get z-index for draw sorting */
     public getGOZIndex() : number {
 
         return getZIndex(
@@ -163,7 +163,7 @@ export default class Anim extends GameObject {
             this.spos.y > 0 ? this.sposYFix : 0 ))    //Fix clipping while moving upwards
     }
 
-    //Set the image index, swapping the image for this animation.
+    /** Set the image index, swapping the image for this animation. */
     public setImageIndex(index : number) {
 
         //This animation has many images
@@ -180,7 +180,7 @@ export default class Anim extends GameObject {
         }
     }
 
-    //Draw this animation
+    /** Draw this animation */
     public draw(ctx : CanvasRenderingContext2D) {
 
         //Stop if this animation is not visible
@@ -212,7 +212,7 @@ export default class Anim extends GameObject {
             this.isVert ? size : oppoSize);
     }
 
-    //Get position offset for the current animation frame within the full image
+    /** Get position offset for the current animation frame within the full image */
     private getAnimationOffset(isVert : boolean) : number {
 
         //If the animation direction matches the checked direction, return an animation offset, 0 otherwise.
@@ -234,7 +234,7 @@ export default class Anim extends GameObject {
         }
     }
 
-    //Debug draw
+    /** Debug draw */
     public superDraw(ctx: CanvasRenderingContext2D) {
 
         // Debug size

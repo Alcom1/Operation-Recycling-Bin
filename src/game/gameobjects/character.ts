@@ -38,11 +38,11 @@ export default class Character extends GameObject {
     protected stateAnimations: number[];            //Array of which animation each state uses. Sometimes it's not 1:1.
     protected stateIndex: number = 0;               //Current state
 
-    //Getters
+    /** Getters */
     protected get animationsCurr() : Anim[] {                               //The animations for the current state
         return this.animations[this.stateAnimations[this.stateIndex]]; 
-    }  
-    public get isNormalMovment() : boolean { return this.stateIndex == 0 }  //If the current state is normal movment
+    }
+    public get isNormalMovment() : boolean { return this.stateIndex == 0 }  //If the current state is normal movment */
     protected get animationSubindex() : number { return this.move.x }       //Sub-index for animations (by default, based on horizontal movement)
 
     /** Constructor */
@@ -103,7 +103,6 @@ export default class Character extends GameObject {
             this.animations[newIndex].forEach(a => this.parent.pushGO(a));
         });
     }
-
     public init() {
 
         // Get brickhandler for pressure checks
@@ -112,7 +111,6 @@ export default class Character extends GameObject {
         // Set active groups
         this.setStateIndex();
     }
-
     public update(dt: number) {
 
         //Normal movement
@@ -145,12 +143,12 @@ export default class Character extends GameObject {
         }
     }
 
-    //Do nothing - override
+    /** Do nothing - override */
     protected handleSpecialMovement(dt: number) {
         
     }
 
-    //Manage bricks underneath this character, set pressure
+    /** Manage bricks underneath this character, set pressure */
     protected handleBricks(isClear : boolean = false) {
 
         //Reset pressures
@@ -175,12 +173,12 @@ export default class Character extends GameObject {
         this.brickHandler.isRecheck = true;
     }
 
-    //Handle synchronized step movement
+    /** Handle synchronized step movement */
     protected handleStep(isStart : boolean = false) {
         
     }
 
-    //Reverse the direction of this character
+    /** Reverse the direction of this character */
     protected reverse() {
 
         this.move.x *= -1;                                                          //Reverse direction
@@ -192,7 +190,7 @@ export default class Character extends GameObject {
         }
     }
 
-    //Set current & active group based on the group index
+    /** Set current & active group based on the group index */
     protected setStateIndex(index? : number) {
         
         this.stateIndex = index ?? this.stateIndex;
@@ -204,7 +202,7 @@ export default class Character extends GameObject {
         this.animationsCurr.forEach(x => x.setImageIndex(this.animationSubindex));
     }
 
-    //Deactivate this gameObject
+    /** Deactivate this gameObject */
     public deactivate() {
         this.isActive = false;
         this.animations.forEach(sg => sg.forEach(s => s.isActive = false));
@@ -212,7 +210,7 @@ export default class Character extends GameObject {
         this.underBricks = [];
     }
 
-    //Perform a sychronized update
+    /** Perform a sychronized update */
     public updateSync(step : Step, loopLength : number) {
 
         //Special start-step for gliders. Used for when nearby geometry must be detected.
@@ -236,7 +234,7 @@ export default class Character extends GameObject {
         }
     }
 
-    //
+    /** */
     public resolveCollisions(collisions : Collision[]) {
         
         super.resolveCollisions(collisions);

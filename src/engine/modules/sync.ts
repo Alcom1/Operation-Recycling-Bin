@@ -28,7 +28,7 @@ interface SyncScene {
 
 /** Module that handles tags and game objects grouped by tag. */
 export default class SyncModule {
-
+    
     private scenes          : SyncScene[] = [];
     private timer           : number = 0;
     private stepInterval    : number = 1/15;
@@ -53,7 +53,7 @@ export default class SyncModule {
         }
     }
 
-    //Update - check and trigger collisions for all game objects in all scenes
+    /** Update - check and trigger collisions for all game objects in all scenes */
     public update(dt : number) {
 
         //Do nothing if there are no scenes, stops updates before scenes load, stops early stutter
@@ -90,7 +90,7 @@ export default class SyncModule {
         });
     }
 
-    //Remove scene reference from colliders
+    /** Remove scene reference from colliders */
     public clear(sceneNames: string[]) {
         this.timer = 0;     //Reset timer for next scene
         this.counter = 0;   //Reset counter for next scene

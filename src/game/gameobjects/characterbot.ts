@@ -21,7 +21,7 @@ enum BotState {
 
 //Bot parameters
 const characterBotOverride = Object.freeze({
-    //Main parameters
+    // Main parameters
     height: 4,      //Bot is this tall
     speed : 3,      //Bot moves fast
     images : [      //Bot has left & right animations
@@ -33,7 +33,7 @@ const characterBotOverride = Object.freeze({
     animsCount : 2,
     stateAnimations : [1, 2, 3, 3, 4],
 
-    //Misc animation parameters
+    // Misc animation parameters
     animsMisc : [{ //Bot-bin interaction animation
         images : [{ name : "char_bot_bin" }],
         gposOffset : { x : -1, y : 0},
@@ -84,20 +84,20 @@ const acb = Object.freeze({
 });
 
 export default class CharacterBot extends Character {
-
-    private timerSpc : number = 0;                          //Timer to track duration of special movements
-    private timerArm : number = 0;                          //Timer to track armor flash
-    private ceilSubOffset : number = -6;                    //Offset for up/down movement
-    private vertSpeed : number = 500;                       //Speed of air movement
-    private vertMult : -1|1 = 1;                            //Up/Down multiplier for air movement
-    private horzSpeed : number = 350;                       //Horizontal air speed
-    private jumpHeights : number[] = [0, 2, 3, 3, 2, 0];    //Individual heights throughout a jump
-    private jumpOrigin : Point = { x : 0, y : 0 }           //Origin of the previous jump
+    
+    private timerSpc : number = 0;                          //Timer to track duration of special movements */
+    private timerArm : number = 0;                          //Timer to track armor flash */
+    private ceilSubOffset : number = -6;                    //Offset for up/down movement */
+    private vertSpeed : number = 500;                       //Speed of air movement */
+    private vertMult : -1|1 = 1;                            //Up/Down multiplier for air movement */
+    private horzSpeed : number = 350;                       //Horizontal air speed */
+    private jumpHeights : number[] = [0, 2, 3, 3, 2, 0];    //Individual heights throughout a jump */
+    private jumpOrigin : Point = { x : 0, y : 0 }           //Origin of the previous jump */
     private jumpIndex : number = 0;
-    private armorDelay : number = 2;                        //Delay where armor remains after taking damage
-    private armorFlashRate : number = 8;                    //Rate of the armor flashing effect
-    private armorState : ArmorState = ArmorState.NONE;      //Current state of the armor
-
+    private armorDelay : number = 2;                        //Delay where armor remains after taking damage */
+    private armorFlashRate : number = 8;                    //Rate of the armor flashing effect */
+    private armorState : ArmorState = ArmorState.NONE;      //Current state of the armor */
+    
     protected get animationSubindex() : number {               //Adjust animation index for armor flash effect
         return this.move.x * (
             this.armorState == ArmorState.ACTIVE ? 2 :
@@ -110,7 +110,7 @@ export default class CharacterBot extends Character {
         super(Object.assign(params, characterBotOverride));
     }
 
-    //Unique bot update to update armor flash
+    /** Unique bot update to update armor flash */
     public update(dt : number) {
         super.update(dt);
 
@@ -127,7 +127,7 @@ export default class CharacterBot extends Character {
         }
     }
 
-    //Special movement
+    /** Special movement */
     protected handleSpecialMovement(dt : number) {
 
         this.timerSpc += dt;   //Update special timer
@@ -181,14 +181,14 @@ export default class CharacterBot extends Character {
         }
     }
 
-    //Vertical motion
+    /** Vertical motion */
     private moveVertical(dt: number, dir: number) {
 
         this.spos.y -= dt * this.vertSpeed * dir;               //Move subposition vertically based on speed
         this.animationsCurr.forEach(a => a.spos = this.spos);   //Move animation to match
     }
 
-    //Move in a jumping arc
+    /** Move in a jumping arc */
     private moveBounce(dt: number) {
 
         this.jumpIndex = Math.abs(this.gpos.x - this.jumpOrigin.x); //Update index of current jump height
@@ -204,7 +204,7 @@ export default class CharacterBot extends Character {
         this.animationsCurr.forEach(a => a.spos = this.spos);       //Update animations to match current position
     }
 
-    //Quick shift to downward vertical movement
+    /** Quick shift to downward vertical movement */
     private startVertMovement() {
 
         this.vertMult = -1;                     //Default to downward movement to remove 1-frame hitch.
@@ -212,7 +212,7 @@ export default class CharacterBot extends Character {
         this.spos.x = 0;                        //Reset horizontal position to grid
     }
 
-    //End vertical or jump movement
+    /** End vertical or jump movement */
     private endVertMovement() {
 
         this.spos.setToZero();  //Snap to grid
@@ -224,7 +224,7 @@ export default class CharacterBot extends Character {
         }
     }
 
-    //Return true if the given vertical direction has an obstacle
+    /** Return true if the given vertical direction has an obstacle */
     private getCollisionVertical(dir : number) : boolean {
 
         //If moving upward and hit the ceiling, return true
@@ -245,7 +245,7 @@ export default class CharacterBot extends Character {
             
     }
 
-    //Check and resolve brick collisions
+    /** Check and resolve brick collisions */
     protected handleStep(isStart : boolean = false) {
 
         switch(this.stateIndex) {
@@ -266,7 +266,7 @@ export default class CharacterBot extends Character {
         }
     }
 
-    //Check and resolve brick collisions - Normal movement
+    /** Check and resolve brick collisions - Normal movement */
     protected handleBrickCollisionNormal() {
 
         //WALL BOUNDARY
@@ -323,7 +323,7 @@ export default class CharacterBot extends Character {
         }
     }
 
-    //
+    /** */
     private walkstep(vOffset : number) {
         
         this.gpos.add({
@@ -332,7 +332,7 @@ export default class CharacterBot extends Character {
         })
     }
 
-    //Check and resolve brick collisions - Vertical movement
+    /** Check and resolve brick collisions - Vertical movement */
     protected handleBrickCollisionVertical() {
         
         //There is an obstacle, stop based on its direction
@@ -356,7 +356,7 @@ export default class CharacterBot extends Character {
         this.vertMult = -1;
     }
 
-    //Check and resolve brick collisions - Bounce movement
+    /** Check and resolve brick collisions - Bounce movement */
     protected handleBrickCollisionBounce() {
 
         //Don't jump past the level boundary
@@ -413,7 +413,7 @@ export default class CharacterBot extends Character {
         }
     }
 
-    //Colliders for non-brick collisions
+    /** Colliders for non-brick collisions */
     public getColliders() : Collider[] {
         
         return [{ 
@@ -431,7 +431,7 @@ export default class CharacterBot extends Character {
         }];
     }
 
-    //Also reset timer when setting the current group
+    /** Also reset timer when setting the current group */
     public setStateIndex(index? : number) {
 
         //Only set state if it's different from the current
@@ -442,7 +442,7 @@ export default class CharacterBot extends Character {
         }
     }
 
-    //
+    /** */
     public updateSync(step : Step, loopLength : number) {
 
         super.updateSync(step, loopLength);
@@ -479,7 +479,7 @@ export default class CharacterBot extends Character {
         }
     }
 
-    //Collisions
+    /** Collisions */
     public resolveCollision(mask : number) {
         
         //Eat

@@ -36,7 +36,6 @@ export default class LevelSequence extends ZGameObject {
 
         this.par = params.par;
     }
-
     public draw(ctx: CanvasRenderingContext2D) {
 
         ctx.textBaseline = "top";

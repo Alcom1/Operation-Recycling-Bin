@@ -10,7 +10,6 @@ interface PointDebug extends Point {
 
 /** Brickhander extension with debug methods */
 export default class BrickHandlerDebug extends BrickHandler {
-
     private debugPoints : PointDebug[] = [];
 
     /** Constructor */
@@ -20,13 +19,13 @@ export default class BrickHandlerDebug extends BrickHandler {
         this.tags.push("BrickHandler"); //Treat this as a regular brick handler
     }
 
-    //Update, fade older debug points
+    /** Update, fade older debug points */
     public update(dt: number) {
         this.debugPoints.forEach(dp => dp.opacity -= dt * 2);               //Fade debug points
         this.debugPoints = this.debugPoints.filter(dp => dp.opacity > 0);   //Remove debug points after they disappear
     }
 
-    //Draw debug points
+    /** Draw debug points */
     public draw(ctx: CanvasRenderingContext2D) {
 
         ctx.fillStyle = "#0FF"

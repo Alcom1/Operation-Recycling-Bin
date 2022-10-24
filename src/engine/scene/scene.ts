@@ -35,7 +35,6 @@ export default class Scene {
         this.gameObjects = [];
         this.initialized = false;
     }
-
     public init(ctx: CanvasRenderingContext2D) {
         
         if (
@@ -53,14 +52,12 @@ export default class Scene {
             this.initialized = true;
         }
     }
-
     public pushGO(gameObject: GameObject) : GameObject {
         // Establish parent scene before pushing
         gameObject.parent = this;
         this.gameObjects.push(gameObject);
         return gameObject;
     }
-
     public update(dt: number) {
 
         //Update all game objects
@@ -73,19 +70,16 @@ export default class Scene {
         //Sort all game objects for drawing - unconditionally
         this.gameObjects.sort((a, b) => a.getGOZIndex() - b.getGOZIndex());
     }
-
     public draw(ctx: CanvasRenderingContext2D) {
         if (this.initialized) {
             this.gameObjects.filter(go => go.isActive).forEach(go => this.subDraw(ctx, go, go.draw));
         }
     }
-
     public superDraw(ctx: CanvasRenderingContext2D) {
         if (this.initialized) {
             this.gameObjects.filter(go => go.isActive).forEach(go => this.subDraw(ctx, go, go.superDraw));
         }
     }
-
     private subDraw(ctx: CanvasRenderingContext2D, gameObject : GameObject, drawAction : Function) {
 
         ctx.save();

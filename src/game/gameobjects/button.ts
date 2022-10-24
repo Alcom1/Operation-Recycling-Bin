@@ -37,7 +37,6 @@ export default class Button extends GameObject {
 
     /* If this button is horizontally centered around the UI */
     private isCenterUI: boolean;
-
     private images = new Map<boolean, Map<boolean, HTMLImageElement>>([[false, new Map()], [true, new Map()]]);
 
     /** Constructor */
@@ -75,7 +74,6 @@ export default class Button extends GameObject {
             }
         }
     }
-
     public init(ctx: CanvasRenderingContext2D) {
         
         // Center button horizontally around the UI
@@ -83,7 +81,6 @@ export default class Button extends GameObject {
             this.spos.x = ctx.canvas.width - WIDTH_SIDEPANEL / 2;
         }
     }
-
     public update(dt: number): void {
         var pos = this.engine.mouse.getPos();
         
@@ -120,7 +117,6 @@ export default class Button extends GameObject {
             }
         }
     }
-
     public draw(ctx: CanvasRenderingContext2D): void {
         ctx.drawImage(
             this.images.get(this.press)?.get(this.hover)!,
@@ -128,7 +124,6 @@ export default class Button extends GameObject {
             -this.size.y / 2
         );
     }
-
     protected doButtonAction(): void {
         console.log(this.text);
     }

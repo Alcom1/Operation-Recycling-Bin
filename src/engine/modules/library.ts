@@ -24,7 +24,6 @@ export default class LibraryModule {
             this.storeImage(name, src) :                        //If the asset isn't in the library, add it
             curr;                                               //Otherwise, return existing asset
     }
-
     private storeImage(name : string, src : string) {
 
         this.loadingCount++;

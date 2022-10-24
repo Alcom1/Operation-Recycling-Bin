@@ -17,7 +17,7 @@ export default class CharacterBin extends Character {
         super(Object.assign(params, characterBinOverride));
     }
     
-    //Get bin colliders
+    /** Get bin colliders */
     public getColliders() : Collider[] {
         
         return [{ 
@@ -31,7 +31,7 @@ export default class CharacterBin extends Character {
         }];
     }
 
-    //Collect
+    /** Collect */
     public resolveCollision(mask : number) {
     
         if (mask & MASKS.scrap) {

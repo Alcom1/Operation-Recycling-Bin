@@ -15,7 +15,7 @@ export default class CharacterGear extends Character {
     protected get isColLand() : boolean { return !!(this.storedCbm & ring.land); }  //Collision front-low corner
     protected get isColBand() : boolean { return !!(this.storedCbm & ring.band); }  //Collision front-rear corner
 
-    //Get colliders
+    /** Get colliders */
     public getColliders() : Collider[] {
 
         return [{ 
@@ -31,7 +31,7 @@ export default class CharacterGear extends Character {
         this.getPassiveCollider()];
     }
 
-    //Check and resolve brick collisions
+    /** Check and resolve brick collisions */
     protected handleStep(isStart : boolean = false) {
 
         this.isStep = true;
@@ -65,7 +65,7 @@ export default class CharacterGear extends Character {
             this.move.x);
     }
 
-    //Special collision resolving
+    /** Special collision resolving */
     public resolveCollisions(collisions : Collision[]) {
 
         if (this.isStep)
@@ -76,7 +76,7 @@ export default class CharacterGear extends Character {
         }
     }
 
-    //Store front collisions in bitmask
+    /** Store front collisions in bitmask */
     public resolveCollision(mask : number, other : GameObject) {
 
         //Block face if there's something in front
@@ -162,17 +162,17 @@ export default class CharacterGear extends Character {
         }
     }
 
-    //
+    /** */
     protected resolveCollisionBitmask() {
         throw new Error("Not implemented!");
     }
 
-    //
+    /** */
     protected updatePosition()  {
         throw new Error("Not implemented!");
     }
 
-    //Get passive collider (blocks bricks)
+    /** Get passive collider (blocks bricks) */
     protected getPassiveCollider() : Collider {
 
         return { 

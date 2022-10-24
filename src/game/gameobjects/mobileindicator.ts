@@ -4,7 +4,6 @@ import Vect, { Point }  from "engine/utilities/vect";
 import Brick from "./bricknormal";
 
 export default class MobileIndicator extends GameObject {
-
     private mobileOffset : Vect = new Vect(0, 0);
     private isSnapped : boolean = false;
     private isFlipped : boolean = false;
@@ -30,14 +29,12 @@ export default class MobileIndicator extends GameObject {
 
         this.isActive = false;
     }
-
     public init(ctx: CanvasRenderingContext2D) {
         
         this.bricks = this.engine.tag.get(  // Get bricks from scene
             "Brick", 
             "Level") as Brick[];
     }    
-
     public update(dt: number) {
 
         this.spos = this.engine.mouse.getPos().getSub(this.mobileOffset).getClamp({
@@ -63,7 +60,6 @@ export default class MobileIndicator extends GameObject {
         this.isFlipped = this.spos.y < GMULTY * (this.box.y + 5);
         this.bricks.filter(b => b.isSelected).forEach(b => b.flipMobile(this.isFlipped));
     }
-
     public draw(ctx: CanvasRenderingContext2D) {
         
         if (this.engine.mouse.getMouseType() == "mouse" ||
@@ -111,7 +107,6 @@ export default class MobileIndicator extends GameObject {
         ctx.shadowColor = "rgba(0, 0, 0, 0)";
         ctx.stroke();
     }
-
     public setMinMax(min: Vect, max: Vect): void {
 
         //Activate
@@ -126,7 +121,6 @@ export default class MobileIndicator extends GameObject {
             y : min.y * GMULTY
         });
     }
-
     public snap(state : boolean) {
 
         this.isSnapped = state;

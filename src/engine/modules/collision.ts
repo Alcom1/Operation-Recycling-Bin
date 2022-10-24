@@ -23,7 +23,7 @@ interface CollidersScene {
 
 /** Module that handles tags and game objects grouped by tag. */
 export default class CollisionModule {
-
+    
     private scenes          : CollidersScene[] = [];
 
     public pushGOs(sceneName : string, sceneObjects : GameObject[]) {
@@ -54,7 +54,7 @@ export default class CollisionModule {
         }
     }
 
-    //Update - check and trigger collisions for all game objects in all scenes
+    /** Update - check and trigger collisions for all game objects in all scenes */
     public update(dt : number) {
 
         //Trigger collisions for each scene. Scenes don't interact with each other.
@@ -80,7 +80,7 @@ export default class CollisionModule {
         });
     }
 
-    //Debug Draw
+    /** Debug Draw */
     public draw(ctx : CanvasRenderingContext2D) {
 
         ctx.strokeStyle = "#F00";
@@ -114,13 +114,13 @@ export default class CollisionModule {
         );
     }
 
-    //Get passive colliders that are within the given box
+    /** Get passive colliders that are within the given box */
     public collidePassive(min : Point, max : Point) : Collider[] {
 
         return this.getPassiveColliders().filter(c => colRectRectCorners(c.min, c.max, min, max))
     }
 
-    //Get passive colliders (mask == 0)
+    /** Get passive colliders (mask == 0) */
     private getPassiveColliders() : Collider[] {
 
         return this.scenes
@@ -132,14 +132,14 @@ export default class CollisionModule {
             .flat();
     }
 
-    //Compare all colliders between two game objects
+    /** Compare all colliders between two game objects */
     private compareGOColliders(goc1 : GameObjectCollider, goc2 : GameObjectCollider) {
         goc1.colliders.forEach(c1 => 
         goc2.colliders.forEach(c2 => 
             this.compareGOPair(c1, c2, goc1.gameObject, goc2.gameObject)));
     }
 
-    //Check & resolve collision between two colliders
+    /** Check & resolve collision between two colliders */
     private compareGOPair(c1 : Collider, c2 : Collider, g1 : GameObject, g2 : GameObject) {
         if ((c1.mask & c2.mask) && this.compareColliders(c1, c2)) {
             g1.setCollision(c1.mask & c2.mask, g2);
@@ -147,7 +147,7 @@ export default class CollisionModule {
         }
     }
 
-    //Compare two colliders, check if they overlap
+    /** Compare two colliders, check if they overlap */
     private compareColliders(c1 : Collider, c2 : Collider) : boolean {
 
         //Collider subtypes match. No need to convert
@@ -168,7 +168,7 @@ export default class CollisionModule {
         }
     }
 
-    //Remove scene reference from colliders
+    /** Remove scene reference from colliders */
     public clear(sceneNames: string[]) {
         this.scenes = this.scenes.filter(sg => !sceneNames.some(sn => sg.name == sn));
     }

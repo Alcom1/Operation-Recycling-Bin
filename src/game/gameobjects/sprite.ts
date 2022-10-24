@@ -7,7 +7,6 @@ export interface SpriteParams extends ZGameObjectParams {
 
 /** Single image gameobject */
 export default class Sprite extends ZGameObject {
-
     private image : HTMLImageElement;
 
     /** Constructor */
@@ -16,7 +15,6 @@ export default class Sprite extends ZGameObject {
 
         this.image = this.engine.library.getImage(params.image, params.extension);
     }
-
     public draw(ctx: CanvasRenderingContext2D): void {
         ctx.drawImage(this.image, 0, 0);
     }

@@ -473,10 +473,10 @@ export default class BrickHandler extends GameObject {
         return ret;
     }
 
-    /**
+    /** 
      * Check all bricks for press, return press state (none, processed, indeterminate)
      * This entire function is bananas.
-     */
+    */
     public pressBricks(pos: Vect): boolean {
 
         // Build an array of selections that are not null (invalid)
@@ -504,10 +504,10 @@ export default class BrickHandler extends GameObject {
         return this.processSelection(this.selections[dir], pos);
     }
     
-    /**
+    /** 
      * Process a selection, set all its bricks to a selected state,
      * search for floating bricks, return if bricks were selected
-     */
+    */
     private processSelection(selection: Brick[] | null, pos: Vect) {
 
         // Select bricks

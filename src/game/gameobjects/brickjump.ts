@@ -11,7 +11,6 @@ const brickJumpOverride = Object.freeze({
 });
 
 export default class BrickJump extends BrickPlateTop {
-
     private brickHandler!: BrickHandler;
     private timer : number = 0;
     private offDuration : number = 0.1;
@@ -22,7 +21,6 @@ export default class BrickJump extends BrickPlateTop {
     constructor(params: BrickPlateParams) {
         super(Object.assign({}, brickJumpOverride, params));
     }
-
     public init() {
 
         //Get brick handler to to check if this jump is blocked by other bricks
@@ -30,7 +28,6 @@ export default class BrickJump extends BrickPlateTop {
             "BrickHandler", 
             "LevelInterface")[0] as BrickHandler;
     }
-
     public update(dt : number) {
 
         if (this.timer2 > 0) {
@@ -49,7 +46,7 @@ export default class BrickJump extends BrickPlateTop {
         }
     }
 
-    //Check if this brick is blocked by bricks on top
+    /** Check if this brick is blocked by bricks on top */
     public isBlocked() : boolean {
 
         //Grey bricks probably shouldn't perform this check.
@@ -69,7 +66,7 @@ export default class BrickJump extends BrickPlateTop {
             1); //HEIGHT
     }
 
-    //Get hazard and passive colliders of this brick.
+    /** Get hazard and passive colliders of this brick. */
     public getColliders() : Collider[] {
 
         //Combine with passive collider from base class, only return jump hitbox if this plate is on and not selected
@@ -80,7 +77,7 @@ export default class BrickJump extends BrickPlateTop {
         }] : []);
     }
 
-    //Turn off
+    /** Turn off */
     public resolveCollision(mask : number) {
 
         //Turn off

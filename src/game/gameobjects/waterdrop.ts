@@ -14,7 +14,6 @@ const characterBotOverride = Object.freeze({
 
 /** Single image gameobject */
 export default class WaterDrop extends Sprite {
-
     private speed : number = 500;
     private brickHandler! : BrickHandler;
     private animLand: Anim;
@@ -51,7 +50,7 @@ export default class WaterDrop extends Sprite {
         this.isActive = false;  //Start deactivated
     }
 
-    //Get brick handler for brick collisions
+    /** Get brick handler for brick collisions */
     public init() {
 
         //Get brick handler to to check brick-wind collisions
@@ -60,7 +59,7 @@ export default class WaterDrop extends Sprite {
             "LevelInterface")[0] as BrickHandler;
     }
 
-    //Move waterdrop down.
+    /** Move waterdrop down. */
     public update(dt : number) {
 
         if (this.slipTimer < this.slipDuration) {
@@ -93,14 +92,14 @@ export default class WaterDrop extends Sprite {
         }
     }
 
-    //Draw only after slip animation ends
+    /** Draw only after slip animation ends */
     public draw(ctx : CanvasRenderingContext2D) {
         if (this.slipTimer >= this.slipDuration) {
             super.draw(ctx);
         }
     }
 
-    //Reset and spawn this waterdrop.
+    /** Reset and spawn this waterdrop. */
     public reset(gpos : Vect) {
 
         this.isActive = true;
@@ -111,12 +110,12 @@ export default class WaterDrop extends Sprite {
         this.animSlip.reset(this.gpos);
     }
 
-    //Remove this waterdrop upon collision
+    /** Remove this waterdrop upon collision */
     public resolveCollision() {
         this.doLandAnimation();
     }
 
-    //Perform a waterdrop landing animation
+    /** Perform a waterdrop landing animation */
     private doLandAnimation() {
 
         this.isActive = false;
@@ -124,7 +123,7 @@ export default class WaterDrop extends Sprite {
         this.animLand.reset(this.gpos);
     }
 
-    //Get hazard and passive colliders of this brick.
+    /** Get hazard and passive colliders of this brick. */
     public getColliders() : Collider[] {
 
         //Return hazard hitbox

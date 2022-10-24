@@ -16,12 +16,10 @@ export default class FPSCounter extends GameObject {
         this.font = params.font ?? "18pt Consolas";
         this.color = params.color || "white";
     }
-
     public update(dt: number) {
         //FPS is inverted delta time, measure to a single decimal point.
         this.text = "fps: " + (1 / dt).toFixed(1);
     }
-
     public draw(ctx: CanvasRenderingContext2D) {
         ctx.textBaseline = "top";
         ctx.font = this.font;

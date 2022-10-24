@@ -4,6 +4,7 @@ import LevelSequence from "./levelsequence";
 export default class ButtonScene extends Button {
     private sceneName: string | null = null;
 
+    /** */
     public init(ctx: CanvasRenderingContext2D) {
         super.init(ctx);
         //Get level sequence for the current level
@@ -18,13 +19,14 @@ export default class ButtonScene extends Button {
         }
     }
 
+    /** */
     protected doButtonAction() {
 
         // Go to new scene if this button has a scene name
         if (this.sceneName) {
             this.engine.killAllScenes();                // Set all scenes to be unloaded
             this.engine.pushScenes(this.sceneName);     // Push this button's scene name to be loaded
-            this.engine.pushScenes("LevelInterface");  // Push level interface to be loaded
+            this.engine.pushScenes("LevelInterface");   // Push level interface to be loaded
         }
     }
 }

@@ -8,7 +8,6 @@ export interface BrickPlateParams extends BrickParams {
 }
 
 export default class BrickPlate extends Brick {
-
     protected isOn : boolean = false;
     protected images : HTMLImageElement[];
     public circuit : number;
@@ -26,13 +25,13 @@ export default class BrickPlate extends Brick {
         this.circuit = params.circuit;
     }
 
-    //Set the on/off state of this plate
+    /** Set the on/off state of this plate */
     public setOnOff(state : boolean) {
         this.isOn = state;
         this.image = this.images[+this.isOn];
     }
 
-    //Get passive collider of this brick.
+    /** Get passive collider of this brick. */
     public getColliders() : Collider[] {
         return !this.isGrey || this.isSelected ? [] : [{ 
             mask : 0,               //Passive

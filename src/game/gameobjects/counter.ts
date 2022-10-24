@@ -9,9 +9,8 @@ interface CounterParams extends GameObjectParams {
 
 //Counter that keeps track of the move count 
 export default class Counter extends GameObject {
-
-    private count : number = 0;         //Current count
-    private fontFamily: string = "";    //Font for count display
+    private count : number = 0;         //Current count */
+    private fontFamily: string = "";    //Font for count display */
     private par: number = 1;            //Current par
     
     /** Constructor */
@@ -21,7 +20,7 @@ export default class Counter extends GameObject {
         this.fontFamily = params.fontFamily ?? "Font04b_08";
     }    
     
-    //Get current level and its par
+    /** Get current level and its par */
     public init(): void {
         this.par = (
             this.engine.tag.get(
@@ -29,12 +28,12 @@ export default class Counter extends GameObject {
                 "Level")[0] as LevelSequence).par;
     }
 
-    //Increment the move count (called when bricks are moved)
+    /** Increment the move count (called when bricks are moved) */
     public incrementCount() {
         this.count++;
     }
 
-    //Draw the current count
+    /** Draw the current count */
     public draw(ctx: CanvasRenderingContext2D): void {
         ctx.textAlign = "right";
         

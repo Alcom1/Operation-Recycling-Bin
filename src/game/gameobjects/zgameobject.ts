@@ -7,7 +7,6 @@ export interface ZGameObjectParams extends GameObjectParams {
 
 /** Game object with a static z-index */
 export default class ZGameObject extends GameObject {
-
     private zIndex : number;
 
     /** Constructor */
@@ -16,11 +15,9 @@ export default class ZGameObject extends GameObject {
 
         this.zIndex = params.zIndex || 0;
     }
-
     public getGOZIndex() : number {
         return this.zIndex;
     }
-
     public setZIndex(modifier : number) {
         this.zIndex = getZIndex(this.gpos, modifier);
     }

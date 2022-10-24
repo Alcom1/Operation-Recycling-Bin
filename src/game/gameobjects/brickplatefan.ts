@@ -11,7 +11,6 @@ const brickPlateFanOverride = Object.freeze({
 });
 
 export default class BrickPlateFan extends BrickPlate {
-
     private brickHandler!: BrickHandler;
     private animations: Anim[] = [];
     private beams: number[] = [];
@@ -38,7 +37,6 @@ export default class BrickPlateFan extends BrickPlate {
             })
         }
     }
-
     public init() {
 
         //Get brick handler to to check brick-wind collisions
@@ -55,7 +53,7 @@ export default class BrickPlateFan extends BrickPlate {
         this.setBeams();
     }
 
-    //Update wind beams
+    /** Update wind beams */
     public update() {
 
         //Set animations
@@ -68,7 +66,7 @@ export default class BrickPlateFan extends BrickPlate {
         });
     }
 
-    //Set wind beams
+    /** Set wind beams */
     private setBeams() {
 
         //2 beams per fan
@@ -99,7 +97,7 @@ export default class BrickPlateFan extends BrickPlate {
         })
     }
 
-    //Get hazard and passive colliders of this brick.
+    /** Get hazard and passive colliders of this brick. */
     public getColliders() : Collider[] {
         
         //Set the beams for the collider (also for drawing the animations)

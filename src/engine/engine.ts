@@ -38,10 +38,9 @@ export default class Engine {
 
     /** If the last frame threw an error */
     private crashed = false;
-
     private gameObjectTypes = new Map<string, typeof GameObject>();
 
-    //Modules
+    /** Modules */
     public baker: BakerModule;
     public collision: CollisionModule;
     public library: LibraryModule;
@@ -203,7 +202,7 @@ export default class Engine {
     /** 
      * Set scenes to be loaded
      * @param fileNames File name(s) of scenes to load
-     */
+    */
     public pushScenes(fileNames: string | string[]): void {
         if (Array.isArray(fileNames)) {
             fileNames.forEach(s => this.pushScene(s));
@@ -212,10 +211,10 @@ export default class Engine {
         }
     }
 
-    /**
+    /** 
      * Set scenes to be unloaded
      * @param sceneNames Scene name(s) to be unloaded
-     */
+    */
     public killScenes(sceneNames: string | string[]): void {
         if (Array.isArray(sceneNames)) {
             sceneNames.forEach(s => this.killScene(s));
@@ -224,20 +223,20 @@ export default class Engine {
         }
     }
 
-    /**
+    /** 
      * Set scene to be loaded
      * @param fileName Filename of scene to load
-     */
+    */
     private pushScene(fileName: string): void {
         if (!this.pushSceneNames.includes(fileName)) {
             this.pushSceneNames.push(fileName);
         }
     }
 
-    /**
+    /** 
      * Set scene to be unloaded
      * @param sceneName Scene name of scene to unload
-     */
+    */
     private killScene(sceneName: string): void {
         if (!this.killSceneNames.includes(sceneName)) {
             this.killSceneNames.push(sceneName);
@@ -249,10 +248,10 @@ export default class Engine {
         this.killScenes(this.scenesActive.map(s => s.name));
     }
 
-    /**
+    /** 
      * Get time since last frame
      * @returns Time since last frame
-     */
+    */
     private calculateDeltaTime(): number {
         // Date as milliseconds
         const now = (+new Date);
@@ -263,7 +262,6 @@ export default class Engine {
         // Return delta time, the milliseconds between this frame and the previous frame
         return 1/fps;
     }
-
     private registerGameObjects(gameObjectTypes: typeof GameObject[]): void {
         for (const GOType of gameObjectTypes) {
             this.gameObjectTypes.set(GOType.name, GOType);

@@ -8,16 +8,15 @@ const brickButtonOverride = Object.freeze({
 });
 
 export default class BrickPlateButton extends BrickPlate {
-    
+
     plates: BrickPlate[] = [];
-    private isLock : boolean = false;   //If this button is locked and can't be flipped again
+    private isLock : boolean = false;   //If this button is locked and can't be flipped again */
     private isLeft : boolean = false;   //If the presser of this button left and it *can* be flipped again
 
     /** Constructor */
     constructor(params: BrickPlateParams) {
         super(Object.assign(params, brickButtonOverride));
     }
-
     public init() {
 
         //Get plates affected by this button (also includes self?)
@@ -26,7 +25,7 @@ export default class BrickPlateButton extends BrickPlate {
             "Level") as BrickPlate[]).filter(p => p.circuit == this.circuit);
     }
 
-    //Update timer
+    /** Update timer */
     public update(dt: number) {
 
         //Unlock the button after the presser leaves
@@ -40,7 +39,7 @@ export default class BrickPlateButton extends BrickPlate {
         }
     }
 
-    //Get hazard and passive colliders of this brick.
+    /** Get hazard and passive colliders of this brick. */
     public getColliders() : Collider[] {
 
         //Combine with passive collider from base class
@@ -51,7 +50,7 @@ export default class BrickPlateButton extends BrickPlate {
         }]);
     }
     
-    //Flip
+    /** Flip */
     public resolveCollision(mask : number) {
 
         //Turn off

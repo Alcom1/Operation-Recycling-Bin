@@ -68,7 +68,7 @@ export default class BrickNormal extends Brick {
                 imageName));
     }
     
-    // Setup this brick for pressing
+    /** Setup this brick for pressing */
     public press(): void {
         super.press();
 

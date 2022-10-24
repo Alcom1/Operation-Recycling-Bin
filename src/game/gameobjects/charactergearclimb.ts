@@ -28,7 +28,7 @@ const CharacterGearClimbOverride = Object.freeze({
     animsCount : 1,
     isGlide : true,
 
-    //Misc animation parameters
+    // Misc animation parameters
     animsMisc : [
     {
         speed : 3.0,
@@ -48,10 +48,10 @@ const CharacterGearClimbOverride = Object.freeze({
 });
 
 export default class CharacterGearClimb extends CharacterGear {
-
-    private vertMax :   number = 3;                 //Maximum vertical climb height
-    private vertCount : number = 0;                 //Vertical climb tracker
-
+    
+    private vertMax :   number = 3;                 //Maximum vertical climb height */
+    private vertCount : number = 0;                 //Vertical climb tracker */
+    
     protected get animationSubindex() : number {    //Include up & down animations (reminder : animation arrays are zippered)
 
         //Animation is based on up/down movement
@@ -76,13 +76,13 @@ export default class CharacterGearClimb extends CharacterGear {
         super(Object.assign(params, CharacterGearClimbOverride));
     }
 
-    //Index reset with unique behaviors
+    /** Index reset with unique behaviors */
     protected setStateIndex(index? : number) {
         this.vertCount = 0;         //Reset vertical counter
         super.setStateIndex(index); //Set index
     }
 
-    //Sets a normal state with a vertical direction
+    /** Sets a normal state with a vertical direction */
     private setNormalState(vertState? : VertState) {
 
         //Go up, down, or horizontal
@@ -95,7 +95,7 @@ export default class CharacterGearClimb extends CharacterGear {
             x.zModifierPub = (vertState == null || x.isBackSlice) ? 0 : 2);
     }
 
-    //Update position to move forward
+    /** Update position to move forward */
     protected updatePosition() {
 
         //Don't update position for special states (WAIT, HALT, etc)
@@ -124,7 +124,7 @@ export default class CharacterGearClimb extends CharacterGear {
         }
     }
 
-    //Resolve collisions based on the current stored bitmask
+    /** Resolve collisions based on the current stored bitmask */
     public resolveCollisionBitmask() {
 
         //Different collision sequences based on state & vertical sub-state
@@ -159,7 +159,7 @@ export default class CharacterGearClimb extends CharacterGear {
         }
     }
 
-    //Standard collision resolution
+    /** Standard collision resolution */
     private resolveCollisionNormal(isDownSwap : Boolean = false) {
 
         //No floor, go down
@@ -180,7 +180,7 @@ export default class CharacterGearClimb extends CharacterGear {
         }
     }
 
-    //Standard UP -> BACK -> HALT check
+    /** Standard UP -> BACK -> HALT check */
     private resolveCollisionStandard() {
         
         //No roof, go up
@@ -198,7 +198,7 @@ export default class CharacterGearClimb extends CharacterGear {
         }
     }
 
-    //Downward BACK -> UP -> HALT check
+    /** Downward BACK -> UP -> HALT check */
     private resolveCollisionsDown() {
 
         if (!this.isColBack) {
@@ -215,7 +215,7 @@ export default class CharacterGearClimb extends CharacterGear {
         }
     }
 
-    //Upward collision resolution
+    /** Upward collision resolution */
     private resolveCollisionUp() {
 
         //Land
@@ -237,7 +237,7 @@ export default class CharacterGearClimb extends CharacterGear {
         }
     }
 
-    //Waiting collision resolution
+    /** Waiting collision resolution */
     private resolveCollisionWait() {
         
         //Go up

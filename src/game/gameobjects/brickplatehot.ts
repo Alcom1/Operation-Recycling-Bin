@@ -9,7 +9,6 @@ const brickPlateHotOverride = Object.freeze({
 });
 
 export default class BrickPlateHot extends BrickPlate {
-
     private animation: Anim;
 
     /** Constructor */
@@ -29,14 +28,14 @@ export default class BrickPlateHot extends BrickPlate {
         this.animation.isActive == this.isOn;
     }
     
-    //draw nothing
+    /** draw nothing */
     public draw(ctx : CanvasRenderingContext2D) {
         if (!this.isOn) {
             super.draw(ctx);
         }
     }
 
-    //Get hazard and passive colliders of this brick.
+    /** Get hazard and passive colliders of this brick. */
     public getColliders() : Collider[] {
 
         //Combine with passive collider from base class
