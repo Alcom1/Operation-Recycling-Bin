@@ -97,7 +97,7 @@ export default class Character extends GameObject {
                     sliceIndex : m.isSliced ? i : null,
                     framesSize : m.isSliced ? GMULTX * 2 : m.framesSize,
                     gposOffset : m.gposOffset,
-                    zModifier :  m.isSliced ? (i < 1 ? 300 : 29) : m.zModifier,
+                    zModifier :  m.isSliced ? (i < 1 ? (this.height * 100 + 1) : 29) : m.zModifier,
                     frameCount : m.frameCount,
                     animsCount : m.animsCount,
                     isLoop :     m.isLoop
