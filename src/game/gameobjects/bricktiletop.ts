@@ -10,7 +10,7 @@ export interface BrickTileTopParams extends BrickTileParams {
 /** Tile with a top plate, like a jump */
 export default class BrickTileTop extends BrickTile {
 
-    private topSprite : Sprite;             // The sprite to be shown on top of this brick */
+    private topSprite : Sprite;             // The sprite to be shown on top of this brick
     private isShowTopIfOn : boolean = true; // If the top sprite should be active for the ON or OFF state.
 
     /** Constructor */

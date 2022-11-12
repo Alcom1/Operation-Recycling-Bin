@@ -9,8 +9,8 @@ interface CounterParams extends GameObjectParams {
 
 /** Counter that keeps track of the move count */
 export default class Counter extends GameObject {
-    private count : number = 0;         // Current count */
-    private fontFamily: string = "";    // Font for count display */
+    private count : number = 0;         // Current count
+    private fontFamily: string = "";    // Font for count display
     private par: number = 1;            // Current par
     
     /** Constructor */

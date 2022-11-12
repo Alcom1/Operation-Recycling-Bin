@@ -33,26 +33,26 @@ export interface AnimationParams extends GameObjectParams {
 export default class Anim extends GameObject {
 
     /** Set in constructor */
-    private gposOffset : Point;                     // Constant offset of the global position */
-    private zModifier : number;                     // Modifier value added to the zIndex */
-    private images : OffsetImageElement[] = [];            // Animation images with a horizontal offset */
-    private speed : number;                         // Speed of the animation */
-    public  isLoop : boolean;                       // If this animation is looped */
-    private isVert : boolean;                       // If this animation is arranged vertically */
-    private framesSize? : number;                   // The Horizontal/Vertical size of each frame */
-    private frameCount : number;                    // The Quantity of frames for this animation */
-    private animsCount : number;                    // The number of animations per image */
+    private gposOffset : Point;                     // Constant offset of the global position
+    private zModifier : number;                     // Modifier value added to the zIndex
+    private images : OffsetImageElement[] = [];            // Animation images with a horizontal offset
+    private speed : number;                         // Speed of the animation
+    public  isLoop : boolean;                       // If this animation is looped
+    private isVert : boolean;                       // If this animation is arranged vertically
+    private framesSize? : number;                   // The Horizontal/Vertical size of each frame
+    private frameCount : number;                    // The Quantity of frames for this animation 
+    private animsCount : number;                    // The number of animations per image
     private sliceIndex? : number;                   // The index of this animation, if it's been sliced
 
     /** Set in init */
     private fullSize : Point = { x : 0, y : 0 };    // The full dimensions of this animation's images
 
     /** Set here */
-    public  zModifierPub : number = 0;              // Public z-modifier */
-    public  isVisible : boolean = true;             // If this animation is visible */
-    private timer : number = 0;                     // Timer to track frames */
-    private imageIndex: number = 0;                 // Index of the current image */
-    private animsIndex : number = 0;                // Index of the current animation */
+    public  zModifierPub : number = 0;              // Public z-modifier
+    public  isVisible : boolean = true;             // If this animation is visible
+    private timer : number = 0;                     // Timer to track frames
+    private imageIndex: number = 0;                 // Index of the current image
+    private animsIndex : number = 0;                // Index of the current animation
     private sposYFix : number = -101;               // Z-index offset to fix vertical clipping
 
     /** get */

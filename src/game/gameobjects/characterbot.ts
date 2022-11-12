@@ -88,18 +88,19 @@ const acb = Object.freeze({
 /** The one and only. */
 export default class CharacterBot extends Character {
 
-    private timerSpc : number = 0;                          // Timer to track duration of special movements */
-    private timerArm : number = 0;                          // Timer to track armor flash */
-    private ceilSubOffset : number = -6;                    // Offset for up/down movement */
-    private vertSpeed : number = 500;                       // Speed of air movement */
-    private vertMult : -1|1 = 1;                            // Up/Down multiplier for air movement */
-    private horzSpeed : number = 350;                       // Horizontal air speed */
-    private jumpHeights : number[] = [0, 2, 3, 3, 2, 0];    // Individual heights throughout a jump */
-    private jumpOrigin : Point = { x : 0, y : 0 }           // Origin of the previous jump */
+    private timerSpc : number = 0;                          // Timer to track duration of special movements
+    private timerArm : number = 0;                          // Timer to track armor flash
+    private ceilSubOffset : number = -6;                    // Offset for up/down movement
+    private vertSpeed : number = 500;                       // Speed of air movement
+    private vertMult : -1|1 = 1;                            // Up/Down multiplier for air movement
+    private vertBlock : boolean = false;                    //
+    private horzSpeed : number = 350;                       // Horizontal air speed
+    private jumpHeights : number[] = [0, 2, 3, 3, 2, 0];    // Individual heights throughout a jump
+    private jumpOrigin : Point = { x : 0, y : 0 }           // Origin of the previous jump
     private jumpIndex : number = 0;
-    private armorDelay : number = 2;                        // Delay where armor remains after taking damage */
-    private armorFlashRate : number = 8;                    // Rate of the armor flashing effect */
-    private armorState : ArmorState = ArmorState.NONE;      // Current state of the armor */
+    private armorDelay : number = 2;                        // Delay where armor remains after taking damage
+    private armorFlashRate : number = 8;                    // Rate of the armor flashing effect
+    private armorState : ArmorState = ArmorState.NONE;      // Current state of the armor
     
     protected get animationSubindex() : number {               // Adjust animation index for armor flash effect
         return this.move.x * (
@@ -187,8 +188,12 @@ export default class CharacterBot extends Character {
     /** Vertical motion */
     private moveVertical(dt: number, dir: number) {
 
-        this.spos.y -= dt * this.vertSpeed * dir;               // Move subposition vertically based on speed
-        this.animationsCurr.forEach(a => a.spos = this.spos);   // Move animation to match
+        //Don't update if vertically blocked and moving upward
+        if(!this.vertBlock || dir < 0) {
+
+            this.spos.y -= dt * this.vertSpeed * dir;               // Move subposition vertically based on speed
+            this.animationsCurr.forEach(a => a.spos = this.spos);   // Move animation to match
+        }
     }
 
     /** Move in a jumping arc */
@@ -337,13 +342,17 @@ export default class CharacterBot extends Character {
 
     /** Check and resolve brick collisions - Vertical movement */
     protected handleBrickCollisionVertical() {
+
+        //Reset vertical block for check
+        this.vertBlock = false;
         
         // There is an obstacle, stop based on its direction
         if (this.getCollisionVertical(this.vertMult)) {
 
             // If going upwards, collide with ceiling
             if (this.vertMult > 0) {
-                this.spos.y = this.ceilSubOffset;   // Block vertical movement
+                this.vertBlock = true;              // Block vertical movement
+                this.spos.y = this.ceilSubOffset;   // Set sub-position for block
                 this.animationsCurr.forEach(a => {  // Adjust animations to match
                     a.zModifierPub = 0;
                     a.spos.y = this.ceilSubOffset;

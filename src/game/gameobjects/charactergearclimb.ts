@@ -51,8 +51,8 @@ const CharacterGearClimbOverride = Object.freeze({
 /** A New Kind of Gearbot!  */
 export default class CharacterGearClimb extends CharacterGear {
     
-    private vertMax :   number = 3;                 // Maximum vertical climb height */
-    private vertCount : number = 0;                 // Vertical climb tracker */
+    private vertMax :   number = 3;                 // Maximum vertical climb height
+    private vertCount : number = 0;                 // Vertical climb tracker
     
     protected get animationSubindex() : number {    // Include up & down animations (reminder : animation arrays are zippered)
 
@@ -231,7 +231,7 @@ export default class CharacterGearClimb extends CharacterGear {
         }
         // Continue upwards
         else if (!this.isColRoof && this.vertCount < this.vertMax) {
-            // Here be dragons!
+            this.setNormalState(VertState.UP);
         }
         // Default to standard if there's no land, band, or continue
         else {

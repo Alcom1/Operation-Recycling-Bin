@@ -12,7 +12,7 @@ const brickButtonOverride = Object.freeze({
 export default class BrickTileButton extends BrickTile {
 
     plates: BrickTile[] = [];
-    private isLock : boolean = false;   // If this button is locked and can't be flipped again */
+    private isLock : boolean = false;   // If this button is locked and can't be flipped again
     private isLeft : boolean = false;   // If the presser of this button left and it *can* be flipped again
 
     /** Constructor */

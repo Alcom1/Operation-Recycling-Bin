@@ -45,7 +45,7 @@ export default class Character extends GameObject {
     protected get animationsCurr() : Anim[] {                               // The animations for the current state
         return this.animations[this.stateAnimations[this.stateIndex]]; 
     }
-    public get isNormalMovment() : boolean { return this.stateIndex == 0 }  // If the current state is normal movment */
+    public get isNormalMovment() : boolean { return this.stateIndex == 0 }  // If the current state is normal movment
     protected get animationSubindex() : number { return this.move.x }       // Sub-index for animations (by default, based on horizontal movement)
 
     /** Constructor */
@@ -229,8 +229,6 @@ export default class Character extends GameObject {
 
         // The step matches this character's speed, perform an update
         if (step.stepType == StepType.SYNC && step.counter % (loopLength / this.speed) == 0) {
-
-            this.spos = Vect.zero;
     
             this.handleStep();
             this.handleBricks();
