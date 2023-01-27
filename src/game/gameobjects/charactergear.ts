@@ -1,6 +1,6 @@
 import GameObject, { Collision } from "engine/gameobjects/gameobject";
 import { Collider } from "engine/modules/collision";
-import { bitStack, BOUNDARY, col1D, RING_BITSTACK as ring, GMULTX, GMULTY, MASKS } from "engine/utilities/math";
+import { bitStack, BOUNDARY, col1D, RING_BITSTACKB as ring, GMULTX, GMULTY, MASKS } from "engine/utilities/math";
 import Character from "./character";
 
 /** Base gear character */
@@ -15,6 +15,7 @@ export default class CharacterGear extends Character {
     protected get isColBack() : boolean { return !!(this.storedCbm & ring.back); }  // Collision back
     protected get isColLand() : boolean { return !!(this.storedCbm & ring.land); }  // Collision front-low corner
     protected get isColBand() : boolean { return !!(this.storedCbm & ring.band); }  // Collision front-rear corner
+    protected get isColHang() : boolean { return !!(this.storedCbm & ring.hang); }  // Collision distant front-low
 
     /** Get colliders */
     public getColliders() : Collider[] {
@@ -64,7 +65,8 @@ export default class CharacterGear extends Character {
                 x : -2, 
                 y : -this.height}), 
             4, 
-            this.move.x);
+            this.move.x,
+            true);
     }
 
     /** Special collision resolving */

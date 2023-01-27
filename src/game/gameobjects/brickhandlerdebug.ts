@@ -1,6 +1,7 @@
 import { GameObjectParams } from "engine/gameobjects/gameobject";
 import { col1D, GMULTX, GMULTY } from "engine/utilities/math";
 import { Point } from "engine/utilities/vect";
+import Brick from "./brick";
 import BrickHandler from "./brickhandler";
 
 /** A point with an opacity for fade effects */
@@ -58,16 +59,17 @@ export default class BrickHandlerDebug extends BrickHandler {
     }
 
     /** Check collisons for a square ring and return a bitmask */
-    public checkCollisionRing(pos: Point, size: number, dir : number = 1): number {
+    public checkCollisionRing(pos: Point, size: number, dir : number = 1, overhang : boolean = true): number {
 
-        let collisions = 0; // Collision bitbask
-        let count = 0;      // Count gridspaces being checked
+        let collisions = 0;     // Collision bitbask
+        let count = 0;          // Count gridspaces being checked
+        let row : Brick[] = [];
 
         // Vertical travel
         for(let j = pos.y; j < pos.y + size; j++) {
 
             // Get this row
-            let row = this.rows.find(r => r.row == j)?.bricks.filter(b => !b.isSelected) || [];
+            row = this.rows.find(r => r.row == j)?.bricks.filter(b => !b.isSelected) || [];
 
             // Horizontal travel, skip to end unless this is the first or last row to create a ring shape
             for(let i = pos.x; i < pos.x + size; i += ((j > pos.y && j < pos.y + size - 1) ? size - 1 : 1)) {
@@ -92,6 +94,29 @@ export default class BrickHandlerDebug extends BrickHandler {
 
                 count++;
             }
+        }
+
+        //Single overhang space
+        if(overhang) {
+
+            //x-pos of new space
+            let check = dir > 0 ? pos.x + size : pos.x - 1;
+            this.debugPoints.push({ x : check, y : pos.y + size - 1, opacity : 1});
+
+            // Check each brick in most recent & bottom row.
+            row.forEach(brick => {
+
+                if (col1D(
+                    brick.gpos.x - 1, 
+                    brick.gpos.x + brick.width,
+                    check,
+                    check
+                )) {
+                    collisions += 1 << (count);
+                }
+            });
+
+            count++;
         }
 
         return collisions;

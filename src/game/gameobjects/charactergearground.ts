@@ -33,8 +33,10 @@ export default class CharacterGearGround extends CharacterGear {
     public resolveCollisionBitmask()  {
 
         // Obstacle in front OR floor stops, reverse
-        if (this.isColFace || !this.isColLand) {
+        if (this.isColFace || !this.isColHang) {
             this.reverse();
         }
+        
+        this.setStateIndex();
     }
 }
