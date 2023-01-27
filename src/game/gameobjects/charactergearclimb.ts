@@ -80,12 +80,16 @@ export default class CharacterGearClimb extends CharacterGear {
 
     /** Index reset with unique behaviors */
     protected setStateIndex(index? : number) {
-        this.vertCount = 0;         // Reset vertical counter
         super.setStateIndex(index); // Set index
     }
 
     /** Sets a normal state with a vertical direction */
     private setNormalState(vertState? : VertState) {
+
+        //Reset vertical counter if going in any direction besides up
+        if(vertState != VertState.UP) {
+            this.vertCount = 0;         // Reset vertical counter
+        }
 
         // Go up, down, or horizontal
         this.move.y =
