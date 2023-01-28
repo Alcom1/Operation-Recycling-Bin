@@ -1,6 +1,7 @@
 import GameObject, { Collision } from "engine/gameobjects/gameobject";
 import { Collider } from "engine/modules/collision";
 import { bitStack, BOUNDARY, col1D, RING_BITSTACKB as ring, GMULTX, GMULTY, MASKS } from "engine/utilities/math";
+import Vect from "engine/utilities/vect";
 import Character from "./character";
 
 /** Base gear character */
@@ -179,10 +180,14 @@ export default class CharacterGear extends Character {
     /** Get passive collider (blocks bricks) */
     protected getPassiveCollider() : Collider {
 
+        var offset = new Vect(
+            this.move.y == 0 ? this.move.x : 0,
+            this.move.y);
+
         return { 
             mask : 0,   // Passive
-            min : this.gpos.getAdd({ x : - (this.move.x < 0 ? 2 : 0), y : 1 - this.height}),
-            max : this.gpos.getAdd({ x : + (this.move.x < 0 ? 0 : 2), y : 1})
+            min : this.gpos.getAdd({x : -1, y : -1}).getAdd(offset),
+            max : this.gpos.getAdd({x :  1, y :  1}).getAdd(offset)
         }
     }
 }
