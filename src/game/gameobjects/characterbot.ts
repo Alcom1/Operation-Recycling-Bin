@@ -199,21 +199,99 @@ export default class CharacterBot extends Character {
     /** Move in a jumping arc */
     private moveBounce(dt: number) {
 
-        this.jumpIndex = Math.abs(this.gpos.x - this.jumpOrigin.x); // Update index of current jump height
+        var index = Math.abs(this.gpos.x - this.jumpOrigin.x);  //Index of current jump height
 
-        // Update position, travel in an arc based on the jump heights.
-        this.spos.x += this.move.x * this.horzSpeed * dt;           // Update horizontal position
-        this.spos.y = - GMULTY * (                                  // Update vertical position to match the jump arc
-            this.jumpHeights[this.jumpIndex] + 
+        //Don't jump past the level boundary
+        if ((index > 0 || Math.abs(this.spos.x) > GMULTX / 2) && (
+            this.gpos.x - 2 < BOUNDARY.minx || 
+            this.gpos.x + 2 > BOUNDARY.maxx)) {
+
+            this.startVertMovement();
+            return;
+        }
+
+        //Collision bitmask
+        const cbm = this.brickHandler.checkCollisionRange(
+            this.gpos.getSub({
+                x : this.move.x > 0 ? 1 : 0, 
+                y : this.height + 1
+            }),             //Position
+            this.move.x,    //Direction
+            5,              //START  n + 1
+            18,             //FINAL
+            6,              //HEIGHT n + 2
+            3);             //Width
+        
+        //Collide face if we're over half-way past the first step
+        if(cbm & acb.face && (index > 0 || Math.abs(this.spos.x) > GMULTX / 2)) {
+            this.startVertMovement();
+            return;
+        }
+        //Collide head if not at the peak of the jump
+        else if((cbm & acb.head || this.gpos.y <= BOUNDARY.miny + 3) && index < 2) {
+            this.startVertMovement();
+            return;
+        }
+        //collide shin after the first step
+        else if (cbm & acb.shin && index > 0) {
+            this.startVertMovement();
+            return;
+        }
+        //Collide with foot after the arc starts travelling downwards
+        else if (cbm & acb.foot && index > 2) {
+            this.startVertMovement();
+            return;
+        }
+        //Collide with floor after the first step
+        else if (cbm & acb.flor && index > 0) {
+            this.endVertMovement();
+            return;
+        }
+
+        //End of jump
+        if(index > this.jumpHeights.length - 2) {
+            this.startVertMovement();
+            return;
+        }
+
+        //Update position, travel in an arc based on the jump heights.
+        this.spos.x += this.move.x * this.horzSpeed * dt;       //Update horizontal position
+        this.spos.y = - GMULTY * (                              //Update vertical position
+            this.jumpHeights[index] + 
             this.gpos.y - 
             this.jumpOrigin.y +
-            Math.abs(this.spos.x / GMULTX) * (this.jumpHeights[this.jumpIndex + 1] - this.jumpHeights[this.jumpIndex]));
+            Math.abs(this.spos.x / GMULTX) * (this.jumpHeights[index + 1] - this.jumpHeights[index]));
 
-        this.animationsCurr.forEach(a => a.spos = this.spos);       // Update animations to match current position
+        this.animationsCurr.forEach(a => a.spos = this.spos);  //Update animations to match current position
+
+        //store sub-position converted to a grid position
+        var move = {
+            x : Math.abs(this.spos.x) > GMULTX ? Math.sign(this.spos.x) : 0,
+            y : Math.abs(this.spos.y) > GMULTY ? Math.sign(this.spos.y) : 0
+        };
+
+        //if sub-position is large enough to move, update position
+        if(move.x || move.y) {
+    
+            this.gpos.add(move);    //Go up or down to new grid position
+            this.spos.sub({         //Reset subposition to match new grid position
+                x : move.x * GMULTX,
+                y : move.y * GMULTY
+            });            
+    
+            //Update animations to match
+            this.animationsCurr.forEach(a => {
+                a.gpos.add(move);
+            });
+
+            this.brickHandler.isRecheck = true; //Recheck bricks after every shift
+        }
     }
 
     /** Quick shift to downward vertical movement */
     private startVertMovement() {
+
+        debugger;
 
         this.vertMult = -1;                     // Default to downward movement to remove 1-frame hitch.
         this.setStateIndex(BotState.FLYING);    // Vertical movement
@@ -222,6 +300,8 @@ export default class CharacterBot extends Character {
 
     /** End vertical or jump movement */
     private endVertMovement() {
+
+        debugger;
 
         this.spos.setToZero();  // Snap to grid
         this.handleBricks();    // Handle bricks now under this character
@@ -262,12 +342,8 @@ export default class CharacterBot extends Character {
                 break;
 
             case BotState.EATING :    // Trash eating also has edge-case air movement
-            case BotState.FLYING :
                 this.handleBrickCollisionVertical();
                 break;
-
-            case BotState.BOUNCE :
-                this.handleBrickCollisionBounce();
 
             default :
                 break;
@@ -368,63 +444,6 @@ export default class CharacterBot extends Character {
         this.vertMult = -1;
     }
 
-    /** Check and resolve brick collisions - Bounce movement */
-    protected handleBrickCollisionBounce() {
-
-        // Don't jump past the level boundary
-        if ((this.jumpIndex > 0 || Math.abs(this.spos.x) > GMULTX / 2) && (
-            this.gpos.x - 2 < BOUNDARY.minx || 
-            this.gpos.x + 2 > BOUNDARY.maxx)) {
-
-            this.startVertMovement();
-            return;
-        }
-
-        // Collision bitmask
-        const cbm = this.brickHandler.checkCollisionRange(
-            this.gpos.getSub({
-                x : this.move.x > 0 ? 1 : 0, 
-                y : this.height + 1
-            }),             // Position
-            this.move.x,    // Direction
-            5,              // START  n + 1
-            18,             // FINAL
-            6,              // HEIGHT n + 2
-            3);             // Width
-        
-        // Collide face if we're past the first step
-        if (cbm & acb.face && (this.jumpIndex > 1)) {
-            this.startVertMovement();
-            return;
-        }
-        // Collide head if not at the peak of the jump
-        else if ((cbm & acb.head || this.gpos.y <= BOUNDARY.miny + 3) && this.jumpIndex < 1) {
-            this.startVertMovement();
-            return;
-        }
-        // collide shin after the first step
-        else if (cbm & acb.shin && this.jumpIndex > 0) {
-            this.startVertMovement();
-            return;
-        }
-        // Collide with foot after the arc starts travelling downwards
-        else if (cbm & acb.foot && this.jumpIndex > 2) {
-            this.startVertMovement();
-            return;
-        }
-        // Collide with floor after the first step
-        else if (cbm & acb.flor && this.jumpIndex > 0) {
-            this.endVertMovement();
-            return;
-        }
-
-        // End of jump
-        if (this.jumpIndex > this.jumpHeights.length - 2) {
-            this.startVertMovement();
-            return;
-        }
-    }
-
     /** Colliders for non-brick collisions */
     public getColliders() : Collider[] {
         
@@ -464,15 +483,6 @@ export default class CharacterBot extends Character {
             switch(this.stateIndex) {
 
                 case BotState.BOUNCE :
-                    if (Math.abs(this.spos.x) > GMULTX) {
-                        this.gpos.x += this.move.x;
-                        this.spos.x -= this.move.x * GMULTX;
-                        this.spos.y = 0;
-                        this.gpos.y -= (this.jumpHeights[this.jumpIndex + 1] ?? 0) - this.jumpHeights[this.jumpIndex];
-                    }
-                    this.handleBrickCollisionBounce();
-                    this.animationsCurr.forEach(a => a.reset(this.gpos, false));
-                    this.animationsCurr.forEach(a => a.spos = this.spos);
                     break;
 
                 case BotState.FLYING :
