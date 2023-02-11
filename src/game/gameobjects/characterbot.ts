@@ -140,6 +140,7 @@ export default class CharacterBot extends Character {
         switch(this.stateIndex) {
 
             // Vertical
+            case BotState.EATING :
             case BotState.FLYING : 
                 this.moveVertical(dt, this.vertMult);
                 break;
@@ -189,7 +190,7 @@ export default class CharacterBot extends Character {
     private moveVertical(dt: number, dir: number) {
 
         //Don't update if vertically blocked and moving upward
-        if(!this.vertBlock || dir < 0) {
+        if(!this.vertBlock) {
 
             this.spos.y -= dt * this.vertSpeed * dir;               // Move subposition vertically based on speed
             this.animationsCurr.forEach(a => a.spos = this.spos);   // Move animation to match
@@ -291,8 +292,6 @@ export default class CharacterBot extends Character {
     /** Quick shift to downward vertical movement */
     private startVertMovement() {
 
-        debugger;
-
         this.vertMult = -1;                     // Default to downward movement to remove 1-frame hitch.
         this.setStateIndex(BotState.FLYING);    // Vertical movement
         this.spos.x = 0;                        // Reset horizontal position to grid
@@ -301,13 +300,13 @@ export default class CharacterBot extends Character {
     /** End vertical or jump movement */
     private endVertMovement() {
 
-        debugger;
-
         this.spos.setToZero();  // Snap to grid
         this.handleBricks();    // Handle bricks now under this character
 
-        // Go from air state to walking state.
-        if ([3, 4].some(n => n == this.stateIndex)) {
+        // Go from air state to walking state for flying & bounce states
+        if (this.stateIndex == BotState.FLYING ||
+            this.stateIndex == BotState.BOUNCE) {
+
             this.setStateIndex(BotState.NORMAL);
         }
     }
@@ -339,10 +338,6 @@ export default class CharacterBot extends Character {
         switch(this.stateIndex) {
             case BotState.NORMAL :
                 this.handleBrickCollisionNormal();
-                break;
-
-            case BotState.EATING :    // Trash eating also has edge-case air movement
-                this.handleBrickCollisionVertical();
                 break;
 
             default :
@@ -425,9 +420,11 @@ export default class CharacterBot extends Character {
         // There is an obstacle, stop based on its direction
         if (this.getCollisionVertical(this.vertMult)) {
 
+            this.vertBlock = true;                  // Block vertical movement
+
             // If going upwards, collide with ceiling
             if (this.vertMult > 0) {
-                this.vertBlock = true;              // Block vertical movement
+
                 this.spos.y = this.ceilSubOffset;   // Set sub-position for block
                 this.animationsCurr.forEach(a => {  // Adjust animations to match
                     a.zModifierPub = 0;
@@ -485,6 +482,7 @@ export default class CharacterBot extends Character {
                 case BotState.BOUNCE :
                     break;
 
+                case BotState.EATING :    // Trash eating also has edge-case air movement
                 case BotState.FLYING :
                     if (Math.abs(this.spos.y) > GMULTY) {
                         this.gpos.y += Math.sign(this.spos.y)
@@ -506,6 +504,7 @@ export default class CharacterBot extends Character {
         
         // Eat
         if (mask & MASKS.scrap) {
+            this.vertMult = -1;         // Default to downward movement
             this.setStateIndex(BotState.EATING);
         }
         // Hazard
