@@ -148,9 +148,10 @@ export default class CharacterGear extends Character {
                 }
             }
             // If diagonal, and one character is moving above/below the other
-            if (Math.abs(diff.x) == 2 && 
-                Math.abs(diff.y) && 
-                Math.sign(otherChar.move.x) == -Math.sign(diff.x)) {
+            if (Math.abs(diff.x) == 2 &&                                // 2 units horizontally
+                Math.abs(diff.y) &&                                     // 0 < units vertically
+                Math.abs(diff.y) < 3 &&                                 // 3 > units vertically
+                Math.sign(otherChar.move.x) == -Math.sign(diff.x)) {    // Moving in opposite directions
                  
                 // Is above
                 if (diffRel.y < 0) {
