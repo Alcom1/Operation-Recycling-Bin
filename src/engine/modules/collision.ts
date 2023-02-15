@@ -77,6 +77,7 @@ export default class CollisionModule {
 
             // Resolve all collisions
             s.gameObjects.forEach(go => go.resolveClearCollisions());
+            s.gameObjects.forEach(go => go.resolveCollisionsPost());
         });
     }
 

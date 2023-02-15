@@ -75,8 +75,16 @@ export default class CharacterGear extends Character {
 
         if (this.isStep)
         {
-            this.isStep = false;                    // Reset step state
             super.resolveCollisions(collisions);    // Perform standard resolve to set bitmask for actual collisions
+        }
+    }
+
+    /** Resolve bitmasks only after all other collisions have been resolved. */
+    public resolveCollisionsPost() {
+        
+        if (this.isStep)
+        {
+            this.isStep = false;                    // Reset step state
             this.resolveCollisionBitmask();         // Handle collisions based on the bitmask
         }
     }

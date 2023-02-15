@@ -115,6 +115,13 @@ export default class GameObject {
         this.collisions = [];
     }
 
+    /**
+     * Event that occurs immediately after all collisions have been resolved. :)
+     */
+    public resolveCollisionsPost() {
+
+    }
+
     /** 
      * Resolve all collisions
     */
