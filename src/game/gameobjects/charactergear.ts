@@ -117,7 +117,7 @@ export default class CharacterGear extends Character {
                 this.gpos.y,
                 other.gpos.y - (other as Character).height ?? 1,
                 other.gpos.y) && (      // Check if close enough to collide, if other character is adjacent or 1x away and approaching
-                    Math.abs(diff.x) <= 2 || isHorzOppose && Math.abs(diff.x) == 3);
+                    Math.abs(diff.x) <= 2 || isHorzOppose && Math.abs(diff.x) == 3 && this.move.x > 0);
 
             // If character is blocking horizontally
             let vertBlock = col1D(      // 1D horizontal collision
@@ -125,7 +125,7 @@ export default class CharacterGear extends Character {
                 this.gpos.x + 2,
                 other.gpos.x,
                 other.gpos.x + 2) && (  // Check if close enough to collide, if other character is adjacent or 1x away and approaching
-                    Math.abs(diff.y) <= 2 || isVertOppose && Math.abs(diff.y) == 3);
+                    Math.abs(diff.y) <= (other as Character).height || isVertOppose && Math.abs(diff.y) == 3);
             
             // If a horizontally-blocking character...
             if (horzBlock) {
@@ -157,7 +157,7 @@ export default class CharacterGear extends Character {
             }
             // If diagonal, and one character is moving above/below the other
             if (Math.abs(diff.x) == 2 &&                                // 2 units horizontally
-                Math.abs(diff.y) &&                                     // 0 < units vertically
+                Math.abs(diff.y) > 1 &&                                 // 1 < units vertically
                 Math.abs(diff.y) < 3 &&                                 // 3 > units vertically
                 Math.sign(otherChar.move.x) == -Math.sign(diff.x)) {    // Moving in opposite directions
                  

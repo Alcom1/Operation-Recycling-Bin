@@ -166,7 +166,7 @@ export default class CharacterGearClimb extends CharacterGear {
     }
 
     /** Standard collision resolution */
-    private resolveCollisionNormal(isDownSwap : Boolean = false) {
+    private resolveCollisionNormal(isDown : Boolean = false) {
 
         // No floor, go down
         if (!this.isColFlor) {
@@ -177,7 +177,7 @@ export default class CharacterGearClimb extends CharacterGear {
             this.setNormalState();
         }
         // Downward movement does back THEN wall check
-        else if (isDownSwap) {
+        else if (isDown) {
             this.resolveCollisionsDown();
         }
         // Standard wall THEN back check

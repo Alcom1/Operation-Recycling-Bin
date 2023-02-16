@@ -4,7 +4,7 @@ import Character, { CharacterParams } from "./character";
 
 /** Specifications of a Bin character */
 const characterBinOverride = Object.freeze({
-    height: 3,                                      // Bins are this tall
+    height: 2,                                      // Bins are this tall
     speed : 0,                                      // Bins aren't animated
     images : [{ name : "char_bin", offsetX : 0}],   // Bin image
     frameCount : 1,
