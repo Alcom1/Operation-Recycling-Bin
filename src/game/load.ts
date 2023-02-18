@@ -24,6 +24,7 @@ import BrickJumpMove from "./gameobjects/brickjumpmove";
 import BrickTileButton from "./gameobjects/bricktilebutton";
 import CharacterRBG from "./gameobjects/charactergearclimb";
 import CharacterRBC from "./gameobjects/charactergearground";
+import CharacterHandler from "./gameobjects/characterhandler";
 
 // Load
 window.onload = function() {
@@ -53,6 +54,7 @@ window.onload = function() {
             CharacterBin,
             CharacterRBC,
             CharacterRBG,
+            CharacterHandler,
             Counter,
             Cursor,
             CursorIcon,

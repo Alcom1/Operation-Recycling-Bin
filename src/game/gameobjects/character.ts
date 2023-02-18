@@ -31,9 +31,10 @@ export default class Character extends GameObject {
     protected _height: number;
     public get move() { return this._move; }        // Movement direction of this character
     protected _move: Vect;                          
+    private _speed: number;                         // Speed of this character
+    public get speed() { return this._speed }
     protected brickHandler!: BrickHandler;          // Brick handler for brick pressure (bricks under this character)
     private checkCollision: boolean;                // If collision needs to be checked
-    private speed: number;                          // Speed of this character
     private isGlide: boolean;                       // If the character sprite matches the character's subposition
     private underBricks: Brick[] = [];              // Bricks under pressure, under this character
 
@@ -54,7 +55,7 @@ export default class Character extends GameObject {
 
         this.tags.push("Character");                                    // All characters need to share a tag
         
-        this.speed = params.speed ?? 1;                                 // Default speed
+        this._speed = params.speed ?? 1;                                 // Default speed
         this._move = new Vect(params.isForward ?? true ? 1 : -1, 0);    // Default move direction
         this._height = params.height ?? 2;                              // Default height for a character
         this.isGlide = params.isGlide ?? false;                         // Default glide state
@@ -128,11 +129,11 @@ export default class Character extends GameObject {
 
                 // Horizontal movement
                 if (this.move.y == 0) {
-                    this.spos.x += this.move.x * this.speed * GMULTX * dt;
+                    this.spos.x += this.move.x * this._speed * GMULTX * dt;
                 }
                 // Vertical movement
                 else {
-                    this.spos.y += this.move.y * this.speed * GMULTY * dt;
+                    this.spos.y += this.move.y * this._speed * GMULTY * dt;
                 }
             }
         }
@@ -228,7 +229,7 @@ export default class Character extends GameObject {
         }
 
         // The step matches this character's speed, perform an update
-        if (step.stepType == StepType.SYNC && step.counter % (loopLength / this.speed) == 0) {
+        if (step.stepType == StepType.SYNC && step.counter % (loopLength / this._speed) == 0) {
     
             this.handleStep();
             this.handleBricks();

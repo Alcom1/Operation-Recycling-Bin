@@ -29,6 +29,9 @@
         "name": "BrickHandler"
       },
       {
+        "name": "CharacterHandler"
+      },
+      {
         "name": "Cursor"
       },
       {

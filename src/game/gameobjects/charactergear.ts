@@ -85,6 +85,19 @@ export default class CharacterGear extends Character {
         if (this.isStep)
         {
             this.isStep = false;                    // Reset step state
+
+            if(this.move.y == 1 && this.gpos.x == 23 && this.gpos.y == 12) {
+                
+                console.log("isColFlor", this.isColFlor);
+                console.log("isColRoof", this.isColRoof);
+                console.log("isColFace", this.isColFace);
+                console.log("isColBack", this.isColBack);
+                console.log("isColLand", this.isColLand);
+                console.log("isColBand", this.isColBand);
+                console.log("isColHang", this.isColHang);
+                debugger;
+            }
+
             this.resolveCollisionBitmask();         // Handle collisions based on the bitmask
         }
     }
