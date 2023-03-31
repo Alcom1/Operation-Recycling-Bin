@@ -22,21 +22,4 @@ export default class CharacterGearGround extends CharacterGear {
     constructor(params: CharacterParams) {
         super(Object.assign(params, CharacterGearGroundOverride));
     }
-
-    /** Update position to move forward */
-    protected updatePosition() {
-        // Move forward, please.
-        this.gpos.x += this.move.x;
-    }
-
-    /** Resolve collisions based on the current stored bitmask */
-    public resolveCollisionBitmask()  {
-
-        // Obstacle in front OR floor stops, reverse
-        if (this.isColFace || !this.isColHang) {
-            this.reverse();
-        }
-        
-        this.setStateIndex();
-    }
 }

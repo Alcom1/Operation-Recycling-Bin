@@ -181,11 +181,6 @@ export default class Character extends GameObject {
         this.brickHandler.isRecheck = true;
     }
 
-    /** Handle synchronized step movement. Do nothing - override */
-    protected handleStep(isStart : boolean = false) {
-        
-    }
-
     /** Reverse the direction of this character */
     protected reverse() {
 
@@ -217,27 +212,5 @@ export default class Character extends GameObject {
         this.animations.forEach(sg => sg.forEach(s => s.isActive = false));
         this.underBricks.forEach(b => b.pressure -= 1);
         this.underBricks = [];
-    }
-
-    /** Perform a sychronized update */
-    public updateSync(step : Step, loopLength : number) {
-
-        // Special start-step for gliders. Used for when nearby geometry must be detected.
-        if (step.stepType == StepType.START && this.isGlide) {
-    
-            this.handleStep(true);
-        }
-
-        // The step matches this character's speed, perform an update
-        if (step.stepType == StepType.SYNC && step.counter % (loopLength / this._speed) == 0) {
-    
-            this.handleStep();
-            this.handleBricks();
-
-            // Normal movement and all gliding movement demands a grid-position reset for all animations
-            if (this.isNormalMovment || this.isGlide) {
-                this.animationsCurr.forEach(s => s.reset(this.gpos));
-            }
-        }
     }
 }

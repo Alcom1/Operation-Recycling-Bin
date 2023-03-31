@@ -332,19 +332,6 @@ export default class CharacterBot extends Character {
             
     }
 
-    /** Check and resolve brick collisions */
-    protected handleStep(isStart : boolean = false) {
-
-        switch(this.stateIndex) {
-            case BotState.NORMAL :
-                this.handleBrickCollisionNormal();
-                break;
-
-            default :
-                break;
-        }
-    }
-
     /** Check and resolve brick collisions - Normal movement */
     protected handleBrickCollisionNormal() {
 
@@ -467,35 +454,6 @@ export default class CharacterBot extends Character {
 
             this.timerSpc = 0;          // Timer reset incase we cancelled a previous animation
             super.setStateIndex(index); // Set index
-        }
-    }
-
-    /** */
-    public updateSync(step : Step, loopLength : number) {
-
-        super.updateSync(step, loopLength);
-
-        if (step.stepType == StepType.FRAME) {
-
-            switch(this.stateIndex) {
-
-                case BotState.BOUNCE :
-                    break;
-
-                case BotState.EATING :    // Trash eating also has edge-case air movement
-                case BotState.FLYING :
-                    if (Math.abs(this.spos.y) > GMULTY) {
-                        this.gpos.y += Math.sign(this.spos.y)
-                        this.spos.y -= Math.sign(this.spos.y) * GMULTY;
-                    }
-                    this.handleBrickCollisionVertical();
-                    this.animationsCurr.forEach(a => a.reset(this.gpos, false));
-                    this.animationsCurr.forEach(a => a.spos = this.spos);
-                    break;
-    
-                default :
-                    break;
-            }
         }
     }
 
