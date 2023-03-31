@@ -1,5 +1,5 @@
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
-import { floor, getZIndex, GMULTX, GMULTY, OPPOSITE_DIRS, zip } from "engine/utilities/math";
+import { floor, getZIndex, GMULTY, zip } from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 
 /** Parameters for an offset image */
@@ -26,7 +26,6 @@ export interface AnimationParams extends GameObjectParams {
 
     frameCount : number;
     animsCount? : number;
-    sliceIndex? : number;
 }
 
 /** Animated image gameobject */
@@ -42,7 +41,6 @@ export default class Anim extends GameObject {
     private framesSize? : number;                   // The Horizontal/Vertical size of each frame
     private frameCount : number;                    // The Quantity of frames for this animation 
     private animsCount : number;                    // The number of animations per image
-    private sliceIndex? : number;                   // The index of this animation, if it's been sliced
 
     /** Set in init */
     private fullSize : Point = { x : 0, y : 0 };    // The full dimensions of this animation's images
@@ -57,7 +55,6 @@ export default class Anim extends GameObject {
 
     /** get */
     public get duration() : number { return 1 / this.speed; }
-    public get isBackSlice() : boolean { return (this.sliceIndex ?? 1) == 1; }
 
     /** Constructor */
     constructor(params : AnimationParams) {
@@ -72,7 +69,6 @@ export default class Anim extends GameObject {
         this.zModifier = (params.zModifier ?? 300) + (this.spos.y > 0 ? this.sposYFix : 0);
         this.frameCount = params.frameCount;
         this.animsCount = params.animsCount ?? 1;
-        this.sliceIndex = params.sliceIndex;
 
         // Store images with different 
         switch(params.images.length) {
@@ -190,7 +186,6 @@ export default class Anim extends GameObject {
 
         const size = this.framesSize ?? 0;                                  // Size (horizontal or vertical) of this frame
         const image = this.images[this.imageIndex];                         // Current image
-        const widthSlice = size * (this.sliceIndex ?? 0);                   // Slice width, or 0 if this animation isn't sliced
         const oppoSize = this.isVert ? this.fullSize.x : this.fullSize.y;   // Full width or height (the non-animated direction)
 
         ctx.drawImage(
@@ -198,15 +193,14 @@ export default class Anim extends GameObject {
             image,                    
 
             // Slice position & size 
-            widthSlice +                    // Move segment forward based on which slice this is.
             image.offsetX +                 // Move segment forward based on the X-offset of the current image  
             this.getAnimationOffset(false),
-            this.getAnimationOffset(true),  
-            this.isVert ? oppoSize : size,  
-            this.isVert ? size : oppoSize,    
+            this.getAnimationOffset(true),
+            this.isVert ? oppoSize : size,
+            this.isVert ? size : oppoSize,
 
             // Greater image position & size
-            widthSlice,                     // Move segment forward based on which slice this is. Unused(?) for vertical animations.
+            0,
             this.isVert ? 0 : GMULTY - this.fullSize.y,
             this.isVert ? oppoSize : size,  
             this.isVert ? size : oppoSize);

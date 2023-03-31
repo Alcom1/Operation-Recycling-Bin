@@ -27,10 +27,10 @@ const characterBotOverride = Object.freeze({
     height: 4,      // Bot is this tall
     speed : 3,      // Bot moves fast
     images : [      // Bot has left & right animations
-        { name : "char_bot_left", offsetX : 36 },
-        { name : "char_bot_right", offsetX : 14},
-        { name : "char_bot_left_armor", offsetX : 36 },
-        { name : "char_bot_right_armor", offsetX : 14}],
+        { name : "char_bot_left" },
+        { name : "char_bot_right" },
+        { name : "char_bot_left_armor" },
+        { name : "char_bot_right_armor" }],
     frameCount : 10,
     animsCount : 2,
     stateAnimations : [1, 2, 3, 3, 4],
@@ -49,8 +49,8 @@ const characterBotOverride = Object.freeze({
         isLoop : false
     },{             // Bot up animation
         images : [  // Flying has left & right animations
-            { name : "char_bot_fly_left", offsetX : 36 },
-            { name : "char_bot_fly_right", offsetX : 14 }],
+            { name : "char_bot_fly_left" },
+            { name : "char_bot_fly_right" }],
         speed : 3,  // Bot moves fast
         gposOffset : { x : -1, y : 0},
         frameCount : 10,
@@ -121,7 +121,7 @@ export default class CharacterBot extends Character {
         // Update armor flash
         if (this.armorState == ArmorState.FLASH) {
             this.timerArm += dt;
-            this.animationsCurr.forEach(x => x.setImageIndex(this.animationSubindex));
+            this.animationsCurr.setImageIndex(this.animationSubindex);
 
             // Remove armor after a duration and reset timer
             if (this.timerArm > this.armorDelay) {
@@ -156,7 +156,7 @@ export default class CharacterBot extends Character {
         }
 
         // If the current animation has ended
-        if (this.timerSpc > this.animationsCurr[0].duration) {
+        if (this.timerSpc > this.animationsCurr.duration) {
 
             // Reset timer
             this.timerSpc = 0;
@@ -171,7 +171,7 @@ export default class CharacterBot extends Character {
 
                 // Vertical - Reset up/down animation
                 case BotState.FLYING :
-                    this.animationsCurr.forEach(a => a.reset());
+                    this.animationsCurr.reset();
                     break;
 
                 // Bounce - Do nothing
@@ -192,9 +192,18 @@ export default class CharacterBot extends Character {
         //Don't update if vertically blocked and moving upward
         if(!this.vertBlock) {
 
-            this.spos.y -= dt * this.vertSpeed * dir;               // Move subposition vertically based on speed
-            this.animationsCurr.forEach(a => a.spos = this.spos);   // Move animation to match
+            this.spos.y -= dt * this.vertSpeed * dir;   // Move subposition vertically based on speed
+            this.animationsCurr.spos = this.spos;       // Move animation to match
         }
+
+        //Update grid position
+        if (Math.abs(this.spos.y) > GMULTY) {
+            this.gpos.y += Math.sign(this.spos.y)
+            this.spos.y -= Math.sign(this.spos.y) * GMULTY;
+        }
+        this.handleBrickCollisionVertical();
+        this.animationsCurr.reset(this.gpos, false);
+        this.animationsCurr.spos = this.spos;
     }
 
     /** Move in a jumping arc */
@@ -256,14 +265,14 @@ export default class CharacterBot extends Character {
         }
 
         //Update position, travel in an arc based on the jump heights.
-        this.spos.x += this.move.x * this.horzSpeed * dt;       //Update horizontal position
-        this.spos.y = - GMULTY * (                              //Update vertical position
+        this.spos.x += this.move.x * this.horzSpeed * dt;   //Update horizontal position
+        this.spos.y = - GMULTY * (                          //Update vertical position
             this.jumpHeights[index] + 
             this.gpos.y - 
             this.jumpOrigin.y +
             Math.abs(this.spos.x / GMULTX) * (this.jumpHeights[index + 1] - this.jumpHeights[index]));
 
-        this.animationsCurr.forEach(a => a.spos = this.spos);  //Update animations to match current position
+        this.animationsCurr.spos = this.spos;               //Update animations to match current position
 
         //store sub-position converted to a grid position
         var move = {
@@ -280,10 +289,8 @@ export default class CharacterBot extends Character {
                 y : move.y * GMULTY
             });            
     
-            //Update animations to match
-            this.animationsCurr.forEach(a => {
-                a.gpos.add(move);
-            });
+            //Update animation to match
+            this.animationsCurr.gpos.add(move);
 
             this.brickHandler.isRecheck = true; //Recheck bricks after every shift
         }
@@ -413,10 +420,8 @@ export default class CharacterBot extends Character {
             if (this.vertMult > 0) {
 
                 this.spos.y = this.ceilSubOffset;   // Set sub-position for block
-                this.animationsCurr.forEach(a => {  // Adjust animations to match
-                    a.zModifierPub = 0;
-                    a.spos.y = this.ceilSubOffset;
-                });
+                this.animationsCurr.zModifierPub = 0;
+                this.animationsCurr.spos.y = this.ceilSubOffset;
             }
             // If going downwards, reset to walking
             else {
