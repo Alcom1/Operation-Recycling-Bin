@@ -32,6 +32,9 @@
         "name": "CharacterHandler"
       },
       {
+        "name": "ZIndexHandler"
+      },
+      {
         "name": "Cursor"
       },
       {

@@ -78,14 +78,6 @@ export default class Character extends GameObject {
             this.animations.push(new Anim({
                 ...params,
                 ...m
-                // speed :      m.speed,
-                // images :     m.images,
-                // framesSize : m.framesSize,
-                // gposOffset : m.gposOffset,
-                // zModifier :  m.zModifier,
-                // frameCount : m.frameCount,
-                // animsCount : m.animsCount,
-                // isLoop :     m.isLoop
             } as AnimationParams));
         });
 

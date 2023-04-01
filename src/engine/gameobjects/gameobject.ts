@@ -25,6 +25,8 @@ export interface GameObjectParams {
 /** Base game object */
 export default class GameObject {
 
+    /** Rand UUID generated upon instantiation */
+    public id = (<any>crypto).randomUUID();
     /** Grid position */
     public gpos: Vect;
     /** Sub-position * */
