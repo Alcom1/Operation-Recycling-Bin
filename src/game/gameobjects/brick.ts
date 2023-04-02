@@ -1,7 +1,6 @@
 import GameObject, {GameObjectParams} from "engine/gameobjects/gameobject";
-import { colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX, getZIndex, MOBILE_PREVIEW_MAX } from "engine/utilities/math";
+import { colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX, MOBILE_PREVIEW_MAX } from "engine/utilities/math";
 import Vect, {Point} from "engine/utilities/vect";
-import Anim from "./anim";
 
 export interface BrickParams extends GameObjectParams {
     color?: string;
@@ -97,16 +96,6 @@ export default class Brick extends GameObject {
     /** Draw mobile preview above everything */
     public superDraw(ctx: CanvasRenderingContext2D): void {
 
-        // Debug Z-index
-        // var indexDisplay = "" + (2500 + this.getGOZIndex());
-        // let indexPos : Point = { x : 5, y : GMULTY - 15};
-        // ctx.strokeStyle = "#000";
-        // ctx.fillStyle = "#FFF"
-        // ctx.lineWidth = 2;
-        // ctx.font = " 20px Monospace"
-        // ctx.strokeText(indexDisplay, indexPos.x, indexPos.y);
-        // ctx.fillText(indexDisplay, indexPos.x, indexPos.y);
-
         // Only draw preview if on browser, this brick is selected, and the selection size is large enough
         if (this.engine.mouse.getMouseType() == "mouse" ||
            !this.isSelected || 
@@ -124,28 +113,6 @@ export default class Brick extends GameObject {
                 this.isMobileFlipped ? 
                -this.mobilePreviewSize.y - 3.2 :
                 this.mobilePreviewSize.y + 3.5));
-    }
-
-    /** Get z-index for draw sorting */
-    public getGOZIndex() : number {
-
-        // Set z-index to draw this brick in its snapped position
-        if (this.isSnapped) {
-            return getZIndex(
-                this.gpos.getAdd({
-                    x : Math.round(this.spos.x / GMULTX),
-                    y : Math.round(this.spos.y / GMULTY)
-                }),
-                this.width * 10);
-        }        
-        // Set z-index to draw this brick under the cursor
-        if (this.isSelected) {
-            return UNDER_CURSOR_Z_INDEX;
-        }
-        // Normal z-index
-        else {
-            return getZIndex(this.gpos, this.width * 10);
-        }
     }
 
     /** Setup this brick for pressing */

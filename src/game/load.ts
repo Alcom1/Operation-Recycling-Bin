@@ -25,6 +25,7 @@ import BrickTileButton from "./gameobjects/bricktilebutton";
 import CharacterRBG from "./gameobjects/charactergearclimb";
 import CharacterRBC from "./gameobjects/charactergearground";
 import CharacterHandler from "./gameobjects/characterhandler";
+import ZIndexHandler from "./gameobjects/zindexhandler";
 
 // Load
 window.onload = function() {
@@ -35,7 +36,7 @@ window.onload = function() {
         canvas, 
         "assets/scenes/",
         "scenes",
-        ["LevelInterface", "LEVEL_28"],
+        ["LevelInterface", "LEVEL_24"],
         [
             BrickHandler,
             BrickHandlerDebug,
@@ -62,7 +63,8 @@ window.onload = function() {
             MobileIndicator,
             LevelSequence,
             Sprite,
-            Stud
+            Stud,
+            ZIndexHandler
         ],
         false
     );    

@@ -1,5 +1,5 @@
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
-import { floor, getZIndex, GMULTY, zip } from "engine/utilities/math";
+import { floor, GMULTY, zip } from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 
 /** Parameters for an offset image */
@@ -149,16 +149,6 @@ export default class Anim extends GameObject {
         }
     }
 
-    /** Get z-index for draw sorting */
-    public getGOZIndex() : number {
-
-        return getZIndex(
-            this.gpos,
-            this.zModifier + 
-            this.zModifierPub + (
-            this.spos.y > 0 ? this.sposYFix : 0 ))    // Fix clipping while moving upwards
-    }
-
     /** Set the image index, swapping the image for this animation. */
     public setImageIndex(index : number) {
 
@@ -226,29 +216,5 @@ export default class Anim extends GameObject {
         else {
             return 0;
         }
-    }
-
-    /** Debug draw */
-    public superDraw(ctx: CanvasRenderingContext2D) {
-
-        // Debug size
-        // ctx.globalAlpha = 0.5;
-        // ctx.strokeStyle = "#F00"
-        // ctx.lineWidth = 4;
-        // ctx.strokeRect(
-        //     widthSlice, 
-        //     this.isVert ? 0 : GMULTY, 
-        //     this.isVert ? oppoSize : size, 
-        //     this.isVert ? size : -oppoSize);
-
-        // Debug Z-index
-        // var indexDisplay = "" + (2500 + this.getGOZIndex());
-        // let indexPos : Point = { x : GMULTX * 2 * (this.sliceIndex ?? 0), y : GMULTY - 15};
-        // ctx.strokeStyle = "#000";
-        // ctx.fillStyle = "#FFF"
-        // ctx.lineWidth = 2;
-        // ctx.font = " 20px Monospace"
-        // ctx.strokeText(indexDisplay, indexPos.x, indexPos.y);
-        // ctx.fillText(indexDisplay, indexPos.x, indexPos.y);
     }
 }

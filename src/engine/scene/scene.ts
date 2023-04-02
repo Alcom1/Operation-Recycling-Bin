@@ -68,7 +68,7 @@ export default class Scene {
         }
 
         // Sort all game objects for drawing - unconditionally
-        this.gameObjects.sort((a, b) => a.getGOZIndex() - b.getGOZIndex());
+        this.gameObjects.sort((a, b) => a.zIndex - b.zIndex);
     }
     public draw(ctx: CanvasRenderingContext2D) {
         if (this.initialized) {

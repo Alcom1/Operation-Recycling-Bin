@@ -3,7 +3,7 @@ import Scene from "engine/scene/scene";
 import Engine from "engine/engine";
 import { Collider } from "engine/modules/collision";
 import { Step } from "engine/modules/sync";
-import { getZIndex, GMULTX, GMULTY } from "engine/utilities/math";
+import { GMULTX, GMULTY } from "engine/utilities/math";
 
 export interface Collision {
     other : GameObject;
@@ -31,15 +31,14 @@ export default class GameObject {
     public gpos: Vect;
     /** Sub-position * */
     public spos: Vect;
-    public get pos() : Vect { return this.spos.getAdd({ 
-        x : this.gpos.x * GMULTX, 
-        y : this.gpos.y * GMULTY })};
     protected engine: Engine;
     public tags: string[];
     public parent: Scene;
     public isActive: Boolean;
     public isDebug: Boolean;
     private collisions: Collision[] = [];
+    private _zIndex : number;
+    get zIndex() : number { return this._zIndex; }
 
     /** Constructor */
     constructor(params: GameObjectParams) {
@@ -50,6 +49,7 @@ export default class GameObject {
         this.engine = params.engine;
         this.isActive = params.isActive ?? true;
         this.isDebug = params.isDebug ?? false;
+        this._zIndex = params.zIndex ?? 0;
     }
 
     /** 
@@ -88,13 +88,6 @@ export default class GameObject {
     */
     public getColliders() : Collider[] {
         return [];
-    }
-
-    /** 
-     * Get the current z-index of this game object
-    */
-    public getGOZIndex() : number {
-        return getZIndex(this.gpos);
     }
 
     /** 

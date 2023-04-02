@@ -25,8 +25,6 @@ export default class BrickTileTop extends BrickTile {
                     image : params.imageTop
                 } as SpriteParams)) as Sprite
 
-        this.topSprite.setZIndex(10);                               // Top sprite is above this one
-
         this.isShowTopIfOn = params.isShowTopIfOn ?? true;          // Top sprite show condition
         this.topSprite.isActive = this.isOn == this.isShowTopIfOn;  // Deactivate top sprite if it starts hidden
     }
@@ -43,7 +41,6 @@ export default class BrickTileTop extends BrickTile {
         super.deselect();
 
         this.topSprite.gpos = this.gpos.getAdd({x : 0, y : -1});
-        this.topSprite.setZIndex(10);
     }
 
     /** Set on/off state and top plate to match */

@@ -1,5 +1,5 @@
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
-import { colorTranslate, getZIndex, GMULTX, GMULTY, MOBILE_PREVIEW_MAX, UNDER_CURSOR_Z_INDEX, Z_DEPTH } from "engine/utilities/math";
+import { colorTranslate, GMULTX, GMULTY, MOBILE_PREVIEW_MAX, UNDER_CURSOR_Z_INDEX, Z_DEPTH } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 
 /** Stud parameters */
@@ -61,28 +61,6 @@ export default class Stud extends GameObject {
                 this.isMobileFlipped ? 
                -this.mobilePreviewSize.y - 3.2 :
                 this.mobilePreviewSize.y + 3.5 ));
-    }
-
-    /** Get z-index for draw sorting */
-    public getGOZIndex() : number {
-
-        // Set z-index to draw this brick in its snapped position
-        if (this.isSnapped) {
-            return getZIndex(
-                this.gpos.getAdd({
-                    x : Math.round(this.spos.x / GMULTX),
-                    y : Math.round(this.spos.y / GMULTY)
-                }),
-                1);
-        }        
-        // Set z-index to draw this brick under the cursor
-        if (this.isSelected) {
-            return UNDER_CURSOR_Z_INDEX;
-        }
-        // Normal z-index
-        else {
-            return getZIndex(this.gpos, 1);
-        }
     }
 
     /** Set this stud's snap state */
