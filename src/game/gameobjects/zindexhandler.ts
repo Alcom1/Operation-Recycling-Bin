@@ -11,21 +11,15 @@ enum ZPointType {
 
 interface ZPoint {
     type : ZPointType,
-    gameObject : GameObject
+    gameObject : GameObject,
+    pos : Point,
     children : ZPoint[]
 }
 
 /** Handler for brick selection, movement, etc. */
 export default class ZIndexHandler extends GameObject {
 
-    private characters: Character[] = [];
-    private bricks: Brick[] = [];
     private zPoints: ZPoint[] = [];
-    private theta = 0;
-
-    public update(dt : number) {
-        this.theta += dt;
-    }
 
     /** Initalize the brick handler, get related bricks & game objects, manage bricks */
     public init() {
@@ -35,6 +29,7 @@ export default class ZIndexHandler extends GameObject {
             "Level").forEach(x => this.zPoints.push({
                 type : ZPointType.Brick,
                 gameObject : x,
+                pos : x.gpos.get(),
                 children : []
             }));
          
@@ -43,30 +38,51 @@ export default class ZIndexHandler extends GameObject {
             "Level").forEach(x => this.zPoints.push({
                 type : ZPointType.Char,
                 gameObject : x,
+                pos : x.gpos.get(),
                 children : []
             }));
 
-        this.zPoints.forEach(x => {
+        this.zPoints.forEach(z => this.processZPoint(z));
+    }
 
-            switch(x.type) {
+    /** Update, check and modify tree */
+    public update() {
 
-                case ZPointType.Brick :
-                    x.children = this.processBrick(x.gameObject as Brick);
-                    break;
+        let isUpdate = this.zPoints.some(z => 
+            z.pos.x != z.gameObject.gpos.x ||
+            z.pos.y != z.gameObject.gpos.y);
 
-                case ZPointType.Char :
-                    x.children = this.processCharacter(x.gameObject as Character);
-                    break;
-            }
-        });
+        if(isUpdate) {
+            this.zPoints.forEach(z => this.processZPoint(z));
+        }
+    }
+
+    /** Process a zPoint */
+    private processZPoint(zPoint : ZPoint) { 
+
+        //Reset
+        zPoint.children = [];
+        zPoint.pos = zPoint.gameObject.gpos.get();
+
+        //Process point differently depending on its type
+        switch(zPoint.type) {
+
+            case ZPointType.Brick :
+                zPoint.children = this.processBrick(zPoint.gameObject as Brick);
+                break;
+
+            case ZPointType.Char :
+                zPoint.children = this.processCharacter(zPoint.gameObject as Character);
+                break;
+        }
     }
 
     /** Process and get the zPoints for a Brick Game Object */
-    private processBrick(b : Brick) : ZPoint[] {
+    private processBrick(brick : Brick) : ZPoint[] {
 
         let ret = [] as ZPoint[];
-        let width = b.width;
-        let gpos = b.gpos;
+        let width = brick.width;
+        let gpos = brick.gpos;
 
         //Add bricks in front
         ret = ret.concat(
@@ -78,9 +94,9 @@ export default class ZIndexHandler extends GameObject {
         //Add characters in front
         ret = ret.concat(
             this.zPoints.filter(cz =>
-                cz.type == ZPointType.Char &&               //Check only characters
+                cz.type == ZPointType.Char &&                   //Check only characters
                 cz.gameObject.gpos.x == gpos.x + width + 1 &&   //Character is ahead
-                col1D(                                      //Character is in range
+                col1D(                                          //Character is in range
                     gpos.y - 1,
                     gpos.y,
                     cz.gameObject.gpos.y - (cz.gameObject as Character).height,
@@ -115,11 +131,11 @@ export default class ZIndexHandler extends GameObject {
     }
 
     /** Process and get the zPoints for a Character Game Object */
-    private processCharacter(c : Character) : ZPoint[] {
+    private processCharacter(character : Character) : ZPoint[] {
 
         let ret = [] as ZPoint[];
-        let height = c.height;
-        let gpos = c.gpos;
+        let height = character.height;
+        let gpos = character.gpos;
 
         //Add bricks in front
         ret = ret.concat(
@@ -216,6 +232,7 @@ export default class ZIndexHandler extends GameObject {
         });
     }
 
+    /** Get proper position of a zPoint */
     private getDrawPos(zPoint : ZPoint) : Point {
 
         return new Vect(
