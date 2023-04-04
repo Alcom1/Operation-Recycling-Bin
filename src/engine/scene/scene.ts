@@ -56,6 +56,7 @@ export default class Scene {
         // Establish parent scene before pushing
         gameObject.parent = this;
         this.gameObjects.push(gameObject);
+        this.engine.tag.pushGO(gameObject, this.name);
         return gameObject;
     }
     public update(dt: number) {

@@ -64,7 +64,7 @@ export default class BrickHandler extends GameObject {
             "LevelInterface")[0] as Counter;       
         this.bricks = this.engine.tag.get(                  // Get bricks from scene
             "Brick", 
-            "Level") as Brick[];                     
+            "Level") as Brick[];
         this.bricks.forEach(b => this.addBrickToRows(b));   // Add bricks into rows
         this.sortRows();                                    // Sort rows/bricks within rows
 
