@@ -1,5 +1,5 @@
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
-import { floor, GMULTY, zip } from "engine/utilities/math";
+import { floor, GMULTX, GMULTY, zip } from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 
 /** Parameters for an offset image */

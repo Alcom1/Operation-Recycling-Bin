@@ -37,8 +37,9 @@ export default class GameObject {
     public isActive: Boolean;
     public isDebug: Boolean;
     private collisions: Collision[] = [];
-    private _zIndex : number;
+    protected _zIndex : number;
     get zIndex() : number { return this._zIndex; }
+    set zIndex(value : number) { this._zIndex = value; }
 
     /** Constructor */
     constructor(params: GameObjectParams) {

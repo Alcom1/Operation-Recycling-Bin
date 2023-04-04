@@ -12,6 +12,13 @@ export default class BrickNormal extends Brick {
     /** Brick segments (Left, Middle, Right) */
     private brickSprites: Map<string, HTMLImageElement> = new Map<string, HTMLImageElement>();
 
+    /** Set zIndex of studs, too! */
+    get zIndex() : number { return super.zIndex; }
+    set zIndex(value : number) { 
+        super.zIndex = value; 
+        this.studs.forEach(s => s.zIndex = value + 1);
+    }
+
     /** Char keys for each brick sprite */
     private brickSpriteKeys: Map<string, Boolean> = new Map<string, Boolean>([
         ["l", false],

@@ -43,6 +43,13 @@ export default class Character extends GameObject {
     }
     public get isNormalMovment() : boolean { return this.stateIndex == 0 }  // If the current state is normal movment
     protected get animationSubindex() : number { return this.move.x }       // Sub-index for animations (by default, based on horizontal movement)
+   
+    /** Set zIndex of animations, too! */
+    get zIndex() : number { return super.zIndex; }
+    set zIndex(value : number) { 
+        super.zIndex = value; 
+        this.animations.forEach(s => s.zIndex = value + 1);
+    }
 
     /** Constructor */
     constructor(params: CharacterParams) {
