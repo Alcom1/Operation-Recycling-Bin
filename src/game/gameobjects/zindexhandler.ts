@@ -14,7 +14,8 @@ enum ZPointType {
 interface ZPoint {
     type : ZPointType,
     gameObject : GameObject,
-    pos : Point
+    pos : Point,
+    vis : Boolean
 }
 
 /** Handler for brick selection, movement, etc. */
@@ -22,35 +23,39 @@ export default class ZIndexHandler extends GameObject {
 
     private zPoints : ZPoint[] = [];
     private zEdges : ZPoint[][] = [];
+    private debug : Boolean = false;
 
     /** Initalize the brick handler, get related bricks & game objects, manage bricks */
     public init() {
          
         this.engine.tag.get(
             "Brick", 
-            "Level").forEach(x => 
+            "Level").forEach(o => 
                 this.zPoints.push({
                     type : ZPointType.Brick,
-                    gameObject : x,
-                    pos : x.gpos.get()
+                    gameObject : o,
+                    pos : o.zpos.get(),
+                    vis : o.zIsActive
                 }));
          
         this.engine.tag.get(
             "Character", 
-            "Level").forEach(x => 
+            "Level").forEach(o => 
                 this.zPoints.push({
                     type : ZPointType.Char,
-                    gameObject : x,
-                    pos : x.gpos.get()
+                    gameObject : o,
+                    pos : o.zpos.get(),
+                    vis : o.zIsActive
                 }));
          
         this.engine.tag.get(
             "Stud", 
-            "Level").forEach(x => 
+            "Level").forEach(o => 
                 this.zPoints.push({
                     type : ZPointType.Studs,
-                    gameObject : x,
-                    pos : x.gpos.get()
+                    gameObject : o,
+                    pos : o.zpos.get(),
+                    vis : o.zIsActive
                 }));
 
         this.processZPoints();
@@ -59,9 +64,10 @@ export default class ZIndexHandler extends GameObject {
     /** Update, check and modify tree */
     public update() {
 
-        let isUpdate = this.zPoints.some(z => 
-            z.pos.x != z.gameObject.gpos.x ||
-            z.pos.y != z.gameObject.gpos.y);
+        let isUpdate = this.zPoints.some(p => 
+            p.pos.x != p.gameObject.zpos.x ||
+            p.pos.y != p.gameObject.zpos.y ||
+            p.vis != p.gameObject.zIsActive);
 
         if(isUpdate) {
             this.processZPoints();
@@ -71,12 +77,12 @@ export default class ZIndexHandler extends GameObject {
     /** Process all zPoints */
     private processZPoints() {
 
+        console.log("PROCESS");
         this.zEdges = [];
         this.zPoints.forEach(z => this.processZPoint(z));
 
-        let qq : ZPoint[] = this.topologicalSort();
-
-        qq.forEach((z, i) => {
+        //Set z-indicies based on sorted array indicies
+        this.topologicalSort().forEach((z, i) => {
             z.gameObject.zIndex = i;
         });
     }
@@ -85,7 +91,8 @@ export default class ZIndexHandler extends GameObject {
     private processZPoint(zPoint : ZPoint) { 
 
         //Reset
-        zPoint.pos = zPoint.gameObject.gpos.get();
+        zPoint.pos = zPoint.gameObject.zpos.get();
+        zPoint.vis = zPoint.gameObject.zIsActive;
 
         //Process point differently depending on its type
         switch(zPoint.type) {
@@ -109,70 +116,70 @@ export default class ZIndexHandler extends GameObject {
 
         let ret = [] as ZPoint[];
         let width = brick.width;
-        let gpos = brick.gpos;
+        let zpos = brick.zpos;
 
         //Add bricks in front
         ret = ret.concat(
             this.zPoints.filter(bz => 
                 bz.type == ZPointType.Brick &&              //Check only bricks
-                bz.gameObject.gpos.x == gpos.x + width &&   //Brick is ahead
-                bz.gameObject.gpos.y == gpos.y));           //Brick is in row
+                bz.gameObject.zpos.x == zpos.x + width &&   //Brick is ahead
+                bz.gameObject.zpos.y == zpos.y));           //Brick is in row
 
         //Add studs in front
         ret = ret.concat(
             this.zPoints.filter(bz => 
                 bz.type == ZPointType.Studs &&              //Check only studs
                (bz.gameObject as Stud).isVisible &&
-                bz.gameObject.gpos.x == gpos.x + width &&   //stud is ahead
-                bz.gameObject.gpos.y == gpos.y));           //stud is in row
+                bz.gameObject.zpos.x == zpos.x + width &&   //stud is ahead
+                bz.gameObject.zpos.y == zpos.y));           //stud is in row
 
         //Add characters in front
         ret = ret.concat(
             this.zPoints.filter(cz =>
                 cz.type == ZPointType.Char &&                   //Check only characters
-                cz.gameObject.gpos.x == gpos.x + width + 1 &&   //Character is ahead
+                cz.gameObject.zpos.x == zpos.x + width + 1 &&   //Character is ahead
                 col1D(                                          //Character is in range
-                    gpos.y - 1,
-                    gpos.y,
-                    cz.gameObject.gpos.y - (cz.gameObject as Character).height,
-                    cz.gameObject.gpos.y
+                    zpos.y - 1,
+                    zpos.y,
+                    cz.gameObject.zpos.y - (cz.gameObject as Character).height,
+                    cz.gameObject.zpos.y
                 )));
         
         //Add bricks above
         ret = ret.concat(
             this.zPoints.filter(bz =>
                 bz.type == ZPointType.Brick &&
-                bz.gameObject.gpos.y == gpos.y - 1 &&
                 col1D(
-                    gpos.x,
-                    gpos.x + width + 1,
-                    bz.gameObject.gpos.x,
-                    bz.gameObject.gpos.x + (bz.gameObject as Brick).width
-                )));
+                    zpos.x,
+                    zpos.x + width + 1,
+                    bz.gameObject.zpos.x,
+                    bz.gameObject.zpos.x + (bz.gameObject as Brick).width
+                ) &&
+                bz.gameObject.zpos.y == zpos.y - 1));
 
         //Add studs above
         ret = ret.concat(
             this.zPoints.filter(bz =>
                 bz.type == ZPointType.Studs &&
                (bz.gameObject as Stud).isVisible &&
-                bz.gameObject.gpos.y == gpos.y - 1 &&
+                bz.gameObject.zpos.y == zpos.y - 1 &&
                 col1D(
-                    gpos.x,
-                    gpos.x + width,
-                    bz.gameObject.gpos.x,
-                    bz.gameObject.gpos.x + 1
+                    zpos.x,
+                    zpos.x + width,
+                    bz.gameObject.zpos.x,
+                    bz.gameObject.zpos.x + 1
                 )));
 
         //Add characters above
         ret = ret.concat(
             this.zPoints.filter(cz =>
                 cz.type == ZPointType.Char &&
-                cz.gameObject.gpos.y == gpos.y - 1 &&
+                cz.gameObject.zpos.y == zpos.y - 1 &&
                 col1D(
-                    gpos.x,
-                    gpos.x + width,
-                    cz.gameObject.gpos.x - 1,
-                    cz.gameObject.gpos.x + 1
+                    zpos.x,
+                    zpos.x + width,
+                    cz.gameObject.zpos.x - 1,
+                    cz.gameObject.zpos.x + 1
                 )));
 
         return ret;
@@ -181,32 +188,48 @@ export default class ZIndexHandler extends GameObject {
     /** Process brick studs */
     private processStuds(stud : Stud) : ZPoint[] {
 
-        stud.zIndex = 0;
-
+        //Ignore invisible studs
         if(!stud.isVisible) {
             return [];
         }
 
         let ret = [] as ZPoint[];
-        let gpos = stud.gpos;
+        let zpos = stud.zpos;
 
         //Add brick in front
         ret = ret.concat(this.zPoints.filter(bz => 
             bz.type == ZPointType.Brick &&              //Check only bricks
-            bz.gameObject.gpos.x == gpos.x + 1 &&       //Brick is ahead
-            bz.gameObject.gpos.y == gpos.y));
+            bz.gameObject.zpos.x == zpos.x + 1 &&       //Brick is ahead
+            bz.gameObject.zpos.y == zpos.y));
 
         //Add characters in front
         ret = ret.concat(
             this.zPoints.filter(cz =>
                 cz.type == ZPointType.Char &&           //Check only characters
-                cz.gameObject.gpos.x == gpos.x + 2 &&   //Character is ahead
+                cz.gameObject.zpos.x == zpos.x + 2 &&   //Character is ahead
                 col1D(                                  //Character is in range
-                    gpos.y - 1,
-                    gpos.y,
-                    cz.gameObject.gpos.y - (cz.gameObject as Character).height,
-                    cz.gameObject.gpos.y
+                    zpos.y - 1,
+                    zpos.y,
+                    cz.gameObject.zpos.y - (cz.gameObject as Character).height,
+                    cz.gameObject.zpos.y
                 )));
+        
+        //Add bricks on top (Transparent bricks, also jump bricks for some reason)
+        let qq = ret.concat(
+            this.zPoints.filter(bz =>
+                bz.type == ZPointType.Brick &&
+                col1D(
+                    zpos.x,
+                    zpos.x + 1,
+                    bz.gameObject.zpos.x,
+                    bz.gameObject.zpos.x + (bz.gameObject as Brick).width
+                ) &&
+                bz.gameObject.zpos.y == zpos.y));
+        
+        if(qq.length > 0) {
+            ret = qq;
+            console.log(qq);
+        }
 
         return ret;
     }
@@ -216,50 +239,51 @@ export default class ZIndexHandler extends GameObject {
 
         let ret = [] as ZPoint[];
         let height = character.height;
-        let gpos = character.gpos;
+        let zpos = character.zpos;
 
         //Add bricks in front
         ret = ret.concat(
             this.zPoints.filter(bz => 
                 bz.type == ZPointType.Brick &&              //Check only bricks
-                bz.gameObject.gpos.x == gpos.x + 1 &&       //Brick is ahead
-                bz.gameObject.gpos.y <= gpos.y &&           //Brick >= height range
-                bz.gameObject.gpos.y >= gpos.y - height));  //Brick <= height range
+                bz.gameObject.zpos.x >= zpos.x + 1 &&       //Brick is ahead
+                bz.gameObject.zpos.x <= zpos.x + 2 &&       //Brick is ahead
+                bz.gameObject.zpos.y <= zpos.y &&           //Brick >= height range
+                bz.gameObject.zpos.y >= zpos.y - height));  //Brick <= height range
 
         //Add characters in front
         ret = ret.concat(
             this.zPoints.filter(cz =>
                 cz.type == ZPointType.Char &&               //Check only characters
-                cz.gameObject.gpos.x == gpos.x + 2 &&       //Character is ahead
+                cz.gameObject.zpos.x == zpos.x + 2 &&       //Character is ahead
                 col1D(                                      //Character is in range
-                    gpos.y - height,
-                    gpos.y,
-                    cz.gameObject.gpos.y - (cz.gameObject as Character).height,
-                    cz.gameObject.gpos.y
+                    zpos.y - height,
+                    zpos.y,
+                    cz.gameObject.zpos.y - (cz.gameObject as Character).height,
+                    cz.gameObject.zpos.y
                 )));
         
         //Add bricks above
         ret = ret.concat(
             this.zPoints.filter(bz =>
                 bz.type == ZPointType.Brick &&
-                bz.gameObject.gpos.y == gpos.y - height &&
+                bz.gameObject.zpos.y == zpos.y - height &&
                 col1D(
-                    gpos.x - 1,
-                    gpos.x + 1,
-                    bz.gameObject.gpos.x,
-                    bz.gameObject.gpos.x + (bz.gameObject as Brick).width
+                    zpos.x - 1,
+                    zpos.x + 1,
+                    bz.gameObject.zpos.x,
+                    bz.gameObject.zpos.x + (bz.gameObject as Brick).width
                 )));
 
         //Add characters above
         ret = ret.concat(
             this.zPoints.filter(cz =>
                 cz.type == ZPointType.Char &&
-                cz.gameObject.gpos.y == gpos.y - height &&
+                cz.gameObject.zpos.y == zpos.y - height &&
                 col1D(
-                    gpos.x - 1,
-                    gpos.x + 1,
-                    cz.gameObject.gpos.x - 1,
-                    cz.gameObject.gpos.x + 1
+                    zpos.x - 1,
+                    zpos.x + 1,
+                    cz.gameObject.zpos.x - 1,
+                    cz.gameObject.zpos.x + 1
                 )));
 
         return ret;
@@ -267,6 +291,10 @@ export default class ZIndexHandler extends GameObject {
 
     /** Debug Draw */
     public superDraw(ctx : CanvasRenderingContext2D) {
+
+        if (!this.debug) {
+            return;
+        }
 
         ctx.globalAlpha = 0.6;
         ctx.lineCap = "round";
@@ -311,6 +339,7 @@ export default class ZIndexHandler extends GameObject {
 
     /** Get proper color of a zPoint */
     private getDrawColor(zPoint : ZPoint) : string {
+
         return (
             zPoint.type == ZPointType.Brick ? "#000" :
             zPoint.type == ZPointType.Studs ? "#0F0" :
@@ -322,8 +351,8 @@ export default class ZIndexHandler extends GameObject {
     private getDrawPos(zPoint : ZPoint) : Point {
 
         return new Vect(
-            zPoint.gameObject.gpos.x * GMULTX,
-            zPoint.gameObject.gpos.y * GMULTY).getAdd( 
+            zPoint.gameObject.zpos.x * GMULTX,
+            zPoint.gameObject.zpos.y * GMULTY).getAdd( 
             zPoint.type == ZPointType.Brick ? {
                 x : (zPoint.gameObject as Brick).width / 2 * GMULTX,
                 y : GMULTY / 2

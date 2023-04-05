@@ -19,6 +19,23 @@ export default class Stud extends GameObject {
     public mobilePreviewSize : Vect = new Vect(0, 0);   // Size for mobile preview
     private isMobileFlipped : boolean = false;          // flipped state for mobile preview
 
+    /** z-index get/setters */
+    get zpos() : Vect { 
+        return (
+            // this.isSnapped && this.isSelected ?
+            // this.gpos.getAdd({
+            //     x : Math.round(this.spos.x / GMULTX),
+            //     y : Math.round(this.spos.y / GMULTY),
+            // }) :
+            this.isSelected ?
+            this.gpos.getAdd({
+                x : Math.floor(this.spos.x / GMULTX),
+                y : Math.floor(this.spos.y / GMULTY),
+            }) :
+            super.zpos); 
+    }
+    get zIsActive() : Boolean { return super.zIsActive && this.isVisible }
+
     /** Constructor */
     constructor(params: StudParams) {
         super(params);

@@ -38,8 +38,12 @@ export default class GameObject {
     public isDebug: Boolean;
     private collisions: Collision[] = [];
     protected _zIndex : number;
+
+    /** z-index get/setters */
     get zIndex() : number { return this._zIndex; }
     set zIndex(value : number) { this._zIndex = value; }
+    get zpos() : Vect { return this.gpos; }
+    get zIsActive() : Boolean { return this.isActive }
 
     /** Constructor */
     constructor(params: GameObjectParams) {

@@ -58,6 +58,17 @@ export default class Brick extends GameObject {
     /** If the mobile preview is flipped */
     private isMobileFlipped : Boolean = false;
 
+    /** z-index get/setters */
+    get zpos() : Vect { 
+        return (
+            this.isSelected ?
+            this.gpos.getAdd({
+                x : Math.floor(this.spos.x / GMULTX),
+                y : Math.floor(this.spos.y / GMULTY),
+            }) :
+            super.zpos); 
+    }
+
     /** Constructor */
     constructor(params: BrickParams) {
         super(params);
