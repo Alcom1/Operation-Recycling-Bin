@@ -1,5 +1,5 @@
 import GameObject, {GameObjectParams} from "engine/gameobjects/gameobject";
-import { colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX, MOBILE_PREVIEW_MAX } from "engine/utilities/math";
+import { colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, MOBILE_PREVIEW_MAX } from "engine/utilities/math";
 import Vect, {Point} from "engine/utilities/vect";
 
 export interface BrickParams extends GameObjectParams {
@@ -58,7 +58,11 @@ export default class Brick extends GameObject {
     /** If the mobile preview is flipped */
     private isMobileFlipped : Boolean = false;
 
-    /** z-index get/setters */
+    /** z-index get/setters */    
+    get zIndex() : number { return super.zIndex; }
+    set zIndex(value : number) { 
+        super.zIndex = value + (this.isSelected && !this.isSnapped ? 2000 : 0);
+    }
     get zpos() : Vect { 
         return (
             this.isSelected ?
@@ -68,6 +72,7 @@ export default class Brick extends GameObject {
             }) :
             super.zpos); 
     }
+    get zState() : Boolean { return this.isSnapped }
 
     /** Constructor */
     constructor(params: BrickParams) {
@@ -108,14 +113,14 @@ export default class Brick extends GameObject {
     public superDraw(ctx: CanvasRenderingContext2D): void {
 
         // Debug Z-index
-        // var indexDisplay = "" + this.zIndex;
-        // let indexPos : Point = { x : 5, y : GMULTY - 15};
-        // ctx.strokeStyle = "#000";
-        // ctx.fillStyle = "#FFF"
-        // ctx.lineWidth = 2;
-        // ctx.font = " 20px Monospace"
-        // ctx.strokeText(indexDisplay, indexPos.x, indexPos.y);
-        // ctx.fillText(indexDisplay, indexPos.x, indexPos.y);
+        var indexDisplay = "" + this.zIndex;
+        let indexPos : Point = { x : 5, y : GMULTY - 15};
+        ctx.strokeStyle = "#000";
+        ctx.fillStyle = "#FFF"
+        ctx.lineWidth = 2;
+        ctx.font = " 20px Monospace"
+        ctx.strokeText(indexDisplay, indexPos.x, indexPos.y);
+        ctx.fillText(indexDisplay, indexPos.x, indexPos.y);
 
         // Only draw preview if on browser, this brick is selected, and the selection size is large enough
         if (this.engine.mouse.getMouseType() == "mouse" ||

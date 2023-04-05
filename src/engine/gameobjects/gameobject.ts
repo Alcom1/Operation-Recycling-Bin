@@ -43,7 +43,7 @@ export default class GameObject {
     get zIndex() : number { return this._zIndex; }
     set zIndex(value : number) { this._zIndex = value; }
     get zpos() : Vect { return this.gpos; }
-    get zIsActive() : Boolean { return this.isActive }
+    get zState() : Boolean { return this.isActive }
 
     /** Constructor */
     constructor(params: GameObjectParams) {

@@ -15,7 +15,7 @@ interface ZPoint {
     type : ZPointType,
     gameObject : GameObject,
     pos : Point,
-    vis : Boolean
+    state : Boolean
 }
 
 /** Handler for brick selection, movement, etc. */
@@ -35,7 +35,7 @@ export default class ZIndexHandler extends GameObject {
                     type : ZPointType.Brick,
                     gameObject : o,
                     pos : o.zpos.get(),
-                    vis : o.zIsActive
+                    state : o.zState
                 }));
          
         this.engine.tag.get(
@@ -45,7 +45,7 @@ export default class ZIndexHandler extends GameObject {
                     type : ZPointType.Char,
                     gameObject : o,
                     pos : o.zpos.get(),
-                    vis : o.zIsActive
+                    state : o.zState
                 }));
          
         this.engine.tag.get(
@@ -55,7 +55,7 @@ export default class ZIndexHandler extends GameObject {
                     type : ZPointType.Studs,
                     gameObject : o,
                     pos : o.zpos.get(),
-                    vis : o.zIsActive
+                    state : o.zState
                 }));
 
         this.processZPoints();
@@ -67,7 +67,7 @@ export default class ZIndexHandler extends GameObject {
         let isUpdate = this.zPoints.some(p => 
             p.pos.x != p.gameObject.zpos.x ||
             p.pos.y != p.gameObject.zpos.y ||
-            p.vis != p.gameObject.zIsActive);
+            p.state != p.gameObject.zState);
 
         if(isUpdate) {
             this.processZPoints();
@@ -77,7 +77,6 @@ export default class ZIndexHandler extends GameObject {
     /** Process all zPoints */
     private processZPoints() {
 
-        console.log("PROCESS");
         this.zEdges = [];
         this.zPoints.forEach(z => this.processZPoint(z));
 
@@ -92,7 +91,7 @@ export default class ZIndexHandler extends GameObject {
 
         //Reset
         zPoint.pos = zPoint.gameObject.zpos.get();
-        zPoint.vis = zPoint.gameObject.zIsActive;
+        zPoint.state = zPoint.gameObject.zState;
 
         //Process point differently depending on its type
         switch(zPoint.type) {
@@ -215,7 +214,7 @@ export default class ZIndexHandler extends GameObject {
                 )));
         
         //Add bricks on top (Transparent bricks, also jump bricks for some reason)
-        let qq = ret.concat(
+        ret = ret.concat(
             this.zPoints.filter(bz =>
                 bz.type == ZPointType.Brick &&
                 col1D(
@@ -225,11 +224,6 @@ export default class ZIndexHandler extends GameObject {
                     bz.gameObject.zpos.x + (bz.gameObject as Brick).width
                 ) &&
                 bz.gameObject.zpos.y == zpos.y));
-        
-        if(qq.length > 0) {
-            ret = qq;
-            console.log(qq);
-        }
 
         return ret;
     }
