@@ -22,7 +22,6 @@ export interface AnimationParams extends GameObjectParams {
     isVert? : boolean;
     framesSize? : number;
     gposOffset? : Point;
-    zModifier? : number;
 
     frameCount : number;
     animsCount? : number;
@@ -33,7 +32,6 @@ export default class Anim extends GameObject {
 
     /** Set in constructor */
     private gposOffset : Point;                     // Constant offset of the global position
-    private zModifier : number;                     // Modifier value added to the zIndex
     private images : OffsetImageElement[] = [];            // Animation images with a horizontal offset
     private speed : number;                         // Speed of the animation
     public  isLoop : boolean;                       // If this animation is looped
@@ -46,12 +44,10 @@ export default class Anim extends GameObject {
     private fullSize : Point = { x : 0, y : 0 };    // The full dimensions of this animation's images
 
     /** Set here */
-    public  zModifierPub : number = 0;              // Public z-modifier
     public  isVisible : boolean = true;             // If this animation is visible
     private timer : number = 0;                     // Timer to track frames
     private imageIndex: number = 0;                 // Index of the current image
     private animsIndex : number = 0;                // Index of the current animation
-    private sposYFix : number = -101;               // Z-index offset to fix vertical clipping
 
     /** get */
     public get duration() : number { return 1 / this.speed; }
@@ -66,7 +62,6 @@ export default class Anim extends GameObject {
         this.isVert = params.isVert ?? false;
         this.framesSize = params.framesSize;
         this.gposOffset = params.gposOffset ?? { x : 0, y : 0 }
-        this.zModifier = (params.zModifier ?? 300) + (this.spos.y > 0 ? this.sposYFix : 0);
         this.frameCount = params.frameCount;
         this.animsCount = params.animsCount ?? 1;
 

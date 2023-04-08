@@ -1,6 +1,6 @@
 import { GameObjectParams } from "engine/gameobjects/gameobject";
 import { Collider } from "engine/modules/collision";
-import { BOUNDARY, GMULTY, MASKS } from "engine/utilities/math";
+import { BOUNDARY, GMULTX, GMULTY, MASKS } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 import Anim, { AnimationParams } from "./anim";
 import BrickHandler from "./brickhandler";
@@ -25,9 +25,11 @@ export default class WaterDrop extends Sprite {
     constructor(params: GameObjectParams) {
         super(Object.assign(params, characterBotOverride));
 
+        this.zIndex = 2500; //Big Z-index, should be in front of everything
+
         this.animLand = this.parent.pushGO(new Anim({
             ...params,
-            zModifier : 100,
+            zIndex : this.zIndex,
             images : [{ name : "part_water_land" }],
             speed : 2.5,
             frameCount : 6,
@@ -38,7 +40,7 @@ export default class WaterDrop extends Sprite {
 
         this.animSlip = this.parent.pushGO(new Anim({
             ...params,
-            zModifier : 100,
+            zIndex : this.zIndex,
             images : [{ name : "part_water_slip" }],
             speed : 1 / this.slipDuration,
             frameCount : 6,

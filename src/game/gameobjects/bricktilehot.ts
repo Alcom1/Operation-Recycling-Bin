@@ -14,6 +14,13 @@ export default class BrickTileHot extends BrickTile {
 
     private animation: Anim;    // Tile is animated
 
+    /** z-index get/setters */
+    get zIndex() : number { return super.zIndex; }
+    set zIndex(value : number) { 
+        super.zIndex = value; 
+        this.animation.zIndex = value;
+    }
+
     /** Constructor */
     constructor(params: BrickTileParams) {
         super(Object.assign(params, BrickTileHotOverride));
@@ -21,7 +28,6 @@ export default class BrickTileHot extends BrickTile {
         this.animation = this.parent.pushGO(new Anim({
             ...params,
             subPosition : { x : 0, y : -25 },       // For some reason, this animation appears super low by default.
-            zModifier : 40,                         // Z-index modifier of a 4-width brick
             images : [{ name : "brick_tile_hot" }], // Single hotplate animation image
             speed : 2,                              // Hotplate animation is weirdly fast
             frameCount : 7,

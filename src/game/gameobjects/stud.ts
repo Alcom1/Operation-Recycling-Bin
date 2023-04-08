@@ -44,9 +44,9 @@ export default class Stud extends GameObject {
     constructor(params: StudParams) {
         super(params);
 
-        this.color = colorTranslate(params.color);
-
         this.tags = ["Stud"];
+
+        this.color = colorTranslate(params.color);
 
         this.image = this.engine.library.getImage(`stud_${this.color.replace("#", "").toLowerCase()}`);
     }

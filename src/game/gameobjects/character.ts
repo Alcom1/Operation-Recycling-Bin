@@ -48,7 +48,7 @@ export default class Character extends GameObject {
     get zIndex() : number { return super.zIndex; }
     set zIndex(value : number) { 
         super.zIndex = value; 
-        this.animations.forEach(s => s.zIndex = value + 1);
+        this.animations.forEach(s => s.zIndex = value);
     }
 
     /** Constructor */
@@ -74,8 +74,7 @@ export default class Character extends GameObject {
             ...params,
             speed : this.isGlide ? 6 : params.speed, 
             isLoop : this.isGlide,          // Loops are handled manually by non-gliders to prevent stuttering
-            zModifier : mainZIndex,         // Z-modifier for different slices
-            framesSize : GMULTX * 6,        // 2x wide slices
+            framesSize : GMULTX * 6,        // Wide frame
             gposOffset : { x : -3, y : 0 }  // Move back by 1. Animations are centered around this character
         } as AnimationParams));
 

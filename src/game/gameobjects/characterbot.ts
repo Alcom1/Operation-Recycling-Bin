@@ -39,12 +39,10 @@ const characterBotOverride = Object.freeze({
     animsMisc : [{ // Bot-bin interaction animation
         images : [{ name : "char_bot_bin" }],
         gposOffset : { x : -1, y : 0},
-        zModifier : 150,
         frameCount : 12
     },{             // Bot explosion animation
         images : [{ name : "char_bot_explosion" }],
         gposOffset : { x : -3, y : 0},
-        zModifier : 600,
         frameCount : 16,
         isLoop : false
     },{             // Bot up animation
@@ -420,7 +418,6 @@ export default class CharacterBot extends Character {
             if (this.vertMult > 0) {
 
                 this.spos.y = this.ceilSubOffset;   // Set sub-position for block
-                this.animationsCurr.zModifierPub = 0;
                 this.animationsCurr.spos.y = this.ceilSubOffset;
             }
             // If going downwards, reset to walking

@@ -3,7 +3,6 @@ import Scene from "engine/scene/scene";
 import Engine from "engine/engine";
 import { Collider } from "engine/modules/collision";
 import { Step } from "engine/modules/sync";
-import { GMULTX, GMULTY } from "engine/utilities/math";
 
 export interface Collision {
     other : GameObject;
