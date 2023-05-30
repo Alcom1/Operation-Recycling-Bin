@@ -113,14 +113,14 @@ export default class Brick extends GameObject {
     public superDraw(ctx: CanvasRenderingContext2D): void {
 
         // Debug Z-index
-        var indexDisplay = "" + this.zIndex;
-        let indexPos : Point = { x : 5, y : GMULTY - 15};
-        ctx.strokeStyle = "#000";
-        ctx.fillStyle = "#FFF"
-        ctx.lineWidth = 2;
-        ctx.font = " 20px Monospace"
-        ctx.strokeText(indexDisplay, indexPos.x, indexPos.y);
-        ctx.fillText(indexDisplay, indexPos.x, indexPos.y);
+        // var indexDisplay = "" + this.zIndex;
+        // let indexPos : Point = { x : 5, y : GMULTY - 15};
+        // ctx.strokeStyle = "#000";
+        // ctx.fillStyle = "#FFF"
+        // ctx.lineWidth = 2;
+        // ctx.font = " 20px Monospace"
+        // ctx.strokeText(indexDisplay, indexPos.x, indexPos.y);
+        // ctx.fillText(indexDisplay, indexPos.x, indexPos.y);
 
         // Only draw preview if on browser, this brick is selected, and the selection size is large enough
         if (this.engine.mouse.getMouseType() == "mouse" ||

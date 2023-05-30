@@ -175,7 +175,7 @@ export default class Character extends GameObject {
     }
 
     /** Set current & active group based on the group index */
-    protected setStateIndex(index? : number) {
+    public setStateIndex(index? : number) {
         
         this.stateIndex = index ?? this.stateIndex;
         this.animations.forEach((s, i) => {

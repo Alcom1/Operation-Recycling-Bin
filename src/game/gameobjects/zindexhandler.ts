@@ -5,7 +5,6 @@ import Anim from "./anim";
 import Brick from "./brick";
 import Character from "./character";
 import Stud from "./stud";
-import WaterDrop from "./waterdrop";
 
 enum ZPointType {
     Brick,
@@ -156,7 +155,8 @@ export default class ZIndexHandler extends GameObject {
         ret = ret.concat(
             this.zPoints.filter(cz =>
                 cz.type == ZPointType.Char &&                   //Check only characters
-                cz.gameObject.zpos.x == zpos.x + width + 1 &&   //Character is ahead
+                cz.gameObject.zpos.x >= zpos.x + width + 1 &&   //Character is ahead
+                cz.gameObject.zpos.x <= zpos.x + width + 2 &&   //Character is ahead
                 col1D(                                          //Character is in range
                     zpos.y - 1,
                     zpos.y,
@@ -240,7 +240,8 @@ export default class ZIndexHandler extends GameObject {
         ret = ret.concat(
             this.zPoints.filter(cz =>
                 cz.type == ZPointType.Char &&           //Check only characters
-                cz.gameObject.zpos.x == zpos.x + 2 &&   //Character is ahead
+                cz.gameObject.zpos.x >= zpos.x + 2 &&   //Character is ahead
+                cz.gameObject.zpos.x <= zpos.x + 3 &&   //Character is ahead
                 col1D(                                  //Character is in range
                     zpos.y - 1,
                     zpos.y,

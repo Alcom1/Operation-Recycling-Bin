@@ -8,7 +8,12 @@ import CharacterGearGround from "./charactergearground";
 
 interface CharacterGroup {
     tag: string;
-    characters: Character[]
+    characters: Character[];
+}
+
+interface CharacterTagged {
+    tag: string;
+    character: Character;
 }
 
 /** Handler for brick selection, movement, etc. */
@@ -48,55 +53,72 @@ export default class CharacterHandler extends GameObject {
 
     /** Perform synchronous updates for all characters */
     public updateSync(step : Step, loopLength : number) {
-        
-        //Fpr all characters in character groups, handle its step
-        this.characterGroups.forEach(cg => {
 
-            cg.characters.forEach(c => {
+        //Map character groups as characters with their specific tag
+        let charactersTagged = this.characterGroups.flatMap(x => x.characters.map(y => {
+            return {
+                tag : x.tag,
+                character : y
+            } as CharacterTagged
+        }))
+        
+        //Sort characters by their grid x-pos or grid y-pos.
+        charactersTagged.sort((a, b) => 
+            a.character.gpos.x - b.character.gpos.x || 
+            a.character.gpos.y - b.character.gpos.y);
+        
+        //Check collision of each tagged character in positional order
+        charactersTagged.forEach(ct => {
 
-                // The step matches this character's speed, perform an update
-                if (step.stepType == StepType.SYNC && step.counter % (loopLength / c.speed) == 0) {
+            let c = ct.character;
 
-                    switch (cg.tag) {
-        
-                        case "CharacterBot" :
-                            this.handleCharacterBot(c);
-                            break;
-        
-                        case "CharacterBin" :
-                            this.handleCharacterBin(c);
-                            break;
-        
-                        case "CharacterGearGround" :
-                            this.handleCharacterGearGround(c);
-                            break;
-        
-                        case "CharacterGearClimb" :
-                            this.handleCharacterGearClimb(c);
-                            break;
-                    }
+            // The step matches this character's speed, perform an update
+            if (step.stepType == StepType.SYNC && step.counter % (loopLength / c.speed) == 0) {
+
+                switch (ct.tag) {
+    
+                    case "CharacterBot" :
+                        this.handleCharacterBot(c);
+                        break;
+    
+                    case "CharacterBin" :
+                        this.handleCharacterBin(c);
+                        break;
+    
+                    case "CharacterGearGround" :
+                        this.handleCharacterGearGround(c);
+                        break;
+    
+                    case "CharacterGearClimb" :
+                        this.handleCharacterGearClimb(c);
+                        break;
                 }
-            });
+
+                //Always refresh state index here?
+                c.setStateIndex();
+            }
         });
     }
 
     /** Handle specific character */
-    private handleCharacterBot(character : Character) {
-        character = character as CharacterBot;
+    private handleCharacterBot(characterGeneric : Character) {
+        let character = characterGeneric as CharacterBot;
+
+        character.handleBrickCollisionNormal();
     }
 
     /** Handle specific character */
-    private handleCharacterBin(character : Character) {
-        character = character as CharacterBin;
+    private handleCharacterBin(characterGeneric : Character) {
+        let character = characterGeneric as CharacterBin;
     }
 
     /** Handle specific character */
-    private handleCharacterGearGround(character : Character) {
-        character = character as CharacterGearGround;
+    private handleCharacterGearGround(characterGeneric : Character) {
+        let character = characterGeneric as CharacterGearGround;
     }
 
     /** Handle specific character */
-    private handleCharacterGearClimb(character : Character) {
-        character = character as CharacterGearClimb;
+    private handleCharacterGearClimb(characterGeneric : Character) {
+        let character = characterGeneric as CharacterGearClimb;
     }
 }

@@ -1,7 +1,6 @@
 import Character, { CharacterParams } from "./character";
 import { BOUNDARY, bitStack, GMULTY, GMULTX, MASKS} from "engine/utilities/math";
 import { Collider } from "engine/modules/collision";
-import { Step, StepType } from "engine/modules/sync";
 import { Point } from "engine/utilities/vect";
 
 /** Armor states of a bot character */
@@ -95,7 +94,6 @@ export default class CharacterBot extends Character {
     private horzSpeed : number = 350;                       // Horizontal air speed
     private jumpHeights : number[] = [0, 2, 3, 3, 2, 0];    // Individual heights throughout a jump
     private jumpOrigin : Point = { x : 0, y : 0 }           // Origin of the previous jump
-    private jumpIndex : number = 0;
     private armorDelay : number = 2;                        // Delay where armor remains after taking damage
     private armorFlashRate : number = 8;                    // Rate of the armor flashing effect
     private armorState : ArmorState = ArmorState.NONE;      // Current state of the armor
@@ -338,7 +336,7 @@ export default class CharacterBot extends Character {
     }
 
     /** Check and resolve brick collisions - Normal movement */
-    protected handleBrickCollisionNormal() {
+    public handleBrickCollisionNormal() {
 
         // WALL BOUNDARY
         if (this.gpos.x - 2 < BOUNDARY.minx && this.move.x < 0 || 
