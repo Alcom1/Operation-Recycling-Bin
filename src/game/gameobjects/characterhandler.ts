@@ -52,7 +52,7 @@ export default class CharacterHandler extends GameObject {
     }
 
     /** Perform synchronous updates for all characters */
-    public updateSync(step : Step, loopLength : number) {
+    public updateSync(counter : number, loopLength : number) {
 
         //Map character groups as characters with their specific tag
         let charactersTagged = this.characterGroups.flatMap(x => x.characters.map(y => {
@@ -73,7 +73,7 @@ export default class CharacterHandler extends GameObject {
             let c = ct.character;
 
             // The step matches this character's speed, perform an update
-            if (step.stepType == StepType.SYNC && step.counter % (loopLength / c.speed) == 0) {
+            if (counter % (loopLength / c.speed) == 0) {
 
                 switch (ct.tag) {
     

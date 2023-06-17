@@ -84,7 +84,7 @@ export default class GameObject {
     /** 
      * Update positions for collisions step
     */
-    public updateSync(step : Step, loopLength : number) {
+    public updateSync(counter : number, loopLength : number) {
     }
 
     /** 

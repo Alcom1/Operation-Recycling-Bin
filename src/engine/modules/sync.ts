@@ -12,7 +12,6 @@ export interface Collider {
 
 export enum StepType {
     START,
-    FRAME,
     SYNC
 }
 
@@ -29,10 +28,15 @@ interface SyncScene {
 /** Module that handles tags and game objects grouped by tag. */
 export default class SyncModule {
     
-    private scenes          : SyncScene[] = [];
-    private timer           : number = 0;
-    private stepInterval    : number = 1/15;
-    private counter         : number = 0;
+    private scenes  : SyncScene[] = [];
+    private counter : number = 0;
+
+    /** 
+    * @param physicsPerSecond Number of physics checks per second
+    */
+    constructor(private physicsPerSecond = 15) {
+        
+    }
 
     public pushGOs(sceneName : string, sceneObjects : GameObject[]) {
 
@@ -54,45 +58,25 @@ export default class SyncModule {
     }
 
     /** Update - check and trigger collisions for all game objects in all scenes */
-    public update(dt : number) {
+    public update() {
 
         // Do nothing if there are no scenes, stops updates before scenes load, stops early stutter
         if (this.scenes.length == 0) {
             return;
         }
-        
-        let isStart = this.timer == 0;
-        this.timer += dt;               // Advance timer
-        let isSync = false;             // If the next step is sychronous (not just an ordinary frame)
-
-        // Check sync
-        if (this.timer >= this.stepInterval) {
-            this.timer -= this.stepInterval;
-            this.counter++;
-            isSync = true;
-        }
-
-        // Create step object
-        let step = {
-            stepType : 
-                isSync ? StepType.SYNC : 
-                isStart ? StepType.START : StepType.FRAME,
-            counter : this.counter
-        } as Step
 
         // Trigger updates for each scene.
         this.scenes.forEach(s => {
 
             // Get all active game objects with colliders
             s.gameObjects.filter(go => go.isActive).forEach(go => {
-                go.updateSync(step, 1 / this.stepInterval);
+                go.updateSync(this.counter++, this.physicsPerSecond);
             });
         });
     }
 
     /** Remove scene reference from colliders */
     public clear(sceneNames: string[]) {
-        this.timer = 0;     // Reset timer for next scene
         this.counter = 0;   // Reset counter for next scene
         this.scenes = this.scenes.filter(sg => !sceneNames.some(sn => sg.name == sn));
     }
