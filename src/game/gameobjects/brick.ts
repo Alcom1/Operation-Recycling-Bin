@@ -43,9 +43,6 @@ export default class Brick extends GameObject {
     /** Temporary recursion state */
     public isChecked = false;
 
-    /** Number of objects on top of this brick */
-    public pressure = 0;
-
     /** Boundary offset for minimum carried position */
     private minCarry : Vect = new Vect(0, 0);
 
@@ -57,6 +54,9 @@ export default class Brick extends GameObject {
 
     /** If the mobile preview is flipped */
     private isMobileFlipped : Boolean = false;
+
+    /** If the brick blocks placement */
+    protected _isBlock : boolean = false; get isBlock() : boolean {return this._isBlock};
 
     /** z-index get/setters */    
     get zIndex() : number { return super.zIndex; }

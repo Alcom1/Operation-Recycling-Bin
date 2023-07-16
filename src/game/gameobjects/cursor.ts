@@ -53,7 +53,7 @@ export default class Cursor extends GameObject {
         var tempSpos = this.engine.mouse.getPos();
 
         // Handle cursor state
-        if (this.isUpdateForced || tempSpos.getDiff(this.spos) || this.brickHandler.isRecheck) {
+        if (this.isUpdateForced || tempSpos.getDiff(this.spos)) {
 
             // Reset update forcing
             this.isUpdateForced = false;
@@ -75,7 +75,7 @@ export default class Cursor extends GameObject {
                     const dir = Math.sign(diff) as (-1 | 1);
 
                     // If we've dragged a sufficient distance and no bricks in the chosen direction are pressured
-                    if (Math.abs(diff) > this.pLength && this.brickHandler.checkPressureSelection(dir)) {
+                    if (Math.abs(diff) > this.pLength) {
                         
                         // Select bricks in the direction of the difference
                         this.selectBricks(dir);

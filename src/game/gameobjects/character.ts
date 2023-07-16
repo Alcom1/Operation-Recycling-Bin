@@ -31,7 +31,6 @@ export default class Character extends GameObject {
     protected brickHandler!: BrickHandler;          // Brick handler for brick pressure (bricks under this character)
     private checkCollision: boolean;                // If collision needs to be checked
     private isGlide: boolean;                       // If the character sprite matches the character's subposition
-    private underBricks: Brick[] = [];              // Bricks under pressure, under this character
 
     protected animations: Anim[] = [];              // Animations, 2D array for character-states and then sub-states
     protected stateAnimations: number[];            // Array of which animation each state uses. Sometimes it's not 1:1.
@@ -137,31 +136,6 @@ export default class Character extends GameObject {
         
     }
 
-    /** Manage bricks underneath this character, set pressure */
-    protected handleBricks(isClear : boolean = false) {
-
-        // Reset pressures
-        this.underBricks.forEach(b => b.pressure -= 1);
-
-        // Reset underbricks if we are clearing unconditionally.
-        if (isClear) {
-            this.underBricks = [];
-        }
-        // Otherwise, get a new set.
-        else {
-            // Get new set of bricks for pressures
-            this.underBricks = this.brickHandler.checkCollisionRow(
-                this.gpos.getAdd({x : -1, y : 1}), 
-                2);
-    
-            // Set new pressures
-            this.underBricks.forEach(b => b.pressure += 1);
-        }
-
-        // Cursor must perform a recheck.
-        this.brickHandler.isRecheck = true;
-    }
-
     /** Reverse the direction of this character */
     protected reverse() {
 
@@ -191,7 +165,5 @@ export default class Character extends GameObject {
 
         this.isActive = false;
         this.animations.forEach(s => s.isActive = false);
-        this.underBricks.forEach(b => b.pressure -= 1);
-        this.underBricks = [];
     }
 }

@@ -22,7 +22,7 @@ export default class CharacterGear extends Character {
     public getColliders() : Collider[] {
 
         return [{ 
-            mask : MASKS.death ,
+            mask : MASKS.death,
             min : this.gpos
                 .getAdd({ x : -1, y : 1 - this.height})
                 .getMult(GMULTX, GMULTY),
@@ -30,21 +30,6 @@ export default class CharacterGear extends Character {
                 .getAdd({ x :  1, y : 1})
                 .getMult(GMULTX, GMULTY),
             isSub : true
-        },
-        this.getPassiveCollider()];
-    }
-
-    /** Get passive collider (blocks bricks) */
-    protected getPassiveCollider() : Collider {
-
-        var offset = new Vect(
-            this.move.y == 0 ? this.move.x : 0,
-            this.move.y);
-
-        return { 
-            mask : 0,   // Passive
-            min : this.gpos.getAdd({x : -1, y : -1}).getAdd(offset),
-            max : this.gpos.getAdd({x :  1, y :  1}).getAdd(offset)
-        }
+        }];
     }
 }

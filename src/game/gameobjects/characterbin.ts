@@ -26,10 +26,6 @@ export default class CharacterBin extends Character {
             mask : MASKS.block | MASKS.scrap | MASKS.water,
             min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
             max : this.gpos.getAdd({ x :  1, y : 1}) 
-        },{ 
-            mask : 0,           // Passive
-            min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
-            max : this.gpos.getAdd({ x :  1, y : 1}) 
         }];
     }
 

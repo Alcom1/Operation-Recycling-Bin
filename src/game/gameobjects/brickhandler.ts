@@ -50,9 +50,6 @@ export default class BrickHandler extends GameObject {
     /** Grey bricks */
     private get bricksGrey(): Brick[] { return this.bricks.filter(b => b.isGrey == true); }
 
-    /** If a brick has been stepped on or off */
-    public isRecheck = false;
-
     /** Initalize the brick handler, get related bricks & game objects, manage bricks */
     public init(ctx: CanvasRenderingContext2D) {
         
@@ -95,11 +92,6 @@ export default class BrickHandler extends GameObject {
         this.cullBrickStuds();  // Initial stud culling
     }
 
-    /** Check selection pressure, return if any selected bricks have a pressure <= 0  */
-    public checkPressureSelection(dir : -1 | 1) : boolean {
-        return this.selections[dir]?.every(x => x.pressure <= 0) ?? false;
-    }
-
     /** Check selection collision, return true if this is a valid position **/
     public checkCollisionSelection(): boolean {
 
@@ -110,7 +102,9 @@ export default class BrickHandler extends GameObject {
 
         const bricksSelected = this.bricks.filter(b => b.isSelected);
 
-        for (const brick1 of bricksSelected) {
+        let isBlocked = false;  //If the selection is blocked by a blocking brick
+
+        brickLoop : for (const brick1 of bricksSelected) {
             
             brick1.setToCursor();   // Force update so the brick position matches this frame and not the previous
 
@@ -147,10 +141,20 @@ export default class BrickHandler extends GameObject {
                         brick2.gpos.x, brick2.gpos.x + brick2.width)) {
 
                         adjacents[dir] = true;          // Set adjacency state for this direction.
-                        break;                          // Check other direction.
+                        
+                        //There is a blocking brick, set state and break out of the loop
+                        if (brick2.isBlock) {
+                            isBlocked = true;
+                            break brickLoop;
+                        }
                     }
                 }
             }
+        }
+
+        //Selection is blocked, invalidate both directions
+        if(isBlocked) {
+            OPPOSITE_DIRS.forEach(d => adjacents[d] = false);
         }
 
         // LEVEL BOUNDARY CHECK - Check if this brick is inside the boundary
@@ -284,6 +288,7 @@ export default class BrickHandler extends GameObject {
                 pos.x,
                 pos.x + width
             )) {
+
                 bricks.push(brick);
             }
         }
@@ -435,11 +440,10 @@ export default class BrickHandler extends GameObject {
     private hoverBrick(brick: Brick, pos: Vect): BrickHandlerState {
 
         // Do nothing if the two bricks are the same
-        if (this.selectedBrick != null && this.selectedBrick.compare(brick) && !this.isRecheck) {
+        if (this.selectedBrick != null && this.selectedBrick.compare(brick)) {
             return BrickHandlerState.SAME;
         }
 
-        this.isRecheck = false;     // Reset pressured state
         this.selectedBrick = brick; // Set current selected brick for later use
         this.selections = [];       // Reset selections
 
@@ -451,13 +455,8 @@ export default class BrickHandler extends GameObject {
             // If there are bricks to select
             if (selectionNew!.length > 0) {
 
-                let floats = this.getFloatingBricks();
-
-                // If every floating brick
-                if (floats.every(b => b.pressure == 0)) {
-
-                    this.selections[dir] = selectionNew.concat(floats);
-                }
+                //Add floating bricks to direction's selection
+                this.selections[dir] = selectionNew.concat(this.getFloatingBricks());
             }
 
             // Clear recursion states after each recursive direction check
@@ -546,8 +545,20 @@ export default class BrickHandler extends GameObject {
     /** Recursively select bricks. */
     private recurseBrick(brick1: Brick, dirs: (-1 | 1)[], checkGrey: boolean) {
 
+        //Check if this brick is blocked, return NULL if so.
+        for (const brick2 of this.rows.find(r => r.row == brick1.gpos.y - 1)?.bricks || []) {
+
+            if (brick2.isBlock && col1D(
+                brick1.gpos.x, brick1.gpos.x + brick1.width, 
+                brick2.gpos.x, brick2.gpos.x + brick2.width)) {
+                
+                debugger;
+                return null;
+            }
+        }
+
         // Return nothing for grey bricks
-        if (checkGrey && (brick1.isGrey || brick1.pressure > 0)) {
+        if (checkGrey && (brick1.isGrey)) {
             return null;
         }
 

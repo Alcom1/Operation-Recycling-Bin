@@ -287,8 +287,6 @@ export default class CharacterBot extends Character {
     
             //Update animation to match
             this.animationsCurr.gpos.add(move);
-
-            this.brickHandler.isRecheck = true; //Recheck bricks after every shift
         }
     }
 
@@ -304,7 +302,6 @@ export default class CharacterBot extends Character {
     private endVertMovement() {
 
         this.spos.setToZero();  // Snap to grid
-        this.handleBricks();    // Handle bricks now under this character
 
         // Go from air state to walking state for flying & bounce states
         if (this.stateIndex == BotState.FLYING ||
@@ -436,10 +433,6 @@ export default class CharacterBot extends Character {
             min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
             max : this.gpos.getAdd({ x :  1, y : 1}) 
         },{ 
-            mask : 0,       // Passive
-            min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
-            max : this.gpos.getAdd({ x :  1, y : 1}) 
-        },{ 
             mask : MASKS.super | MASKS.jumps | MASKS.press,
             min : this.gpos.getAdd({ x : -1 - Math.min(this.move.x, 0), y : 0}),
             max : this.gpos.getAdd({ x :    - Math.min(this.move.x, 0), y : 1}) 
@@ -480,7 +473,6 @@ export default class CharacterBot extends Character {
         // Vertical
         else if (mask & MASKS.float) {
             this.vertMult = 1;          // Default to upward movement
-            this.handleBricks(true);    // Release bricks before flying
             this.setStateIndex(BotState.FLYING);
         }
         // Bounce

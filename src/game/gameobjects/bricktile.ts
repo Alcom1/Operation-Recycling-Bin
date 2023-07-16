@@ -23,6 +23,7 @@ export default class BrickTile extends Brick {
 
         this.images = params.images.map(i => i ? this.engine.library.getImage(i) : {} as HTMLImageElement);
 
+        this._isBlock = true;
         this.isOn = params.isOn ?? true;
         this.image = this.images[+this.isOn];
         this.circuit = params.circuit;
@@ -32,14 +33,5 @@ export default class BrickTile extends Brick {
     public setOnOff(state : boolean) {
         this.isOn = state;
         this.image = this.images[+this.isOn];
-    }
-
-    /** Get passive collider of this brick. */
-    public getColliders() : Collider[] {
-        return !this.isGrey || this.isSelected ? [] : [{ 
-            mask : 0,               // Passive
-            min : this.gpos.getAdd({ x : 0,              y : -1}),
-            max : this.gpos.getAdd({ x : this.width,     y :  2}) 
-        }];
     }
 }
