@@ -6,9 +6,11 @@ import Character, { CharacterParams } from "./character";
 const characterBinOverride = Object.freeze({
     height: 2,                                          // Bins are this tall
     speed : 0,                                          // Bins aren't animated
-    images : [{ name : "char_bin", offsetX : -69 }],    // Bin image
-    frameCount : 1,
-    animsCount : 1
+    animMain : {
+        images : [{ name : "char_bin", offsetX : -69 }],    // Bin image
+        frameCount : 1,
+        animsCount : 1
+    }
 });
 
 /** A bin full of junk. Eat it. */

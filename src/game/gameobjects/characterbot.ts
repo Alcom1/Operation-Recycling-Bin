@@ -25,14 +25,16 @@ const characterBotOverride = Object.freeze({
     // Main parameters
     height: 4,      // Bot is this tall
     speed : 3,      // Bot moves fast
-    images : [      // Bot has left & right animations
-        { name : "char_bot_left" },
-        { name : "char_bot_right" },
-        { name : "char_bot_left_armor" },
-        { name : "char_bot_right_armor" }],
-    frameCount : 10,
-    animsCount : 2,
     stateAnimations : [1, 2, 3, 3, 4],
+    animMain : {
+        images : [      // Bot has left & right animations
+            { name : "char_bot_left" },
+            { name : "char_bot_right" },
+            { name : "char_bot_left_armor" },
+            { name : "char_bot_right_armor" }],
+        frameCount : 10,
+        animsCount : 2
+    },
 
     // Misc animation parameters
     animsMisc : [{ // Bot-bin interaction animation

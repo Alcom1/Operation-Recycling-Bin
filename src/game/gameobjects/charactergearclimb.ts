@@ -20,13 +20,15 @@ enum VertState {
 const CharacterGearClimbOverride = Object.freeze({
     height: 2,
     speed : 3.0,
-    images : [
-        { name : "char_rbc_left",   offsetX : 0 },
-        { name : "char_rbc_right",  offsetX : 0},
-        { name : "char_rbc_up",     offsetX : 0},
-        { name : "char_rbc_down",   offsetX : 0}],
-    frameCount : 2,
-    animsCount : 1,
+    animMain : {
+        images : [
+            { name : "char_rbc_left",   offsetX : 0 },
+            { name : "char_rbc_right",  offsetX : 0},
+            { name : "char_rbc_up",     offsetX : 0},
+            { name : "char_rbc_down",   offsetX : 0}],
+        frameCount : 2,
+        animsCount : 1
+    },
     isGlide : true,
 
     // Misc animation parameters

@@ -10,9 +10,7 @@ import BrickPhantom from "./brickphantom";
 export interface CharacterParams extends GameObjectParams {
     height? : number;
     speed? : number;
-    images : OffsetImageParams[];
-    frameCount : number;
-    animsCount : number;
+    animMain : AnimationParams;
     isForward? : boolean;
     isGlide? : boolean;
     stateAnimations : number[];
@@ -71,6 +69,7 @@ export default class Character extends GameObject {
         // Add segment to scene and this character
         this.animations.push(new Anim({
             ...params,
+            ...params.animMain,
             speed : this.isGlide ? 6 : params.speed, 
             isLoop : this.isGlide,          // Loops are handled manually by non-gliders to prevent stuttering
             framesSize : GMULTX * 6,        // Wide frame
@@ -82,6 +81,7 @@ export default class Character extends GameObject {
 
             this.animations.push(new Anim({
                 ...params,
+                speed : null,
                 ...m
             } as AnimationParams));
         });

@@ -7,11 +7,13 @@ import CharacterGear from "./charactergear";
 const CharacterGearGroundOverride = Object.freeze({
     height: 2,
     speed : 5.0,
-    images : [        
-        { name : "char_rbg_left", offsetX : 0 },
-        { name : "char_rbg_right", offsetX : 0}],
-    frameCount : 2,
-    animsCount : 1,
+    animMain : {
+        images : [        
+            { name : "char_rbg_left", offsetX : 0 },
+            { name : "char_rbg_right", offsetX : 0}],
+        frameCount : 2,
+        animsCount : 1
+    },
     isGlide : true
 });
 
