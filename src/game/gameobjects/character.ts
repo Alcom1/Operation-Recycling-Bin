@@ -1,10 +1,10 @@
-import GameObject, { Collision, GameObjectParams } from "engine/gameobjects/gameobject";
+import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import { GMULTX, GMULTY } from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 import BrickHandler from "./brickhandler";
 import Brick from "./bricknormal";
 import Anim, { OffsetImageParams, AnimationParams } from "./anim";
-import { Step, StepType } from "engine/modules/sync";
+import BrickPhantom from "./brickphantom";
 
 /** Parameters for a character */
 export interface CharacterParams extends GameObjectParams {
@@ -29,12 +29,13 @@ export default class Character extends GameObject {
     private _speed: number;                         // Speed of this character
     public get speed() { return this._speed }
     protected brickHandler!: BrickHandler;          // Brick handler for brick pressure (bricks under this character)
-    private checkCollision: boolean;                // If collision needs to be checked
     private isGlide: boolean;                       // If the character sprite matches the character's subposition
 
     protected animations: Anim[] = [];              // Animations, 2D array for character-states and then sub-states
     protected stateAnimations: number[];            // Array of which animation each state uses. Sometimes it's not 1:1.
     protected stateIndex: number = 0;               // Current state
+
+    private bricks : Brick[] = [];                  // Phantom bricks for this character's collisions
 
     /** Getters */
     protected get animationsCurr() : Anim {                               // The animations for the current state
@@ -60,7 +61,6 @@ export default class Character extends GameObject {
         this._move = new Vect(params.isForward ?? true ? 1 : -1, 0);    // Default move direction
         this._height = params.height ?? 2;                              // Default height for a character
         this.isGlide = params.isGlide ?? false;                         // Default glide state
-        this.checkCollision = true;                                     // Force initial collision check
         this.stateAnimations = [0, ...(
             params.stateAnimations ?? (                                 // Get special state animations or...
             params.animsMisc ? params.animsMisc.map((x, i) => i + 1) :  // Get default animations or...
@@ -88,6 +88,15 @@ export default class Character extends GameObject {
 
         //Add animations to scene
         this.animations.forEach(a => this.parent.pushGO(a));
+
+        //Add phantom bricks for this character's collisions
+        for (let i = 0; i < this.height; i++) {
+            this.bricks.push(this.parent.pushGO(new BrickPhantom({
+                ...params,
+                width : 2,
+                position : this.gpos.getAdd({ x : -1, y : -i})
+            })) as Brick)
+        }
     }
 
     /** Initialize this character. Get brick handler & set the default state */
@@ -139,8 +148,9 @@ export default class Character extends GameObject {
     /** Reverse the direction of this character */
     protected reverse() {
 
-        this.move.x *= -1;                                          // Reverse direction
+        this._move.x *= -1;                                          // Reverse direction
         this.animations[0].setImageIndex(this.animationSubindex);   // Establish sprites for new direction
+        this.animationsCurr.reset();
         
         // If gliding force-reset the sprite to match its current position
         if (this.isGlide) {
@@ -148,8 +158,19 @@ export default class Character extends GameObject {
         }
     }
 
+    /** Move this character and its bricks by an offset*/
+    protected moveAll(offset : Point) {
+
+        this.gpos.add(offset);
+        this.bricks.forEach((b,i) => {
+
+            b.gpos = this.gpos.getAdd({ x : -1, y : -i });
+        })
+        this.setStateIndex();
+    }
+
     /** Set current & active group based on the group index */
-    public setStateIndex(index? : number) {
+    protected setStateIndex(index? : number) {
         
         this.stateIndex = index ?? this.stateIndex;
         this.animations.forEach((s, i) => {
@@ -160,8 +181,13 @@ export default class Character extends GameObject {
         this.animationsCurr.setImageIndex(this.animationSubindex);
     }
 
+    /** */
+    public handleStep(isStart : boolean = false) {
+
+    }
+
     /** Deactivate this character */
-    public deactivate() {
+    protected deactivate() {
 
         this.isActive = false;
         this.animations.forEach(s => s.isActive = false);

@@ -118,7 +118,9 @@ export default class Engine {
                     break;              //Stop
                 }
 
-                this.sync.update();     //Perform physics update
+                //Perform updates
+                this.collision.update();    //Check collisions
+                this.sync.update();         //Resolve statuses
 
                 physicsLagCount++;      //Count lag
                 timeCount -= timeMin;   //Subtract duration from physics timer
@@ -180,7 +182,6 @@ export default class Engine {
 
     /** Perform both an update and draw */
     private updateDrawScenes(scenes : Scene[], dt: number): void {
-        this.collision.update(dt);  // Handle collisions before update/draw
         scenes.forEach(s => s.update(dt));
         scenes.forEach(s => s.draw(this.ctx));
         scenes.forEach(s => s.superDraw(this.ctx));

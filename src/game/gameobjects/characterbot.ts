@@ -392,7 +392,7 @@ export default class CharacterBot extends Character {
     /** Shift forward, with a vertical offset to handle steps */
     private walkstep(vOffset : number) {
         
-        this.gpos.add({
+        this.moveAll({
             x : this.move.x,
             y : vOffset
         })
@@ -447,6 +447,21 @@ export default class CharacterBot extends Character {
 
             this.timerSpc = 0;          // Timer reset incase we cancelled a previous animation
             super.setStateIndex(index); // Set index
+        }
+    }
+
+    
+
+    /** Check and resolve brick collisions */
+    public handleStep(isStart : boolean = false) {
+
+        switch(this.stateIndex) {
+            case BotState.NORMAL :
+                this.handleBrickCollisionNormal();
+                break;
+
+            default :
+                break;
         }
     }
 

@@ -48,7 +48,7 @@ export default class BrickHandler extends GameObject {
     private selections: (Brick[] | null)[] = [];
 
     /** Grey bricks */
-    private get bricksGrey(): Brick[] { return this.bricks.filter(b => b.isGrey == true); }
+    private get bricksGrey(): Brick[] { return this.bricks.filter(b => b.isGrey); }
 
     /** Initalize the brick handler, get related bricks & game objects, manage bricks */
     public init(ctx: CanvasRenderingContext2D) {
@@ -189,7 +189,13 @@ export default class BrickHandler extends GameObject {
     }
 
     /** Check collisons for a vertically-looping range and return a bitmask */
-    public checkCollisionRange(pos: Point, dir: number, start: number, final: number, height: number, width: number = 2): number {
+    public checkCollisionRange(
+        pos: Point, 
+        dir: number, 
+        start: number, 
+        final: number, 
+        height: number, 
+        width: number = 2): number {
 
         let collisions = 0; // Collision bitbask
 
@@ -199,6 +205,10 @@ export default class BrickHandler extends GameObject {
             let x = Math.floor(i / height) % width; // Wrap by width to go back and check ceiling
 
             for (const brick of this.rows.find(r => r.row == pos.y + y + 1)?.bricks.filter(b => !b.isSelected) || []) {
+
+                if(brick.isBlock) {
+                    continue;
+                }
 
                 if (col1D(
                     brick.gpos.x - 1, 
@@ -548,11 +558,10 @@ export default class BrickHandler extends GameObject {
         //Check if this brick is blocked, return NULL if so.
         for (const brick2 of this.rows.find(r => r.row == brick1.gpos.y - 1)?.bricks || []) {
 
-            if (brick2.isBlock && col1D(
+            if (checkGrey && !brick1.isGrey && brick2.isBlock && col1D(
                 brick1.gpos.x, brick1.gpos.x + brick1.width, 
                 brick2.gpos.x, brick2.gpos.x + brick2.width)) {
                 
-                debugger;
                 return null;
             }
         }

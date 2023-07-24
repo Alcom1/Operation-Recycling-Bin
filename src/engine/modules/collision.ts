@@ -55,7 +55,7 @@ export default class CollisionModule {
     }
 
     /** Update - check and trigger collisions for all game objects in all scenes */
-    public update(dt : number) {
+    public update() {
 
         // Trigger collisions for each scene. Scenes don't interact with each other.
         this.scenes.forEach(s => {

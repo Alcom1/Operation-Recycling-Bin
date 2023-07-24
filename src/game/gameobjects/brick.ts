@@ -5,6 +5,7 @@ import Vect, {Point} from "engine/utilities/vect";
 export interface BrickParams extends GameObjectParams {
     color?: string;
     width?: number;
+    block?: boolean;
 }
 
 /** Base class for all bricks */
@@ -14,7 +15,7 @@ export default class Brick extends GameObject {
     protected color: string;
 
     /** If this is a grey brick */
-    public isGrey: boolean;
+    private _isGrey: boolean; public get isGrey(): boolean { return this._isGrey; }
 
     /** Baked image data for this brick */
     protected image = new Image();
@@ -56,7 +57,7 @@ export default class Brick extends GameObject {
     private isMobileFlipped : Boolean = false;
 
     /** If the brick blocks placement */
-    protected _isBlock : boolean = false; get isBlock() : boolean {return this._isBlock};
+    protected _isBlock : boolean = false; public get isBlock() : boolean {return this._isBlock};
 
     /** z-index get/setters */    
     get zIndex() : number { return super.zIndex; }
@@ -79,7 +80,8 @@ export default class Brick extends GameObject {
         super(params);
         
         this.color = colorTranslate(params.color);
-        this.isGrey = !params.color;
+        this._isGrey = !params.color;
+        this._isBlock = params.block ?? false;
 
         this.tags.push("Brick");
 

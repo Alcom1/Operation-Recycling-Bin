@@ -7,7 +7,7 @@ import BrickHandler from "./brickhandler";
 import Sprite from "./sprite";
 
 /** Specifications of a water drop */
-const characterBotOverride = Object.freeze({
+const waterDropOverride = Object.freeze({
     image: "part_water",
     zIndex: 0,
 });
@@ -23,7 +23,7 @@ export default class WaterDrop extends Sprite {
 
     /** Constructor */
     constructor(params: GameObjectParams) {
-        super(Object.assign(params, characterBotOverride));
+        super(Object.assign(params, waterDropOverride));
 
         this.zIndex = 2500; //Big Z-index, should be in front of everything
 

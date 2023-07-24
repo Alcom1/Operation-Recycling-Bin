@@ -17,13 +17,12 @@ export default class BrickTile extends Brick {
 
     /** Constructor */
     constructor(params: BrickTileParams) {
-        super(params);
+        super({...params, block : true});
 
         this.tags.push("BrickTile");
 
         this.images = params.images.map(i => i ? this.engine.library.getImage(i) : {} as HTMLImageElement);
 
-        this._isBlock = true;
         this.isOn = params.isOn ?? true;
         this.image = this.images[+this.isOn];
         this.circuit = params.circuit;

@@ -93,9 +93,6 @@ export default class CharacterHandler extends GameObject {
                         this.handleCharacterGearClimb(c);
                         break;
                 }
-
-                //Always refresh state index here?
-                c.setStateIndex();
             }
         });
     }
@@ -104,13 +101,14 @@ export default class CharacterHandler extends GameObject {
     private handleCharacterBot(characterGeneric : Character) {
         let character = characterGeneric as CharacterBot;
 
-        character.handleBrickCollisionNormal();
+        character.handleStep();
     }
 
     /** Handle specific character */
     private handleCharacterBin(characterGeneric : Character) {
         let character = characterGeneric as CharacterBin;
     }
+
 
     /** Handle specific character */
     private handleCharacterGearGround(characterGeneric : Character) {

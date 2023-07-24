@@ -70,9 +70,12 @@ export default class SyncModule {
 
             // Get all active game objects with colliders
             s.gameObjects.filter(go => go.isActive).forEach(go => {
-                go.updateSync(this.counter++, this.physicsPerSecond);
+                go.updateSync(this.counter, this.physicsPerSecond);
             });
         });
+
+        //Increment counter for next update
+        this.counter++;
     }
 
     /** Remove scene reference from colliders */

@@ -28,7 +28,7 @@ export default class ZIndexHandler extends GameObject {
 
     private zPoints : ZPoint[] = [];
     private zEdges : ZPoint[][] = [];
-    private debug : Boolean = true;
+    private debug : Boolean = false;
 
     /** Initalize the brick handler, get related bricks & game objects, manage bricks */
     public init() {
