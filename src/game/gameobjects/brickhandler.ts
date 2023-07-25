@@ -32,11 +32,8 @@ export default class BrickHandler extends GameObject {
     /** */
     private counter!: Counter;
 
-    /** Rows of bricks */
-    protected rows: BrickRow[] = [];
-
     /** All bricks */
-    private bricks: Brick[] = [];
+    protected bricks: Brick[] = [];
 
     /** */
     private mobileIndicator : MobileIndicator | null = null;
@@ -62,21 +59,21 @@ export default class BrickHandler extends GameObject {
         this.bricks = this.engine.tag.get(                  // Get bricks from scene
             "Brick", 
             "Level") as Brick[];
-        this.bricks.forEach(b => this.addBrickToRows(b));   // Add bricks into rows
-        this.sortRows();                                    // Sort rows/bricks within rows
 
         // Check for and log overlapping bricks
-        this.rows.forEach(r => r.bricks.forEach((b1, i) => {
-            
-            var b2 = r.bricks[i - 1];
+        this.bricks.forEach((b1, j) => {
 
-            // If this brick overlaps with the previous, log it.
-            if (i > 0 && col1D(
-                b1.gpos.x, b1.gpos.x + b1.width, 
-                b2.gpos.x, b2.gpos.x + b2.width)) {
-                console.log(`OVERLAPPING BRICK AT {"x" : ${b1.gpos.x}, "y" : ${r.row}}`);
+            for(let i = j + 1; i < this.bricks.length; i++) {
+                let b2 = this.bricks[i];
+
+                // If this brick overlaps with the previous, log it.
+                if (b1.gpos.y == b2.gpos.y && col1D(
+                    b1.gpos.x, b1.gpos.x + b1.width, 
+                    b2.gpos.x, b2.gpos.x + b2.width)) {
+                    console.log(`OVERLAPPING BRICK AT {"x" : ${b1.gpos.x}, "y" : ${b1.gpos.y}}`);
+                }
             }
-        }));
+        })
 
         // For each brick, do a recursive check in each direction.
         // If both directions are blocked, it's static.
@@ -119,7 +116,7 @@ export default class BrickHandler extends GameObject {
             max.y = Math.max(max.y, tposy + 1);
 
             // Check collision between current selected brick and every brick in its potential new row.
-            for (const brick2 of this.rows.find(r => r.row == tposy)?.bricks || []) { // For each brick in the current row
+            for (const brick2 of this.bricks.filter(b => b.gpos.y == tposy)) { // For each brick in the current row
                 
                 if (!brick2.isSelected && col1D(        // If the brick-in-row is colliding with this brick
                     tposx, tposx + brick1.width,
@@ -134,7 +131,7 @@ export default class BrickHandler extends GameObject {
 
                 // If row in the direction (above/below) has bricks, check each brick
                 // For each brick in the row in that direction
-                for (var brick2 of this.rows.find(r => r.row == tposy + dir)?.bricks || []) {
+                for (var brick2 of this.bricks.filter(b => b.gpos.y == tposy + dir)) {
                     
                     if (!brick2.isSelected && col1D(    // If the brick-in-row is colliding with this brick
                         tposx, tposx + brick1.width,
@@ -204,7 +201,7 @@ export default class BrickHandler extends GameObject {
             let y = i % height;                     // Wrap by height
             let x = Math.floor(i / height) % width; // Wrap by width to go back and check ceiling
 
-            for (const brick of this.rows.find(r => r.row == pos.y + y + 1)?.bricks.filter(b => !b.isSelected) || []) {
+            for (const brick of this.bricks.filter(b => b.gpos.y == pos.y + y + 1 && !b.isSelected)) {
 
                 if(brick.isBlock) {
                     continue;
@@ -235,7 +232,7 @@ export default class BrickHandler extends GameObject {
         for(let j = pos.y; j < pos.y + size; j++) {
 
             // Get this row
-            row = this.rows.find(r => r.row == j)?.bricks.filter(b => !b.isSelected) || [];
+            row = this.bricks.filter(b => b.gpos.y == j && !b.isSelected);
 
             // Horizontal travel, skip to end unless this is the first or last row to create a ring shape
             for(let i = pos.x; i < pos.x + size; i += ((j > pos.y && j < pos.y + size - 1) ? size - 1 : 1)) {
@@ -290,7 +287,7 @@ export default class BrickHandler extends GameObject {
 
         let bricks : Brick[] = [];
 
-        for (const brick of this.rows.find(r => r.row == pos.y)?.bricks.filter(b => !b.isSelected) || []) {
+        for (const brick of this.bricks.filter(b => b.gpos.y == pos.y && !b.isSelected) || []) {
 
             if (col1D(
                 brick.gpos.x, 
@@ -309,10 +306,10 @@ export default class BrickHandler extends GameObject {
     /** Disable studs that are covered */
     public cullBrickStuds(): void {
 
-        this.bricks.filter(b => !b.isSelected && b.hasTag("BrickNormal")).forEach(b => {
+        this.bricks.filter(b => !b.isSelected && b.hasTag("BrickNormal")).forEach(b1 => {
 
             // Hide studs based on above row
-            b.hideStuds(this.rows.find(r => r.row == b.gpos.y - 1)?.bricks.filter(b => b.hasTag("BrickNormal")) || [])
+            b1.hideStuds(this.bricks.filter(b2 => b2.gpos.y == b1.gpos.y - 1 && b2.hasTag("BrickNormal")))
         });
 
         // Always show studs for selected bricks
@@ -355,49 +352,8 @@ export default class BrickHandler extends GameObject {
         this.selections = [];
         this.bricks.forEach(b => b.deselect());
 
-        this.updateRows();
-
         // Disable mobile indicator
         this.mobileIndicator!.isActive = false;
-    }
-
-    /** Update rows so they store the correct bricks */
-    public updateRows(): void {
-
-        // Move bricks to the new row
-        this.rows.forEach(r => {                                // For each row
-            var move = r.bricks.filter(b => b.gpos.y != r.row); // Get move-bricks that are no longer in this row
-            r.bricks = r.bricks.filter(b => b.gpos.y == r.row); // Remove bricks that are no longer in this row
-            move.forEach(b => this.addBrickToRows(b));          // For each move-brick, add it to its new row
-        });
-
-        // Sort
-        this.sortRows();
-    }
-
-    /** Add a brick to a row, and create that row if it doesn't exist. */
-    private addBrickToRows(brick: Brick): void {
-        const currRow = this.rows.find(r => r.row == brick.gpos.y);
-
-        // Create a new row or add a brick to the existing row
-        if (currRow == null) {
-            this.rows.push({
-                row : brick.gpos.y, // Assign its first brick's position to the new row
-                bricks : [brick]
-            });
-        } else {
-            currRow.bricks.push(brick);
-        }
-    }
-
-    /** Sort bricks */
-    private sortRows(): void {
-
-        // Sort rows by row value
-        this.rows.sort((a, b) => a.row > b.row ? 1 : 0);
-
-        // Sort bricks in each row by x-position
-        this.rows.forEach(r => r.bricks.sort((a, b) => a.gpos.x > b.gpos.x ? 1 : 0));
     }
 
     /** Check all bricks for hover, return hover state */
@@ -562,7 +518,7 @@ export default class BrickHandler extends GameObject {
     private recurseBrick(brick1: Brick, dirs: (-1 | 1)[], checkGrey: boolean) {
 
         //Check if this brick is blocked, return NULL if so.
-        for (const brick2 of this.rows.find(r => r.row == brick1.gpos.y - 1)?.bricks || []) {
+        for (const brick2 of this.bricks.filter(b => b.gpos.y == brick1.gpos.y - 1)) {
 
             if (checkGrey && !brick1.isGrey && brick2.isBlock && col1D(
                 brick1.gpos.x, brick1.gpos.x + brick1.width, 
@@ -586,7 +542,7 @@ export default class BrickHandler extends GameObject {
         for (const dir of dirs) {
 
             // If adjacent row in the direction (above/below) has bricks, check and recurse for each brick
-            for (const brick2 of this.rows.find(r => r.row == brick1.gpos.y + dir)?.bricks || []) {
+            for (const brick2 of this.bricks.filter(b => b.gpos.y == brick1.gpos.y + dir)) {
 
                 if (!brick2.isChecked && col1D(
                     brick1.gpos.x, brick1.gpos.x + brick1.width, 
