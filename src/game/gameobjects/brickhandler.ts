@@ -203,10 +203,6 @@ export default class BrickHandler extends GameObject {
 
             for (const brick of this.bricks.filter(b => b.gpos.y == pos.y + y + 1 && !b.isSelected)) {
 
-                if(brick.isBlock) {
-                    continue;
-                }
-
                 if (col1D(
                     brick.gpos.x - 1, 
                     brick.gpos.x + brick.width, 
