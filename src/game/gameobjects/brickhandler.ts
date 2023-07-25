@@ -355,6 +355,15 @@ export default class BrickHandler extends GameObject {
         this.selections = [];
         this.bricks.forEach(b => b.deselect());
 
+        this.updateRows();
+
+        // Disable mobile indicator
+        this.mobileIndicator!.isActive = false;
+    }
+
+    /** Update rows so they store the correct bricks */
+    public updateRows(): void {
+
         // Move bricks to the new row
         this.rows.forEach(r => {                                // For each row
             var move = r.bricks.filter(b => b.gpos.y != r.row); // Get move-bricks that are no longer in this row
@@ -364,9 +373,6 @@ export default class BrickHandler extends GameObject {
 
         // Sort
         this.sortRows();
-
-        // Disable mobile indicator
-        this.mobileIndicator!.isActive = false;
     }
 
     /** Add a brick to a row, and create that row if it doesn't exist. */

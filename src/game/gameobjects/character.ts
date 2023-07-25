@@ -166,6 +166,7 @@ export default class Character extends GameObject {
 
             b.gpos = this.gpos.getAdd({ x : -1, y : -i });
         })
+        this.brickHandler.updateRows();
         this.setStateIndex();
     }
 
