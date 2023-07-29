@@ -280,8 +280,8 @@ export default class CharacterBot extends Character {
         //if sub-position is large enough to move, update position
         if(move.x || move.y) {
     
-            this.gpos.add(move);    //Go up or down to new grid position
-            this.spos.sub({         //Reset subposition to match new grid position
+            this.moveAll(move, false);  //Go up or down to new grid position
+            this.spos.sub({             //Reset subposition to match new grid position
                 x : move.x * GMULTX,
                 y : move.y * GMULTY
             });            
@@ -466,7 +466,7 @@ export default class CharacterBot extends Character {
 
     /** Override collision check  */
     protected resolveCollisions(collisions : Collision[]) {
-        super.resolveCollisions(collisions)
+        super.resolveCollisions(collisions);
         
         //Start going down if flying but there's no float collisions
         if (!collisions.find(c => c.mask & MASKS.float) && this.stateIndex == BotState.FLYING) {
