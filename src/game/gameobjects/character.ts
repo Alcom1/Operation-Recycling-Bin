@@ -159,14 +159,18 @@ export default class Character extends GameObject {
     }
 
     /** Move this character and its bricks by an offset*/
-    protected moveAll(offset : Point) {
+    protected moveAll(offset : Point, isAnimReset : boolean = true) {
 
         this.gpos.add(offset);
         this.bricks.forEach((b,i) => {
 
             b.gpos = this.gpos.getAdd({ x : -1, y : -i });
         });
-        this.setStateIndex();
+
+        if(isAnimReset) {
+            
+            this.setStateIndex();
+        }
     }
 
     /** Set current & active group based on the group index */

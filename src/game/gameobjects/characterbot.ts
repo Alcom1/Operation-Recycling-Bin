@@ -2,6 +2,7 @@ import Character, { CharacterParams } from "./character";
 import { BOUNDARY, bitStack, GMULTY, GMULTX, MASKS} from "engine/utilities/math";
 import { Collider } from "engine/modules/collision";
 import { Point } from "engine/utilities/vect";
+import { Collision } from "engine/gameobjects/gameobject";
 
 /** Armor states of a bot character */
 enum ArmorState {
@@ -51,17 +52,15 @@ const characterBotOverride = Object.freeze({
             { name : "char_bot_fly_left" },
             { name : "char_bot_fly_right" }],
         speed : 3,  // Bot moves fast
-        gposOffset : { x : -1, y : 0},
+        gposOffset : { x : -3, y : 0},
         frameCount : 10,
-        animsCount : 2,
-        isSliced : true
+        animsCount : 2
     },{             // Bot armor animation
         images : [  // Flying has left & right animations
             { name : "char_bot_armor_left", offsetX : 36 },
             { name : "char_bot_armor_right", offsetX : 14 }],
         gposOffset : { x : -1, y : 0},
-        frameCount : 12,
-        isSliced : true
+        frameCount : 12
     }]
 });
 
@@ -196,7 +195,7 @@ export default class CharacterBot extends Character {
 
         //Update grid position
         if (Math.abs(this.spos.y) > GMULTY) {
-            this.gpos.y += Math.sign(this.spos.y)
+            this.moveAll({x : 0, y : Math.sign(this.spos.y)}, false)
             this.spos.y -= Math.sign(this.spos.y) * GMULTY;
         }
         this.handleBrickCollisionVertical();
@@ -331,7 +330,6 @@ export default class CharacterBot extends Character {
             0,  // START
             2,  // FINAL
             1); // HEIGHT
-            
     }
 
     /** Check and resolve brick collisions - Normal movement */
@@ -422,18 +420,19 @@ export default class CharacterBot extends Character {
                 this.endVertMovement();
             }
         }
-
-        // Set to go downwards incase a collision with wind DOES NOT occur next frame.
-        this.vertMult = -1;
     }
 
     /** Colliders for non-brick collisions */
     public getColliders() : Collider[] {
         
         return [{ 
-            mask : MASKS.scrap | MASKS.death | MASKS.float,
+            mask : MASKS.scrap | MASKS.death,
             min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
             max : this.gpos.getAdd({ x :  1, y : 1}) 
+        },{ 
+            mask : MASKS.float,
+            min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
+            max : this.gpos.getAdd({ x :  1, y : 2}) 
         },{ 
             mask : MASKS.super | MASKS.jumps | MASKS.press,
             min : this.gpos.getAdd({ x : -1 - Math.min(this.move.x, 0), y : 0}),
@@ -452,8 +451,6 @@ export default class CharacterBot extends Character {
         }
     }
 
-    
-
     /** Check and resolve brick collisions */
     public handleStep(isStart : boolean = false) {
 
@@ -464,6 +461,16 @@ export default class CharacterBot extends Character {
 
             default :
                 break;
+        }
+    }
+
+    /** Override collision check  */
+    protected resolveCollisions(collisions : Collision[]) {
+        super.resolveCollisions(collisions)
+        
+        //Start going down if flying but there's no float collisions
+        if (!collisions.find(c => c.mask & MASKS.float) && this.stateIndex == BotState.FLYING) {
+            this.vertMult = -1;         // Go down please
         }
     }
 

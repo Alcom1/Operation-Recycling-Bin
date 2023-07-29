@@ -109,7 +109,7 @@ export default class Anim extends GameObject {
 
         // Default frame size based on the image size and number of frames
         if(!this.framesSize) {
-            this.framesSize = (this.isVert ? this.fullSize.y : this.fullSize.x) * this.animsCount / this.frameCount
+            this.framesSize = (this.isVert ? this.fullSize.y : this.fullSize.x) / this.frameCount
         }
     }
 
