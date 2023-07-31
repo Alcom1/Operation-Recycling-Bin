@@ -17,6 +17,18 @@ export const OPPOSITE_DIRS = [-1, 1] as (-1 | 1)[];
 /** Maximum size of a mobile preview */
 export const MOBILE_PREVIEW_MAX = new Vect(6, 3);
 
+/** Faction reference enum */
+export const enum Faction {
+    FRIENDLY,
+    NEUTRAL,
+    HOSTILE
+}
+
+/** Returns true if factions are not opposing */
+export function MatchFactions(a : Faction, b : Faction) : boolean {
+    return Math.abs(b - a) < 2;
+}
+
 /** Environment boundary */
 export const BOUNDARY = Object.freeze({
     /** Minimum X-position */

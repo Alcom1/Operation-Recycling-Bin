@@ -1,5 +1,5 @@
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
-import { GMULTX, GMULTY } from "engine/utilities/math";
+import { Faction, GMULTX, GMULTY } from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 import BrickHandler from "./brickhandler";
 import Brick from "./bricknormal";
@@ -53,9 +53,12 @@ export default class Character extends GameObject {
     constructor(params: CharacterParams) {
         super(params);
 
+        this._faction = this.faction == Faction.FRIENDLY ?              // Characters can only be friendly or hostile
+            Faction.FRIENDLY :
+            Faction.HOSTILE;
         this.tags.push("Character");                                    // All characters need to share a tag
         
-        this._speed = params.speed ?? 1;                                 // Default speed
+        this._speed = params.speed ?? 1;                                // Default speed
         this._move = new Vect(params.isForward ?? true ? 1 : -1, 0);    // Default move direction
         this._height = params.height ?? 2;                              // Default height for a character
         this.isGlide = params.isGlide ?? false;                         // Default glide state
@@ -93,6 +96,7 @@ export default class Character extends GameObject {
         for (let i = 0; i < this.height; i++) {
             this.bricks.push(this.parent.pushGO(new BrickPhantom({
                 ...params,
+                faction : this.faction,
                 width : 2,
                 position : this.gpos.getAdd({ x : -1, y : -i})
             })) as Brick)

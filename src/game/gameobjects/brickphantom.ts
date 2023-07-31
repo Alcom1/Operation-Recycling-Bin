@@ -1,7 +1,5 @@
-import { col1D, GMULTX, GMULTY, Z_DEPTH } from "engine/utilities/math";
-import Vect, { Point } from "engine/utilities/vect";
+import { GMULTX, GMULTY } from "engine/utilities/math";
 import Brick, { BrickParams } from "./brick";
-import Stud from "./stud";
 
 /** Ordinary brick with studs */
 export default class BrickPhantom extends Brick {

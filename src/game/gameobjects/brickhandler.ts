@@ -1,5 +1,5 @@
 import GameObject from "engine/gameobjects/gameobject";
-import {col1D, GMULTX, GMULTY, colBoundingBoxGrid, colPointRectGrid, colPointParHGrid, colPointParVGrid, OPPOSITE_DIRS, colRectRectCornerSize} from "engine/utilities/math";
+import {col1D, GMULTX, GMULTY, colBoundingBoxGrid, colPointRectGrid, colPointParHGrid, colPointParVGrid, OPPOSITE_DIRS, colRectRectCornerSize, MatchFactions, Faction} from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 import Brick from "./bricknormal";
 import Counter from "./counter";
@@ -192,7 +192,8 @@ export default class BrickHandler extends GameObject {
         start: number, 
         final: number, 
         height: number, 
-        width: number = 2): number {
+        width: number = 2,
+        faction: Faction = Faction.NEUTRAL): number {
 
         let collisions = 0; // Collision bitbask
 
@@ -201,7 +202,10 @@ export default class BrickHandler extends GameObject {
             let y = i % height;                     // Wrap by height
             let x = Math.floor(i / height) % width; // Wrap by width to go back and check ceiling
 
-            for (const brick of this.bricks.filter(b => b.gpos.y == pos.y + y + 1 && !b.isSelected)) {
+            for (const brick of this.bricks.filter(
+                b => b.gpos.y == pos.y + y + 1 && 
+                !b.isSelected &&
+                MatchFactions(b.faction, faction))) {
 
                 if (col1D(
                     brick.gpos.x - 1, 

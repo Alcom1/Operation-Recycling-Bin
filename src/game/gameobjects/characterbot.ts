@@ -1,5 +1,5 @@
 import Character, { CharacterParams } from "./character";
-import { BOUNDARY, bitStack, GMULTY, GMULTX, MASKS} from "engine/utilities/math";
+import { BOUNDARY, bitStack, GMULTY, GMULTX, MASKS, Faction} from "engine/utilities/math";
 import { Collider } from "engine/modules/collision";
 import { Point } from "engine/utilities/vect";
 import { Collision } from "engine/gameobjects/gameobject";
@@ -24,6 +24,7 @@ enum BotState {
 /** Specifications of THE bot character */
 const characterBotOverride = Object.freeze({
     // Main parameters
+    faction: Faction.FRIENDLY,
     height: 4,      // Bot is this tall
     speed : 3,      // Bot moves fast
     stateAnimations : [1, 2, 3, 3, 4],
@@ -353,7 +354,9 @@ export default class CharacterBot extends Character {
                 this.move.x,    // Direction
                 5,              // START :  n + 1
                 15,             // FINAL : (n + 3) * 2 + 1
-                7);             // HEIGHT:  n + 3
+                7,              // HEIGHT:  n + 3
+                undefined,
+                this.faction);
 
             // WALL - REVERSE
             if (cbm & gcb.wall) {

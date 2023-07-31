@@ -2,7 +2,7 @@ import Vect, { Point } from "engine/utilities/vect";
 import Scene from "engine/scene/scene";
 import Engine from "engine/engine";
 import { Collider } from "engine/modules/collision";
-import { Step } from "engine/modules/sync";
+import { Faction } from "engine/utilities/math";
 
 export interface Collision {
     other : GameObject;
@@ -17,6 +17,7 @@ export interface GameObjectParams {
     scene: Scene;
     name: string;
     tags?: [string];
+    faction? : Faction;
     isActive?: boolean;
     isDebug: boolean;
 }
@@ -25,24 +26,43 @@ export interface GameObjectParams {
 export default class GameObject {
 
     /** Rand UUID generated upon instantiation */
-    public id = (<any>crypto).randomUUID();
+    private _id = (<any>crypto).randomUUID();
+    public get id() : boolean { return this._id; }
+
     /** Grid position */
     public gpos: Vect;
+
     /** Sub-position * */
     public spos: Vect;
-    protected engine: Engine;
-    public tags: string[];
-    public parent: Scene;
-    public isActive: Boolean;
-    public isDebug: Boolean;
-    private collisions: Collision[] = [];
-    protected _zIndex : number;
 
-    /** z-index get/setters */
-    get zIndex() : number { return this._zIndex; }
-    set zIndex(value : number) { this._zIndex = value; }
-    get zpos() : Vect { return this.gpos; }
-    get zState() : Boolean { return this.isActive }
+    /** Engine access */
+    protected engine: Engine;
+
+    /** Tags to reference this and similar game objects */
+    public tags: string[];
+
+    /** Parent scene of this game object*/
+    public parent: Scene;
+
+    /** If this is an active game object */
+    public isActive: Boolean;
+
+    /** If this game object is in a debug state */
+    public isDebug: Boolean;
+
+    /** Stored collisions to be processed */
+    private collisions: Collision[] = [];
+
+    /**  */
+    protected _faction: Faction;
+    public get faction(): Faction { return this._faction; };
+
+    /** z-index with get/setters */
+    protected _zIndex : number;
+    public get zIndex() : number { return this._zIndex; }
+    public set zIndex(value : number) { this._zIndex = value; }
+    public get zpos() : Vect { return this.gpos; }
+    public get zState() : Boolean { return this.isActive }
 
     /** Constructor */
     constructor(params: GameObjectParams) {
@@ -51,6 +71,7 @@ export default class GameObject {
         this.tags = params.tags ?? [params.name];
         this.parent = params.scene;
         this.engine = params.engine;
+        this._faction = params.faction ?? Faction.NEUTRAL;
         this.isActive = params.isActive ?? true;
         this.isDebug = params.isDebug ?? false;
         this._zIndex = params.zIndex ?? 0;
