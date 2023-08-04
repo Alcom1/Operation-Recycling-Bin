@@ -7,6 +7,8 @@ export default class BrickPhantom extends Brick {
     /** Constructor */
     constructor(params: BrickParams) {
         super({...params, block : true});
+
+        this.tags.push("BrickPhantom");
     }
 
     draw(ctx : CanvasRenderingContext2D) {

@@ -21,6 +21,7 @@ export default class BrickTileTop extends BrickTile {
         this.topSprite = this.parent.pushGO(
             new Sprite({
                     ...params,
+                    tags: ["Misc"],
                     position : this.gpos.getAdd({x : 0, y : -1}),   // Top sprite is 1 grid above this brick
                     image : params.imageTop
                 } as SpriteParams)) as Sprite

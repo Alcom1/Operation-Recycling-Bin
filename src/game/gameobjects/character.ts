@@ -67,8 +67,6 @@ export default class Character extends GameObject {
             params.animsMisc ? params.animsMisc.map((x, i) => i + 1) :  // Get default animations or...
             []))];                                                      // There's only one animation.
 
-        const mainZIndex = this.height * 100 - 1;                       // Z-index of main slices in the character sprite
-
         // Add segment to scene and this character
         this.animations.push(new Anim({
             ...params,

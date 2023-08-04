@@ -14,6 +14,7 @@ enum ArmorState {
 /** States of a bot character */
 enum BotState {
     NORMAL,
+    HALTED,
     EATING,
     HAZARD,
     FLYING,
@@ -27,7 +28,7 @@ const characterBotOverride = Object.freeze({
     faction: Faction.FRIENDLY,
     height: 4,      // Bot is this tall
     speed : 3,      // Bot moves fast
-    stateAnimations : [1, 2, 3, 3, 4],
+    stateAnimations : [1, 2, 3, 4, 4, 5],
     animMain : {
         images : [      // Bot has left & right animations
             { name : "char_bot_left" },
@@ -39,7 +40,17 @@ const characterBotOverride = Object.freeze({
     },
 
     // Misc animation parameters
-    animsMisc : [{ // Bot-bin interaction animation
+    animsMisc : [{
+        images : [      // Bot has left & right animations
+            { name : "char_bot_left" },
+            { name : "char_bot_right" },
+            { name : "char_bot_left_armor" },
+            { name : "char_bot_right_armor" }],
+        speed : 0,
+        gposOffset : { x : -3, y : 0},
+        frameCount : 10,
+        animsCount : 2
+    },{ // Bot-bin interaction animation
         images : [{ name : "char_bot_bin" }],
         gposOffset : { x : -1, y : 0},
         frameCount : 12
@@ -51,13 +62,15 @@ const characterBotOverride = Object.freeze({
     },{             // Bot up animation
         images : [  // Flying has left & right animations
             { name : "char_bot_fly_left" },
-            { name : "char_bot_fly_right" }],
+            { name : "char_bot_fly_right" },
+            { name : "char_bot_fly_left_armor" },
+            { name : "char_bot_fly_right_armor" }],
         speed : 3,  // Bot moves fast
         gposOffset : { x : -3, y : 0},
         frameCount : 10,
         animsCount : 2
     },{             // Bot armor animation
-        images : [  // Flying has left & right animations
+        images : [
             { name : "char_bot_armor_left", offsetX : 36 },
             { name : "char_bot_armor_right", offsetX : 14 }],
         gposOffset : { x : -1, y : 0},
@@ -89,11 +102,12 @@ export default class CharacterBot extends Character {
 
     private timerSpc : number = 0;                          // Timer to track duration of special movements
     private timerArm : number = 0;                          // Timer to track armor flash
+    private stepThreshold : number = 2 / 9;                 // Minimum time required for a step to occur
     private ceilSubOffset : number = -6;                    // Offset for up/down movement
-    private vertSpeed : number = 500;                       // Speed of air movement
+    private vertSpeed : number = 360;                       // Speed of air movement
     private vertMult : -1|1 = 1;                            // Up/Down multiplier for air movement
     private vertBlock : boolean = false;                    //
-    private horzSpeed : number = 350;                       // Horizontal air speed
+    private horzSpeed : number = 300;                       // Horizontal air speed
     private jumpHeights : number[] = [0, 2, 3, 3, 2, 0];    // Individual heights throughout a jump
     private jumpOrigin : Point = { x : 0, y : 0 }           // Origin of the previous jump
     private armorDelay : number = 2;                        // Delay where armor remains after taking damage
@@ -309,7 +323,7 @@ export default class CharacterBot extends Character {
         if (this.stateIndex == BotState.FLYING ||
             this.stateIndex == BotState.BOUNCE) {
 
-            this.setStateIndex(BotState.NORMAL);
+            this.setStateIndex(BotState.HALTED);
         }
     }
 
@@ -394,7 +408,7 @@ export default class CharacterBot extends Character {
 
     /** Shift forward, with a vertical offset to handle steps */
     private walkstep(vOffset : number) {
-        
+
         this.moveAll({
             x : this.move.x,
             y : vOffset
@@ -455,9 +469,14 @@ export default class CharacterBot extends Character {
     }
 
     /** Check and resolve brick collisions */
-    public handleStep(isStart : boolean = false) {
+    public handleStep() {
 
         switch(this.stateIndex) {
+
+            case BotState.HALTED :
+                this.setStateIndex(BotState.NORMAL);
+                break;
+
             case BotState.NORMAL :
                 this.handleBrickCollisionNormal();
                 break;
