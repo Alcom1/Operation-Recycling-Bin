@@ -309,9 +309,13 @@ export default class CharacterBot extends Character {
     /** Quick shift to downward vertical movement */
     private startVertMovement() {
 
-        this.vertMult = -1;                     // Default to downward movement to remove 1-frame hitch.
-        this.setStateIndex(BotState.FLYING);    // Vertical movement
-        this.spos.x = 0;                        // Reset horizontal position to grid
+        // If bot is between studs, move forward instead of backward
+        if (Math.abs(this.spos.x) > GMULTX / 2) {
+            this.gpos.x += Math.sign(this.spos.x);  // Move forward by one.
+        }
+
+        this.vertMult = -1;                         // Default to downward movement to remove 1-frame hitch.
+        this.setStateIndex(BotState.FLYING);        // Vertical movement
     }
 
     /** End vertical or jump movement */
