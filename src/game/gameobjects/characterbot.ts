@@ -466,6 +466,10 @@ export default class CharacterBot extends Character {
     /** Also reset timer when setting the current group */
     public setStateIndex(index? : number) {
 
+        //Deactivate bricks for bounce and flying states
+        let isBricksActive = [BotState.BOUNCE, BotState.FLYING].every(x => x != index);
+        this.bricks.forEach(x => x.isActive = isBricksActive);
+
         // Only set state if it's different from the current
         if (this.stateIndex != index) {
 

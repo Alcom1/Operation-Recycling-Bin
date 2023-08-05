@@ -33,7 +33,7 @@ export default class Character extends GameObject {
     protected stateAnimations: number[];            // Array of which animation each state uses. Sometimes it's not 1:1.
     protected stateIndex: number = 0;               // Current state
 
-    private bricks : Brick[] = [];                  // Phantom bricks for this character's collisions
+    protected bricks : Brick[] = [];                // Phantom bricks for this character's collisions
 
     /** Getters */
     protected get animationsCurr() : Anim {                               // The animations for the current state
