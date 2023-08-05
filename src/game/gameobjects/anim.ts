@@ -45,7 +45,7 @@ export default class Anim extends GameObject {
 
     /** Set here */
     public  isVisible : boolean = true;             // If this animation is visible
-    private timer : number = 0;                     // Timer to track frames
+    public  timer : number = 0;                     // Timer to track frames
     private imageIndex: number = 0;                 // Index of the current image
     private animsIndex : number = 0;                // Index of the current animation
 

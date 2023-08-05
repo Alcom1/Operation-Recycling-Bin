@@ -217,7 +217,8 @@ export default class ZIndexHandler extends GameObject {
         ret = ret.concat(
             this.zPoints.filter(cz =>
                 cz.type == ZPointType.Char &&
-                cz.gameObject.zpos.y == zpos.y - 1 &&
+                cz.gameObject.zpos.y <= zpos.y - 1 &&
+                cz.gameObject.zpos.y >= zpos.y - 2 &&
                 col1D(
                     zpos.x,
                     zpos.x + width,
@@ -264,7 +265,7 @@ export default class ZIndexHandler extends GameObject {
         ret = ret.concat(
             this.zPoints.filter(cz =>
                 cz.type == ZPointType.Char &&           //Check only characters
-                cz.gameObject.zpos.x >= zpos.x &&   //Character is ahead
+                cz.gameObject.zpos.x >= zpos.x &&       //Character is ahead
                 cz.gameObject.zpos.x <= zpos.x + 3 &&   //Character is ahead
                 col1D(                                  //Character is in range
                     zpos.y - 1,

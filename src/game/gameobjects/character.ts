@@ -197,6 +197,6 @@ export default class Character extends GameObject {
 
         this.isActive = false;
         this.animations.forEach(s => s.isActive = false);
-        this.bricks.forEach(b => b.isActive == false);
+        this.bricks.forEach(b => b.isActive = false);
     }
 }

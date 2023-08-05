@@ -102,11 +102,11 @@ export default class CharacterBot extends Character {
 
     private timerSpc : number = 0;                          // Timer to track duration of special movements
     private timerArm : number = 0;                          // Timer to track armor flash
-    private stepThreshold : number = 2 / 9;                 // Minimum time required for a step to occur
+    private timerStp : number = 0;                          // Timer to track time since previous step
     private ceilSubOffset : number = -6;                    // Offset for up/down movement
     private vertSpeed : number = 360;                       // Speed of air movement
     private vertMult : -1|1 = 1;                            // Up/Down multiplier for air movement
-    private vertBlock : boolean = false;                    //
+    private vertBlock : boolean = false;                    // If vertically blocked
     private horzSpeed : number = 300;                       // Horizontal air speed
     private jumpHeights : number[] = [0, 2, 3, 3, 2, 0];    // Individual heights throughout a jump
     private jumpOrigin : Point = { x : 0, y : 0 }           // Origin of the previous jump
@@ -129,6 +129,8 @@ export default class CharacterBot extends Character {
     /** Unique bot update to update armor flash */
     public update(dt : number) {
         super.update(dt);
+
+        this.timerStp += dt;    //Update step timer
 
         // Update armor flash
         if (this.armorState == ArmorState.FLASH) {
@@ -178,7 +180,7 @@ export default class CharacterBot extends Character {
 
                 // Dead - Deactivate this character
                 case BotState.HAZARD :
-                    this.isActive = false;
+                    this.deactivate();
                     break;
 
                 // Vertical - Reset up/down animation
@@ -447,11 +449,11 @@ export default class CharacterBot extends Character {
     public getColliders() : Collider[] {
         
         return [{ 
-            mask : MASKS.scrap | MASKS.death,
+            mask : MASKS.death,
             min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
             max : this.gpos.getAdd({ x :  1, y : 1}) 
         },{ 
-            mask : MASKS.float,
+            mask : MASKS.scrap | MASKS.float,
             min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
             max : this.gpos.getAdd({ x :  1, y : 2}) 
         },{ 
@@ -469,11 +471,18 @@ export default class CharacterBot extends Character {
 
             this.timerSpc = 0;          // Timer reset incase we cancelled a previous animation
             super.setStateIndex(index); // Set index
+
+            //Force walk animation to sync with steps
+            if(this.stateIndex == BotState.NORMAL) {
+                this.animationsCurr.timer = this.timerStp;
+            }
         }
     }
 
     /** Check and resolve brick collisions */
     public handleStep() {
+
+        this.timerStp = 0;  //Reset step timer
 
         switch(this.stateIndex) {
 

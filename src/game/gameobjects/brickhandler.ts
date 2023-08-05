@@ -44,6 +44,9 @@ export default class BrickHandler extends GameObject {
     /** All selected bricks */
     private selections: (Brick[] | null)[] = [];
 
+    /** Active bricks */
+    private get bricksActive() { return this.bricks.filter(b => b.isActive && !b.isSelected); }
+
     /** Grey bricks */
     private get bricksGrey(): Brick[] { return this.bricks.filter(b => b.isGrey); }
 
@@ -116,7 +119,7 @@ export default class BrickHandler extends GameObject {
             max.y = Math.max(max.y, tposy + 1);
 
             // Check collision between current selected brick and every brick in its potential new row.
-            for (const brick2 of this.bricks.filter(b => b.gpos.y == tposy)) { // For each brick in the current row
+            for (const brick2 of this.bricksActive.filter(b => b.gpos.y == tposy)) { // For each brick in the current row
                 
                 if (!brick2.isSelected && col1D(        // If the brick-in-row is colliding with this brick
                     tposx, tposx + brick1.width,
@@ -131,7 +134,7 @@ export default class BrickHandler extends GameObject {
 
                 // If row in the direction (above/below) has bricks, check each brick
                 // For each brick in the row in that direction
-                for (var brick2 of this.bricks.filter(b => b.gpos.y == tposy + dir)) {
+                for (var brick2 of this.bricksActive.filter(b => b.gpos.y == tposy + dir)) {
                     
                     if (!brick2.isSelected && col1D(    // If the brick-in-row is colliding with this brick
                         tposx, tposx + brick1.width,
@@ -202,9 +205,8 @@ export default class BrickHandler extends GameObject {
             let y = i % height;                     // Wrap by height
             let x = Math.floor(i / height) % width; // Wrap by width to go back and check ceiling
 
-            for (const brick of this.bricks.filter(
+            for (const brick of this.bricksActive.filter(
                 b => b.gpos.y == pos.y + y + 1 && 
-                !b.isSelected &&
                 MatchFactions(b.faction, faction))) {
 
                 if (col1D(
@@ -367,7 +369,7 @@ export default class BrickHandler extends GameObject {
     private checkBricks<T>(pos: Vect, func: (brick: Brick, pos: Vect) => T): T | null {
 
         // Front face check
-        for (const brick of this.bricks) {
+        for (const brick of this.bricksActive) {
 
             // Front face - if position is over this face
             if (colPointRectGrid(
@@ -382,7 +384,7 @@ export default class BrickHandler extends GameObject {
         }
 
         // Top and side face check
-        for (var brick of this.bricks) {
+        for (var brick of this.bricksActive) {
             if (// Top Face - if position is over this face
                 colPointParHGrid(
                     pos.x,
@@ -432,7 +434,7 @@ export default class BrickHandler extends GameObject {
             }
 
             // Clear recursion states after each recursive direction check
-            this.bricks.forEach(b => b.clearRecursion());
+            this.bricksActive.forEach(b => b.clearRecursion());
         }
 
         return this.selections[-1] && 
@@ -518,7 +520,7 @@ export default class BrickHandler extends GameObject {
     private recurseBrick(brick1: Brick, dirs: (-1 | 1)[], checkGrey: boolean) {
 
         //Check if this brick is blocked, return NULL if so.
-        for (const brick2 of this.bricks.filter(b => b.gpos.y == brick1.gpos.y - 1)) {
+        for (const brick2 of this.bricksActive.filter(b => b.gpos.y == brick1.gpos.y - 1)) {
 
             if (checkGrey && !brick1.isGrey && brick2.isBlock && col1D(
                 brick1.gpos.x, brick1.gpos.x + brick1.width, 
@@ -542,7 +544,7 @@ export default class BrickHandler extends GameObject {
         for (const dir of dirs) {
 
             // If adjacent row in the direction (above/below) has bricks, check and recurse for each brick
-            for (const brick2 of this.bricks.filter(b => b.gpos.y == brick1.gpos.y + dir)) {
+            for (const brick2 of this.bricksActive.filter(b => b.gpos.y == brick1.gpos.y + dir)) {
 
                 if (!brick2.isChecked && col1D(
                     brick1.gpos.x, brick1.gpos.x + brick1.width, 
