@@ -1,5 +1,5 @@
 import { Collider } from "engine/modules/collision";
-import { MASKS } from "engine/utilities/math";
+import { Faction, MASKS } from "engine/utilities/math";
 import BrickHandler from "./brickhandler";
 import { BrickTileParams } from "./bricktile";
 import BrickTileTop from "./bricktiletop";
@@ -72,7 +72,9 @@ export default class BrickJump extends BrickTileTop {
             1,  // Direction
             0,  // START
             2,  // FINAL
-            1); // HEIGHT
+            1,  // HEIGHT
+            undefined, 
+            Faction.HOSTILE);
     }
 
     /** Get hazard and passive colliders of this brick. */
