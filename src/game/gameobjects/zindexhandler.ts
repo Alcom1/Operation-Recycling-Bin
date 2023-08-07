@@ -68,7 +68,9 @@ export default class ZIndexHandler extends GameObject {
         //Game Objects in front
         ret = ret.concat(this.zPointsActive.filter(o => {
 
-            let isFront = c.zpos.x + c.size.x == o.zpos.x;
+            let isFront = 
+                c.zpos.x + c.size.x <= o.zpos.x && 
+                c.zpos.x + c.size.x >= o.zpos.x - 1;
 
             //Y-Overlap
             let cZposy = c.zpos.y + (c.size.y == 0 ? 1 : 0);    //Treat flat objects as 1 lower.
