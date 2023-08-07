@@ -23,7 +23,8 @@ export default class BrickTileTop extends BrickTile {
                     ...params,
                     tags: ["Misc"],
                     position : this.gpos.getAdd({x : 0, y : -1}),   // Top sprite is 1 grid above this brick
-                    image : params.imageTop
+                    image : params.imageTop,
+                    size : { x : params.width ?? 2, y : 0 }
                 } as SpriteParams)) as Sprite
 
         this.isShowTopIfOn = params.isShowTopIfOn ?? true;          // Top sprite show condition

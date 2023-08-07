@@ -73,7 +73,7 @@ export default class Brick extends GameObject {
             }) :
             super.zpos); 
     }
-    get zState() : Boolean { return this.isSnapped }
+    public get zSize() : Point { return {x : this.width, y : 1 }; }
 
     /** Constructor */
     constructor(params: BrickParams) {

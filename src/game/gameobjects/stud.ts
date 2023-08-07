@@ -1,6 +1,6 @@
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import { colorTranslate, GMULTX, GMULTY, MOBILE_PREVIEW_MAX, Z_DEPTH } from "engine/utilities/math";
-import Vect from "engine/utilities/vect";
+import Vect, { Point } from "engine/utilities/vect";
 
 /** Stud parameters */
 interface StudParams extends GameObjectParams {
@@ -20,17 +20,12 @@ export default class Stud extends GameObject {
     private isMobileFlipped : boolean = false;          // flipped state for mobile preview
 
     /** z-index get/setters */
-    get zIndex() : number { return super.zIndex; }
-    set zIndex(value : number) { 
+    public get zIndex() : number { return super.zIndex; }
+    public set zIndex(value : number) { 
         super.zIndex = value + (this.isSelected && !this.isSnapped ? 2000 : 0);
     }
-    get zpos() : Vect { 
+    public get zpos() : Vect { 
         return (
-            // this.isSnapped && this.isSelected ?
-            // this.gpos.getAdd({
-            //     x : Math.round(this.spos.x / GMULTX),
-            //     y : Math.round(this.spos.y / GMULTY),
-            // }) :
             this.isSelected ?
             this.gpos.getAdd({
                 x : Math.floor(this.spos.x / GMULTX),
@@ -38,7 +33,8 @@ export default class Stud extends GameObject {
             }) :
             super.zpos); 
     }
-    get zState() : Boolean { return super.zState && this.isVisible }
+    public get zState() : Boolean { return super.zState && this.isVisible }
+    public get zSize() : Point { return { x : 1, y : 0}; }
 
     /** Constructor */
     constructor(params: StudParams) {
