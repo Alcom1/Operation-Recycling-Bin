@@ -37,15 +37,7 @@ export default class ZIndexHandler extends GameObject {
 
     /** Update, check and modify tree */
     public update() {
-
-        let isUpdate = this.zPoints.some(p => 
-            p.zpos.x != p.gameObject.zpos.x ||
-            p.zpos.y != p.gameObject.zpos.y ||
-            p.state != p.gameObject.zState);
-
-        if(isUpdate) {
-            this.processZPoints();
-        }
+        this.processZPoints();
     }
 
     /** Process all zPoints */
@@ -136,10 +128,6 @@ export default class ZIndexHandler extends GameObject {
         ctx.lineCap = "round";
         ctx.lineWidth = 3;
 
-        if(this.zEdges.length == 1) {
-            console.log(this.zEdges[0][1].zpos.x);
-        }
-
         this.zEdges.forEach(e => {
 
             let offsetZ = this.getDrawPos(e[0]);
@@ -187,8 +175,8 @@ export default class ZIndexHandler extends GameObject {
     private getDrawPos(zPoint : ZPoint) : Point {
 
         return new Vect(
-            GMULTX * (zPoint.gameObject.zpos.x + zPoint.size.x / 2),
-            GMULTY * (zPoint.gameObject.zpos.y + zPoint.size.y / 2));
+            GMULTX * (zPoint.gameObject.zpos.x + (zPoint.size.x > 0 ? zPoint.size.x : 1) / 2),
+            GMULTY * (zPoint.gameObject.zpos.y + (zPoint.size.y > 0 ? zPoint.size.y : 1) / 2));
     }
 
     /** Kahn's algorithm! */
