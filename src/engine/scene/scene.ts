@@ -26,8 +26,8 @@ export default class Scene {
             name = "unnamed",
             need = [],
             zIndex = 0
-        }: SceneParams
-    ) {
+        }: SceneParams) 
+    {
         this.name = name;
         // Required scenes for this scene to initialize
         this.need = need;
@@ -35,6 +35,7 @@ export default class Scene {
         this.gameObjects = [];
         this.initialized = false;
     }
+
     public init(ctx: CanvasRenderingContext2D) {
         
         if (
@@ -52,35 +53,41 @@ export default class Scene {
             this.initialized = true;
         }
     }
+
     public pushGO(gameObject: GameObject) : GameObject {
+
         // Establish parent scene before pushing
         gameObject.parent = this;
         this.gameObjects.push(gameObject);
         this.engine.tag.pushGO(gameObject, this.name);
         return gameObject;
     }
+
     public update(dt: number) {
 
         // Update all game objects
         if (this.initialized) {
-            this.gameObjects.forEach(go => { if (!go.isActive) { return; }
-                go.update(dt)
-            });
+            this.gameObjects.filter(go => go.isActive).forEach(go => go.update(dt));
         }
 
         // Sort all game objects for drawing - unconditionally
         this.gameObjects.sort((a, b) => a.zIndex - b.zIndex);
     }
+
     public draw(ctx: CanvasRenderingContext2D) {
+
         if (this.initialized) {
             this.gameObjects.filter(go => go.isActive).forEach(go => this.subDraw(ctx, go, go.draw));
         }
     }
+
     public superDraw(ctx: CanvasRenderingContext2D) {
+
         if (this.initialized) {
             this.gameObjects.filter(go => go.isActive).forEach(go => this.subDraw(ctx, go, go.superDraw));
         }
     }
+
     private subDraw(ctx: CanvasRenderingContext2D, gameObject : GameObject, drawAction : Function) {
 
         ctx.save();

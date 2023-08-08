@@ -29,6 +29,7 @@ export default class BrickTileFan extends BrickTile {
             [0,1].forEach(i => {
                 this.animations.push(this.parent.pushGO(new Anim({
                     ...params,
+                    zNoCompare : true,
                     tags : ["Wind"],
                     position : {x : this.gpos.x + i + 1, y : j},
                     subPosition : { x : Z_DEPTH / 2 - 2, y : -Z_DEPTH / 2 + 2 }, 

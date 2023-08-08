@@ -14,6 +14,7 @@ export interface GameObjectParams {
     position?: Point;
     subPosition?: Point;
     zIndex?: number;
+    zNoCompare?: boolean;
     scene: Scene;
     name: string;
     tags?: [string];
@@ -60,6 +61,8 @@ export default class GameObject {
     /** z-index with get/setters */
     protected _zIndex : number;
     public get zIndex() : number { return this._zIndex; }
+    protected _zNoCompare : boolean;
+    public get zNoCompare() : boolean { return this._zNoCompare; }
     public set zIndex(value : number) { this._zIndex = value; }
     public get zpos() : Vect { return this.gpos; }
     public get zState() : Boolean { return this.isActive; }
@@ -76,6 +79,7 @@ export default class GameObject {
         this.isActive = params.isActive ?? true;
         this.isDebug = params.isDebug ?? false;
         this._zIndex = params.zIndex ?? 0;
+        this._zNoCompare = params.zNoCompare ?? false;
     }
 
     /** 
@@ -96,8 +100,7 @@ export default class GameObject {
     }
 
     /** 
-     * Game object update
-     * @param dt Delta time
+     * If this game object has a specific tag
     */
     public hasTag(tag: string): boolean {
         return this.tags.some(t => t === tag);
@@ -106,8 +109,26 @@ export default class GameObject {
     /** 
      * Update positions for collisions step
     */
-    public updateSync(counter : number, loopLength : number) {
+     public updateSync(counter : number, loopLength : number) {
     }
+    
+    /** 
+     * Game object update
+     * @param dt Delta time
+    */
+    public update(dt: number) {}
+
+    /** 
+     * Game object draw
+     * @param ctx
+    */
+    public draw(ctx: CanvasRenderingContext2D) {}
+
+    /** 
+     * Latter game object draw
+     * @param ctx
+    */
+    public superDraw(ctx: CanvasRenderingContext2D) {}
 
     /** 
      * Get all colliders for this game object
@@ -150,22 +171,4 @@ export default class GameObject {
     protected resolveCollision(mask : number, other : GameObject) {
 
     }
-
-    /** 
-     * Game object update
-     * @param dt Delta time
-    */
-    public update(dt: number) {}
-
-    /** 
-     * Game object draw
-     * @param ctx
-    */
-    public draw(ctx: CanvasRenderingContext2D) {}
-
-    /** 
-     * Latter game object draw
-     * @param ctx
-    */
-    public superDraw(ctx: CanvasRenderingContext2D) {}
 }

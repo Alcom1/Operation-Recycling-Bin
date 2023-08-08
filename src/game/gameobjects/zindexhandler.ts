@@ -4,9 +4,10 @@ import Vect, { Point } from "engine/utilities/vect";
 
 interface ZPoint {
     gameObject : GameObject,
-    zpos : Point,
+    pos : Point,
     size : Point,
-    state : Boolean
+    state : Boolean,
+    noCompare : Boolean
 }
 
 /** Handler for brick selection, movement, etc. */
@@ -27,9 +28,10 @@ export default class ZIndexHandler extends GameObject {
             }).forEach(o => 
                 this.zPoints.push({
                     gameObject : o,
-                    zpos : o.zpos.get(),
+                    pos : o.zpos.get(),
                     size : o.zSize,
-                    state : o.zState
+                    state : o.zState,
+                    noCompare : o.zNoCompare
                 }));
 
         this.processZPoints();
@@ -47,12 +49,12 @@ export default class ZIndexHandler extends GameObject {
         
         //Setup zpoints for current state
         this.zPoints.forEach(z => {
-            z.zpos = z.gameObject.zpos.get()
+            z.pos = z.gameObject.zpos.get()
             z.state = z.gameObject.zState;
         });
         
         //Compare z-points and get the edges between them
-        this.zEdges = this.zPointsActive.flatMap(z => this.process(z).map(b => [z, b]));
+        this.zEdges = this.zPointsActive.flatMap(z => this.processZPoint(z).map(b => [z, b]));
 
         //Set z-indicies based on sorted array indicies
         this.topologicalSort().forEach((z, i) => {
@@ -61,25 +63,30 @@ export default class ZIndexHandler extends GameObject {
     }
 
     /** Process a single zPoint */
-    private process(c : ZPoint) : ZPoint[] {
+    private processZPoint(c : ZPoint) : ZPoint[] {
 
         let ret = [] as ZPoint[];
 
         //Game Objects in front
         ret = ret.concat(this.zPointsActive.filter(o => {
 
+            //Never sort with self, or between two objects marked NOCOMPARE
+            if(c === o || (c.noCompare && o.noCompare)) {
+                return;
+            }
+
             let isFront = 
-                c.zpos.x + c.size.x <= o.zpos.x && 
-                c.zpos.x + c.size.x >= o.zpos.x - 1;
+                c.pos.x + c.size.x <= o.pos.x && 
+                c.pos.x + c.size.x >= o.pos.x - 1;
 
             //Y-Overlap
-            let cZposy = c.zpos.y + (c.size.y == 0 ? 1 : 0);    //Treat flat objects as 1 lower.
-            let oZposy = o.zpos.y + (o.size.y == 0 ? 1 : 0);    //Treat flat objects as 1 lower.
+            let cPosy = c.pos.y + (c.size.y == 0 ? 1 : 0);  //Treat flat objects as 1 lower.
+            let oPosy = o.pos.y + (o.size.y == 0 ? 1 : 0);  //Treat flat objects as 1 lower.
             let overlapY = col1D(
-                cZposy,
-                cZposy + c.size.y + 0.1,
-                oZposy,
-                oZposy + o.size.y + 0.1);
+                cPosy,
+                cPosy + c.size.y + 0.1,
+                oPosy,
+                oPosy + o.size.y + 0.1);
 
             return isFront && overlapY;
         }));
@@ -87,31 +94,31 @@ export default class ZIndexHandler extends GameObject {
         //Game Objects above
         ret = ret.concat(this.zPointsActive.filter(o => {
 
-            //Never sort with self
-            if(c === o) {
-                return false;
+            //Never sort with self, or between two objects marked NOCOMPARE
+            if(c === o || (c.noCompare && o.noCompare)) {
+                return;
             }
 
             //Other game object is above
             let isAbove = c.size.y > 0 ?
-                c.zpos.y - o.zpos.y > 0 :
-                c.zpos.y - o.zpos.y >= 0;
+                c.pos.y - o.pos.y > 0 :
+                c.pos.y - o.pos.y >= 0;
 
             //X-Overlap
             let overlapX = col1D(
-                c.zpos.x, 
-                c.zpos.x + c.size.x, 
-                o.zpos.x, 
-                o.zpos.x + o.size.x);
+                c.pos.x, 
+                c.pos.x + c.size.x, 
+                o.pos.x, 
+                o.pos.x + o.size.x);
 
             //Y-Overlap
-            let cZposy = c.zpos.y + (c.size.y == 0 ? 1 : 0);    //Treat flat objects as 1 lower.
-            let oZposy = o.zpos.y + (o.size.y == 0 ? 1 : 0);    //Treat flat objects as 1 lower.
+            let cPosy = c.pos.y + (c.size.y == 0 ? 1 : 0);  //Treat flat objects as 1 lower.
+            let oPosy = o.pos.y + (o.size.y == 0 ? 1 : 0);  //Treat flat objects as 1 lower.
             let overlapY = col1D(
-                cZposy,
-                cZposy + c.size.y + 0.1,
-                oZposy,
-                oZposy + o.size.y + 0.1);
+                cPosy,
+                cPosy + c.size.y + 0.1,
+                oPosy,
+                oPosy + o.size.y + 0.1);
 
             return isAbove && overlapX && overlapY;
         }));
