@@ -17,7 +17,6 @@ export default class Scene {
     public zIndex: number;
     private gameObjects: GameObject[];
     private initialized: boolean;
-    private isSortNext: boolean = false;
 
     /** Constructor */
     constructor(
@@ -69,12 +68,12 @@ export default class Scene {
         if (this.initialized) {
             this.gameObjects.filter(go => go.isActive).forEach(go => go.update(dt));
         }
-
-        // Sort all game objects for drawing - unconditionally
-        this.gameObjects.sort((a, b) => a.zIndex - b.zIndex);
     }
 
     public draw(ctx: CanvasRenderingContext2D) {
+
+        // Sort all game objects for drawing - unconditionally
+        this.gameObjects.sort((a, b) => a.zIndex - b.zIndex);
 
         if (this.initialized) {
             this.gameObjects.filter(go => go.isActive).forEach(go => this.subDraw(ctx, go, go.draw));

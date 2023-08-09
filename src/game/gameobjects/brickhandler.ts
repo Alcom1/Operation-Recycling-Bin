@@ -152,35 +152,14 @@ export default class BrickHandler extends GameObject {
             }
         }
 
-        //Selection is blocked, invalidate both directions
+        //Selection is blocked, return false
         if(isBlocked) {
-            OPPOSITE_DIRS.forEach(d => adjacents[d] = false);
+            return false;
         }
 
         // LEVEL BOUNDARY CHECK - Check if this brick is inside the boundary
         if (colBoundingBoxGrid(min, max)) {
             return false;       // Fail if outside boundary
-        }
-
-        // CHARACTER - CHECK Check if any characters are in the current selection bounding box
-        for(const c of this.engine.collision.collidePassive(min, max)) {
-
-            // For each individual brick in the selection
-            for (const b of bricksSelected) {
-
-                // Check collision between each selected brick and the character
-                if (colRectRectCornerSize(
-                    c.min,
-                    c.max,
-                    b.gpos.getAdd({ 
-                        x : Math.round(b.spos.x / GMULTX),
-                        y : Math.round(b.spos.y / GMULTY)
-                    }),
-                    {x : b.width, y : 1})) {
-
-                    return false;
-                }
-            }
         }
 
         // We need to attach in one direction but not both. Return true if we are attaching in a single direction.
