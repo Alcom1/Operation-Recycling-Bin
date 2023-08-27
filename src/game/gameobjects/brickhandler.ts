@@ -48,7 +48,7 @@ export default class BrickHandler extends GameObject {
     private get bricksActive() { return this.bricks.filter(b => b.isActive && !b.isSelected); }
 
     /** Grey bricks */
-    private get bricksGrey(): Brick[] { return this.bricks.filter(b => b.isGrey && !b.isBlock); }
+    private get bricksGrey(): Brick[] { return this.bricks.filter(b => b.isActive && b.isGrey && !b.isBlock); }
 
     /** Initalize the brick handler, get related bricks & game objects, manage bricks */
     public init(ctx: CanvasRenderingContext2D) {
@@ -412,7 +412,7 @@ export default class BrickHandler extends GameObject {
                 //Add floating bricks to selection
                 selectionNew = selectionNew.concat(this.getFloatingBricks());
 
-                //Validated that none of the selected bricks are blocked
+                //Validate that none of the selected bricks are blocked
                 let isAnyBlocked = selectionNew.some(b => this.checkBrickIsBlocked(b));
 
                 //Add floating bricks to direction's selection
@@ -462,12 +462,16 @@ export default class BrickHandler extends GameObject {
             }
         }
 
-        // Select floating bricks and clear recursion states
-        // Stop trying to move the selected check! You know why it's there! 
-        for (const brick of this.bricks) {
+        // Select active floating bricks and clear recursion states
+        // Stop trying to move the selected check! You know why it's there! (I've forgotten why it's there.)
+        for (const brick of this.bricksActive) {
+
+            //If the brick isn't grounded or selected, it's floating! Add it.
             if (!brick.isGrounded && !brick.isSelected) {
                 ret.push(brick);
             }
+
+            //Clear stored recursive results in brick
             brick.clearRecursion();
         }
 
