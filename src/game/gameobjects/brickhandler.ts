@@ -48,7 +48,7 @@ export default class BrickHandler extends GameObject {
     private get bricksActive() { return this.bricks.filter(b => b.isActive && !b.isSelected); }
 
     /** Grey bricks */
-    private get bricksGrey(): Brick[] { return this.bricks.filter(b => b.isGrey); }
+    private get bricksGrey(): Brick[] { return this.bricks.filter(b => b.isGrey && !b.isBlock); }
 
     /** Initalize the brick handler, get related bricks & game objects, manage bricks */
     public init(ctx: CanvasRenderingContext2D) {
@@ -392,13 +392,14 @@ export default class BrickHandler extends GameObject {
     /** Press a single brick */
     private hoverBrick(brick: Brick, pos: Vect): BrickHandlerState {
 
-        // Do nothing if the two bricks are the same
-        if (this.selectedBrick != null && this.selectedBrick.compare(brick)) {
-            return BrickHandlerState.SAME;
-        }
-
         this.selectedBrick = brick; // Set current selected brick for later use
         this.selections = [];       // Reset selections
+
+        //Dp not proceed if the currently selected brick is blocked
+        if(this.checkBrickIsBlocked(this.selectedBrick)) {
+
+            return BrickHandlerState.NONE;
+        }
 
         // Check both directions if they're valid (valid == not null)
         for (const dir of OPPOSITE_DIRS) {
@@ -408,8 +409,14 @@ export default class BrickHandler extends GameObject {
             // If there are bricks to select
             if (selectionNew!.length > 0) {
 
+                //Add floating bricks to selection
+                selectionNew = selectionNew.concat(this.getFloatingBricks());
+
+                //Validated that none of the selected bricks are blocked
+                let isAnyBlocked = selectionNew.some(b => this.checkBrickIsBlocked(b));
+
                 //Add floating bricks to direction's selection
-                this.selections[dir] = selectionNew.concat(this.getFloatingBricks());
+                this.selections[dir] = !isAnyBlocked ? selectionNew : null;
             }
 
             // Clear recursion states after each recursive direction check
@@ -423,6 +430,24 @@ export default class BrickHandler extends GameObject {
             BrickHandlerState.NONE;                         // No direction is valid. Return no state
     }
 
+    /** Check if a single brick is being blocked by a character */
+    private checkBrickIsBlocked(brick : Brick) : boolean {
+
+        //Row above for brick being evaluated
+        for (const brick2 of this.bricksActive.filter(b => b.gpos.y == brick.gpos.y - 1)) {
+
+            if (brick2.isBlock &&   // If a brick in the other row is blocking
+                col1D(              // And it overlaps with the current brick
+                    brick.gpos.x, brick.gpos.x + brick.width, 
+                    brick2.gpos.x, brick2.gpos.x + brick2.width)) {
+                
+                return true;        // Return true
+            }
+        }
+
+        return false;
+    }
+
     /** Return floating bricks after a selection */
     private getFloatingBricks(): Brick[] {
         
@@ -430,6 +455,7 @@ export default class BrickHandler extends GameObject {
 
         // Recursively check from all grey bricks and mark connected bricks as grounded
         for (const brick of this.bricksGrey) {
+
             // If the grey brick isn't checked (Reduces redundancy)
             if (!brick.isChecked) {
                 this.recurseBrick(brick, OPPOSITE_DIRS, false)?.forEach(c => c.isGrounded = true);
@@ -497,17 +523,6 @@ export default class BrickHandler extends GameObject {
 
     /** Recursively select bricks. */
     private recurseBrick(brick1: Brick, dirs: (-1 | 1)[], checkGrey: boolean) {
-
-        //Check if this brick is blocked, return NULL if so.
-        for (const brick2 of this.bricksActive.filter(b => b.gpos.y == brick1.gpos.y - 1)) {
-
-            if (checkGrey && !brick1.isGrey && brick2.isBlock && col1D(
-                brick1.gpos.x, brick1.gpos.x + brick1.width, 
-                brick2.gpos.x, brick2.gpos.x + brick2.width)) {
-                
-                return null;
-            }
-        }
 
         // Return nothing for grey bricks
         if (checkGrey && (brick1.isGrey)) {

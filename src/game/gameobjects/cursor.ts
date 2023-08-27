@@ -47,6 +47,11 @@ export default class Cursor extends GameObject {
         this.cursorIcon = cursorIcon as CursorIcon;
     }
 
+    public updateSync()
+    {
+        this.isUpdateForced = true;
+    }
+
     /** Update this cursor */
     public update(dt: number): void {
 
@@ -147,9 +152,6 @@ export default class Cursor extends GameObject {
         switch(hoverState) {
             case BrickHandlerState.NONE:
                 this.resetState();
-                break;
-
-            case BrickHandlerState.SAME:
                 break;
 
             default:
