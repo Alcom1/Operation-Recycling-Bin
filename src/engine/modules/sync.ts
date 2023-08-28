@@ -60,6 +60,9 @@ export default class SyncModule {
     /** Update - check and trigger collisions for all game objects in all scenes */
     public update() {
 
+        //Increment counter for next update
+        this.counter++;
+
         // Do nothing if there are no scenes, stops updates before scenes load, stops early stutter
         if (this.scenes.length == 0) {
             return;
@@ -73,9 +76,6 @@ export default class SyncModule {
                 go.updateSync(this.counter, this.physicsPerSecond);
             });
         });
-
-        //Increment counter for next update
-        this.counter++;
     }
 
     /** Remove scene reference from colliders */

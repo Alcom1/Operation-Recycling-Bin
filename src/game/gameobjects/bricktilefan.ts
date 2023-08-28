@@ -54,22 +54,13 @@ export default class BrickTileFan extends BrickTile {
         this.characters = this.engine.tag.get(
             "Character", 
             "Level") as Character[];
-
-        // Set the beams for drawing the animations
-        this.setBeams();
     }
 
     /** Update wind beams */
     public update() {
-
-        // Set animations
-        this.beams.forEach((y, x) => {
-            this.animations.forEach(a => {
-                if (a.gpos.x == this.gpos.x + x + 1) {
-                    a.isVisible = this.isOn && a.gpos.y >= y
-                }
-            });
-        });
+        
+        // Set the beams for the collider (also for drawing the animations)
+        this.setBeams();
     }
 
     /** Set wind beams */
@@ -100,14 +91,20 @@ export default class BrickTileFan extends BrickTile {
             });
 
             return ret;
-        })
+        });
+
+        // Set animations
+        this.beams.forEach((y, x) => {
+            this.animations.forEach(a => {
+                if (a.gpos.x == this.gpos.x + x + 1) {
+                    a.isVisible = this.isOn && a.gpos.y >= y
+                }
+            });
+        });
     }
 
     /** Get hazard and passive colliders of this brick. */
     public getColliders() : Collider[] {
-        
-        // Set the beams for the collider (also for drawing the animations)
-        this.setBeams();
         
         // Combine with passive collider from base class
         return super.getColliders().concat(this.isOn ? 
