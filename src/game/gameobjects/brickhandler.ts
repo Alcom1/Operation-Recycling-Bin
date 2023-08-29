@@ -467,7 +467,7 @@ export default class BrickHandler extends GameObject {
         for (const brick of this.bricksActive) {
 
             //If the brick isn't grounded or selected, it's floating! Add it.
-            if (!brick.isGrounded && !brick.isSelected) {
+            if (!brick.isGrounded && !brick.isSelected && !brick.isBlock) {
                 ret.push(brick);
             }
 
