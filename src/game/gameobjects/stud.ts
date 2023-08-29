@@ -35,6 +35,7 @@ export default class Stud extends GameObject {
     }
     public get zState() : Boolean { return super.zState && this.isVisible }
     public get zSize() : Point { return { x : 1, y : 0}; }
+    public get zLayer() : Number { return this.isSelected && !this.isSnapped ? 1 : 0 }
 
     /** Constructor */
     constructor(params: StudParams) {

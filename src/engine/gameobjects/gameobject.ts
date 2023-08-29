@@ -67,6 +67,7 @@ export default class GameObject {
     public get zpos() : Vect { return this.gpos; }
     public get zState() : Boolean { return this.isActive; }
     public get zSize() : Point { return {x : 1, y : 1}; }
+    public get zLayer() : Number { return 0; }
 
     /** Constructor */
     constructor(params: GameObjectParams) {

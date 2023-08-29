@@ -7,6 +7,7 @@ interface ZPoint {
     pos : Point,
     size : Point,
     state : Boolean,
+    layer : Number,
     noCompare : Boolean
 }
 
@@ -31,6 +32,7 @@ export default class ZIndexHandler extends GameObject {
                     pos : o.zpos.get(),
                     size : o.zSize,
                     state : o.zState,
+                    layer : o.zLayer,
                     noCompare : o.zNoCompare
                 }));
 
@@ -51,6 +53,7 @@ export default class ZIndexHandler extends GameObject {
         this.zPoints.forEach(z => {
             z.pos = z.gameObject.zpos.get()
             z.state = z.gameObject.zState;
+            z.layer = z.gameObject.zLayer;
         });
         
         //Compare z-points and get the edges between them
@@ -70,8 +73,8 @@ export default class ZIndexHandler extends GameObject {
         //Game Objects in front
         ret = ret.concat(this.zPointsActive.filter(o => {
 
-            //Never sort with self, or between two objects marked NOCOMPARE
-            if(c === o || (c.noCompare && o.noCompare)) {
+            //If the comparison is invalid, skip
+            if(!this.checkValidComparison(c, o)) {
                 return;
             }
 
@@ -94,8 +97,8 @@ export default class ZIndexHandler extends GameObject {
         //Game Objects above
         ret = ret.concat(this.zPointsActive.filter(o => {
 
-            //Never sort with self, or between two objects marked NOCOMPARE
-            if(c === o || (c.noCompare && o.noCompare)) {
+            //If the comparison is invalid, skip
+            if(!this.checkValidComparison(c, o)) {
                 return;
             }
 
@@ -124,6 +127,27 @@ export default class ZIndexHandler extends GameObject {
         }));
 
         return ret;
+    }
+
+    /** returns true if a comparison is valid */
+    public checkValidComparison(a : ZPoint, b : ZPoint) : Boolean {
+        
+        //Never sort with self
+        if(a === b) {
+            return false;
+        }
+        
+        //Never sort two objects marked NOCOMPARE
+        if(a.noCompare && b.noCompare) {
+            return false;
+        }
+
+        //Never sort two objects on different layers
+        if(a.layer != b.layer) {
+            return false;
+        }
+
+        return true;
     }
 
     /** Debug Draw */

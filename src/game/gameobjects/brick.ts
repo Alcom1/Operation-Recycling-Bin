@@ -74,6 +74,7 @@ export default class Brick extends GameObject {
             super.zpos); 
     }
     public get zSize() : Point { return {x : this.width, y : 1 }; }
+    public get zLayer() : Number { return this.isSelected && !this.isSnapped ? 1 : 0 }
 
     /** Constructor */
     constructor(params: BrickParams) {
