@@ -529,7 +529,7 @@ export default class BrickHandler extends GameObject {
     private recurseBrick(brick1: Brick, dirs: (-1 | 1)[], checkGrey: boolean) {
 
         // Return nothing for grey bricks
-        if (checkGrey && (brick1.isGrey)) {
+        if (checkGrey && brick1.isGrey) {
             return null;
         }
 
@@ -537,6 +537,11 @@ export default class BrickHandler extends GameObject {
 
         // Current brick is a new brick in the selection
         let selection = [brick1];
+
+        // Recursion should not progress past blocking bricks
+        if (brick1.isBlock) {
+            return selection;
+        }
 
         // For all directions, check adjacent bricks in that direction and recurse for each brick
         for (const dir of dirs) {
