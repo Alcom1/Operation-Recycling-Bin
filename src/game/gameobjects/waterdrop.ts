@@ -1,6 +1,6 @@
 import { GameObjectParams } from "engine/gameobjects/gameobject";
 import { Collider } from "engine/modules/collision";
-import { BOUNDARY, GMULTX, GMULTY, MASKS } from "engine/utilities/math";
+import { BOUNDARY, Faction, GMULTX, GMULTY, MASKS } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 import Anim, { AnimationParams } from "./anim";
 import BrickHandler from "./brickhandler";
@@ -85,7 +85,9 @@ export default class WaterDrop extends Sprite {
                 1,          // Direction
                 0,          // START
                 2,          // FINAL
-                1))         // HEIGHT
+                1,          // HEIGHT
+                undefined,
+                Faction.HOSTILE))
                 {
                       
 
