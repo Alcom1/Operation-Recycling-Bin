@@ -32,4 +32,35 @@ export default class CharacterGear extends Character {
             isSub : true
         }];
     }
+
+    public handleStepUpdate() {
+
+        this.storedCbm = 0;
+
+        // WALL BOUNDARY
+        if (this.gpos.x - 2 < BOUNDARY.minx) {
+            this.storedCbm |= (this.move.x > 0 ? ring.back : ring.face);
+        }        
+        else if (this.gpos.x + 2 > BOUNDARY.maxx) {
+            this.storedCbm |= (this.move.x > 0 ? ring.face : ring.back);
+        }
+
+        // Ceiling boundary
+        if (this.gpos.y - 2 < BOUNDARY.miny) {
+            this.storedCbm |= ring.roof;
+        }
+
+        this.storedCbm |= this.brickHandler.checkCollisionRing(
+            this.gpos.getAdd({
+                x : -2, 
+                y : -this.height}), 
+            4, 
+            this.move.x,
+            true);
+    }
+
+    /** */
+    public handleStep() {
+        this.moveAll(this.move);
+    }
 }

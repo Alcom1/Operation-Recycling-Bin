@@ -192,7 +192,12 @@ export default class Character extends GameObject {
     }
 
     /** */
-    public handleStep(isStart : boolean = false) {
+    public handleStep() {
+
+    }
+
+    /** */
+    public handleStepUpdate() {
 
     }
 

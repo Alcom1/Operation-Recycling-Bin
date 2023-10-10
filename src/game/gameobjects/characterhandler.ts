@@ -67,56 +67,24 @@ export default class CharacterHandler extends GameObject {
             a.character.gpos.x - b.character.gpos.x || 
             a.character.gpos.y - b.character.gpos.y);
         
-        //Check collision of each tagged character in positional order
+        //Move characters by positional order
         charactersTagged.forEach(ct => {
 
-            let c = ct.character;
-
             // The step matches this character's speed, perform an update
-            if (counter % (loopLength / c.speed) == 0) {
+            if (counter % (loopLength / ct.character.speed) == 0) {
 
-                switch (ct.tag) {
-    
-                    case "CharacterBot" :
-                        this.handleCharacterBot(c);
-                        break;
-    
-                    case "CharacterBin" :
-                        this.handleCharacterBin(c);
-                        break;
-    
-                    case "CharacterGearGround" :
-                        this.handleCharacterGearGround(c);
-                        break;
-    
-                    case "CharacterGearClimb" :
-                        this.handleCharacterGearClimb(c);
-                        break;
-                }
+                ct.character.handleStep();
             }
         });
-    }
+        
+        //Update character states by positional order
+        charactersTagged.forEach(ct => {
 
-    /** Handle specific character */
-    private handleCharacterBot(characterGeneric : Character) {
-        let character = characterGeneric as CharacterBot;
+            // The step matches this character's speed, perform an update
+            if (counter % (loopLength / ct.character.speed) == 0) {
 
-        character.handleStep();
-    }
-
-    /** Handle specific character */
-    private handleCharacterBin(characterGeneric : Character) {
-        let character = characterGeneric as CharacterBin;
-    }
-
-
-    /** Handle specific character */
-    private handleCharacterGearGround(characterGeneric : Character) {
-        let character = characterGeneric as CharacterGearGround;
-    }
-
-    /** Handle specific character */
-    private handleCharacterGearClimb(characterGeneric : Character) {
-        let character = characterGeneric as CharacterGearClimb;
+                ct.character.handleStepUpdate();
+            }
+        });
     }
 }

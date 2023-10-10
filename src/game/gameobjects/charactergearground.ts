@@ -24,4 +24,13 @@ export default class CharacterGearGround extends CharacterGear {
     constructor(params: CharacterParams) {
         super(Object.assign(params, CharacterGearGroundOverride));
     }
+
+    /** */
+    public handleStepUpdate() {
+        super.handleStepUpdate();
+
+        if (this.isColFace || !this.isColHang) {
+            this.reverse();
+        }
+    }
 }
