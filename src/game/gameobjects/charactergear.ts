@@ -18,6 +18,8 @@ export default class CharacterGear extends Character {
     protected get isColBand() : boolean { return !!(this.storedCbm & ring.band); }  // Collision front-rear corner
     protected get isColHang() : boolean { return !!(this.storedCbm & ring.hang); }  // Collision distant front-low
 
+    public get zGlide() : Boolean { return true; }
+
     /** Get colliders */
     public getColliders() : Collider[] {
 

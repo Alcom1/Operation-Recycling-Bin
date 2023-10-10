@@ -51,7 +51,9 @@ export default class Character extends GameObject {
     public get zpos() : Vect { 
         return this.gpos.getAdd({ x : -1, y : 1 - this.height});
     }
-    public get zSize() : Point { return {x : 2, y : this.height}; }
+    public get zSize() : Point { 
+        return {x : 2, y : this.height}; 
+    }
 
     /** Constructor */
     constructor(params: CharacterParams) {

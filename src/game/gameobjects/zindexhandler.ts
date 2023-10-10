@@ -7,6 +7,7 @@ interface ZPoint {
     pos : Point,
     size : Point,
     state : Boolean,
+    glide : Boolean,
     layer : Number,
     noCompare : Boolean
 }
@@ -32,6 +33,7 @@ export default class ZIndexHandler extends GameObject {
                     pos : o.zpos.get(),
                     size : o.zSize,
                     state : o.zState,
+                    glide : o.zGlide,
                     layer : o.zLayer,
                     noCompare : o.zNoCompare
                 }));
@@ -87,7 +89,7 @@ export default class ZIndexHandler extends GameObject {
             let oPosy = o.pos.y + (o.size.y == 0 ? 1 : 0);  //Treat flat objects as 1 lower.
             let overlapY = col1D(
                 cPosy,
-                cPosy + c.size.y + 0.1,
+                cPosy + c.size.y + (c.glide ? 0 : 0.1),     //Gliders are always above studs
                 oPosy,
                 oPosy + o.size.y + 0.1);
 
@@ -112,7 +114,7 @@ export default class ZIndexHandler extends GameObject {
                 c.pos.x, 
                 c.pos.x + c.size.x, 
                 o.pos.x, 
-                o.pos.x + o.size.x);
+                o.pos.x + o.size.x + (o.glide && c.size.y == 0 ? 1 : 0));   //Gliders are always above studs
 
             //Y-Overlap
             let cPosy = c.pos.y + (c.size.y == 0 ? 1 : 0);  //Treat flat objects as 1 lower.
