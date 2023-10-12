@@ -1,5 +1,6 @@
 import GameObject from "engine/gameobjects/gameobject";
 import { Step, StepType } from "engine/modules/sync";
+import { Point } from "engine/utilities/vect";
 import Character from "./character";
 import CharacterBin from "./characterbin";
 import CharacterBot from "./characterbot";
@@ -49,6 +50,11 @@ export default class CharacterHandler extends GameObject {
             return groups;
 
         }, [] as CharacterGroup[])
+    }
+
+    /** Get all no-place zones */
+    public getNoPlaceZones() : Point[] {
+        return this.characterGroups.flatMap(x => x.characters).flatMap(x => x.getNoPlaceZone());
     }
 
     /** Perform synchronous updates for all characters */

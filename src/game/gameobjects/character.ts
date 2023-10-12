@@ -203,6 +203,11 @@ export default class Character extends GameObject {
 
     }
 
+    /** */
+    public getNoPlaceZone() : Point[] {
+        return [];
+    }
+
     /** Deactivate this character */
     protected deactivate() {
 

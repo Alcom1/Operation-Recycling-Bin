@@ -1,7 +1,7 @@
 import GameObject, { Collision } from "engine/gameobjects/gameobject";
 import { Collider } from "engine/modules/collision";
-import { bitStack, BOUNDARY, col1D, RING_BITSTACKB as ring, GMULTX, GMULTY, MASKS } from "engine/utilities/math";
-import Vect from "engine/utilities/vect";
+import { bitStack, BOUNDARY, col1D, RING_BITSTACKB as ring, GMULTX, GMULTY, MASKS, OPPOSITE_DIRS } from "engine/utilities/math";
+import Vect, { Point } from "engine/utilities/vect";
 import Character from "./character";
 
 /** Base gear character */
@@ -64,5 +64,14 @@ export default class CharacterGear extends Character {
     /** */
     public handleStep() {
         this.moveAll(this.move);
+    }
+
+    /** Get both grid spaces ahead of this character */
+    public getNoPlaceZone() : Point[] {
+
+        return OPPOSITE_DIRS.map(d => this.gpos.getAdd({
+            x : Math.round(Math.sign(this.move.x) * 1.5 + Math.sign(this.move.y) * d * 0.5 -0.5),
+            y : Math.round(Math.sign(this.move.y) * 1.5 + Math.sign(this.move.x) * d * 0.5 -0.5)
+        }));
     }
 }

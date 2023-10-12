@@ -2,6 +2,7 @@ import GameObject from "engine/gameobjects/gameobject";
 import {col1D, GMULTX, GMULTY, colBoundingBoxGrid, colPointRectGrid, colPointParHGrid, colPointParVGrid, OPPOSITE_DIRS, colRectRectCornerSize, MatchFactions, Faction} from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 import Brick from "./bricknormal";
+import CharacterHandler from "./characterhandler";
 import Counter from "./counter";
 import MobileIndicator from "./mobileindicator";
 
@@ -36,6 +37,9 @@ export default class BrickHandler extends GameObject {
     protected bricks: Brick[] = [];
 
     /** */
+    private characterHandler : CharacterHandler | null = null;
+
+    /** */
     private mobileIndicator : MobileIndicator | null = null;
 
     /** Current selected bricks */
@@ -53,6 +57,9 @@ export default class BrickHandler extends GameObject {
     /** Initalize the brick handler, get related bricks & game objects, manage bricks */
     public init(ctx: CanvasRenderingContext2D) {
         
+        this.characterHandler = this.engine.tag.get(        // Get character handler from scene
+            "CharacterHandler", 
+            "LevelInterface")[0] as CharacterHandler;
         this.mobileIndicator = this.engine.tag.get(         // Get mobile indicator from scene
             "MobileIndicator", 
             "LevelInterface")[0] as MobileIndicator;
@@ -100,17 +107,27 @@ export default class BrickHandler extends GameObject {
         const min : Point = {x : Number.MAX_VALUE, y : Number.MAX_VALUE}
         const max : Point = {x : 0, y : 0}
 
-        const bricksSelected = this.bricks.filter(b => b.isSelected);
+        let noPlaceZones = this.characterHandler?.getNoPlaceZones();
 
         let isBlocked = false;  //If the selection is blocked by a blocking brick
 
-        brickLoop : for (const brick1 of bricksSelected) {
+        brickLoop : for (const brick1 of this.bricks.filter(b => b.isSelected)) {
             
             brick1.setToCursor();   // Force update so the brick position matches this frame and not the previous
+
 
             // Combine grid positions and sub positions for true positions
             var tposx = brick1.gpos.x + Math.round(brick1.spos.x / GMULTX);
             var tposy = brick1.gpos.y + Math.round(brick1.spos.y / GMULTY);
+
+            //Do not place bricks in no-place zones
+            if (noPlaceZones?.some(p => 
+                p.y == tposy &&
+                p.x >= tposx &&
+                p.x <  tposx + brick1.width)) {
+
+                return false;
+            }
 
             // Store minimum and maximum positions for a bounding box
             min.x = Math.min(min.x, tposx);
