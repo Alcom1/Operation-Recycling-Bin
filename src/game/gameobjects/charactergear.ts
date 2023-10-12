@@ -69,9 +69,6 @@ export default class CharacterGear extends Character {
     /** Get both grid spaces ahead of this character */
     public getNoPlaceZone() : Point[] {
 
-        return OPPOSITE_DIRS.map(d => this.gpos.getAdd({
-            x : Math.round(Math.sign(this.move.x) * 1.5 + Math.sign(this.move.y) * d * 0.5 -0.5),
-            y : Math.round(Math.sign(this.move.y) * 1.5 + Math.sign(this.move.x) * d * 0.5 -0.5)
-        }));
+        return [-1, 0].flatMap(x => [-1, 0].map(y => new Vect(x,y).getAdd(this.gpos).getAdd(this.move)));
     }
 }

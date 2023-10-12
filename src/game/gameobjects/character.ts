@@ -101,6 +101,7 @@ export default class Character extends GameObject {
             this.bricks.push(this.parent.pushGO(new BrickPhantom({
                 ...params,
                 faction : this.faction,
+                glide : this.isGlide,
                 width : 2,
                 position : this.gpos.getAdd({ x : -1, y : -i})
             })) as Brick)

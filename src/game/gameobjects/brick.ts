@@ -6,6 +6,7 @@ export interface BrickParams extends GameObjectParams {
     color?: string;
     width?: number;
     block?: boolean;
+    glide?: boolean;
 }
 
 /** Base class for all bricks */
@@ -59,6 +60,9 @@ export default class Brick extends GameObject {
     /** If the brick blocks placement */
     protected _isBlock : boolean = false; public get isBlock() : boolean {return this._isBlock};
 
+    /** If the brick is attatched to a gliding object */
+    protected _isGlide : boolean = false; public get isGlide() : boolean {return this._isGlide};
+
     /** z-index get/setters */    
     get zIndex() : number { return super.zIndex; }
     set zIndex(value : number) { 
@@ -83,6 +87,7 @@ export default class Brick extends GameObject {
         this.color = colorTranslate(params.color);
         this._isGrey = !params.color;
         this._isBlock = params.block ?? false;
+        this._isGlide = params.glide ?? false;
 
         this.tags.push("Brick");
 

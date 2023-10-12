@@ -115,12 +115,11 @@ export default class BrickHandler extends GameObject {
             
             brick1.setToCursor();   // Force update so the brick position matches this frame and not the previous
 
-
             // Combine grid positions and sub positions for true positions
             var tposx = brick1.gpos.x + Math.round(brick1.spos.x / GMULTX);
             var tposy = brick1.gpos.y + Math.round(brick1.spos.y / GMULTY);
 
-            //Do not place bricks in no-place zones
+            //Do not place bricks in no-place zones (gliding bricks/characters are handled by this, instead)
             if (noPlaceZones?.some(p => 
                 p.y == tposy &&
                 p.x >= tposx &&
@@ -136,7 +135,7 @@ export default class BrickHandler extends GameObject {
             max.y = Math.max(max.y, tposy + 1);
 
             // Check collision between current selected brick and every brick in its potential new row.
-            for (const brick2 of this.bricksActive.filter(b => b.gpos.y == tposy)) { // For each brick in the current row
+            for (const brick2 of this.bricksActive.filter(b => !b.isGlide && b.gpos.y == tposy)) { // For each non-gliding brick in the current row
                 
                 if (!brick2.isSelected && col1D(        // If the brick-in-row is colliding with this brick
                     tposx, tposx + brick1.width,
@@ -147,11 +146,11 @@ export default class BrickHandler extends GameObject {
             }
 
             // Check collision between current selected brick and every brick in its potential adjacent rows.
-            for (var dir of OPPOSITE_DIRS) {             // For each direction
+            for (var dir of OPPOSITE_DIRS) {            // For each direction
 
                 // If row in the direction (above/below) has bricks, check each brick
                 // For each brick in the row in that direction
-                for (var brick2 of this.bricksActive.filter(b => b.gpos.y == tposy + dir)) {
+                for (var brick2 of this.bricksActive.filter(b => !b.isGlide && b.gpos.y == tposy + dir)) {
                     
                     if (!brick2.isSelected && col1D(    // If the brick-in-row is colliding with this brick
                         tposx, tposx + brick1.width,
