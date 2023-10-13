@@ -1,20 +1,7 @@
 import GameObject, { Collision } from "engine/gameobjects/gameobject";
 import { RING_BITSTACK as gcb, MASKS, zip } from "engine/utilities/math";
 import { CharacterParams } from "./character";
-import CharacterGear from "./charactergear";
-
-// Character states
-enum ClimbState {
-    NORMAL,
-    WAIT,
-    HALT
-}
-
-// Character sub-states for vertical movement
-enum VertState {
-    UP,
-    DOWN
-}
+import CharacterGear, { GearState } from "./charactergear";
 
 /** Specifications of a climb character */
 const CharacterGearClimbOverride = Object.freeze({
@@ -82,7 +69,7 @@ export default class CharacterGearClimb extends CharacterGear {
     protected updatePosition() {
 
         // Don't update position for special states (WAIT, HALT, etc)
-        if (this.stateIndex != ClimbState.NORMAL) {
+        if (this.stateIndex != GearState.NORMAL) {
             return;
         }
 

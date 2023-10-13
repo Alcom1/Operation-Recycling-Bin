@@ -1,13 +1,7 @@
 import GameObject, { Collision } from "engine/gameobjects/gameobject";
 import { RING_BITSTACK as gcb, MASKS } from "engine/utilities/math";
 import { CharacterParams } from "./character";
-import CharacterGear from "./charactergear";
-
-// Character states
-enum GroundState {
-    NORMAL,
-    WAIT
-}
+import CharacterGear, { GearState } from "./charactergear";
 
 /** Specifications of a grounded gearbot */
 const CharacterGearGroundOverride = Object.freeze({
@@ -27,6 +21,13 @@ const CharacterGearGroundOverride = Object.freeze({
             images : [{ name : "char_rbg_wait", offsetX : 0 }],
             frameCount : 2,
             gposOffset : { x : -3, y : 0}
+        },{
+            speed : 3.0,
+            images : [
+                { name : "char_rbg_left", offsetX : 0 },
+                { name : "char_rbg_right", offsetX : 0}],
+            frameCount : 2,
+            gposOffset : { x : -3, y : 0}
         }]
 });
 
@@ -42,26 +43,34 @@ export default class CharacterGearGround extends CharacterGear {
     public handleStepUpdate() {
         super.handleStepUpdate();
 
-        console.log(this.gpos.x);
-
         switch(this.stateIndex) {
 
-            case GroundState.NORMAL :
+            case GearState.NORMAL :
                 if(this.isColFace && this.isColBack) {
-                    debugger
-                    this.setStateIndex(GroundState.WAIT);
+                    this.setStateIndex(GearState.WAIT);
                 }
                 else if (this.isColFace || !this.isColHang) {
                     this.reverse();
+                    this.setStateIndex(GearState.HALT);
                 }
                 break;
 
-            case GroundState.WAIT :
+            case GearState.WAIT :
                 if(!this.isColFace) {
-                    this.setStateIndex(GroundState.NORMAL);
+                    this.setStateIndex(GearState.NORMAL);
                 }
                 if(!this.isColBack) {
-                    this.setStateIndex(GroundState.NORMAL);
+                    this.setStateIndex(GearState.NORMAL);
+                }
+
+            case GearState.HALT :
+                if(this.isColFace && this.isColBack) {
+                    this.setStateIndex(GearState.WAIT);
+                }
+                if(!this.isColFace) {
+                    this.setStateIndex(GearState.NORMAL);
+                }
+                if(!this.isColBack) {
                     this.reverse();
                 }
                 break;

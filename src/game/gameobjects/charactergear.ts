@@ -4,6 +4,13 @@ import { bitStack, BOUNDARY, col1D, RING_BITSTACKB as ring, GMULTX, GMULTY, MASK
 import Vect, { Point } from "engine/utilities/vect";
 import Character from "./character";
 
+// Character states
+export enum GearState {
+    NORMAL,
+    WAIT,
+    HALT
+}
+
 /** Base gear character */
 export default class CharacterGear extends Character {
 
@@ -71,6 +78,9 @@ export default class CharacterGear extends Character {
 
     /** Get both grid spaces ahead of this character */
     public getNoPlaceZone() : Point[] {
-        return [-1, 0].flatMap(x => [-1, 0].map(y => new Vect(x,y).getAdd(this.gpos).getAdd(this.move)));
+
+        return [-1, 0].flatMap(x => [-1, 0].map(y => new Vect(x,y)
+            .getAdd(this.gpos)
+            .getAdd(this.stateIndex == 0 ? this.move : {x : 0, y : 0})));
     }
 }
