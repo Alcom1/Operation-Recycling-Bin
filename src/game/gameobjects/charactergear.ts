@@ -63,12 +63,14 @@ export default class CharacterGear extends Character {
 
     /** */
     public handleStep() {
-        this.moveAll(this.move);
+
+        if(this.stateIndex == 0) {
+            this.moveAll(this.move);
+        }
     }
 
     /** Get both grid spaces ahead of this character */
     public getNoPlaceZone() : Point[] {
-
         return [-1, 0].flatMap(x => [-1, 0].map(y => new Vect(x,y).getAdd(this.gpos).getAdd(this.move)));
     }
 }

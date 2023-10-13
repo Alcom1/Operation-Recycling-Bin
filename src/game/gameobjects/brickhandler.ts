@@ -563,7 +563,8 @@ export default class BrickHandler extends GameObject {
         for (const dir of dirs) {
 
             // If adjacent row in the direction (above/below) has bricks, check and recurse for each brick
-            for (const brick2 of this.bricksActive.filter(b => b.gpos.y == brick1.gpos.y + dir)) {
+            // Also, skip blocking bricks, so characters do not interfere (Does this break something?)
+            for (const brick2 of this.bricksActive.filter(b => !b.isBlock && b.gpos.y == brick1.gpos.y + dir)) {
 
                 if (!brick2.isChecked && col1D(
                     brick1.gpos.x, brick1.gpos.x + brick1.width, 
