@@ -52,6 +52,7 @@ export default class Anim extends GameObject {
     /** get */
     public get duration() : number { return 1 / this.speed; }
     public get zState() : Boolean { return super.zState && this.isVisible }
+    public get zSize() : Vect { return new Vect(super.zSize.x, 0) }
 
     /** Constructor */
     constructor(params : AnimationParams) {

@@ -1,11 +1,12 @@
 import GameObject from "engine/gameobjects/gameobject";
-import { col1D, GMULTX, GMULTY } from "engine/utilities/math";
+import { BOUNDARY, col1D, gap1D, GMULTX, GMULTY } from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 
 interface ZPoint {
     gameObject : GameObject,
     pos : Point,
     size : Point,
+    flat : Boolean,
     state : Boolean,
     glide : Boolean,
     layer : Number,
@@ -18,7 +19,7 @@ export default class ZIndexHandler extends GameObject {
     private zPoints : ZPoint[] = [];
     private get zPointsActive() : ZPoint[] { return this.zPoints.filter(z => z.state) }
     private zEdges : ZPoint[][] = [];
-    private debug : Boolean = false;
+    private debug : Boolean = true;
 
     /** Initalize the brick handler, get related bricks & game objects, manage bricks */
     public init() {
@@ -30,8 +31,9 @@ export default class ZIndexHandler extends GameObject {
             }).forEach(o => 
                 this.zPoints.push({
                     gameObject : o,
-                    pos : o.zpos.get(),
-                    size : o.zSize,
+                    pos : this.getTrueZpos(o.zpos, o.zSize.y == 0),
+                    size : this.getTrueZsize(o.zSize),
+                    flat : o.zSize.y == 0,
                     state : o.zState,
                     glide : o.zGlide,
                     layer : o.zLayer,
@@ -53,7 +55,7 @@ export default class ZIndexHandler extends GameObject {
         
         //Setup zpoints for current state
         this.zPoints.forEach(z => {
-            z.pos = z.gameObject.zpos.get()
+            z.pos = this.getTrueZpos(z.gameObject.zpos, z.flat);
             z.state = z.gameObject.zState;
             z.layer = z.gameObject.zLayer;
         });
@@ -67,6 +69,18 @@ export default class ZIndexHandler extends GameObject {
         });
     }
 
+    /** Get the true z-position of a zpoint*/
+    private getTrueZpos(zpos : Vect, flat : Boolean) : Vect {
+
+        return new Vect(zpos.x, zpos.y * 2 - (flat ? 0 : 1));
+    }
+
+    /** Get the true z-position of a zpoint*/
+    private getTrueZsize(zsize : Point) : Vect {
+
+        return new Vect(zsize.x, Math.max(zsize.y * 2, 1));
+    }
+
     /** Process a single zPoint */
     private processZPoint(c : ZPoint) : ZPoint[] {
 
@@ -77,23 +91,10 @@ export default class ZIndexHandler extends GameObject {
 
             //If the comparison is invalid, skip
             if(!this.checkValidComparison(c, o)) {
-                return;
+                return false;
             }
 
-            let isFront = 
-                c.pos.x + c.size.x <= o.pos.x && 
-                c.pos.x + c.size.x >= o.pos.x - 1;
-
-            //Y-Overlap
-            let cPosy = c.pos.y + (c.size.y == 0 ? 1 : 0);  //Treat flat objects as 1 lower.
-            let oPosy = o.pos.y + (o.size.y == 0 ? 1 : 0);  //Treat flat objects as 1 lower.
-            let overlapY = col1D(
-                cPosy,
-                cPosy + c.size.y + (c.glide ? 0 : 0.1),     //Gliders are always above studs
-                oPosy,
-                oPosy + o.size.y + 0.1);
-
-            return isFront && overlapY;
+            return false;
         }));
 
         //Game Objects above
@@ -101,31 +102,10 @@ export default class ZIndexHandler extends GameObject {
 
             //If the comparison is invalid, skip
             if(!this.checkValidComparison(c, o)) {
-                return;
+                return false;
             }
 
-            //Other game object is above
-            let isAbove = c.size.y > 0 ?
-                c.pos.y - o.pos.y > 0 :
-                c.pos.y - o.pos.y >= 0;
-
-            //X-Overlap
-            let overlapX = col1D(
-                c.pos.x, 
-                c.pos.x + c.size.x, 
-                o.pos.x, 
-                o.pos.x + o.size.x + (o.glide && c.size.y == 0 ? 1 : 0));   //Gliders are always above studs
-
-            //Y-Overlap
-            let cPosy = c.pos.y + (c.size.y == 0 ? 1 : 0);  //Treat flat objects as 1 lower.
-            let oPosy = o.pos.y + (o.size.y == 0 ? 1 : 0);  //Treat flat objects as 1 lower.
-            let overlapY = col1D(
-                cPosy,
-                cPosy + c.size.y + 0.1,
-                oPosy,
-                oPosy + o.size.y + 0.1);
-
-            return isAbove && overlapX && overlapY;
+            return false;
         }));
 
         return ret;
@@ -158,6 +138,51 @@ export default class ZIndexHandler extends GameObject {
         if (!this.debug) {
             return;
         }
+
+        this.boxDraw(ctx);
+    }
+
+    /** Debug Draw */
+    public boxDraw(ctx : CanvasRenderingContext2D) {
+
+        ctx.translate(
+            1 * GMULTX, 
+            2 * GMULTY
+        );
+
+        let scale = 10;
+
+        ctx.globalAlpha = 0.5;
+        ctx.fillStyle = "#000";
+        ctx.fillRect(
+            0,
+            0,
+            BOUNDARY.maxx * scale,
+            BOUNDARY.maxy * scale * 2
+        );
+
+        ctx.globalAlpha = 0.75;
+
+        this.zPointsActive.forEach(p => {
+
+            let border = p.size.y > 2 ? 3 : 1;
+
+            ctx.fillStyle = 
+                p.flat       ? "#38F" : 
+                p.size.y > 2 ? "#F33" : "#FF3";
+            ctx.fillRect(
+                scale * p.pos.x + border,
+                scale * p.pos.y + border,
+                scale * p.size.x - border * 2,
+                scale * p.size.y - border * 2,
+            );
+        });
+        
+        ctx.restore();
+    }
+
+    /** Debug Draw */
+    public graphDraw(ctx : CanvasRenderingContext2D) {
 
         ctx.globalAlpha = 0.6;
         ctx.lineCap = "round";

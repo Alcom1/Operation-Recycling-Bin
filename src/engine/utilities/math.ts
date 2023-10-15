@@ -235,6 +235,15 @@ export function col1D(a1: number, a2: number, b1: number, b2: number): boolean {
     return a2 > b1 && a1 < b2;
 }
 
+/** 1-dimensional check to measure vertical overlap */
+export function gap1D(a1: number, a2: number, b1: number, b2: number): number {
+    // Return gap size between two ranges (negative if overlap)
+    if(a1 > a2) { [a1, a2] = [a2, a1] };    //Fix order for proper +/-
+    if(b1 > b2) { [b1, b2] = [b2, b1] };    //Fix order for proper +/-
+    return Math.abs(b1 - a2) < Math.abs(a1 - b2) ? (b1 - a2) : (a1 - b2);
+}
+
+
 /** Translate text colors to custom values */
 export function colorTranslate(color?: string): string {
     switch (color){
