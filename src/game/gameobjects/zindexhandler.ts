@@ -19,7 +19,7 @@ export default class ZIndexHandler extends GameObject {
     private zPoints : ZPoint[] = [];
     private get zPointsActive() : ZPoint[] { return this.zPoints.filter(z => z.state) }
     private zEdges : ZPoint[][] = [];
-    private debug : Boolean = true;
+    private debug : Boolean = false;
 
     /** Initalize the brick handler, get related bricks & game objects, manage bricks */
     public init() {
@@ -86,17 +86,6 @@ export default class ZIndexHandler extends GameObject {
 
         let ret = [] as ZPoint[];
 
-        //Game Objects in front
-        ret = ret.concat(this.zPointsActive.filter(o => {
-
-            //If the comparison is invalid, skip
-            if(!this.checkValidComparison(c, o)) {
-                return false;
-            }
-
-            return false;
-        }));
-
         //Game Objects above
         ret = ret.concat(this.zPointsActive.filter(o => {
 
@@ -105,7 +94,54 @@ export default class ZIndexHandler extends GameObject {
                 return false;
             }
 
-            return false;
+            let isAbove = c.pos.y > o.pos.y;
+
+            let isAlign = col1D(
+                c.pos.x,
+                c.pos.x + c.size.x,
+                o.pos.x,
+                o.pos.x + o.size.x + (c.flat && o.glide ? 1 : 0));  //Gliders roll over studs
+
+            let distance = gap1D(
+                o.pos.y,
+                o.pos.y + o.size.y,
+                c.pos.y,
+                c.pos.y + c.size.y);
+
+            return (
+                isAbove &&                  //Other object is above 
+                isAlign &&                  //Other object is horizontally aligned 
+                distance <= 1);             //Other object is close
+        }));
+
+        //Game Objects in front
+        ret = ret.concat(this.zPointsActive.filter(o => {
+
+            //If the comparison is invalid, skip
+            if(!this.checkValidComparison(c, o)) {
+                return false;
+            }
+
+            let isAhead = c.pos.x < o.pos.x;
+
+            let isAlign = col1D(
+                c.pos.y,
+                c.pos.y + c.size.y,
+                o.pos.y,
+                o.pos.y + o.size.y);
+
+            let distance = gap1D(
+                c.pos.x,
+                c.pos.x + c.size.x,
+                o.pos.x,
+                o.pos.x + o.size.x);
+
+            return (
+                isAhead &&                  //Other object is ahead
+                isAlign &&                  //Other object is vertically aligned
+                distance <= 1 &&            //Other object is close
+                !(c.glide && o.flat) &&     //Gliders roll over studs
+                !(o.flat && distance < 0)); //Overlapping with flat objects does not mean they're in front.
         }));
 
         return ret;
@@ -138,31 +174,29 @@ export default class ZIndexHandler extends GameObject {
         if (!this.debug) {
             return;
         }
+        
+        ctx.save();
 
-        this.boxDraw(ctx);
-    }
-
-    /** Debug Draw */
-    public boxDraw(ctx : CanvasRenderingContext2D) {
-
+        //Position
         ctx.translate(
             1 * GMULTX, 
             2 * GMULTY
         );
 
+        //Scale
         let scale = 10;
 
+        //Draw background
         ctx.globalAlpha = 0.5;
         ctx.fillStyle = "#000";
         ctx.fillRect(
             0,
             0,
             BOUNDARY.maxx * scale,
-            BOUNDARY.maxy * scale * 2
-        );
+            BOUNDARY.maxy * scale * 2);
 
+        //Draw z-boxes
         ctx.globalAlpha = 0.75;
-
         this.zPointsActive.forEach(p => {
 
             let border = p.size.y > 2 ? 3 : 1;
@@ -174,69 +208,10 @@ export default class ZIndexHandler extends GameObject {
                 scale * p.pos.x + border,
                 scale * p.pos.y + border,
                 scale * p.size.x - border * 2,
-                scale * p.size.y - border * 2,
-            );
+                scale * p.size.y - border * 2);
         });
         
         ctx.restore();
-    }
-
-    /** Debug Draw */
-    public graphDraw(ctx : CanvasRenderingContext2D) {
-
-        ctx.globalAlpha = 0.6;
-        ctx.lineCap = "round";
-        ctx.lineWidth = 3;
-
-        this.zEdges.forEach(e => {
-
-            let offsetZ = this.getDrawPos(e[0]);
-            let offsetC = this.getDrawPos(e[1]);
-
-            let gradient = ctx.createLinearGradient(
-                offsetZ.x, 
-                offsetZ.y, 
-                offsetC.x, 
-                offsetC.y);
-                gradient.addColorStop(0.0, this.getDrawColor(e[0]));
-                gradient.addColorStop(1.0, this.getDrawColor(e[1]));
-            ctx.fillStyle = gradient;
-
-            let angle = Math.atan(-
-                (offsetC.x - offsetZ.x)/
-                (offsetC.y - offsetZ.y));
-        
-            ctx.beginPath();
-
-            ctx.arc(
-                offsetZ.x,
-                offsetZ.y,
-                4,
-                angle - Math.PI,
-                angle,
-                offsetC.y - offsetZ.y != 0)
-            ctx.lineTo(
-                offsetC.x + Math.cos(angle) * 1, 
-                offsetC.y + Math.sin(angle) * 1);
-            ctx.lineTo(
-                offsetC.x - Math.cos(angle) * 1, 
-                offsetC.y - Math.sin(angle) * 1);
-            ctx.fill();
-        });
-    }
-
-    /** Get proper color of a zPoint */
-    private getDrawColor(zPoint : ZPoint) : string {
-
-        return "#000";
-    }
-
-    /** Get proper position of a zPoint */
-    private getDrawPos(zPoint : ZPoint) : Point {
-
-        return new Vect(
-            GMULTX * (zPoint.gameObject.zpos.x + (zPoint.size.x > 0 ? zPoint.size.x : 1) / 2),
-            GMULTY * (zPoint.gameObject.zpos.y + (zPoint.size.y > 0 ? zPoint.size.y : 1) / 2));
     }
 
     /** Kahn's algorithm! */
