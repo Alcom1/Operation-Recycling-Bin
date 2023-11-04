@@ -21,6 +21,16 @@ interface CharacterTagged {
 export default class CharacterHandler extends GameObject {
 
     private characterGroups: CharacterGroup[] = [];
+    private isStart: boolean = false;
+
+    private get charactersTagged() : CharacterTagged[] {
+        return this.characterGroups.flatMap(x => x.characters.map(y => {
+            return {
+                tag : x.tag,
+                character : y
+            } as CharacterTagged
+        }));
+    }
 
     /** Initalize the brick handler, get related bricks & game objects, manage bricks */
     public init() {
@@ -52,6 +62,23 @@ export default class CharacterHandler extends GameObject {
         }, [] as CharacterGroup[])
     }
 
+    /** A second layer of initialization, gets characters out of unwanted starting positions */
+    public update()
+    {
+        //If this handler hasn't started yet (after constructor and init)
+        if(!this.isStart) {
+
+            this.isStart = true;    //Started
+
+            //Update character states by positional order
+            this.charactersTagged.forEach(ct => {
+
+                //Unconditional update
+                ct.character.handleStepUpdate();
+            });
+        }
+    }
+
     /** Get all no-place zones */
     public getNoPlaceZones() : Point[] {
         return this.characterGroups.flatMap(x => x.characters).flatMap(x => x.getNoPlaceZone());
@@ -61,12 +88,7 @@ export default class CharacterHandler extends GameObject {
     public updateSync(counter : number, loopLength : number) {
 
         //Map character groups as characters with their specific tag
-        let charactersTagged = this.characterGroups.flatMap(x => x.characters.map(y => {
-            return {
-                tag : x.tag,
-                character : y
-            } as CharacterTagged
-        }))
+        let charactersTagged = this.charactersTagged;
         
         //Sort characters by their grid x-pos or grid y-pos.
         charactersTagged.sort((a, b) => 

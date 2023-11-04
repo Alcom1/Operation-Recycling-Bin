@@ -7,8 +7,8 @@ import Character from "./character";
 // Character states
 export enum GearState {
     NORMAL,
-    WAIT,
-    HALT
+    STOP,
+    WAIT
 }
 
 /** Base gear character */
@@ -66,6 +66,8 @@ export default class CharacterGear extends Character {
             4, 
             this.move.x,
             true);
+
+        debugger;
     }
 
     /** */

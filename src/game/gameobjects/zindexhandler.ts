@@ -19,7 +19,7 @@ export default class ZIndexHandler extends GameObject {
     private zPoints : ZPoint[] = [];
     private get zPointsActive() : ZPoint[] { return this.zPoints.filter(z => z.state) }
     private zEdges : ZPoint[][] = [];
-    private debug : Boolean = false;
+    private debug : Boolean = true;
 
     /** Initalize the brick handler, get related bricks & game objects, manage bricks */
     public init() {

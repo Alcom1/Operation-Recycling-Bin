@@ -46,33 +46,35 @@ export default class CharacterGearGround extends CharacterGear {
         switch(this.stateIndex) {
 
             case GearState.NORMAL :
-                if(this.isColFace && this.isColBack) {
-                    this.setStateIndex(GearState.WAIT);
+                if (this.isColFace || !this.isColLand) {
+
+                    if (this.isColBack || !this.isColBand) {
+
+                        debugger;
+
+                        this.setStateIndex(GearState.STOP);
+                    }
+                    else {
+
+                        this.reverse();
+                        this.setStateIndex(GearState.WAIT);
+                    }
                 }
-                else if (this.isColFace || !this.isColHang) {
+                break;
+
+            case GearState.STOP :
+
+                if (!this.isColFace && this.isColLand) {
+                    this.setStateIndex(GearState.NORMAL);
+                }
+                if (!this.isColBack && this.isColBand) {
                     this.reverse();
-                    this.setStateIndex(GearState.HALT);
+                    this.setStateIndex(GearState.NORMAL);
                 }
                 break;
 
             case GearState.WAIT :
-                if(!this.isColFace) {
-                    this.setStateIndex(GearState.NORMAL);
-                }
-                if(!this.isColBack) {
-                    this.setStateIndex(GearState.NORMAL);
-                }
-
-            case GearState.HALT :
-                if(this.isColFace && this.isColBack) {
-                    this.setStateIndex(GearState.WAIT);
-                }
-                if(!this.isColFace) {
-                    this.setStateIndex(GearState.NORMAL);
-                }
-                if(!this.isColBack) {
-                    this.reverse();
-                }
+                this.setStateIndex(GearState.NORMAL);
                 break;
         }
     }
