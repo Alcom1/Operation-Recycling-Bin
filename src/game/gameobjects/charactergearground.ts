@@ -50,8 +50,6 @@ export default class CharacterGearGround extends CharacterGear {
 
                     if (this.isColBack || !this.isColBand) {
 
-                        debugger;
-
                         this.setStateIndex(GearState.STOP);
                     }
                     else {
@@ -63,18 +61,17 @@ export default class CharacterGearGround extends CharacterGear {
                 break;
 
             case GearState.STOP :
-
+            case GearState.WAIT :
                 if (!this.isColFace && this.isColLand) {
                     this.setStateIndex(GearState.NORMAL);
                 }
-                if (!this.isColBack && this.isColBand) {
+                else if (!this.isColBack && this.isColBand) {
                     this.reverse();
                     this.setStateIndex(GearState.NORMAL);
                 }
-                break;
-
-            case GearState.WAIT :
-                this.setStateIndex(GearState.NORMAL);
+                else {
+                    this.setStateIndex(GearState.STOP);
+                }
                 break;
         }
     }
