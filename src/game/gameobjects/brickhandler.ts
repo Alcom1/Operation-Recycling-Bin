@@ -229,7 +229,7 @@ export default class BrickHandler extends GameObject {
         for(let j = pos.y; j < pos.y + size; j++) {
 
             // Get this row
-            row = this.bricks.filter(b => b.gpos.y == j && !b.isSelected);
+            row = this.bricksActive.filter(b => b.gpos.y == j && !b.isSelected);
 
             // Horizontal travel, skip to end unless this is the first or last row to create a ring shape
             for(let i = pos.x; i < pos.x + size; i += ((j > pos.y && j < pos.y + size - 1) ? size - 1 : 1)) {
