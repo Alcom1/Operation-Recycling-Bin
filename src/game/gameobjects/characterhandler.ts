@@ -114,34 +114,28 @@ export default class CharacterHandler extends GameObject {
                 let isHorzProx = false;
                 let isVertProx = false;
 
+                let checkProximity = function(
+                    diffA : number, 
+                    diffB : number, 
+                    selfMove : number, 
+                    othrMove : number) {
+                    
+                    return (
+                        diffA < 0                    && //Right-of-way (character on left/??? still moves)
+                        Math.abs(diffA) == 3         && //Character is in proximity range (one gap away)
+                        Math.abs(diffB) < 2          && //Character is aligned
+                        selfMove == Math.sign(diffA) && //Moving towards other char
+                        othrMove == -Math.sign(diffA))  //Other char moving towards self
+                }
+
                 //Proximity check against characters with height 2
                 charactersTagged.filter(ct2 => ct2.character.height == 2).forEach(ct2 => {
-                    
-                    let diff = ct2.character.gpos.getSub(ct.character.gpos);
-    
-                    //Horizontal proximity
-                    if (diff.x < 0 &&                                   //Right-of-way (character on left still moves)
-                        Math.abs(diff.x) == 3 &&                        //Character is in proximity range (one gap away)
-                        Math.abs(diff.y) < 2)                           //Character is aligned
-                    {
-                        if (ct.character.move.x == Math.sign(diff.x) && //Moving towards other char
-                            ct2.character.move.x == -Math.sign(diff.x)) //Other char moving towards self
-                        {
-                            isHorzProx = true;
-                        }
-                    }
 
-                    //Vertical proximity
-                    if (diff.y < 0 &&                                   //Right-of-way
-                        Math.abs(diff.y) == 3 &&                        //Character is in proximity range (one gap away) 
-                        Math.abs(diff.x) < 2)                           //Character is aligned
-                    {
-                        if (ct.character.move.y == Math.sign(diff.y) && //Moving towards other char
-                            ct2.character.move.y == -Math.sign(diff.y)) //Other char moving towards self
-                        {
-                            isVertProx = true;
-                        }
-                    }
+                    let diff = ct2.character.gpos.getSub(ct.character.gpos);
+
+                    isHorzProx = isHorzProx || checkProximity(diff.x, diff.y, ct.character.move.x, ct2.character.move.x);
+
+                    isVertProx = isVertProx || checkProximity(diff.y, diff.x, ct.character.move.y, ct2.character.move.y);
                 });
 
                 ct.character.handleStepUpdate(isHorzProx, isVertProx);
