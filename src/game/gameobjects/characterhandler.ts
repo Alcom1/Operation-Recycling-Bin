@@ -15,6 +15,8 @@ interface CharacterGroup {
 interface CharacterTagged {
     tag: string;
     character: Character;
+    isHorzProx: boolean;
+    isVertProx: boolean;
 }
 
 /** Handler for brick selection, movement, etc. */
@@ -71,11 +73,7 @@ export default class CharacterHandler extends GameObject {
             this.isStart = true;    //Started
 
             //Update character states by positional order
-            this.charactersTagged.forEach(ct => {
-
-                //Unconditional update
-                ct.character.handleStepUpdate();
-            });
+            this.handleStepUpdate(this.charactersTagged, 0, 0, true);
         }
     }
 
@@ -104,15 +102,26 @@ export default class CharacterHandler extends GameObject {
                 ct.character.handleStep();
             }
         });
+
+        //Handle proximity and step updates for all characters
+        this.handleStepUpdate(charactersTagged, counter, loopLength)
+    }
+
+    //Handle proximity and step updates for all characters
+    public handleStepUpdate(
+        charactersTagged : CharacterTagged[], 
+        counter : number, 
+        loopLength : number, 
+        isOverride : boolean = false) {
         
-        //Update character states by positional order
+        //Update character proximity
         charactersTagged.forEach(ct => {
 
             // The step matches this character's speed, perform an update
-            if (counter % (loopLength / ct.character.speed) == 0) {
+            if (isOverride || counter % (loopLength / ct.character.speed) == 0) {
 
-                let isHorzProx = false;
-                let isVertProx = false;
+                let isHorzProx = false; //Horizontal proximity - there is an incoming collision across a 1-gap
+                let isVertProx = false; //Horizontal proximity - there is an incoming collision across a 1-gap
 
                 let checkProximity = function(
                     diffA : number, 
@@ -122,14 +131,14 @@ export default class CharacterHandler extends GameObject {
                     
                     return (
                         diffA < 0                    && //Right-of-way (character on left/??? still moves)
-                        Math.abs(diffA) == 3         && //Character is in proximity range (one gap away)
+                        Math.abs(diffA) == 3         && //Character is in proximity range (1-gap away)
                         Math.abs(diffB) < 2          && //Character is aligned
                         selfMove == Math.sign(diffA) && //Moving towards other char
                         othrMove == -Math.sign(diffA))  //Other char moving towards self
                 }
 
                 //Proximity check against characters with height 2
-                charactersTagged.filter(ct2 => ct2.character.height == 2).forEach(ct2 => {
+                this.charactersTagged.filter(ct2 => ct2.character.height == 2).forEach(ct2 => {
 
                     let diff = ct2.character.gpos.getSub(ct.character.gpos);
 
@@ -138,7 +147,19 @@ export default class CharacterHandler extends GameObject {
                     isVertProx = isVertProx || checkProximity(diff.y, diff.x, ct.character.move.y, ct2.character.move.y);
                 });
 
-                ct.character.handleStepUpdate(isHorzProx, isVertProx);
+                //Set final proximity result for this character
+                ct.isHorzProx = isHorzProx;
+                ct.isVertProx = isVertProx;
+            }
+        });
+        
+        //Update character states by positional order
+        charactersTagged.forEach(ct => {
+
+            // The step matches this character's speed, perform an update
+            if (isOverride || counter % (loopLength / ct.character.speed) == 0) {
+
+                ct.character.handleStepUpdate(ct.isHorzProx, ct.isVertProx);
             }
         });
     }
