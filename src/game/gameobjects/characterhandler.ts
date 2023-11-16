@@ -111,7 +111,40 @@ export default class CharacterHandler extends GameObject {
             // The step matches this character's speed, perform an update
             if (counter % (loopLength / ct.character.speed) == 0) {
 
-                ct.character.handleStepUpdate();
+                let isHorzProx = false;
+                let isVertProx = false;
+
+                //Proximity check against characters with height 2
+                charactersTagged.filter(ct2 => ct2.character.height == 2).forEach(ct2 => {
+                    
+                    let diff = ct2.character.gpos.getSub(ct.character.gpos);
+    
+                    //Horizontal proximity
+                    if (diff.x < 0 &&                                   //Right-of-way (character on left still moves)
+                        Math.abs(diff.x) == 3 &&                        //Character is in proximity range (one gap away)
+                        Math.abs(diff.y) < 2)                           //Character is aligned
+                    {
+                        if (ct.character.move.x == Math.sign(diff.x) && //Moving towards other char
+                            ct2.character.move.x == -Math.sign(diff.x)) //Other char moving towards self
+                        {
+                            isHorzProx = true;
+                        }
+                    }
+
+                    //Vertical proximity
+                    if (diff.y < 0 &&                                   //Right-of-way
+                        Math.abs(diff.y) == 3 &&                        //Character is in proximity range (one gap away) 
+                        Math.abs(diff.x) < 2)                           //Character is aligned
+                    {
+                        if (ct.character.move.y == Math.sign(diff.y) && //Moving towards other char
+                            ct2.character.move.y == -Math.sign(diff.y)) //Other char moving towards self
+                        {
+                            isVertProx = true;
+                        }
+                    }
+                });
+
+                ct.character.handleStepUpdate(isHorzProx, isVertProx);
             }
         });
     }

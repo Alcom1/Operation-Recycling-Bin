@@ -42,11 +42,16 @@ export default class CharacterGear extends Character {
         }];
     }
 
-    public handleStepUpdate() {
+    public handleStepUpdate(isHorzProx : boolean, isVertProx : boolean) {
 
         this.storedCbm = 0;
 
-        // WALL BOUNDARY
+        // Horizontal proximity
+        if (isHorzProx) {
+            this.storedCbm |= ring.face;
+        }
+
+        // WALL BOUNDARY (WHY ARE WE YELLING)
         if (this.gpos.x - 2 < BOUNDARY.minx) {
             this.storedCbm |= (this.move.x > 0 ? ring.back : ring.face);
         }        
@@ -59,6 +64,7 @@ export default class CharacterGear extends Character {
             this.storedCbm |= ring.roof;
         }
 
+        // Bricks
         this.storedCbm |= this.brickHandler.checkCollisionRing(
             this.gpos.getAdd({
                 x : -2, 
@@ -66,8 +72,6 @@ export default class CharacterGear extends Character {
             4, 
             this.move.x,
             true);
-
-        debugger;
     }
 
     /** */

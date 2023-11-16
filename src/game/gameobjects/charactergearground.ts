@@ -40,8 +40,8 @@ export default class CharacterGearGround extends CharacterGear {
     }
 
     /** */
-    public handleStepUpdate() {
-        super.handleStepUpdate();
+    public handleStepUpdate(isHorzProx : boolean, isVertProx : boolean) {
+        super.handleStepUpdate(isHorzProx, isVertProx);
 
         switch(this.stateIndex) {
 

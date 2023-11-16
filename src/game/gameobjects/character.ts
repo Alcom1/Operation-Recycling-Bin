@@ -200,7 +200,7 @@ export default class Character extends GameObject {
     }
 
     /** */
-    public handleStepUpdate() {
+    public handleStepUpdate(isHorzProx : boolean, isVertProx : boolean) {
 
     }
 
