@@ -115,10 +115,10 @@ export default class CharacterHandler extends GameObject {
         isOverride : boolean = false) {
         
         //Update character proximity
-        charactersTagged.forEach(ct => {
+        charactersTagged.forEach(ct1 => {
 
             // The step matches this character's speed, perform an update
-            if (isOverride || counter % (loopLength / ct.character.speed) == 0) {
+            if (isOverride || counter % (loopLength / ct1.character.speed) == 0) {
 
                 let isHorzProx = false; //Horizontal proximity - there is an incoming collision across a 1-gap
                 let isVertProx = false; //Horizontal proximity - there is an incoming collision across a 1-gap
@@ -140,16 +140,20 @@ export default class CharacterHandler extends GameObject {
                 //Proximity check against characters with height 2
                 this.charactersTagged.filter(ct2 => ct2.character.height == 2).forEach(ct2 => {
 
-                    let diff = ct2.character.gpos.getSub(ct.character.gpos);
+                    let diff = ct2.character.gpos.getSub(ct1.character.gpos);
 
-                    isHorzProx = isHorzProx || checkProximity(diff.x, diff.y, ct.character.move.x, ct2.character.move.x);
+                    isHorzProx = isHorzProx || checkProximity(diff.x, diff.y, 
+                        ct1.character.move.y == 0 ? ct1.character.move.x : 0, 
+                        ct2.character.move.y == 0 ? ct2.character.move.x : 0);
 
-                    isVertProx = isVertProx || checkProximity(diff.y, diff.x, ct.character.move.y, ct2.character.move.y);
+                    isVertProx = isVertProx || checkProximity(diff.y, diff.x, 
+                        ct1.character.move.y, 
+                        ct2.character.move.y);
                 });
 
                 //Set final proximity result for this character
-                ct.isHorzProx = isHorzProx;
-                ct.isVertProx = isVertProx;
+                ct1.isHorzProx = isHorzProx;
+                ct1.isVertProx = isVertProx;
             }
         });
         
