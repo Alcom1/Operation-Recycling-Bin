@@ -15,8 +15,6 @@ interface CharacterGroup {
 interface CharacterTagged {
     tag: string;
     character: Character;
-    isHorzProx: boolean;
-    isVertProx: boolean;
 }
 
 /** Handler for brick selection, movement, etc. */
@@ -72,8 +70,16 @@ export default class CharacterHandler extends GameObject {
 
             this.isStart = true;    //Started
 
+            //Map character groups as characters with their specific tag
+            let charactersTagged = this.charactersTagged;
+            
+            //Sort characters by their grid x-pos or grid y-pos.
+            charactersTagged.sort((a, b) => 
+                a.character.gpos.x - b.character.gpos.x || 
+                a.character.gpos.y - b.character.gpos.y);
+
             //Update character states by positional order
-            this.handleStepUpdate(this.charactersTagged, 0, 0, true);
+            this.handleStepUpdate(charactersTagged, 0, 0, true);
         }
     }
 
@@ -114,56 +120,35 @@ export default class CharacterHandler extends GameObject {
         loopLength : number, 
         isOverride : boolean = false) {
         
-        //Update character proximity
-        charactersTagged.forEach(ct1 => {
+        //Update character states by positional order
+        charactersTagged.forEach((ct1, i) => {
 
             // The step matches this character's speed, perform an update
             if (isOverride || counter % (loopLength / ct1.character.speed) == 0) {
 
-                let isHorzProx = false; //Horizontal proximity - there is an incoming collision across a 1-gap
-                let isVertProx = false; //Horizontal proximity - there is an incoming collision across a 1-gap
-
-                let checkProximity = function(
-                    diffA : number, 
-                    diffB : number, 
-                    selfMove : number, 
-                    othrMove : number) {
-                    
-                    return (
-                        diffA < 0                    && //Right-of-way (character on left/??? still moves)
-                        Math.abs(diffA) == 3         && //Character is in proximity range (1-gap away)
-                        Math.abs(diffB) < 2          && //Character is aligned
-                        selfMove == Math.sign(diffA) && //Moving towards other char
-                        othrMove == -Math.sign(diffA))  //Other char moving towards self
-                }
+                let proxs : Point[] = [];
 
                 //Proximity check against characters with height 2
-                this.charactersTagged.filter(ct2 => ct2.character.height == 2).forEach(ct2 => {
+                charactersTagged.slice(0, i).filter(ct2 => ct2.character.height == 2).forEach(ct2 => {
 
+                    //Distance vector between characters
                     let diff = ct2.character.gpos.getSub(ct1.character.gpos);
 
-                    isHorzProx = isHorzProx || checkProximity(diff.x, diff.y, 
-                        ct1.character.move.y == 0 ? ct1.character.move.x : 0, 
-                        ct2.character.move.y == 0 ? ct2.character.move.x : 0);
+                    //In proximity range
+                    if (Math.abs(diff.x) <= 3 &&
+                        Math.abs(diff.y) <= 3) {
 
-                    isVertProx = isVertProx || checkProximity(diff.y, diff.x, 
-                        ct1.character.move.y, 
-                        ct2.character.move.y);
+                        //Get proximity with future-expected position of other character
+                        proxs.push(diff.getAdd({
+                            x : ct2.character.move.y == 0 ? ct2.character.move.x : 0,
+                            y : ct2.character.move.y
+                        }));
+                    }
+
                 });
 
-                //Set final proximity result for this character
-                ct1.isHorzProx = isHorzProx;
-                ct1.isVertProx = isVertProx;
-            }
-        });
-        
-        //Update character states by positional order
-        charactersTagged.forEach(ct => {
-
-            // The step matches this character's speed, perform an update
-            if (isOverride || counter % (loopLength / ct.character.speed) == 0) {
-
-                ct.character.handleStepUpdate(ct.isHorzProx, ct.isVertProx);
+                //Handle step with proximity results
+                ct1.character.handleStepUpdate(proxs);
             }
         });
     }

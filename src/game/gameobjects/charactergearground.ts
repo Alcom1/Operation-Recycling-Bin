@@ -1,5 +1,6 @@
 import GameObject, { Collision } from "engine/gameobjects/gameobject";
 import { RING_BITSTACK as gcb, MASKS } from "engine/utilities/math";
+import { Point } from "engine/utilities/vect";
 import { CharacterParams } from "./character";
 import CharacterGear, { GearState } from "./charactergear";
 
@@ -40,8 +41,8 @@ export default class CharacterGearGround extends CharacterGear {
     }
 
     /** */
-    public handleStepUpdate(isHorzProx : boolean, isVertProx : boolean) {
-        super.handleStepUpdate(isHorzProx, isVertProx);
+    public handleStepUpdate(proxs : Point[]) {
+        super.handleStepUpdate(proxs);
 
         switch(this.stateIndex) {
 

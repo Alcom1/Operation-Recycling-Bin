@@ -247,6 +247,11 @@ export default class ZIndexHandler extends GameObject {
                 }
             })
         }
+
+        if(sorted.length != this.zPoints.length) {
+
+            console.log(`WARNING, LOOP in Z-INDEXING, Sorted : ${sorted.length}, Expected : ${this.zPoints.length}}`);
+        }
       
         return sorted;
     }

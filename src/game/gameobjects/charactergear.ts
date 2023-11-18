@@ -42,14 +42,30 @@ export default class CharacterGear extends Character {
         }];
     }
 
-    public handleStepUpdate(isHorzProx : boolean, isVertProx : boolean) {
+    public handleStepUpdate(proxs : Point[]) {
 
         this.storedCbm = 0;
 
-        // Horizontal proximity
-        if (isHorzProx) {
-            this.storedCbm |= ring.face;
-        }
+        //Characters in proxminity
+        proxs.forEach(p => {
+
+            //Below
+            if (p.y == 2) {
+                this.storedCbm |= ring.flor
+            }
+            //Above
+            if (p.y == -2) {
+                this.storedCbm |= ring.roof
+            }
+            //Rightward
+            if (p.x == 2) {
+                this.storedCbm |= (this.move.x > 0 ? ring.face : ring.back)
+            }
+            //Leftward
+            if (p.x == -2) {
+                this.storedCbm |= (this.move.x > 0 ? ring.back : ring.face)
+            }
+        })
 
         // WALL BOUNDARY (WHY ARE WE YELLING)
         if (this.gpos.x - 2 < BOUNDARY.minx) {
