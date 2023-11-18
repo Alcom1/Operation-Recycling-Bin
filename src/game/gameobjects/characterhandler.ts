@@ -97,7 +97,7 @@ export default class CharacterHandler extends GameObject {
         //Sort characters by their grid x-pos or grid y-pos.
         charactersTagged.sort((a, b) => 
             a.character.gpos.x - b.character.gpos.x || 
-            a.character.gpos.y - b.character.gpos.y);
+            b.character.gpos.y - a.character.gpos.y);
         
         //Move characters by positional order
         charactersTagged.forEach(ct => {

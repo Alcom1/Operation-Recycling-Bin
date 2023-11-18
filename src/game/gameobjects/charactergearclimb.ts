@@ -114,15 +114,17 @@ export default class CharacterGearClimb extends CharacterGear {
         
                     // Moving up
                     case -1 : 
-                        //Forward ledge, go forward
-                        if(!this.isColFace && this.isColLand) {
+                        //Forward ledge, go forward, but don't climb each other
+                        if(!this.isColFace && this.isColLand &&
+                            !proxs.some(p => p.y == 2 && Math.sign(p.x) == this.move.x)) {
 
                             this.vertCount = 0;
                             this.move.y = 0;
                             this.setStateIndex(GearState.NORMAL);
                         }
-                        //Rear ledge, go backwards
-                        else if(!this.isColBack && this.isColBand) {
+                        //Rear ledge, go backwards, but don't climb each other
+                        else if(!this.isColBack && this.isColBand &&
+                            !proxs.some(p => p.y == 2 && Math.sign(p.x) == -this.move.x)) {
 
                             this.vertCount = 0;
                             this.move.y = 0;
@@ -134,7 +136,7 @@ export default class CharacterGearClimb extends CharacterGear {
 
                             this.vertCount = 0;
                             this.reverse();
-                            this.handleStandardStep();
+                            this.setStateIndex(GearState.WAIT);
                         }
                         break;
                 }
@@ -147,18 +149,32 @@ export default class CharacterGearClimb extends CharacterGear {
 
             //Currently waiting. Go up if not blocked, do standard check otherwise
             case GearState.WAIT :
-                if(!this.isColRoof) {
+
+                //Move down if there is no floor
+                if(!this.isColFlor) {
+                    this.move.y = 1;
+                    this.setStateIndex(GearState.NORMAL);
+                }
+                //Move up if there is no ceiling
+                else if(!this.isColRoof) {
                     this.move.y = -1;
                     this.setStateIndex(GearState.NORMAL);
                 }
+                //Move back if there is no wall behind
                 else if(!this.isColBack) {
-
                     this.move.y = 0;
                     this.setStateIndex(GearState.NORMAL);
                     this.reverse();
                 }
+                //Move forward if there is floor
+                else if(!this.isColFace) {
+                    this.move.y = 0;
+                    this.setStateIndex(GearState.NORMAL);
+                }
+                //Completely boxed in, just stop
                 else {
-                    this.handleStandardStep();
+                    this.move.y = 0;
+                    this.setStateIndex(GearState.STOP);
                 }
                 break;
         }

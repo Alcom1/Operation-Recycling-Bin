@@ -102,7 +102,10 @@ export default class ZIndexHandler extends GameObject {
                 c.pos.x,
                 c.pos.x + c.size.x,
                 o.pos.x,
-                o.pos.x + o.size.x + (c.flat && o.glide ? 1 : 0)); //Gliders roll over studs
+                o.pos.x + o.size.x + (
+                    c.flat && 
+                    o.glide && 
+                    c.pos.y + c.size.y == o.pos.y + o.size.y ? 1 : 0)); //Gliders roll over studs beneath
 
             let distance = gap1D(
                 o.pos.y,
