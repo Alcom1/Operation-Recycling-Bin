@@ -58,6 +58,8 @@ export default class ZIndexHandler extends GameObject {
             z.pos = this.getTrueZpos(z.gameObject.zpos, z.flat);
             z.state = z.gameObject.zState;
             z.layer = z.gameObject.zLayer;
+            z.size = this.getTrueZsize(z.gameObject.zSize);
+            z.glide = z.gameObject.zGlide;
         });
         
         //Compare z-points and get the edges between them
@@ -100,7 +102,7 @@ export default class ZIndexHandler extends GameObject {
                 c.pos.x,
                 c.pos.x + c.size.x,
                 o.pos.x,
-                o.pos.x + o.size.x + (c.flat && o.glide ? 1 : 0));  //Gliders roll over studs
+                o.pos.x + o.size.x + (c.flat && o.glide ? 1 : 0)); //Gliders roll over studs
 
             let distance = gap1D(
                 o.pos.y,

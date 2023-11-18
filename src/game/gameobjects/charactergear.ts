@@ -25,7 +25,7 @@ export default class CharacterGear extends Character {
     protected get isColBand() : boolean { return !!(this.storedCbm & ring.band); }  // Collision front-rear corner
     protected get isColHang() : boolean { return !!(this.storedCbm & ring.hang); }  // Collision distant front-low
 
-    public get zGlide() : Boolean { return true; }
+    public get zGlide() : Boolean { return this.move.y == 0 }
 
     /** Get colliders */
     public getColliders() : Collider[] {
@@ -77,7 +77,7 @@ export default class CharacterGear extends Character {
     /** */
     public handleStep() {
 
-        if(this.stateIndex == 0) {
+        if(this.stateIndex == GearState.NORMAL) {
             this.moveAll(this.move);
         }
     }

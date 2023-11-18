@@ -49,10 +49,16 @@ export default class Character extends GameObject {
         this.animations.forEach(s => s.zIndex = value);
     }
     public get zpos() : Vect { 
-        return this.gpos.getAdd({ x : -1, y : 1 - this.height});
+        return this.gpos.getAdd({ 
+            x : -1, 
+            y : 1 - this.height + (this.spos.y < 0 ? -1 : 0)
+        });
     }
-    public get zSize() : Point { 
-        return {x : 2, y : this.height}; 
+    public get zSize() : Point {
+        return {
+            x : 2, 
+            y : this.height + (this.spos.y != 0 ? 1 : 0)
+        }; 
     }
 
     /** Constructor */
