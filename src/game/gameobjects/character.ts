@@ -56,7 +56,7 @@ export default class Character extends GameObject {
     }
     public get zSize() : Point {
         return {
-            x : 2, 
+            x : 2 + (this.isGlide && this.stateIndex == 0 && this.move.y == 0 && this.move.x == 1 ? 1 : 0), //Wow!
             y : this.height + (this.spos.y != 0 ? 1 : 0)
         }; 
     }

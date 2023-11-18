@@ -8,7 +8,6 @@ interface ZPoint {
     size : Point,
     flat : Boolean,
     state : Boolean,
-    glide : Boolean,
     layer : Number,
     noCompare : Boolean
 }
@@ -35,7 +34,6 @@ export default class ZIndexHandler extends GameObject {
                     size : this.getTrueZsize(o.zSize),
                     flat : o.zSize.y == 0,
                     state : o.zState,
-                    glide : o.zGlide,
                     layer : o.zLayer,
                     noCompare : o.zNoCompare
                 }));
@@ -59,7 +57,6 @@ export default class ZIndexHandler extends GameObject {
             z.state = z.gameObject.zState;
             z.layer = z.gameObject.zLayer;
             z.size = this.getTrueZsize(z.gameObject.zSize);
-            z.glide = z.gameObject.zGlide;
         });
         
         //Compare z-points and get the edges between them
@@ -102,10 +99,7 @@ export default class ZIndexHandler extends GameObject {
                 c.pos.x,
                 c.pos.x + c.size.x,
                 o.pos.x,
-                o.pos.x + o.size.x + (
-                    c.flat && 
-                    o.glide && 
-                    c.pos.y + c.size.y == o.pos.y + o.size.y ? 1 : 0)); //Gliders roll over studs beneath
+                o.pos.x + o.size.x);
 
             let distance = gap1D(
                 o.pos.y,
@@ -145,7 +139,6 @@ export default class ZIndexHandler extends GameObject {
                 isAhead &&                  //Other object is ahead
                 isAlign &&                  //Other object is vertically aligned
                 distance <= 1 &&            //Other object is close
-                !(c.glide && o.flat) &&     //Gliders roll over studs
                 !(o.flat && distance < 0)); //Overlapping with flat objects does not mean they're in front.
         }));
 
