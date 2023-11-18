@@ -150,6 +150,12 @@ export default class CharacterGearClimb extends CharacterGear {
                     this.move.y = -1;
                     this.setStateIndex(GearState.NORMAL);
                 }
+                else if(!this.isColBack) {
+
+                    this.move.y = 0;
+                    this.setStateIndex(GearState.NORMAL);
+                    this.reverse();
+                }
                 else {
                     this.handleStandardStep();
                 }
@@ -181,8 +187,7 @@ export default class CharacterGearClimb extends CharacterGear {
         else if(!this.isColBack) {
 
             this.move.y = 0;
-            this.setStateIndex(GearState.NORMAL);   //This should also go to WAIT, I think
-            this.reverse();
+            this.setStateIndex(GearState.WAIT);
         }
         //Completely boxed in, just stop
         else {
