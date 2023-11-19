@@ -1,35 +1,57 @@
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
-import { colorTranslate, getZIndex, GMULTX, GMULTY, MOBILE_PREVIEW_MAX, UNDER_CURSOR_Z_INDEX, Z_DEPTH } from "engine/utilities/math";
-import Vect from "engine/utilities/vect";
+import { colorTranslate, GMULTX, GMULTY, MOBILE_PREVIEW_MAX, Z_DEPTH } from "engine/utilities/math";
+import Vect, { Point } from "engine/utilities/vect";
 
+/** Stud parameters */
 interface StudParams extends GameObjectParams {
     color?: string;
 }
 
-/** Series of studs for a brick */
+/** Pair of studs for a brick */
 export default class Stud extends GameObject {
-    color: string;
 
-    image : HTMLImageElement;
+    private color: string;                              // Stud color
+    private image : HTMLImageElement;                   // Image of a pair of studs
+    private isPressed : boolean = false;                // Brick is pressed
+    private isSelected : boolean = false;               // Brick is selected
+    private isSnapped : boolean = false;                // Brick is snapped
+    public isVisible : boolean = true;                  // Stud is visible and should be drawn
+    public mobilePreviewSize : Vect = new Vect(0, 0);   // Size for mobile preview
+    private isMobileFlipped : boolean = false;          // flipped state for mobile preview
 
-    private isPressed : boolean = false;
-    private isSelected : boolean = false;
-    private isSnapped : boolean = false;
-    public isVisible : boolean = true;
-    public mobilePreviewSize : Vect = new Vect(0, 0);
-    private isMobileFlipped : boolean = false;
+    /** z-index get/setters */
+    public get zIndex() : number { return super.zIndex; }
+    public set zIndex(value : number) { 
+        super.zIndex = value + (this.isSelected && !this.isSnapped ? 2000 : 0);
+    }
+    public get zpos() : Vect { 
+        return (
+            this.isSelected ?
+            this.gpos.getAdd({
+                x : Math.floor(this.spos.x / GMULTX),
+                y : Math.floor(this.spos.y / GMULTY),
+            }) :
+            super.zpos); 
+    }
+    public get zState() : Boolean { return super.zState && this.isVisible }
+    public get zSize() : Point { return { x : 1, y : 0}; }
+    public get zLayer() : Number { return this.isSelected && !this.isSnapped ? 1 : 0 }
 
+    /** Constructor */
     constructor(params: StudParams) {
         super(params);
+
+        this.tags = ["Stud"];
 
         this.color = colorTranslate(params.color);
 
         this.image = this.engine.library.getImage(`stud_${this.color.replace("#", "").toLowerCase()}`);
     }
 
+    /** Draw studs */
     public draw(ctx: CanvasRenderingContext2D): void {
 
-        if(this.isVisible) {
+        if (this.isVisible) {
             
             // Global transparency for selection states
             ctx.globalAlpha =
@@ -42,7 +64,8 @@ export default class Stud extends GameObject {
             ctx.drawImage(this.image, Z_DEPTH - 13, 0);
         }
     }    
-    
+
+    /** Draw mobile preview */
     public superDraw(ctx: CanvasRenderingContext2D): void {
 
         if (this.engine.mouse.getMouseType() == "mouse" ||
@@ -56,30 +79,8 @@ export default class Stud extends GameObject {
             Z_DEPTH - 13.5, 
             - GMULTY * (
                 this.isMobileFlipped ? 
-                -this.mobilePreviewSize.y - 3.2 :
+               -this.mobilePreviewSize.y - 3.2 :
                 this.mobilePreviewSize.y + 3.5 ));
-    }
-
-    /** Get z-index for draw sorting */
-    public getGOZIndex() : number {
-
-        // Set z-index to draw this brick in its snapped position
-        if(this.isSnapped) {
-            return getZIndex(
-                this.gpos.getAdd({
-                    x : Math.round(this.spos.x / GMULTX),
-                    y : Math.round(this.spos.y / GMULTY)
-                }),
-                1);
-        }        
-        // Set z-index to draw this brick under the cursor
-        if(this.isSelected) {
-            return UNDER_CURSOR_Z_INDEX;
-        }
-        //Normal z-index
-        else {
-            return getZIndex(this.gpos, 1);
-        }
     }
 
     /** Set this stud's snap state */
@@ -93,7 +94,7 @@ export default class Stud extends GameObject {
         this.isPressed = true;
     }
 
-    /** Setup this stud for selecting */ 
+    /** Setup this stud for selecting */
     public select(): void {
         this.isSelected = true;
     }

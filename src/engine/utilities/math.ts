@@ -8,8 +8,6 @@ export const PATH_IMG = "assets/img/";
 export const GMULTX = 30;
 /** Vertical multiplier for grid positions */
 export const GMULTY = 36;
-/** Z-index to place objects beneath the cursor */
-export const UNDER_CURSOR_Z_INDEX = 1000;
 /** Distance to draw depth */
 export const Z_DEPTH = 22;
 /** Width of the sidepanel UI */
@@ -18,6 +16,18 @@ export const WIDTH_SIDEPANEL = 234;
 export const OPPOSITE_DIRS = [-1, 1] as (-1 | 1)[];
 /** Maximum size of a mobile preview */
 export const MOBILE_PREVIEW_MAX = new Vect(6, 3);
+
+/** Faction reference enum */
+export const enum Faction {
+    FRIENDLY,
+    NEUTRAL,
+    HOSTILE
+}
+
+/** Returns true if factions are not opposing */
+export function MatchFactions(a : Faction, b : Faction) : boolean {
+    return Math.abs(b - a) < 2;
+}
 
 /** Environment boundary */
 export const BOUNDARY = Object.freeze({
@@ -43,15 +53,38 @@ export const MASKS = Object.freeze({
     enemy: 0b100000000,
 })
 
+// 4x4 Collision bitmasks
+// 0123
+// 4  5
+// 6  7
+// 89AB
+export const RING_BITSTACK = Object.freeze({
+    flor : bitStack(9, 10),
+    roof : bitStack(1, 2),
+    face : bitStack(5, 7),
+    back : bitStack(4, 6),
+    land : bitStack(11),
+    band : bitStack(8)
+});
+
+// 4x5 Collision bitmask with an extra overhang
+// 0123
+// 4  5
+// 6  7
+// 89ABC
+export const RING_BITSTACKB = Object.freeze({
+    ...RING_BITSTACK,
+    hang : RING_BITSTACK.land + bitStack(12)
+});
+
 /** Handles file extension - image */
 export function pathImg(fileName : string, extension?: string) {
 
-    return `${PATH_IMG}${fileName}.${extension ?? "png"}`;    //Default to png
+    return `${PATH_IMG}${fileName}.${extension ?? "png"}`;    // Default to png
 }
 
 /** Constrain value between min and max (inclusive) */
 export function clamp(val: number, min: number, max: number): number {
-
     return Math.max(min, Math.min(max, val));
 }
 
@@ -65,8 +98,13 @@ export function floor(val: number, target: number): number {
     return Math.floor(val / target) * target;
 }
 
+/** Zipper an integer (0, 1, 2, 3) => (-1, 1, -2, 2) or 0 if negative */
+export function zip(val: number) {
+    return val >= 0 ? OPPOSITE_DIRS[val % 2] * Math.ceil((val + 1) / 2) : 0
+}
+
 /** Stack an array of integers into a bitmask */
-export function bitStack(numbers: number[]): number {
+export function bitStack(...numbers: number[]): number {
 
     var ret = 0;
     numbers.forEach(n => ret += 1 << n);
@@ -150,9 +188,9 @@ export function colPointRectGrid(px: number, py: number, rx: number, ry: number,
 /** Point-parallelogram (Horizontal) collision */
 export function colPointParH(px: number, py: number, rx: number, ry: number, rw: number, rh: number): boolean {
     return (
-        px >= rx      - py + ry &&  //Horizontal tilt
+        px >= rx      - py + ry &&  // Horizontal tilt
         py >= ry                &&
-        px <  rx + rw - py + ry &&  //Horizontal tilt
+        px <  rx + rw - py + ry &&  // Horizontal tilt
         py <  ry + rh
     );
 }
@@ -160,12 +198,12 @@ export function colPointParH(px: number, py: number, rx: number, ry: number, rw:
 /** Point-parallelogram (Horizontal) collision but with grid coordinates */
 export function colPointParHGrid(px: number, py: number, rx: number, ry: number, rw: number): boolean {
     return colPointParH(
-        px,                     //Point-X
-        py,                     //Point-y
-        rx * GMULTX + Z_DEPTH,  //Para-x
-        ry * GMULTY - Z_DEPTH,  //Para-y
-        rw * GMULTX,            //Para-width
-        Z_DEPTH                 //Para-height
+        px,                     // Point-X
+        py,                     // Point-y
+        rx * GMULTX + Z_DEPTH,  // Para-x
+        ry * GMULTY - Z_DEPTH,  // Para-y
+        rw * GMULTX,            // Para-width
+        Z_DEPTH                 // Para-height
     );
 }
 
@@ -197,14 +235,14 @@ export function col1D(a1: number, a2: number, b1: number, b2: number): boolean {
     return a2 > b1 && a1 < b2;
 }
 
-/** Calculate the desire z-index of an object based on a position **/
-export function getZIndex(gpos: Vect, modifier : number = 0) {
-    // Z-sort vertically and then horizontally.
-    return (
-        gpos.x * 10 -
-        gpos.y * 100 +
-        modifier);
+/** 1-dimensional check to measure vertical overlap */
+export function gap1D(a1: number, a2: number, b1: number, b2: number): number {
+    // Return gap size between two ranges (negative if overlap)
+    if(a1 > a2) { [a1, a2] = [a2, a1] };    //Fix order for proper +/-
+    if(b1 > b2) { [b1, b2] = [b2, b1] };    //Fix order for proper +/-
+    return Math.abs(b1 - a2) < Math.abs(a1 - b2) ? (b1 - a2) : (a1 - b2);
 }
+
 
 /** Translate text colors to custom values */
 export function colorTranslate(color?: string): string {

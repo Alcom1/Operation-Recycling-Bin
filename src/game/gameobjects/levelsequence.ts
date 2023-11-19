@@ -1,6 +1,7 @@
-import ZGameObject, { ZGameObjectParams } from "./zgameobject";
+import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 
-interface LevelSequenceParams extends ZGameObjectParams {
+/** Parameters for a level sequence */
+interface LevelSequenceParams extends GameObjectParams {
     font?: string;
     color?: string;
     levelName: string;
@@ -8,18 +9,28 @@ interface LevelSequenceParams extends ZGameObjectParams {
     par: number;
 }
 
-export default class LevelSequence extends ZGameObject {
+/** */
+export default class LevelSequence extends GameObject {
+
+    /** Level name display font */
     private font: string;
+    /** Level name display color */
     private color: string;
+    /** Level name */
     private levelName: string;
+
+    /** Publicly exposed level names for next & prev */
     public levels: {
         /** Level label */
         label: string;
         /** Level name */
         level: string;
     }[];
+
+    /** Publically exposed par for counter */
     public par: number;
 
+    /** Constructor */
     constructor(params: LevelSequenceParams) {
         super(params);
 
@@ -27,7 +38,7 @@ export default class LevelSequence extends ZGameObject {
         this.color = params.color || "white";
         this.levelName = params.levelName;
 
-        //Map levels to array of name-level objects
+        // Map levels to array of name-level objects
         this.levels = Object.entries(params.levels ?? {}).map(l => ({
             label : l[0],
             level : l[1]
@@ -36,6 +47,7 @@ export default class LevelSequence extends ZGameObject {
         this.par = params.par;
     }
 
+    /** Draw the level name */
     public draw(ctx: CanvasRenderingContext2D) {
 
         ctx.textBaseline = "top";

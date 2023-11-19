@@ -11,8 +11,8 @@ export default class LibraryModule {
         const curr = this.assetsImage.get(name);
 
         return curr == null ? 
-            this.storeImage(name, pathImg(name, extension)) :   //If the asset isn't in the library, add it
-            curr;                                               //Otherwise, return existing asset
+            this.storeImage(name, pathImg(name, extension)) :   // If the asset isn't in the library, add it
+            curr;                                               // Otherwise, return existing asset
     }
 
     /** Get an image asset from a full src, store it if it's new. */
@@ -21,15 +21,14 @@ export default class LibraryModule {
         const curr = this.assetsImage.get(name);
 
         return curr == null ? 
-            this.storeImage(name, src) :                        //If the asset isn't in the library, add it
-            curr;                                               //Otherwise, return existing asset
+            this.storeImage(name, src) :                        // If the asset isn't in the library, add it
+            curr;                                               // Otherwise, return existing asset
     }
-
     private storeImage(name : string, src : string) {
 
         this.loadingCount++;
         
-        //Create, store, and return new image
+        // Create, store, and return new image
         const image = new Image();
         image.src = src;
         image.onload = e => this.loadingCount--;
@@ -40,7 +39,7 @@ export default class LibraryModule {
     /** Return true if all assets are loaded */
     public getLoaded() {
 
-        //Return if there's no more images that need loading
+        // Return if there's no more images that need loading
         return this.loadingCount <= 0;
     }
 }

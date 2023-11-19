@@ -4,9 +4,9 @@ export default class BakerModule {
     private ctx: CanvasRenderingContext2D;
     private images: Record<string, string>;
 
-    /**
+    /** 
      * @param element HTML canvas element
-     */
+    */
     constructor(element: HTMLCanvasElement) {
         // Canvas
         this.canvas = element;
@@ -20,10 +20,10 @@ export default class BakerModule {
         this.images = {};
     }
 
-    /**
+    /** 
      * Bake an image and return its data using the canvas
      * @returns Generated image data, or cached image data if in cache
-     */
+    */
     bake(
         render: (ctx: CanvasRenderingContext2D) => void,
         width?: number,

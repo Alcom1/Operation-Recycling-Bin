@@ -3,6 +3,7 @@ import Vect, { Point } from "engine/utilities/vect";
 import Brick, { BrickParams } from "./brick";
 import Stud from "./stud";
 
+/** Ordinary brick with studs */
 export default class BrickNormal extends Brick {
 
     /** The stud objects for this brick */
@@ -19,6 +20,7 @@ export default class BrickNormal extends Brick {
         ["h", true]
     ]);
 
+    /** Constructor */
     constructor(params: BrickParams) {
         super(params);
 
@@ -41,9 +43,9 @@ export default class BrickNormal extends Brick {
             this.parent.pushGO(stud);
         }
         
-        //Get image for each brick sprite key
+        // Get image for each brick sprite key
         this.brickSpriteKeys.forEach((needsGrey, spriteKey) => {
-            if(!needsGrey || this.isGrey) { //Check if the key is grey-brick exclusive
+            if (!needsGrey || this.isGrey) {    // Check if the key is grey-brick exclusive
                 this.brickSprites.set(
                     spriteKey, 
                     this.engine.library.getImage(`brick_${spriteKey}_${this.color.replace("#", "").toLowerCase()}`));
@@ -67,7 +69,7 @@ export default class BrickNormal extends Brick {
                 imageName));
     }
     
-    // Setup this brick for pressing
+    /** Setup this brick for pressing */
     public press(): void {
         super.press();
 
@@ -104,17 +106,19 @@ export default class BrickNormal extends Brick {
     public snap(state: boolean): void {
         super.snap(state);
 
-        //Also snap the studs, of course.
+        // Also snap the studs, of course.
         this.studs.forEach(s => s.snap(state));
     }
 
     /** Hide this brick's studs based on a given above row */
     public hideStuds(rowBricks: Brick[]) {
 
+        // For each stud
         this.studs.forEach(s => {
 
-            s.isVisible = true;
+            s.isVisible = true;             // Default to visible
 
+            // For each brick in the above row
             for (const brick of rowBricks) {
                 
                 if (!brick.isSelected &&    // Don't cull based on selected bricks
@@ -126,7 +130,7 @@ export default class BrickNormal extends Brick {
                         s.gpos.x
                     )) {
 
-                    s.isVisible = false;
+                    s.isVisible = false;    // Hide this stud if it's overlapped
                     break;                  // Stop all checks once the stud is hidden
                 }
             }
@@ -142,6 +146,7 @@ export default class BrickNormal extends Brick {
     /** Reset studs to match the position of this brick */
     private resetStuds(isDeselect : boolean): void {
 
+        // For each stud with index
         for (const [idx, stud] of this.studs.entries()) {
 
             // Set stud global pos to match this brick
@@ -149,7 +154,7 @@ export default class BrickNormal extends Brick {
             // Set stud sub pos to match this brick
             stud.spos.set(this.spos);
             // Deselect this stud
-            if(isDeselect) {
+            if (isDeselect) {
                 stud.deselect();
             }
         }
@@ -157,6 +162,7 @@ export default class BrickNormal extends Brick {
 
     /** Set the minimum and maximum carry positions of this brick */
     public setMinMax(min: Vect, max: Vect): void {
+
         super.setMinMax(min, max);
 
         this.studs.forEach(s => s.mobilePreviewSize = this.mobilePreviewSize);
@@ -164,6 +170,7 @@ export default class BrickNormal extends Brick {
 
     /** Set the flipped state for the mobile preview */
     public flipMobile(isFlipped : boolean) {
+        
         super.flipMobile(isFlipped);
 
         this.studs.forEach(s => s.flipMobile(isFlipped));
@@ -174,17 +181,17 @@ export default class BrickNormal extends Brick {
 
         ctx.save();
 
-        //Draw left side
+        // Draw left side
         ctx.drawImage(this.brickSprites.get("l")!!, 0, 0);
         ctx.translate(30, 0);
 
-        //Draw middle segments
+        // Draw middle segments
         for (let j = 1; j < this.width; j++) {
             ctx.drawImage(this.brickSprites.get("m")!!, 0, 0);
             ctx.translate(30, 0);
         }
 
-        //Draw right side
+        // Draw right side
         ctx.drawImage(this.brickSprites.get("r")!!, 0, 0);
         ctx.restore();
 
