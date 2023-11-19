@@ -1,6 +1,7 @@
 import GameObject, { Collision } from "engine/gameobjects/gameobject";
 import { RING_BITSTACK as gcb, MASKS, zip } from "engine/utilities/math";
 import { Point } from "engine/utilities/vect";
+import Anim, { AnimationParams } from "./anim";
 import { CharacterParams } from "./character";
 import CharacterGear, { GearState } from "./charactergear";
 
@@ -38,6 +39,7 @@ export default class CharacterGearClimb extends CharacterGear {
     
     private vertMax :   number = 3;                 // Maximum vertical climb height
     private vertCount : number = 0;                 // Vertical climb tracker
+    private burstAnim : Anim;
     
     protected get animationSubindex() : number {    // Include up & down animations (reminder : animation arrays are zippered)
 
@@ -61,6 +63,21 @@ export default class CharacterGearClimb extends CharacterGear {
     /** Constructor */
     constructor(params: CharacterParams) {
         super(Object.assign(params, CharacterGearClimbOverride));
+
+        this.burstAnim = this.parent.pushGO(new Anim({
+            ...params,
+            images : [{ name : "char_rbc_burst" }], // Single hotplate animation image
+            speed : 3,                              // Hotplate animation is weirdly fast
+            frameCount : 6,
+            zIndex : 50000
+        } as AnimationParams)) as Anim;
+    }
+
+    /** Update this character */
+    public update(dt: number) {
+        super.update(dt);
+
+        this.burstAnim.spos = this.spos.getAdd({x : -25, y : 16});
     }
 
     /** Update position to move forward */
@@ -90,6 +107,9 @@ export default class CharacterGearClimb extends CharacterGear {
                 this.vertCount ++;
                 break;
         }
+
+        //Update burst animation
+        this.burstAnim.reset(this.gpos);
     }    
     
     /** */
@@ -130,7 +150,7 @@ export default class CharacterGearClimb extends CharacterGear {
                             this.reverse();
                         }
                         //Height limit or blocked, stop climbing
-                        else if(this.isColRoof || this.vertCount >= 3) {
+                        else if(this.isColRoof || this.vertCount >= this.vertMax) {
 
                             this.vertCount = 0;
                             this.reverse();
