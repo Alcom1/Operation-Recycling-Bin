@@ -16,10 +16,9 @@ const CharacterGearGroundOverride = Object.freeze({
         animsCount : 1
     },
     isGlide : true,
-    animsMisc : [
-        {
+    animsMisc : [{
             speed : 5.0,
-            images : [{ name : "char_rbg_wait", offsetX : 0 }],
+            images : [{ name : "char_rbg_stop", offsetX : 0 }],
             frameCount : 2,
             gposOffset : { x : -3, y : 0}
         },{

@@ -22,9 +22,7 @@ const CharacterGearClimbOverride = Object.freeze({
     // Misc animation parameters
     animsMisc : [{
         speed : 3.0,
-        images : [
-            { name : "char_rbc_left", offsetX : 0 },
-            { name : "char_rbc_right", offsetX : 0}],
+        images : [{ name : "char_rbc_stop", offsetX : 0 }],
         frameCount : 2,
         gposOffset : { x : -3, y : 0}
     },{
