@@ -1,5 +1,5 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
-import {colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX, getZIndex, MOBILE_PREVIEW_MAX} from "../../engine/utilities/math.js";
+import {colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, MOBILE_PREVIEW_MAX} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
 export default class Brick extends GameObject {
   constructor(params) {
@@ -12,15 +12,45 @@ export default class Brick extends GameObject {
     this.selectedPos = new Vect(0, 0);
     this.isGrounded = false;
     this.isChecked = false;
-    this.pressure = 0;
     this.minCarry = new Vect(0, 0);
     this.maxCarry = new Vect(0, 0);
     this.mobilePreviewSize = new Vect(0, 0);
     this.isMobileFlipped = false;
+    this._isBlock = false;
+    this._isGlide = false;
     this.color = colorTranslate(params.color);
-    this.isGrey = !params.color;
+    this._isGrey = !params.color;
+    this._isBlock = params.block ?? false;
+    this._isGlide = params.glide ?? false;
     this.tags.push("Brick");
     this.width = params.width || 1;
+  }
+  get isGrey() {
+    return this._isGrey;
+  }
+  get isBlock() {
+    return this._isBlock;
+  }
+  get isGlide() {
+    return this._isGlide;
+  }
+  get zIndex() {
+    return super.zIndex;
+  }
+  set zIndex(value) {
+    super.zIndex = value + (this.isSelected && !this.isSnapped ? 2e3 : 0);
+  }
+  get zpos() {
+    return this.isSelected ? this.gpos.getAdd({
+      x: Math.floor(this.spos.x / GMULTX),
+      y: Math.floor(this.spos.y / GMULTY)
+    }) : super.zpos;
+  }
+  get zSize() {
+    return {x: this.width, y: 1};
+  }
+  get zLayer() {
+    return this.isSelected && !this.isSnapped ? 1 : 0;
   }
   update(dt) {
     if (this.isSelected) {
@@ -36,19 +66,6 @@ export default class Brick extends GameObject {
       return;
     }
     ctx.drawImage(this.image, 0, -Z_DEPTH - 3 - GMULTY * (this.isMobileFlipped ? -this.mobilePreviewSize.y - 3.2 : this.mobilePreviewSize.y + 3.5));
-  }
-  getGOZIndex() {
-    if (this.isSnapped) {
-      return getZIndex(this.gpos.getAdd({
-        x: Math.round(this.spos.x / GMULTX),
-        y: Math.round(this.spos.y / GMULTY)
-      }), this.width * 10);
-    }
-    if (this.isSelected) {
-      return UNDER_CURSOR_Z_INDEX;
-    } else {
-      return getZIndex(this.gpos, this.width * 10);
-    }
   }
   press() {
     if (!this.isStatic) {

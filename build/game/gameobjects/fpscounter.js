@@ -7,7 +7,15 @@ export default class FPSCounter extends GameObject {
     this.color = params.color || "white";
   }
   update(dt) {
-    this.text = "fps: " + (1 / dt).toFixed(1);
+    let fps = (1 / dt).toFixed(1);
+    this.text = "fps:" + this.getSpaces(6 - fps.length) + fps;
+  }
+  getSpaces(count) {
+    var ret = "";
+    for (let i = 0; i < count; i++) {
+      ret += " ";
+    }
+    return ret;
   }
   draw(ctx) {
     ctx.textBaseline = "top";

@@ -1,5 +1,5 @@
-import ZGameObject from "./zgameobject.js";
-export default class LevelSequence extends ZGameObject {
+import GameObject from "../../engine/gameobjects/gameobject.js";
+export default class LevelSequence extends GameObject {
   constructor(params) {
     super(params);
     this.font = params.font || "24px Font04b_08";

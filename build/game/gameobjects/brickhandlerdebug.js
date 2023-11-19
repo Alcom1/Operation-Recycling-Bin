@@ -1,4 +1,4 @@
-import {GMULTX, GMULTY} from "../../engine/utilities/math.js";
+import {col1D, GMULTX, GMULTY} from "../../engine/utilities/math.js";
 import BrickHandler from "./brickhandler.js";
 export default class BrickHandlerDebug extends BrickHandler {
   constructor(params) {
@@ -26,6 +26,35 @@ export default class BrickHandlerDebug extends BrickHandler {
       });
     }
     return super.checkCollisionRange(pos, dir, start, final, height, width);
+  }
+  checkCollisionRing(pos, size, dir = 1, overhang = true) {
+    let collisions = 0;
+    let count = 0;
+    let row = [];
+    for (let j = pos.y; j < pos.y + size; j++) {
+      row = this.bricks.filter((b) => b.gpos.y == j && !b.isSelected) || [];
+      for (let i = pos.x; i < pos.x + size; i += j > pos.y && j < pos.y + size - 1 ? size - 1 : 1) {
+        let check = dir > 0 ? i : 2 * pos.x - i + size - 1;
+        this.debugPoints.push({x: check, y: j, opacity: 1});
+        row.forEach((brick2) => {
+          if (col1D(brick2.gpos.x - 1, brick2.gpos.x + brick2.width, check, check)) {
+            collisions += 1 << count;
+          }
+        });
+        count++;
+      }
+    }
+    if (overhang) {
+      let check = dir > 0 ? pos.x + size : pos.x - 1;
+      this.debugPoints.push({x: check, y: pos.y + size - 1, opacity: 1});
+      row.forEach((brick2) => {
+        if (col1D(brick2.gpos.x - 1, brick2.gpos.x + brick2.width, check, check)) {
+          collisions += 1 << count;
+        }
+      });
+      count++;
+    }
+    return collisions;
   }
 }
 //# sourceMappingURL=brickhandlerdebug.js.map

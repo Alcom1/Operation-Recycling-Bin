@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["C:\\Users\\Alcom\\Desktop\\Dev\\Git\\Operation Recycling Bin\\src\\game\\gameobjects\\brickphantom.ts"],
+  "sourcesContent": ["import { GMULTX, GMULTY, Z_DEPTH } from \"engine/utilities/math\";\r\nimport Brick, { BrickParams } from \"./brick\";\r\n\r\n/** Ordinary brick with studs */\r\nexport default class BrickPhantom extends Brick {\r\n\r\n    /** Constructor */\r\n    constructor(params: BrickParams) {\r\n        super({...params, block : true});\r\n\r\n        this.tags.push(\"BrickPhantom\");\r\n    }\r\n\r\n    draw(ctx : CanvasRenderingContext2D) {\r\n\r\n        if(this.isDebug) {\r\n            ctx.fillStyle = \"#0008\";\r\n            ctx.fillRect(4 + Z_DEPTH, 4 - Z_DEPTH, GMULTX * this.width - 8, GMULTY - 8);\r\n        }\r\n    }\r\n}"],
+  "mappings": "AAAA;AACA;AADA,0CAI0C;AAAA,EAGtC,YAAY;AACR,UAAM,IAAI,QAAQ,OAAQ;AAE1B,SAAK,KAAK,KAAK;AAAA;AAAA,EAGnB;AAEI,QAAG,KAAK;AACJ,UAAI,YAAY;AAChB,UAAI,SAAS,IAAI,SAAS,IAAI,SAAS,SAAS,KAAK,QAAQ,GAAG,SAAS;AAAA;AAAA;AAAA;",
+  "names": []
+}

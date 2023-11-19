@@ -1,10 +1,10 @@
 import {MASKS} from "../../engine/utilities/math.js";
-import BrickPlateTop from "./brickplatetop.js";
+import BrickTileTop from "./bricktiletop.js";
 const brickSuperOverride = Object.freeze({
   images: ["brick_super_off", "brick_super"],
   imageTop: "brick_super_top"
 });
-export default class BrickSuper extends BrickPlateTop {
+export default class BrickSuper extends BrickTileTop {
   constructor(params) {
     super(Object.assign(params, brickSuperOverride));
   }

@@ -1,126 +1,143 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
-import {GMULTX, GMULTY} from "../../engine/utilities/math.js";
+import {Faction, GMULTX, GMULTY} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
-import Animat from "./animation.js";
+import Anim from "./anim.js";
+import BrickPhantom from "./brickphantom.js";
 export default class Character extends GameObject {
   constructor(params) {
     super(params);
-    this.underBricks = [];
-    this.animatGroupsIndex = 0;
-    this.animatGroups = [[]];
+    this.animations = [];
+    this.stateIndex = 0;
+    this.bricks = [];
+    this._faction = this.faction == Faction.FRIENDLY ? Faction.FRIENDLY : Faction.HOSTILE;
     this.tags.push("Character");
-    this.speed = params.speed ?? 1;
-    this.move = new Vect(params.isForward ?? true ? 1 : -1, 0);
+    this._speed = params.speed ?? 1;
+    this._move = new Vect(params.isForward ?? true ? 1 : -1, 0);
     this._height = params.height ?? 2;
     this.isGlide = params.isGlide ?? false;
-    this.checkCollision = true;
-    const mainZIndex = this.height * 100 - (this.isGlide ? 100 : 0);
-    for (let i = -1; i <= 1; i++) {
-      this.animatGroupCurr.push(this.parent.pushGO(new Animat({
+    this.stateAnimations = [0, ...params.stateAnimations ?? (params.animsMisc ? params.animsMisc.map((x, i) => i + 1) : [])];
+    this.animations.push(new Anim({
+      ...params,
+      ...params.animMain,
+      speed: this.isGlide ? 6 : params.speed,
+      isLoop: this.isGlide,
+      framesSize: GMULTX * 6,
+      gposOffset: {x: -3, y: 0}
+    }));
+    params.animsMisc?.forEach((m) => {
+      this.animations.push(new Anim({
         ...params,
-        isLoop: false,
-        zModifier: i < 1 ? mainZIndex : 29,
-        sliceIndex: i,
-        framesSize: GMULTX * 2,
-        gposOffset: {x: -1, y: 0}
+        speed: null,
+        ...m
+      }));
+    });
+    this.animations.forEach((a) => this.parent.pushGO(a));
+    for (let i = 0; i < this.height; i++) {
+      this.bricks.push(this.parent.pushGO(new BrickPhantom({
+        ...params,
+        faction: this.faction,
+        glide: this.isGlide,
+        width: 2,
+        position: this.gpos.getAdd({x: -1, y: -i})
       })));
     }
   }
   get height() {
     return this._height;
   }
-  get animatGroupCurr() {
-    return this.animatGroups[this.animatGroupsIndex];
+  get move() {
+    return this._move;
+  }
+  get speed() {
+    return this._speed;
+  }
+  get animationsCurr() {
+    return this.animations[this.stateAnimations[this.stateIndex]];
   }
   get isNormalMovment() {
-    return this.animatGroupsIndex == 0;
+    return this.stateIndex == 0;
   }
-  get animImageIndex() {
+  get animationSubindex() {
     return this.move.x;
+  }
+  get zIndex() {
+    return super.zIndex;
+  }
+  set zIndex(value) {
+    super.zIndex = value;
+    this.animations.forEach((s) => s.zIndex = value);
+  }
+  get zpos() {
+    return this.gpos.getAdd({
+      x: -1,
+      y: 1 - this.height + (this.spos.y < 0 ? -1 : 0)
+    });
+  }
+  get zSize() {
+    return {
+      x: 2 + (this.isGlide && this.stateIndex == 0 && this.move.y == 0 && this.move.x == 1 ? 1 : 0),
+      y: this.height + (this.spos.y != 0 ? 1 : 0)
+    };
   }
   init() {
     this.brickHandler = this.engine.tag.get("BrickHandler", "LevelInterface")[0];
-    this.setCurrentGroup();
+    this.setStateIndex();
   }
   update(dt) {
     if (this.isNormalMovment) {
-      this.handleNormalMovement(dt);
-      this.shift(true);
+      if (this.isGlide) {
+        if (this.move.y == 0) {
+          this.spos.x += this.move.x * this._speed * GMULTX * dt;
+        } else {
+          this.spos.y += this.move.y * this._speed * GMULTY * dt;
+        }
+      }
     } else {
       this.handleSpecialMovement(dt);
-      this.shift(false);
-    }
-    if (this.checkCollision) {
-      this.handleCollision();
-      this.handleBricks();
-      this.animatGroupCurr.forEach((s) => s.reset(this.gpos));
-      this.checkCollision = false;
-    }
-  }
-  shift(isCollideAfterShift) {
-    var move = {
-      x: Math.abs(this.spos.x) > GMULTX ? Math.sign(this.spos.x) : 0,
-      y: Math.abs(this.spos.y) > GMULTY ? Math.sign(this.spos.y) : 0
-    };
-    if (move.x || move.y) {
-      this.gpos.add(move);
-      this.spos.sub({
-        x: move.x * GMULTX,
-        y: move.y * GMULTY
-      });
-      this.animatGroupCurr.forEach((a) => {
-        a.gpos.add(move);
-      });
-      this.checkCollision = isCollideAfterShift;
-      this.brickHandler.isRecheck = true;
     }
     if (this.isGlide) {
-      this.animatGroupCurr.forEach((a) => {
-        a.spos = this.spos;
-      });
+      this.animationsCurr.spos = this.spos;
     }
-  }
-  handleNormalMovement(dt) {
-    this.spos.x += this.move.x * this.speed * GMULTX * dt;
   }
   handleSpecialMovement(dt) {
   }
-  handleBricks(isClear = false) {
-    this.underBricks.forEach((b) => b.pressure -= 1);
-    if (isClear) {
-      this.underBricks = [];
-    } else {
-      this.underBricks = this.brickHandler.checkCollisionRow(this.gpos.getAdd({x: -1, y: 1}), 2);
-      this.underBricks.forEach((b) => b.pressure += 1);
-    }
-  }
-  handleCollision() {
-  }
   reverse() {
-    this.move.x *= -1;
-    this.animatGroups[0].forEach((x) => x.setImageIndex(this.animImageIndex));
+    this._move.x *= -1;
+    this.animations[0].setImageIndex(this.animationSubindex);
+    this.animationsCurr.reset();
     if (this.isGlide) {
-      this.animatGroupCurr.forEach((a) => a.reset(this.gpos));
-    }
-    if (!this.isGlide) {
-      this.gpos.x += this.move.x;
+      this.animationsCurr.reset(this.gpos);
     }
   }
-  setCurrentGroup(index) {
-    index = index ?? this.animatGroupsIndex;
-    this.animatGroupsIndex = index;
-    this.animatGroups.forEach((sg, i) => sg.forEach((s) => {
-      s.isActive = i == index;
+  moveAll(offset, isAnimReset = true) {
+    this.gpos.add(offset);
+    this.bricks.forEach((b, i) => {
+      b.gpos = this.gpos.getAdd({x: -1, y: -i});
+    });
+    if (isAnimReset) {
+      this.setStateIndex();
+    }
+  }
+  setStateIndex(index) {
+    this.stateIndex = index ?? this.stateIndex;
+    this.animations.forEach((s, i) => {
+      s.isActive = i == this.stateAnimations[this.stateIndex];
       s.spos.setToZero();
       s.reset(this.gpos);
-    }));
-    this.animatGroupCurr.forEach((x) => x.setImageIndex(this.animImageIndex));
+    });
+    this.animationsCurr.setImageIndex(this.animationSubindex);
+  }
+  handleStep() {
+  }
+  handleStepUpdate(proxs) {
+  }
+  getNoPlaceZone() {
+    return [];
   }
   deactivate() {
     this.isActive = false;
-    this.animatGroups.forEach((sg) => sg.forEach((s) => s.isActive = false));
-    this.underBricks.forEach((b) => b.pressure -= 1);
-    this.underBricks = [];
+    this.animations.forEach((s) => s.isActive = false);
+    this.bricks.forEach((b) => b.isActive = false);
   }
 }
 //# sourceMappingURL=character.js.map

@@ -1,5 +1,5 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
-import {colorTranslate, getZIndex, GMULTX, GMULTY, MOBILE_PREVIEW_MAX, UNDER_CURSOR_Z_INDEX, Z_DEPTH} from "../../engine/utilities/math.js";
+import {colorTranslate, GMULTX, GMULTY, MOBILE_PREVIEW_MAX, Z_DEPTH} from "../../engine/utilities/math.js";
 import Vect from "../../engine/utilities/vect.js";
 export default class Stud extends GameObject {
   constructor(params) {
@@ -10,8 +10,30 @@ export default class Stud extends GameObject {
     this.isVisible = true;
     this.mobilePreviewSize = new Vect(0, 0);
     this.isMobileFlipped = false;
+    this.tags = ["Stud"];
     this.color = colorTranslate(params.color);
     this.image = this.engine.library.getImage(`stud_${this.color.replace("#", "").toLowerCase()}`);
+  }
+  get zIndex() {
+    return super.zIndex;
+  }
+  set zIndex(value) {
+    super.zIndex = value + (this.isSelected && !this.isSnapped ? 2e3 : 0);
+  }
+  get zpos() {
+    return this.isSelected ? this.gpos.getAdd({
+      x: Math.floor(this.spos.x / GMULTX),
+      y: Math.floor(this.spos.y / GMULTY)
+    }) : super.zpos;
+  }
+  get zState() {
+    return super.zState && this.isVisible;
+  }
+  get zSize() {
+    return {x: 1, y: 0};
+  }
+  get zLayer() {
+    return this.isSelected && !this.isSnapped ? 1 : 0;
   }
   draw(ctx) {
     if (this.isVisible) {
@@ -24,19 +46,6 @@ export default class Stud extends GameObject {
       return;
     }
     ctx.drawImage(this.image, Z_DEPTH - 13.5, -GMULTY * (this.isMobileFlipped ? -this.mobilePreviewSize.y - 3.2 : this.mobilePreviewSize.y + 3.5));
-  }
-  getGOZIndex() {
-    if (this.isSnapped) {
-      return getZIndex(this.gpos.getAdd({
-        x: Math.round(this.spos.x / GMULTX),
-        y: Math.round(this.spos.y / GMULTY)
-      }), 1);
-    }
-    if (this.isSelected) {
-      return UNDER_CURSOR_Z_INDEX;
-    } else {
-      return getZIndex(this.gpos, 1);
-    }
   }
   snap(state) {
     this.isSnapped = state;

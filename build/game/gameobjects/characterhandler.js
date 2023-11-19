@@ -1,38 +1,50 @@
 import GameObject from "../../engine/gameobjects/gameobject.js";
-import {colRectRectCorners} from "../../engine/utilities/math.js";
 export default class CharacterHandler extends GameObject {
-  init(ctx) {
-    this.characters = this.engine.tag.get(["CharacterBin", "CharacterBot"], "Level");
-    this.obstacles = this.engine.tag.get(["Brick"], "Level").filter((b) => !b.tags.includes("BrickNormal"));
+  constructor() {
+    super(...arguments);
+    this.characters = [];
+    this.isStart = false;
   }
-  getCollisionBoxes(min, max) {
-    return this.getCBsFromCharacters(min, max).concat(this.getCBsFromObstacles(min, max));
+  init() {
+    this.characters = this.engine.tag.get("Character", "Level");
   }
-  getCBsFromObstacles(min, max) {
-    const ret = [];
-    this.obstacles.forEach((obstacle) => {
-      const c = {
-        min: obstacle.gpos.getAdd({x: 0, y: -1}),
-        max: obstacle.gpos.getAdd({x: obstacle.width, y: 2})
-      };
-      if (colRectRectCorners(min, max, c.min, c.max)) {
-        ret.push(c);
+  update() {
+    if (!this.isStart) {
+      this.isStart = true;
+      let charactersTagged = this.characters;
+      charactersTagged.sort((a, b) => a.gpos.x - b.gpos.x || a.gpos.y - b.gpos.y);
+      this.handleStepUpdate(charactersTagged, 0, 0, true);
+    }
+  }
+  getNoPlaceZones() {
+    return this.characters.flatMap((x) => x.getNoPlaceZone());
+  }
+  updateSync(counter, loopLength) {
+    let charactersTagged = this.characters;
+    charactersTagged.sort((a, b) => a.gpos.x - b.gpos.x || b.gpos.y - a.gpos.y);
+    charactersTagged.forEach((ct) => {
+      if (counter % (loopLength / ct.speed) == 0) {
+        ct.handleStep();
       }
     });
-    return ret;
+    this.handleStepUpdate(charactersTagged, counter, loopLength);
   }
-  getCBsFromCharacters(min, max) {
-    const ret = [];
-    this.characters.filter((c) => c.isActive).forEach((character2) => {
-      const c = {
-        min: character2.gpos.getAdd({x: -1, y: 1 - character2.height}),
-        max: character2.gpos.getAdd({x: 1, y: 1})
-      };
-      if (colRectRectCorners(min, max, c.min, c.max)) {
-        ret.push(c);
+  handleStepUpdate(charactersTagged, counter, loopLength, isOverride = false) {
+    charactersTagged.forEach((ct1, i) => {
+      if (isOverride || counter % (loopLength / ct1.speed) == 0) {
+        let proxs = [];
+        charactersTagged.slice(0, i).filter((ct2) => ct2.height == 2).forEach((ct2) => {
+          let diff = ct2.gpos.getSub(ct1.gpos);
+          if (Math.abs(diff.x) <= 3 && Math.abs(diff.y) <= 3) {
+            proxs.push(diff.getAdd({
+              x: ct2.move.y == 0 ? ct2.move.x : 0,
+              y: ct2.move.y
+            }));
+          }
+        });
+        ct1.handleStepUpdate(proxs);
       }
     });
-    return ret;
   }
 }
 //# sourceMappingURL=characterhandler.js.map

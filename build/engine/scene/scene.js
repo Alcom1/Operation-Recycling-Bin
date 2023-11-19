@@ -6,7 +6,6 @@ export default class Scene {
     zIndex = 0
   }) {
     this.engine = engine2;
-    this.isSortNext = false;
     this.name = name;
     this.need = need;
     this.zIndex = zIndex;
@@ -18,6 +17,7 @@ export default class Scene {
       ctx.save();
       this.gameObjects.forEach((go) => go.init(ctx));
       ctx.restore();
+      this.engine.sync.pushGOs(this.name, this.gameObjects);
       this.engine.collision.pushGOs(this.name, this.gameObjects);
       this.initialized = true;
     }
@@ -25,20 +25,16 @@ export default class Scene {
   pushGO(gameObject) {
     gameObject.parent = this;
     this.gameObjects.push(gameObject);
+    this.engine.tag.pushGO(gameObject, this.name);
     return gameObject;
   }
   update(dt) {
     if (this.initialized) {
-      this.gameObjects.forEach((go) => {
-        if (!go.isActive) {
-          return;
-        }
-        go.update(dt);
-      });
+      this.gameObjects.filter((go) => go.isActive).forEach((go) => go.update(dt));
     }
-    this.gameObjects.sort((a, b) => a.getGOZIndex() - b.getGOZIndex());
   }
   draw(ctx) {
+    this.gameObjects.sort((a, b) => a.zIndex - b.zIndex);
     if (this.initialized) {
       this.gameObjects.filter((go) => go.isActive).forEach((go) => this.subDraw(ctx, go, go.draw));
     }

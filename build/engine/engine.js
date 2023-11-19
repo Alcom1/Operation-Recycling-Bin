@@ -2,23 +2,25 @@ import BakerModule from "./modules/baker.js";
 import CollisionModule from "./modules/collision.js";
 import LibraryModule from "./modules/library.js";
 import MouseModule from "./modules/mouse.js";
+import SyncModule from "./modules/sync.js";
 import TagModule from "./modules/tag.js";
 import Scene from "./scene/scene.js";
 import {clamp} from "./utilities/math.js";
 export default class Engine {
-  constructor(element, scenePathName, sceneSource, startScenes, gameObjectTypes, debug = false, width = 1296, height = 864) {
+  constructor(element, scenePathName, sceneSource, startScenes, gameObjectTypes, debug = false, width = 1296, height = 864, physicsPerSecond = 15, physicsLagUpdateMax = 5) {
     this.debug = debug;
     this.width = width;
     this.height = height;
+    this.physicsPerSecond = physicsPerSecond;
+    this.physicsLagUpdateMax = physicsLagUpdateMax;
     this.lastTime = 0;
-    this.animationID = 0;
     this.sceneDatas = [];
     this.scenesActive = [];
     this.scenesLoading = [];
     this.pushSceneNames = [];
     this.killSceneNames = [];
-    this.crashed = false;
     this.gameObjectTypes = new Map();
+    this.crashed = false;
     this.scenePath = scenePathName;
     this.canvas = element;
     this.canvas.width = width;
@@ -34,15 +36,40 @@ export default class Engine {
     this.library = new LibraryModule();
     this.mouse = new MouseModule(this.canvas);
     this.mouse.setResolution(this.canvas.width, this.canvas.height);
+    this.sync = new SyncModule(this.physicsPerSecond);
     this.tag = new TagModule();
     this.registerGameObjects(gameObjectTypes);
     this.pushSceneNames = startScenes;
     this.loadScenes(sceneSource, this.scenesActive).finally(() => {
+      this.physicsFrame();
       this.frame();
     });
   }
+  async physicsFrame() {
+    let t1 = Date.now();
+    let timeCount = 0;
+    let timeMin = 1e3 / this.physicsPerSecond;
+    let physicsLagCount = 0;
+    while (true) {
+      let t2 = Date.now();
+      timeCount += t2 - t1;
+      t1 = t2;
+      while (timeCount >= timeMin) {
+        if (physicsLagCount >= this.physicsLagUpdateMax) {
+          timeCount = 0;
+          break;
+        }
+        this.collision.update();
+        this.sync.update();
+        physicsLagCount++;
+        timeCount -= timeMin;
+      }
+      physicsLagCount = 0;
+      await new Promise((resolve) => setTimeout(resolve, 2));
+    }
+  }
   frame() {
-    this.animationID = requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
       if (this.crashed)
         return;
       try {
@@ -70,7 +97,6 @@ export default class Engine {
     this.scenesActive.forEach((s) => s.init(this.ctx));
   }
   updateDrawScenes(scenes, dt) {
-    this.collision.update();
     scenes.forEach((s) => s.update(dt));
     scenes.forEach((s) => s.draw(this.ctx));
     scenes.forEach((s) => s.superDraw(this.ctx));
@@ -92,7 +118,6 @@ export default class Engine {
           throw new Error(`GameObject of type ${goData.name} does not exist`);
         const go = new GOType({...goData, engine: this, scene: scene2});
         scene2.pushGO(go);
-        this.tag.pushGO(go, scene2.name);
       }
       scenes.push(scene2);
       scenes.sort((a, b) => a.zIndex - b.zIndex);
@@ -104,6 +129,7 @@ export default class Engine {
     if (killSceneNames.length > 1) {
       this.scenesActive = this.scenesActive.filter((s) => !this.killSceneNames.includes(s.name));
       this.tag.clear(this.killSceneNames);
+      this.sync.clear(this.killSceneNames);
       this.collision.clear(this.killSceneNames);
       this.killSceneNames = [];
     }

@@ -86,5 +86,8 @@ export default class Vect {
     this.x = 0;
     this.y = 0;
   }
+  static get zero() {
+    return new Vect(0, 0);
+  }
 }
 //# sourceMappingURL=vect.js.map

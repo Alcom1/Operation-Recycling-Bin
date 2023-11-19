@@ -17,7 +17,7 @@ export default class Cursor extends GameObject {
     this.pLength = 10;
     this.state = 0;
     this.hoverState = BrickHandlerState.NONE;
-    this.snapState = false;
+    this.isSnap = false;
     this.isUpdateForced = false;
   }
   init(ctx) {
@@ -30,9 +30,12 @@ export default class Cursor extends GameObject {
       throw new Error("Can't find CursorIcon");
     this.cursorIcon = cursorIcon;
   }
+  updateSync() {
+    this.isUpdateForced = true;
+  }
   update(dt) {
     var tempSpos = this.engine.mouse.getPos();
-    if (this.isUpdateForced || tempSpos.getDiff(this.spos) || this.brickHandler.isRecheck) {
+    if (this.isUpdateForced || tempSpos.getDiff(this.spos)) {
       this.isUpdateForced = false;
       switch (this.state) {
         case 0:
@@ -42,13 +45,13 @@ export default class Cursor extends GameObject {
         case 1:
           const diff = this.spos.y - this.ppos.y;
           const dir = Math.sign(diff);
-          if (Math.abs(diff) > this.pLength && this.brickHandler.checkPressureSelection(dir)) {
+          if (Math.abs(diff) > this.pLength) {
             this.selectBricks(dir);
           }
           break;
         case 2:
-          this.snapState = this.brickHandler.checkCollisionSelection();
-          this.brickHandler.setSnappedBricks(this.snapState);
+          this.isSnap = this.brickHandler.checkCollisionSelection();
+          this.brickHandler.setSnappedBricks(this.isSnap);
           break;
       }
     }
@@ -67,9 +70,9 @@ export default class Cursor extends GameObject {
         }
         break;
       case MouseState.WASRELEASED:
-        if (this.state != 2 || this.snapState) {
+        if (this.state != 2 || this.isSnap) {
           this.brickHandler.deselectBricks();
-          if (this.snapState) {
+          if (this.isSnap) {
             this.brickHandler.cullBrickStuds();
           }
           this.isUpdateForced = true;
@@ -83,8 +86,6 @@ export default class Cursor extends GameObject {
     switch (hoverState) {
       case BrickHandlerState.NONE:
         this.resetState();
-        break;
-      case BrickHandlerState.SAME:
         break;
       default:
         this.hover(hoverState);

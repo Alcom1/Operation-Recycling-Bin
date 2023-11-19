@@ -1,19 +1,20 @@
-import {BOUNDARY, GMULTY, MASKS} from "../../engine/utilities/math.js";
-import Animat from "./animation.js";
+import {BOUNDARY, Faction, GMULTY, MASKS} from "../../engine/utilities/math.js";
+import Anim from "./anim.js";
 import Sprite from "./sprite.js";
-const characterBotOverride = Object.freeze({
+const waterDropOverride = Object.freeze({
   image: "part_water",
   zIndex: 0
 });
 export default class WaterDrop extends Sprite {
   constructor(params) {
-    super(Object.assign(params, characterBotOverride));
+    super(Object.assign(params, waterDropOverride));
     this.speed = 500;
     this.slipDuration = 0.4;
     this.slipTimer = 0;
-    this.animLand = this.parent.pushGO(new Animat({
+    this.zIndex = 2500;
+    this.animLand = this.parent.pushGO(new Anim({
       ...params,
-      zModifier: 100,
+      zIndex: this.zIndex,
       images: [{name: "part_water_land"}],
       speed: 2.5,
       frameCount: 6,
@@ -21,9 +22,9 @@ export default class WaterDrop extends Sprite {
       isActive: false,
       isLoop: false
     }));
-    this.animSlip = this.parent.pushGO(new Animat({
+    this.animSlip = this.parent.pushGO(new Anim({
       ...params,
-      zModifier: 100,
+      zIndex: this.zIndex,
       images: [{name: "part_water_slip"}],
       speed: 1 / this.slipDuration,
       frameCount: 6,
@@ -47,7 +48,7 @@ export default class WaterDrop extends Sprite {
     if (this.spos.y > GMULTY) {
       this.spos.y -= GMULTY;
       this.gpos.y += 1;
-      if (this.gpos.y > BOUNDARY.maxy || this.brickHandler.checkCollisionRange(this.gpos, 1, 0, 2, 1)) {
+      if (this.gpos.y > BOUNDARY.maxy || this.brickHandler.checkCollisionRange(this.gpos, 1, 0, 2, 1, void 0, Faction.HOSTILE)) {
         this.doLandAnimation();
       }
     }

@@ -34,6 +34,7 @@ export default class CollisionModule {
           this.compareGOColliders(gocs[i], gocs[j]);
         }
       }
+      s.gameObjects.forEach((go) => go.resolveClearCollisions());
     });
   }
   draw(ctx) {
@@ -62,8 +63,8 @@ export default class CollisionModule {
   }
   compareGOPair(c1, c2, g1, g2) {
     if (c1.mask & c2.mask && this.compareColliders(c1, c2)) {
-      g1.resolveCollision(c1.mask & c2.mask, g2);
-      g2.resolveCollision(c1.mask & c2.mask, g1);
+      g1.setCollision(c1.mask & c2.mask, g2);
+      g2.setCollision(c1.mask & c2.mask, g1);
     }
   }
   compareColliders(c1, c2) {

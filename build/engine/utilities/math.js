@@ -2,11 +2,19 @@ import Vect from "./vect.js";
 export const PATH_IMG = "assets/img/";
 export const GMULTX = 30;
 export const GMULTY = 36;
-export const UNDER_CURSOR_Z_INDEX = 1e3;
 export const Z_DEPTH = 22;
 export const WIDTH_SIDEPANEL = 234;
 export const OPPOSITE_DIRS = [-1, 1];
 export const MOBILE_PREVIEW_MAX = new Vect(6, 3);
+export var Faction;
+(function(Faction2) {
+  Faction2[Faction2["FRIENDLY"] = 0] = "FRIENDLY";
+  Faction2[Faction2["NEUTRAL"] = 1] = "NEUTRAL";
+  Faction2[Faction2["HOSTILE"] = 2] = "HOSTILE";
+})(Faction || (Faction = {}));
+export function MatchFactions(a, b) {
+  return Math.abs(b - a) < 2;
+}
 export const BOUNDARY = Object.freeze({
   minx: 0,
   miny: 2,
@@ -24,6 +32,18 @@ export const MASKS = Object.freeze({
   press: 128,
   enemy: 256
 });
+export const RING_BITSTACK = Object.freeze({
+  flor: bitStack(9, 10),
+  roof: bitStack(1, 2),
+  face: bitStack(5, 7),
+  back: bitStack(4, 6),
+  land: bitStack(11),
+  band: bitStack(8)
+});
+export const RING_BITSTACKB = Object.freeze({
+  ...RING_BITSTACK,
+  hang: RING_BITSTACK.land + bitStack(12)
+});
 export function pathImg(fileName, extension) {
   return `${PATH_IMG}${fileName}.${extension ?? "png"}`;
 }
@@ -36,7 +56,10 @@ export function round(val, target) {
 export function floor(val, target) {
   return Math.floor(val / target) * target;
 }
-export function bitStack(numbers) {
+export function zip(val) {
+  return val >= 0 ? OPPOSITE_DIRS[val % 2] * Math.ceil((val + 1) / 2) : 0;
+}
+export function bitStack(...numbers) {
   var ret = 0;
   numbers.forEach((n) => ret += 1 << n);
   return ret;
@@ -74,8 +97,16 @@ export function colPointParVGrid(px, py, rx, ry, rw) {
 export function col1D(a1, a2, b1, b2) {
   return a2 > b1 && a1 < b2;
 }
-export function getZIndex(gpos, modifier = 0) {
-  return gpos.x * 10 - gpos.y * 100 + modifier;
+export function gap1D(a1, a2, b1, b2) {
+  if (a1 > a2) {
+    [a1, a2] = [a2, a1];
+  }
+  ;
+  if (b1 > b2) {
+    [b1, b2] = [b2, b1];
+  }
+  ;
+  return Math.abs(b1 - a2) < Math.abs(a1 - b2) ? b1 - a2 : a1 - b2;
 }
 export function colorTranslate(color) {
   switch (color) {
