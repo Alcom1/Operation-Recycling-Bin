@@ -1,4 +1,5 @@
 import {zip} from "../../engine/utilities/math.js";
+import Anim from "./anim.js";
 import CharacterGear, {GearState} from "./charactergear.js";
 const CharacterGearClimbOverride = Object.freeze({
   height: 2,
@@ -31,6 +32,13 @@ export default class CharacterGearClimb extends CharacterGear {
     super(Object.assign(params, CharacterGearClimbOverride));
     this.vertMax = 3;
     this.vertCount = 0;
+    this.burstAnim = this.parent.pushGO(new Anim({
+      ...params,
+      images: [{name: "char_rbc_burst"}],
+      speed: 3,
+      frameCount: 6,
+      zIndex: 5e4
+    }));
   }
   get animationSubindex() {
     switch (this.move.y) {
@@ -41,6 +49,10 @@ export default class CharacterGearClimb extends CharacterGear {
       default:
         return zip(3);
     }
+  }
+  update(dt) {
+    super.update(dt);
+    this.burstAnim.spos = this.spos.getAdd({x: -25, y: 16});
   }
   handleStep() {
     if (this.stateIndex != GearState.NORMAL) {
@@ -58,6 +70,7 @@ export default class CharacterGearClimb extends CharacterGear {
         this.vertCount++;
         break;
     }
+    this.burstAnim.reset(this.gpos);
   }
   handleStepUpdate(proxs) {
     super.handleStepUpdate(proxs);
@@ -78,7 +91,7 @@ export default class CharacterGearClimb extends CharacterGear {
               this.move.y = 0;
               this.setStateIndex(GearState.NORMAL);
               this.reverse();
-            } else if (this.isColRoof || this.vertCount >= 3) {
+            } else if (this.isColRoof || this.vertCount >= this.vertMax) {
               this.vertCount = 0;
               this.reverse();
               this.setStateIndex(GearState.WAIT);
