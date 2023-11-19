@@ -1,19 +1,22 @@
 import GameObject, {GameObjectParams} from "engine/gameobjects/gameobject";
-import { colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, UNDER_CURSOR_Z_INDEX, getZIndex, MOBILE_PREVIEW_MAX } from "engine/utilities/math";
+import { colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, MOBILE_PREVIEW_MAX } from "engine/utilities/math";
 import Vect, {Point} from "engine/utilities/vect";
 
 export interface BrickParams extends GameObjectParams {
     color?: string;
     width?: number;
+    block?: boolean;
+    glide?: boolean;
 }
 
+/** Base class for all bricks */
 export default class Brick extends GameObject {
 
     /** The color of this brick */
     protected color: string;
 
     /** If this is a grey brick */
-    public isGrey: boolean;
+    private _isGrey: boolean; public get isGrey(): boolean { return this._isGrey; }
 
     /** Baked image data for this brick */
     protected image = new Image();
@@ -42,9 +45,6 @@ export default class Brick extends GameObject {
     /** Temporary recursion state */
     public isChecked = false;
 
-    /** Number of objects on top of this brick */
-    public pressure = 0;
-
     /** Boundary offset for minimum carried position */
     private minCarry : Vect = new Vect(0, 0);
 
@@ -57,17 +57,44 @@ export default class Brick extends GameObject {
     /** If the mobile preview is flipped */
     private isMobileFlipped : Boolean = false;
 
+    /** If the brick blocks placement */
+    protected _isBlock : boolean = false; public get isBlock() : boolean {return this._isBlock};
+
+    /** If the brick is attatched to a gliding object */
+    protected _isGlide : boolean = false; public get isGlide() : boolean {return this._isGlide};
+
+    /** z-index get/setters */    
+    get zIndex() : number { return super.zIndex; }
+    set zIndex(value : number) { 
+        super.zIndex = value + (this.isSelected && !this.isSnapped ? 2000 : 0);
+    }
+    get zpos() : Vect { 
+        return (
+            this.isSelected ?
+            this.gpos.getAdd({
+                x : Math.floor(this.spos.x / GMULTX),
+                y : Math.floor(this.spos.y / GMULTY),
+            }) :
+            super.zpos); 
+    }
+    public get zSize() : Point { return {x : this.width, y : 1 }; }
+    public get zLayer() : Number { return this.isSelected && !this.isSnapped ? 1 : 0 }
+
+    /** Constructor */
     constructor(params: BrickParams) {
         super(params);
         
         this.color = colorTranslate(params.color);
-        this.isGrey = !params.color;
+        this._isGrey = !params.color;
+        this._isBlock = params.block ?? false;
+        this._isGlide = params.glide ?? false;
 
         this.tags.push("Brick");
 
         this.width = params.width || 1;
     }
 
+    /** Update brick, move it along the cursor if it's selected. */
     public update(dt: number): void {
 
         // Follow mouse if selected
@@ -76,6 +103,7 @@ export default class Brick extends GameObject {
         }
     }
 
+    /** Draw brick */
     public draw(ctx: CanvasRenderingContext2D): void {
 
         // Global transparency for selection states
@@ -89,15 +117,27 @@ export default class Brick extends GameObject {
         ctx.drawImage(this.image, 0, -Z_DEPTH - 3);
     }
 
+    /** Draw mobile preview above everything */
     public superDraw(ctx: CanvasRenderingContext2D): void {
 
+        // Debug Z-index
+        // var indexDisplay = "" + this.zIndex;
+        // let indexPos : Point = { x : 5, y : GMULTY - 15};
+        // ctx.strokeStyle = "#000";
+        // ctx.fillStyle = "#FFF"
+        // ctx.lineWidth = 2;
+        // ctx.font = " 20px Monospace"
+        // ctx.strokeText(indexDisplay, indexPos.x, indexPos.y);
+        // ctx.fillText(indexDisplay, indexPos.x, indexPos.y);
+
+        // Only draw preview if on browser, this brick is selected, and the selection size is large enough
         if (this.engine.mouse.getMouseType() == "mouse" ||
            !this.isSelected || 
            !MOBILE_PREVIEW_MAX.getLessOrEqual(this.mobilePreviewSize)) {
             return;
         }
 
-        //Draw mobile view
+        // Draw mobile view
         ctx.drawImage(
             this.image, 
             0, 
@@ -107,28 +147,6 @@ export default class Brick extends GameObject {
                 this.isMobileFlipped ? 
                -this.mobilePreviewSize.y - 3.2 :
                 this.mobilePreviewSize.y + 3.5));
-    }
-
-    /** Get z-index for draw sorting */
-    public getGOZIndex() : number {
-
-        // Set z-index to draw this brick in its snapped position
-        if(this.isSnapped) {
-            return getZIndex(
-                this.gpos.getAdd({
-                    x : Math.round(this.spos.x / GMULTX),
-                    y : Math.round(this.spos.y / GMULTY)
-                }),
-                this.width * 10);
-        }        
-        // Set z-index to draw this brick under the cursor
-        if(this.isSelected) {
-            return UNDER_CURSOR_Z_INDEX;
-        }
-        //Normal z-index
-        else {
-            return getZIndex(this.gpos, this.width * 10);
-        }
     }
 
     /** Setup this brick for pressing */
@@ -167,7 +185,7 @@ export default class Brick extends GameObject {
         this.isPressed = false;
         this.isSelected = false;
         this.isSnapped = false;
-        this.isChecked = false; //Fixed bug where selections dragged offscreen wouldn't clear correctly.
+        this.isChecked = false; // Fixed bug where selections dragged offscreen wouldn't clear correctly.
         this.spos.set(0, 0);
         this.selectedPos.set(0, 0);
         // Reset studs to match the final brick position
@@ -206,7 +224,7 @@ export default class Brick extends GameObject {
         this.isSnapped = state;
 
         // Reposition for unsnapped state to fix 1-frame jump on pickup
-        if(!this.isSnapped) {            
+        if (!this.isSnapped) {            
             this.setToCursor();
         }
     }
@@ -223,7 +241,7 @@ export default class Brick extends GameObject {
         this.minCarry = min;
         this.maxCarry = max;
 
-        this.mobilePreviewSize = max.getSub(min); //asdf
+        this.mobilePreviewSize = max.getSub(min); // asdf
     }
 
     /** Set the flipped state for the mobile preview */

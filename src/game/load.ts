@@ -14,18 +14,20 @@ import LevelSequence from "./gameobjects/levelsequence";
 import MobileIndicator from "./gameobjects/mobileindicator";
 import Sprite from "./gameobjects/sprite";
 import BrickNormal from "game/gameobjects/bricknormal";
-import BrickPlateHot from "./gameobjects/brickplatehot";
-import BrickPlateFan from "./gameobjects/brickplatefan";
+import BrickTileHot from "./gameobjects/bricktilehot";
+import BrickTileFan from "./gameobjects/bricktilefan";
 import BrickSuper from "./gameobjects/bricksuper";
 import BrickPipe from "./gameobjects/brickpipe";
 import BrickJump from "./gameobjects/brickjump";
 import BrickHandlerDebug from "./gameobjects/brickhandlerdebug";
 import BrickJumpMove from "./gameobjects/brickjumpmove";
-import BrickPlateButton from "./gameobjects/brickplatebutton";
-import CharacterRBG from "./gameobjects/characterrbg";
-import CharacterRBC from "./gameobjects/characterrbc";
+import BrickTileButton from "./gameobjects/bricktilebutton";
+import CharacterRBG from "./gameobjects/charactergearclimb";
+import CharacterRBC from "./gameobjects/charactergearground";
+import CharacterHandler from "./gameobjects/characterhandler";
+import ZIndexHandler from "./gameobjects/zindexhandler";
 
-//Load
+// Load
 window.onload = function() {
     const canvas = document.querySelector('canvas');
     if (!canvas) throw new Error("Can't get canvas");
@@ -34,7 +36,7 @@ window.onload = function() {
         canvas, 
         "assets/scenes/",
         "scenes",
-        ["LevelInterface", "LEVEL_08"],
+        ["LevelInterface", "LEVEL_00"],
         [
             BrickHandler,
             BrickHandlerDebug,
@@ -42,9 +44,9 @@ window.onload = function() {
             BrickJumpMove,
             BrickNormal,
             BrickPipe,
-            BrickPlateButton,
-            BrickPlateFan,
-            BrickPlateHot,
+            BrickTileButton,
+            BrickTileFan,
+            BrickTileHot,
             BrickSuper,
             Button,
             ButtonScene,
@@ -53,6 +55,7 @@ window.onload = function() {
             CharacterBin,
             CharacterRBC,
             CharacterRBG,
+            CharacterHandler,
             Counter,
             Cursor,
             CursorIcon,
@@ -60,7 +63,8 @@ window.onload = function() {
             MobileIndicator,
             LevelSequence,
             Sprite,
-            Stud
+            Stud,
+            ZIndexHandler
         ],
         false
     );    

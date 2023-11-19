@@ -3,23 +3,22 @@ import BakerModule from "./modules/baker";
 import CollisionModule from "./modules/collision";
 import LibraryModule from "./modules/library";
 import MouseModule from "./modules/mouse";
+import SyncModule from "./modules/sync";
 import TagModule from "./modules/tag";
 import Scene, {SceneParams} from "./scene/scene";
 import {clamp} from "./utilities/math";
 
 /** Engine core */
 export default class Engine {
+
+    /** HTML Canvas */
     private canvas: HTMLCanvasElement;
+    /** HTML Canvas Context */
     private ctx: CanvasRenderingContext2D;
-    
     /** Timestamp of last frame for calculating dt */
     private lastTime: number = 0;
-    /** ID index of current frame */
-    private animationID: number = 0;
-    
     /** Path scenes are located in */
     private scenePath: string;
-    
     /** All Scenes */
     private sceneDatas : {
         scene: SceneParams;
@@ -29,24 +28,25 @@ export default class Engine {
     private scenesActive: Scene[] = [];
     /** Loading screen scenes */
     private scenesLoading: Scene[] = [];
-
     /** Names of scenes to be added next frame */
     private pushSceneNames: string[] = [];
     /** Names of scenes to be removed next frame */
     private killSceneNames: string[] = [];
+    /** All possible types of Game Objects */
+    private gameObjectTypes = new Map<string, typeof GameObject>();
 
     /** If the last frame threw an error */
     private crashed = false;
 
-    private gameObjectTypes = new Map<string, typeof GameObject>();
-
-    //Modules
+    /** Public Modules */
     public baker: BakerModule;
     public collision: CollisionModule;
     public library: LibraryModule;
     public mouse: MouseModule;
+    public sync: SyncModule;
     public tag: TagModule;
 
+    /** Constructor */
     constructor(
         element: HTMLCanvasElement,
         scenePathName: string,
@@ -55,7 +55,9 @@ export default class Engine {
         gameObjectTypes: typeof GameObject[],
         private debug: boolean = false,
         private width: number = 1296,
-        private height: number = 864
+        private height: number = 864,
+        private physicsPerSecond = 15,
+        private physicsLagUpdateMax = 5
     ) {
         this.scenePath = scenePathName;
 
@@ -75,6 +77,7 @@ export default class Engine {
         this.library = new LibraryModule();
         this.mouse = new MouseModule(this.canvas);
         this.mouse.setResolution(this.canvas.width, this.canvas.height);
+        this.sync = new SyncModule(this.physicsPerSecond);
         this.tag = new TagModule();
 
         // Register available game object types
@@ -84,13 +87,54 @@ export default class Engine {
         this.pushSceneNames = startScenes;
 
         // Load each starting & loading scene
-        this.loadScenes(sceneSource, this.scenesActive).finally(() => { this.frame() });
+        this.loadScenes(sceneSource, this.scenesActive).finally(() => {
+            this.physicsFrame();
+            this.frame();
+        });
+    }
+
+    /** Physics Update loop - Asynchronous */
+    private async physicsFrame(): Promise<void> {
+
+        let t1 = Date.now();                        //Previous time
+        let timeCount = 0;                          //Timer for physics
+        let timeMin = 1000 / this.physicsPerSecond; //Number of miliseconds between physics updates
+
+        let physicsLagCount = 0;
+
+        while (true) {
+
+            //Add time difference to count
+            let t2 = Date.now();
+            timeCount += t2 - t1;
+            t1 = t2;
+
+            //If time difference is beyond minimum, do at least one physics update
+            while(timeCount >= timeMin) {
+
+                //If exceeded the maximum number of physics updates for large lag spikes, stop
+                if(physicsLagCount >= this.physicsLagUpdateMax) {
+                    timeCount = 0;      //Reset timer, no more updates
+                    break;              //Stop
+                }
+
+                //Perform updates
+                this.collision.update();    //Check collisions
+                this.sync.update();         //Resolve statuses
+
+                physicsLagCount++;      //Count lag
+                timeCount -= timeMin;   //Subtract duration from physics timer
+            }
+            physicsLagCount = 0;        //Reset lag count after physics updates are finished
+
+            await new Promise(resolve => setTimeout(resolve, 2));
+        }
     }
 
     /** Update loop */
     private frame(): void {
 
-        this.animationID = requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
             // Don't continue throwing errors repeatedly without hope of recovering
             if (this.crashed) return;
             try {
@@ -118,7 +162,7 @@ export default class Engine {
         this.pushSceneNames = [];
 
         // Scene actions
-        if(this.library.getLoaded()) {
+        if (this.library.getLoaded()) {
             this.initScenes();
             this.updateDrawScenes(this.scenesActive, dt);
         }
@@ -138,13 +182,12 @@ export default class Engine {
 
     /** Perform both an update and draw */
     private updateDrawScenes(scenes : Scene[], dt: number): void {
-        this.collision.update();    //Handle collisions before update/draw
         scenes.forEach(s => s.update(dt));
         scenes.forEach(s => s.draw(this.ctx));
         scenes.forEach(s => s.superDraw(this.ctx));
 
-        //Debug views
-        if(this.debug) {
+        // Debug views
+        if (this.debug) {
             this.collision.draw(this.ctx);
         }
     }
@@ -161,7 +204,7 @@ export default class Engine {
 
         const sceneData = this.sceneDatas.find(s => s.scene.tag == sceneName);
 
-        if(sceneData) {
+        if (sceneData) {
 
             const scene = new Scene(this, sceneData.scene);
 
@@ -171,7 +214,6 @@ export default class Engine {
                 if (!GOType) throw new Error(`GameObject of type ${goData.name} does not exist`);
                 const go = new GOType({...goData, engine : this, scene});
                 scene.pushGO(go);
-                this.tag.pushGO(go, scene.name);
             }
             
             scenes.push(scene);
@@ -189,6 +231,7 @@ export default class Engine {
             // Clear scene names from core
             this.scenesActive = this.scenesActive.filter(s => !this.killSceneNames.includes(s.name)); 
             this.tag.clear(this.killSceneNames);
+            this.sync.clear(this.killSceneNames);
             this.collision.clear(this.killSceneNames);
             this.killSceneNames = [];
         }
@@ -197,7 +240,7 @@ export default class Engine {
     /** 
      * Set scenes to be loaded
      * @param fileNames File name(s) of scenes to load
-     */
+    */
     public pushScenes(fileNames: string | string[]): void {
         if (Array.isArray(fileNames)) {
             fileNames.forEach(s => this.pushScene(s));
@@ -206,10 +249,10 @@ export default class Engine {
         }
     }
 
-    /**
+    /** 
      * Set scenes to be unloaded
      * @param sceneNames Scene name(s) to be unloaded
-     */
+    */
     public killScenes(sceneNames: string | string[]): void {
         if (Array.isArray(sceneNames)) {
             sceneNames.forEach(s => this.killScene(s));
@@ -218,22 +261,22 @@ export default class Engine {
         }
     }
 
-    /**
+    /** 
      * Set scene to be loaded
      * @param fileName Filename of scene to load
-     */
+    */
     private pushScene(fileName: string): void {
         if (!this.pushSceneNames.includes(fileName)) {
             this.pushSceneNames.push(fileName);
         }
     }
 
-    /**
+    /** 
      * Set scene to be unloaded
      * @param sceneName Scene name of scene to unload
-     */
+    */
     private killScene(sceneName: string): void {
-        if(!this.killSceneNames.includes(sceneName)) {
+        if (!this.killSceneNames.includes(sceneName)) {
             this.killSceneNames.push(sceneName);
         }
     }
@@ -243,10 +286,10 @@ export default class Engine {
         this.killScenes(this.scenesActive.map(s => s.name));
     }
 
-    /**
+    /** 
      * Get time since last frame
      * @returns Time since last frame
-     */
+    */
     private calculateDeltaTime(): number {
         // Date as milliseconds
         const now = (+new Date);
@@ -258,6 +301,7 @@ export default class Engine {
         return 1/fps;
     }
 
+    /** Register a game object type */
     private registerGameObjects(gameObjectTypes: typeof GameObject[]): void {
         for (const GOType of gameObjectTypes) {
             this.gameObjectTypes.set(GOType.name, GOType);

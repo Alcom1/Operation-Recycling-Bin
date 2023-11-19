@@ -4,6 +4,7 @@ import Vect from "engine/utilities/vect";
 import BrickHandler, { BrickHandlerState } from "./brickhandler";
 import CursorIcon, { CursorIconState } from "./cursoricon";
 
+/** */
 enum CursorState {
     NONE,
     DRAG,
@@ -11,22 +12,30 @@ enum CursorState {
     HOVER
 }
 
+/** */
 export default class Cursor extends GameObject {
+
     /** Previous pressed position */
     private ppos = new Vect(0, 0);
     /** Distance to enter carry state */
     private pLength = 10;
 
+    /** State for the cursor */
     private state = CursorState.NONE;
+    /** State for the brickhandler */
     private hoverState = BrickHandlerState.NONE;
-    private snapState = false;
-
+    /** If the current selection is being snapped to the grid */
+    private isSnap = false;
+    /** If an update is being forced */
     private isUpdateForced = false;
 
+    /** Brick handler to check bricks */
     private brickHandler!: BrickHandler;
 
+    /** Cursor icon to display */
     private cursorIcon!: CursorIcon;
 
+    /** Initialize this cursor, get brickhandler and icon */
     public init(ctx: CanvasRenderingContext2D) {
 
         const brickHandler = this.engine.tag.get("BrickHandler", "LevelInterface")[0];
@@ -38,11 +47,18 @@ export default class Cursor extends GameObject {
         this.cursorIcon = cursorIcon as CursorIcon;
     }
 
+    public updateSync()
+    {
+        this.isUpdateForced = true;
+    }
+
+    /** Update this cursor */
     public update(dt: number): void {
+
         var tempSpos = this.engine.mouse.getPos();
 
         // Handle cursor state
-        if (this.isUpdateForced || tempSpos.getDiff(this.spos) || this.brickHandler.isRecheck) {
+        if (this.isUpdateForced || tempSpos.getDiff(this.spos)) {
 
             // Reset update forcing
             this.isUpdateForced = false;
@@ -64,7 +80,7 @@ export default class Cursor extends GameObject {
                     const dir = Math.sign(diff) as (-1 | 1);
 
                     // If we've dragged a sufficient distance and no bricks in the chosen direction are pressured
-                    if (Math.abs(diff) > this.pLength && this.brickHandler.checkPressureSelection(dir)) {
+                    if (Math.abs(diff) > this.pLength) {
                         
                         // Select bricks in the direction of the difference
                         this.selectBricks(dir);
@@ -72,8 +88,8 @@ export default class Cursor extends GameObject {
                     break;
 
                 case CursorState.CARRY:
-                    this.snapState = this.brickHandler.checkCollisionSelection();
-                    this.brickHandler.setSnappedBricks(this.snapState);
+                    this.isSnap = this.brickHandler.checkCollisionSelection();
+                    this.brickHandler.setSnappedBricks(this.isSnap);
                     break;
             }
         }
@@ -81,14 +97,17 @@ export default class Cursor extends GameObject {
         // Set current position
         this.spos = tempSpos;
 
+        // Handle mouse state
         switch (this.engine.mouse.getMouseState()) {
+
+            // MOBILE - If a press event occurs in a NONE state/without a press (Only occurs on Mobile)
             case MouseState.WASPRESSED:
-                // MOBILE - If a press event occurs in a NONE state/without a press (Only occurs on Mobile)
+
                 if (this.state == CursorState.NONE) {
 
                     this.hoverBricks(this.spos);
 
-                } else if(this.state == CursorState.HOVER) {
+                } else if (this.state == CursorState.HOVER) {
 
                     // If pressing the brick returns true (Indeterminate state)
                     if (this.brickHandler.pressBricks(this.spos)) {
@@ -105,15 +124,16 @@ export default class Cursor extends GameObject {
                 }
                 break;
 
+            // Reset state upon release
+            // If the current state is not carrying or if the bricks are snapped to a valid location
             case MouseState.WASRELEASED:
-                //Reset state upon release
-                // If the current state is not carrying or if the bricks are snapped to a valid location
-                if (this.state != CursorState.CARRY || this.snapState) {
+
+                if (this.state != CursorState.CARRY || this.isSnap) {
                     
                     this.brickHandler.deselectBricks();
 
                     // If we are deselecting bricks
-                    if (this.snapState) {
+                    if (this.isSnap) {
                         this.brickHandler.cullBrickStuds();
                     }
 
@@ -134,9 +154,6 @@ export default class Cursor extends GameObject {
                 this.resetState();
                 break;
 
-            case BrickHandlerState.SAME:
-                break;
-
             default:
                 this.hover(hoverState);
                 break;
@@ -147,7 +164,7 @@ export default class Cursor extends GameObject {
     private selectBricks(dir: -1 | 1): void {
 
         // Initialize the selection. If doing so caused bricks to be carried, enter carry state
-        if(this.brickHandler.initSelection(this.ppos, dir)) {
+        if (this.brickHandler.initSelection(this.ppos, dir)) {
 
             this.carry();
         }  
@@ -156,7 +173,7 @@ export default class Cursor extends GameObject {
     /** Set cursor to no state */
     private resetState(): void {
 
-        if(this.state != CursorState.NONE) {
+        if (this.state != CursorState.NONE) {
 
             this.cursorIcon.setCursor(CursorIconState.NONE);
             // Ensure no brick is selected in the NONE state
@@ -193,7 +210,7 @@ export default class Cursor extends GameObject {
     /** Set the cursor to its drag state */
     private drag(): void {
 
-        if(this.state != CursorState.DRAG) {
+        if (this.state != CursorState.DRAG) {
 
             this.cursorIcon.setCursor(CursorIconState.DRAG);
             this.brickHandler.cullBrickStuds();
