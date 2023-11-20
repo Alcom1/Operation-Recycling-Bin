@@ -21,5 +21,8 @@
   "devDependencies": {
     "typescript": "^5.0.3",
     "vite": "^5.0.0"
+  },
+  "dependencies": {
+    "@rollup/rollup-win32-x64-msvc": "^4.5.0"
   }
 }
