@@ -3,7 +3,7 @@
 import Vect, { Point } from "./vect";
 
 /** Path to image assets */
-export const PATH_IMG = "assets/img/";
+export const PATH_IMG = "img/";
 /** Horizontal multiplier for grid positions */
 export const GMULTX = 30;
 /** Vertical multiplier for grid positions */

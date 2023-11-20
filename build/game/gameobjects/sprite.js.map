@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["C:\\Users\\Alcom\\Desktop\\Dev\\Git\\Operation Recycling Bin\\src\\game\\gameobjects\\sprite.ts"],
-  "sourcesContent": ["import GameObject, { GameObjectParams } from \"engine/gameobjects/gameobject\";\r\nimport { Point } from \"engine/utilities/vect\";\r\n\r\n/** Sprite parameters */\r\nexport interface SpriteParams extends GameObjectParams {\r\n    image: string;\r\n    extension?: string;\r\n    size?: Point;\r\n}\r\n\r\n/** Single image gameobject */\r\nexport default class Sprite extends GameObject {\r\n    \r\n    private image : HTMLImageElement;\r\n    private size? : Point;\r\n\r\n    /** z-index get/setters */\r\n    public get zSize() { return this.size ?? super.zSize; }\r\n\r\n    /** Constructor */\r\n    constructor(params: SpriteParams) {\r\n        super(params);\r\n\r\n        this.image = this.engine.library.getImage(params.image, params.extension);\r\n        this.size = params.size;\r\n    }\r\n\r\n    /** Draw this sprite */\r\n    public draw(ctx: CanvasRenderingContext2D): void {\r\n        ctx.drawImage(this.image, 0, 0);\r\n    }\r\n}"],
-  "mappings": "AAAA;AAAA,oCAWoC;AAAA,MAMrB;AAAU,WAAO,KAAK,QAAQ,MAAM;AAAA;AAAA,EAG/C,YAAY;AACR,UAAM;AAEN,SAAK,QAAQ,KAAK,OAAO,QAAQ,SAAS,OAAO,OAAO,OAAO;AAC/D,SAAK,OAAO,OAAO;AAAA;AAAA,EAIhB;AACH,QAAI,UAAU,KAAK,OAAO,GAAG;AAAA;AAAA;",
-  "names": []
-}

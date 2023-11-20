@@ -34,7 +34,7 @@ window.onload = function() {
     
     new Engine(
         canvas, 
-        "assets/scenes/",
+        "scenes/",
         "scenes",
         ["LevelInterface", "LEVEL_28"],
         [
@@ -67,5 +67,5 @@ window.onload = function() {
             ZIndexHandler
         ],
         false
-    );    
+    );
 }
