@@ -20,9 +20,7 @@
   "homepage": "https://github.com/Alcom1/Operation-Recycling-Bin#readme",
   "devDependencies": {
     "typescript": "^5.0.3",
-    "vite": "^5.0.0"
-  },
-  "dependencies": {
+    "vite": "^5.0.0",
     "@rollup/rollup-win32-x64-msvc": "^4.5.0"
   }
 }
