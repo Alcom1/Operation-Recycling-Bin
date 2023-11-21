@@ -1157,6 +1157,11 @@
         "zIndex": -50000
       },
       {
+        "type": 2,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "loading level idea 2",
         "levels": {
           "nextLevel": "LEVEL_01",
@@ -2209,6 +2214,55 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "arrowl",
+            "position": {
+              "x": 369,
+              "y": 316
+            }
+          },
+          {
+            "name": "arrowur",
+            "position": {
+              "x": 248,
+              "y": 322
+            }
+          },
+          {
+            "name": "arrowr",
+            "position": {
+              "x": 139,
+              "y": 321
+            }
+          },
+          {
+            "name": "lite_word_level",
+            "position": {
+              "x": 53,
+              "y": 259
+            }
+          },
+          {
+            "name": "lite_number_1",
+            "position": {
+              "x": 95,
+              "y": 259
+            }
+          },
+          {
+            "name": "door",
+            "position": {
+              "x": 56,
+              "y": 316
+            }
+          }
+        ],
+        "type": 2,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "New Employee Training",
         "levels": {
           "nextLevel": "LEVEL_02",
@@ -2578,6 +2632,55 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "arrowur",
+            "position": {
+              "x": 374,
+              "y": 296
+            }
+          },
+          {
+            "name": "door",
+            "position": {
+              "x": 301,
+              "y": 316
+            }
+          },
+          {
+            "name": "door",
+            "position": {
+              "x": 224,
+              "y": 316
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 224,
+              "y": 250
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 299,
+              "y": 251
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 261,
+              "y": 250
+            }
+          }
+        ],
+        "type": 1,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "Art in the Lobby",
         "levels": {
           "nextLevel": "LEVEL_03",
@@ -2773,6 +2876,83 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "window",
+            "position": {
+              "x": 367,
+              "y": 86
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 406,
+              "y": 86
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 444,
+              "y": 86
+            }
+          },
+          {
+            "name": "word_danger",
+            "position": {
+              "x": 111,
+              "y": 134
+            }
+          },
+          {
+            "name": "safetystrip_vert",
+            "position": {
+              "x": 56,
+              "y": 191
+            }
+          },
+          {
+            "name": "safetystrip_vert",
+            "position": {
+              "x": 161,
+              "y": 191
+            }
+          },
+          {
+            "name": "safetystrip_vert",
+            "position": {
+              "x": 251,
+              "y": 191
+            }
+          },
+          {
+            "name": "safetystrip_vert",
+            "position": {
+              "x": 430,
+              "y": 192
+            }
+          },
+          {
+            "name": "door",
+            "position": {
+              "x": 336,
+              "y": 335
+            }
+          },
+          {
+            "name": "sign_no_access",
+            "position": {
+              "x": 335,
+              "y": 274
+            }
+          }
+        ],
+        "type": 1,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "Bridge Builder",
@@ -3341,6 +3521,41 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "computer_matrix",
+            "position": {
+              "x": 61,
+              "y": 214
+            }
+          },
+          {
+            "name": "terminal_chart",
+            "position": {
+              "x": 378,
+              "y": 115
+            }
+          },
+          {
+            "name": "terminal_circuit",
+            "position": {
+              "x": 443,
+              "y": 115
+            }
+          },
+          {
+            "name": "fusebox_pipes_d",
+            "position": {
+              "x": 478,
+              "y": 332
+            }
+          }
+        ],
+        "type": 4,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "Move the Stairs",
         "levels": {
           "nextLevel": "LEVEL_05",
@@ -3902,6 +4117,76 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "sign_fire",
+            "position": {
+              "x": 410,
+              "y": 365
+            }
+          },
+          {
+            "name": "sign_fire",
+            "position": {
+              "x": 109,
+              "y": 365
+            }
+          },
+          {
+            "name": "fusebox_pipes_d",
+            "position": {
+              "x": 487,
+              "y": 180
+            }
+          },
+          {
+            "name": "door",
+            "position": {
+              "x": 264,
+              "y": 313
+            }
+          },
+          {
+            "name": "arrowld",
+            "position": {
+              "x": 173,
+              "y": 185
+            }
+          },
+          {
+            "name": "arrowrd",
+            "position": {
+              "x": 345,
+              "y": 187
+            }
+          },
+          {
+            "name": "fusebox_pipes_l",
+            "position": {
+              "x": 34,
+              "y": 183
+            }
+          },
+          {
+            "name": "fusebox_pipes_d",
+            "position": {
+              "x": 59,
+              "y": 107
+            }
+          },
+          {
+            "name": "fusebox_pipes_r",
+            "position": {
+              "x": 493,
+              "y": 88
+            }
+          }
+        ],
+        "type": 1,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "Caution: Fire ",
         "levels": {
           "nextLevel": "LEVEL_06",
@@ -4351,6 +4636,69 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "door",
+            "position": {
+              "x": 50,
+              "y": 97
+            }
+          },
+          {
+            "name": "fusebox",
+            "position": {
+              "x": 102,
+              "y": 98
+            }
+          },
+          {
+            "name": "computer_matrix",
+            "position": {
+              "x": 95,
+              "y": 299
+            }
+          },
+          {
+            "name": "computer2dial",
+            "position": {
+              "x": 216,
+              "y": 299
+            }
+          },
+          {
+            "name": "computer_matrix",
+            "position": {
+              "x": 334,
+              "y": 299
+            }
+          },
+          {
+            "name": "computer_matrix",
+            "position": {
+              "x": 456,
+              "y": 299
+            }
+          },
+          {
+            "name": "door",
+            "position": {
+              "x": 465,
+              "y": 100
+            }
+          },
+          {
+            "name": "fusebox",
+            "position": {
+              "x": 415,
+              "y": 99
+            }
+          }
+        ],
+        "type": 2,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "Gearbots in Cubicles",
@@ -5121,6 +5469,34 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "window",
+            "position": {
+              "x": 176,
+              "y": 299
+            }
+          },
+          {
+            "name": "fusebox_pipes_l",
+            "position": {
+              "x": 32,
+              "y": 72
+            }
+          },
+          {
+            "name": "fusebox_pipes_r",
+            "position": {
+              "x": 482,
+              "y": 264
+            }
+          }
+        ],
+        "type": 1,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "Terrarium ",
         "levels": {
           "nextLevel": "LEVEL_08",
@@ -5864,6 +6240,69 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "sign_acid",
+            "position": {
+              "x": 360,
+              "y": 244
+            }
+          },
+          {
+            "name": "word_danger",
+            "position": {
+              "x": 118,
+              "y": 240
+            }
+          },
+          {
+            "name": "word_danger",
+            "position": {
+              "x": 431,
+              "y": 243
+            }
+          },
+          {
+            "name": "sign_acid",
+            "position": {
+              "x": 45,
+              "y": 241
+            }
+          },
+          {
+            "name": "arrowl",
+            "position": {
+              "x": 241,
+              "y": 32
+            }
+          },
+          {
+            "name": "arrowr",
+            "position": {
+              "x": 294,
+              "y": 32
+            }
+          },
+          {
+            "name": "computer2dial",
+            "position": {
+              "x": 280,
+              "y": 224
+            }
+          },
+          {
+            "name": "computer_matrix",
+            "position": {
+              "x": 247,
+              "y": 224
+            }
+          }
+        ],
+        "type": 5,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "Caution: Leaky Roof",
@@ -6687,6 +7126,62 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "arrowl",
+            "position": {
+              "x": 396,
+              "y": 73
+            }
+          },
+          {
+            "name": "arrowl",
+            "position": {
+              "x": 306,
+              "y": 72
+            }
+          },
+          {
+            "name": "arrowl",
+            "position": {
+              "x": 218,
+              "y": 72
+            }
+          },
+          {
+            "name": "arrowl",
+            "position": {
+              "x": 125,
+              "y": 72
+            }
+          },
+          {
+            "name": "fusebox_pipes_l",
+            "position": {
+              "x": 60,
+              "y": 305
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 108,
+              "y": 293
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 144,
+              "y": 293
+            }
+          }
+        ],
+        "type": 4,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "Fill the Gaps",
         "levels": {
           "nextLevel": "LEVEL_10",
@@ -7221,6 +7716,34 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "word_danger",
+            "position": {
+              "x": 57,
+              "y": 292
+            }
+          },
+          {
+            "name": "sign_keepout",
+            "position": {
+              "x": 55,
+              "y": 320
+            }
+          },
+          {
+            "name": "door",
+            "position": {
+              "x": 441,
+              "y": 332
+            }
+          }
+        ],
+        "type": 3,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "Don't Touch the Gearbots",
@@ -8285,6 +8808,76 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "sign_fire",
+            "position": {
+              "x": 260,
+              "y": 144
+            }
+          },
+          {
+            "name": "sign_skull",
+            "position": {
+              "x": 290,
+              "y": 144
+            }
+          },
+          {
+            "name": "word_danger",
+            "position": {
+              "x": 275,
+              "y": 113
+            }
+          },
+          {
+            "name": "fusebox_pipes_d",
+            "position": {
+              "x": 113,
+              "y": 77
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 278,
+              "y": 186
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 322,
+              "y": 186
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 233,
+              "y": 186
+            }
+          },
+          {
+            "name": "computer2dial",
+            "position": {
+              "x": 166,
+              "y": 77
+            }
+          },
+          {
+            "name": "terminal_1dial",
+            "position": {
+              "x": 419,
+              "y": 167
+            }
+          }
+        ],
+        "type": 4,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "Fire and Ice",
         "levels": {
           "nextLevel": "LEVEL_12",
@@ -8861,6 +9454,69 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "window",
+            "position": {
+              "x": 394,
+              "y": 45
+            }
+          },
+          {
+            "name": "door",
+            "position": {
+              "x": 313,
+              "y": 281
+            }
+          },
+          {
+            "name": "sign_no_access",
+            "position": {
+              "x": 313,
+              "y": 226
+            }
+          },
+          {
+            "name": "computer_matrix",
+            "position": {
+              "x": 129,
+              "y": 273
+            }
+          },
+          {
+            "name": "computer_matrix",
+            "position": {
+              "x": 300,
+              "y": 122
+            }
+          },
+          {
+            "name": "number_4",
+            "position": {
+              "x": 358,
+              "y": 276
+            }
+          },
+          {
+            "name": "computer2dial",
+            "position": {
+              "x": 42,
+              "y": 328
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 504,
+              "y": 205
+            }
+          }
+        ],
+        "type": 3,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "Movin' On Up",
@@ -9473,6 +10129,69 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "word_danger",
+            "position": {
+              "x": 233,
+              "y": 246
+            }
+          },
+          {
+            "name": "computer_matrix",
+            "position": {
+              "x": 84,
+              "y": 361
+            }
+          },
+          {
+            "name": "computer2dial",
+            "position": {
+              "x": 151,
+              "y": 361
+            }
+          },
+          {
+            "name": "terminal_1dial",
+            "position": {
+              "x": 430,
+              "y": 183
+            }
+          },
+          {
+            "name": "terminal_chart",
+            "position": {
+              "x": 429,
+              "y": 77
+            }
+          },
+          {
+            "name": "fusebox_pipes_d",
+            "position": {
+              "x": 486,
+              "y": 75
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 138,
+              "y": 43
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 102,
+              "y": 43
+            }
+          }
+        ],
+        "type": 3,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "Bridge over Angry Gearbots",
         "levels": {
           "nextLevel": "LEVEL_14",
@@ -9676,6 +10395,41 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "sign_acid",
+            "position": {
+              "x": 204,
+              "y": 313
+            }
+          },
+          {
+            "name": "sign_voltage",
+            "position": {
+              "x": 235,
+              "y": 313
+            }
+          },
+          {
+            "name": "door",
+            "position": {
+              "x": 42,
+              "y": 207
+            }
+          },
+          {
+            "name": "fusebox_pipes_l",
+            "position": {
+              "x": 33,
+              "y": 160
+            }
+          }
+        ],
+        "type": 1,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "The Long Umbrella",
         "levels": {
           "nextLevel": "LEVEL_15",
@@ -9852,6 +10606,62 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "door",
+            "position": {
+              "x": 68,
+              "y": 319
+            }
+          },
+          {
+            "name": "sign_no_access",
+            "position": {
+              "x": 67,
+              "y": 261
+            }
+          },
+          {
+            "name": "computer_matrix",
+            "position": {
+              "x": 459,
+              "y": 49
+            }
+          },
+          {
+            "name": "terminal_chart",
+            "position": {
+              "x": 457,
+              "y": 330
+            }
+          },
+          {
+            "name": "fusebox_pipes_r",
+            "position": {
+              "x": 519,
+              "y": 263
+            }
+          },
+          {
+            "name": "fusebox",
+            "position": {
+              "x": 480,
+              "y": 276
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 69,
+              "y": 35
+            }
+          }
+        ],
+        "type": 3,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "Clear the Corners",
@@ -10617,6 +11427,69 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "arrowur",
+            "position": {
+              "x": 425,
+              "y": 120
+            }
+          },
+          {
+            "name": "arrowur",
+            "position": {
+              "x": 279,
+              "y": 120
+            }
+          },
+          {
+            "name": "arrowur",
+            "position": {
+              "x": 143,
+              "y": 120
+            }
+          },
+          {
+            "name": "arrowul",
+            "position": {
+              "x": 283,
+              "y": 325
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 230,
+              "y": 376
+            }
+          },
+          {
+            "name": "terminal_1dial",
+            "position": {
+              "x": 402,
+              "y": 366
+            }
+          },
+          {
+            "name": "door",
+            "position": {
+              "x": 81,
+              "y": 353
+            }
+          },
+          {
+            "name": "sign_no_access",
+            "position": {
+              "x": 81,
+              "y": 295
+            }
+          }
+        ],
+        "type": 4,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "Jump Around",
         "levels": {
           "nextLevel": "LEVEL_17",
@@ -10889,6 +11762,62 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "door",
+            "position": {
+              "x": 485,
+              "y": 224
+            }
+          },
+          {
+            "name": "fusebox_pipes_l",
+            "position": {
+              "x": 31,
+              "y": 165
+            }
+          },
+          {
+            "name": "terminal_chart",
+            "position": {
+              "x": 83,
+              "y": 165
+            }
+          },
+          {
+            "name": "sign_keepout",
+            "position": {
+              "x": 397,
+              "y": 218
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 53,
+              "y": 56
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 121,
+              "y": 56
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 87,
+              "y": 56
+            }
+          }
+        ],
+        "type": 5,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "A New Kind of Gearbot",
@@ -11240,6 +12169,62 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 361,
+              "y": 322
+            }
+          },
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 399,
+              "y": 322
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 53,
+              "y": 64
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 88,
+              "y": 64
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 122,
+              "y": 64
+            }
+          },
+          {
+            "name": "sign_no_access",
+            "position": {
+              "x": 59,
+              "y": 311
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 380,
+              "y": 169
+            }
+          }
+        ],
+        "type": 5,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "Number One Fan",
@@ -11700,6 +12685,48 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "terminal_1dial",
+            "position": {
+              "x": 495,
+              "y": 113
+            }
+          },
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 152,
+              "y": 93
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 463,
+              "y": 264
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 497,
+              "y": 264
+            }
+          },
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 153,
+              "y": 242
+            }
+          }
+        ],
+        "type": 4,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "Air Conditioning",
@@ -12196,6 +13223,104 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "arrowd",
+            "position": {
+              "x": 93,
+              "y": 329
+            }
+          },
+          {
+            "name": "arrowd",
+            "position": {
+              "x": 174,
+              "y": 329
+            }
+          },
+          {
+            "name": "arrowd",
+            "position": {
+              "x": 262,
+              "y": 330
+            }
+          },
+          {
+            "name": "arrowd",
+            "position": {
+              "x": 355,
+              "y": 329
+            }
+          },
+          {
+            "name": "arrowd",
+            "position": {
+              "x": 451,
+              "y": 330
+            }
+          },
+          {
+            "name": "sign_keepout",
+            "position": {
+              "x": 41,
+              "y": 125
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 135,
+              "y": 179
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 224,
+              "y": 178
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 312,
+              "y": 177
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 404,
+              "y": 177
+            }
+          },
+          {
+            "name": "word_danger",
+            "position": {
+              "x": 265,
+              "y": 149
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 379,
+              "y": 88
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 415,
+              "y": 88
+            }
+          }
+        ],
+        "type": 1,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "The Engine Room",
         "levels": {
           "nextLevel": "LEVEL_21",
@@ -12457,6 +13582,76 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 422,
+              "y": 351
+            }
+          },
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 257,
+              "y": 352
+            }
+          },
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 78,
+              "y": 353
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 332,
+              "y": 44
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 296,
+              "y": 44
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 369,
+              "y": 44
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 257,
+              "y": 304
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 420,
+              "y": 301
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 81,
+              "y": 306
+            }
+          }
+        ],
+        "type": 1,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "Ride the Wind",
@@ -13278,6 +14473,55 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "fusebox_pipes_l",
+            "position": {
+              "x": 271,
+              "y": 363
+            }
+          },
+          {
+            "name": "computer2dial",
+            "position": {
+              "x": 230,
+              "y": 353
+            }
+          },
+          {
+            "name": "sign_fire",
+            "position": {
+              "x": 311,
+              "y": 354
+            }
+          },
+          {
+            "name": "word_danger",
+            "position": {
+              "x": 88,
+              "y": 94
+            }
+          },
+          {
+            "name": "sign_no_access",
+            "position": {
+              "x": 86,
+              "y": 64
+            }
+          },
+          {
+            "name": "terminal_1dial",
+            "position": {
+              "x": 464,
+              "y": 95
+            }
+          }
+        ],
+        "type": 3,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "Internal Combustion",
         "levels": {
           "nextLevel": "LEVEL_23",
@@ -13430,6 +14674,48 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "word_danger",
+            "position": {
+              "x": 274,
+              "y": 189
+            }
+          },
+          {
+            "name": "door",
+            "position": {
+              "x": 69,
+              "y": 119
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 454,
+              "y": 93
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 418,
+              "y": 93
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 382,
+              "y": 93
+            }
+          }
+        ],
+        "type": 1,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "Pardon Me",
@@ -14550,6 +15836,20 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "computer2dial",
+            "position": {
+              "x": 284,
+              "y": 274
+            }
+          }
+        ],
+        "type": 1,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "Trapped in the Freezer",
         "levels": {
           "nextLevel": "LEVEL_25",
@@ -14886,6 +16186,69 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 425,
+              "y": 283
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 454,
+              "y": 283
+            }
+          },
+          {
+            "name": "word_danger",
+            "position": {
+              "x": 439,
+              "y": 260
+            }
+          },
+          {
+            "name": "arrowr",
+            "position": {
+              "x": 96,
+              "y": 310
+            }
+          },
+          {
+            "name": "sign_skull",
+            "position": {
+              "x": 45,
+              "y": 309
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 305,
+              "y": 95
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 341,
+              "y": 95
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 378,
+              "y": 95
+            }
+          }
+        ],
+        "type": 5,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "The Think Tank",
         "levels": {
           "nextLevel": "LEVEL_26",
@@ -15052,6 +16415,11 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "type": 0,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "The Drafty Floor",
@@ -15577,6 +16945,76 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "sign_voltage",
+            "position": {
+              "x": 212,
+              "y": 303
+            }
+          },
+          {
+            "name": "fusebox_pipes_l",
+            "position": {
+              "x": 28,
+              "y": 313
+            }
+          },
+          {
+            "name": "door",
+            "position": {
+              "x": 406,
+              "y": 332
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 219,
+              "y": 69
+            }
+          },
+          {
+            "name": "door",
+            "position": {
+              "x": 450,
+              "y": 82
+            }
+          },
+          {
+            "name": "terminal_chart",
+            "position": {
+              "x": 47,
+              "y": 222
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 257,
+              "y": 69
+            }
+          },
+          {
+            "name": "arrowld",
+            "position": {
+              "x": 336,
+              "y": 237
+            }
+          },
+          {
+            "name": "arrowld",
+            "position": {
+              "x": 337,
+              "y": 111
+            }
+          }
+        ],
+        "type": 3,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "The Garage",
         "levels": {
           "nextLevel": "LEVEL_28",
@@ -16092,6 +17530,69 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "arrowur",
+            "position": {
+              "x": 61,
+              "y": 136
+            }
+          },
+          {
+            "name": "arrowul",
+            "position": {
+              "x": 52,
+              "y": 193
+            }
+          },
+          {
+            "name": "arrowur",
+            "position": {
+              "x": 56,
+              "y": 248
+            }
+          },
+          {
+            "name": "arrowul",
+            "position": {
+              "x": 51,
+              "y": 301
+            }
+          },
+          {
+            "name": "arrowur",
+            "position": {
+              "x": 55,
+              "y": 354
+            }
+          },
+          {
+            "name": "terminal_chart",
+            "position": {
+              "x": 470,
+              "y": 366
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 453,
+              "y": 145
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 489,
+              "y": 145
+            }
+          }
+        ],
+        "type": 3,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "Up, Up, and Away",
         "levels": {
           "nextLevel": "LEVEL_29",
@@ -16337,6 +17838,83 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "door",
+            "position": {
+              "x": 261,
+              "y": 351
+            }
+          },
+          {
+            "name": "sign_acid",
+            "position": {
+              "x": 263,
+              "y": 99
+            }
+          },
+          {
+            "name": "sign_fire",
+            "position": {
+              "x": 295,
+              "y": 99
+            }
+          },
+          {
+            "name": "sign_voltage",
+            "position": {
+              "x": 327,
+              "y": 99
+            }
+          },
+          {
+            "name": "sign_skull",
+            "position": {
+              "x": 232,
+              "y": 99
+            }
+          },
+          {
+            "name": "sign_fire",
+            "position": {
+              "x": 201,
+              "y": 99
+            }
+          },
+          {
+            "name": "terminal_chart",
+            "position": {
+              "x": 76,
+              "y": 366
+            }
+          },
+          {
+            "name": "fusebox_pipes_d",
+            "position": {
+              "x": 132,
+              "y": 365
+            }
+          },
+          {
+            "name": "computer_matrix",
+            "position": {
+              "x": 407,
+              "y": 352
+            }
+          },
+          {
+            "name": "computer2dial",
+            "position": {
+              "x": 472,
+              "y": 352
+            }
+          }
+        ],
+        "type": 4,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "Disgruntled Climbbot",
         "levels": {
           "nextLevel": "LEVEL_30",
@@ -16520,6 +18098,69 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "terminal_chart",
+            "position": {
+              "x": 60,
+              "y": 96
+            }
+          },
+          {
+            "name": "door",
+            "position": {
+              "x": 51,
+              "y": 352
+            }
+          },
+          {
+            "name": "sign_no_access",
+            "position": {
+              "x": 51,
+              "y": 293
+            }
+          },
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 349,
+              "y": 377
+            }
+          },
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 228,
+              "y": 380
+            }
+          },
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 106,
+              "y": 381
+            }
+          },
+          {
+            "name": "terminal_circuit",
+            "position": {
+              "x": 289,
+              "y": 99
+            }
+          },
+          {
+            "name": "computer_matrix",
+            "position": {
+              "x": 173,
+              "y": 267
+            }
+          }
+        ],
+        "type": 4,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "Ups and Downs",
@@ -16830,6 +18471,48 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "arrowur",
+            "position": {
+              "x": 109,
+              "y": 304
+            }
+          },
+          {
+            "name": "arrowul",
+            "position": {
+              "x": 103,
+              "y": 232
+            }
+          },
+          {
+            "name": "arrowur",
+            "position": {
+              "x": 111,
+              "y": 152
+            }
+          },
+          {
+            "name": "arrowrd",
+            "position": {
+              "x": 429,
+              "y": 119
+            }
+          },
+          {
+            "name": "word_danger",
+            "position": {
+              "x": 408,
+              "y": 78
+            }
+          }
+        ],
+        "type": 2,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "Portable Boost",
         "levels": {
           "nextLevel": "LEVEL_32",
@@ -17091,6 +18774,76 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 363,
+              "y": 341
+            }
+          },
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 153,
+              "y": 339
+            }
+          },
+          {
+            "name": "sign_fire",
+            "position": {
+              "x": 98,
+              "y": 347
+            }
+          },
+          {
+            "name": "sign_fire",
+            "position": {
+              "x": 211,
+              "y": 347
+            }
+          },
+          {
+            "name": "sign_fire",
+            "position": {
+              "x": 305,
+              "y": 347
+            }
+          },
+          {
+            "name": "sign_fire",
+            "position": {
+              "x": 423,
+              "y": 347
+            }
+          },
+          {
+            "name": "computer2dial",
+            "position": {
+              "x": 442,
+              "y": 78
+            }
+          },
+          {
+            "name": "computer_matrix",
+            "position": {
+              "x": 112,
+              "y": 78
+            }
+          },
+          {
+            "name": "terminal_circuit",
+            "position": {
+              "x": 277,
+              "y": 114
+            }
+          }
+        ],
+        "type": 4,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "Hot Air",
@@ -17501,6 +19254,41 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "safetystrip_vert",
+            "position": {
+              "x": 422,
+              "y": 300
+            }
+          },
+          {
+            "name": "safetystrip_vert",
+            "position": {
+              "x": 121,
+              "y": 302
+            }
+          },
+          {
+            "name": "door",
+            "position": {
+              "x": 464,
+              "y": 297
+            }
+          },
+          {
+            "name": "lite_number_4",
+            "position": {
+              "x": 463,
+              "y": 242
+            }
+          }
+        ],
+        "type": 3,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "It's Raining Climbbots!",
@@ -18079,6 +19867,69 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "window",
+            "position": {
+              "x": 451,
+              "y": 88
+            }
+          },
+          {
+            "name": "door",
+            "position": {
+              "x": 375,
+              "y": 224
+            }
+          },
+          {
+            "name": "sign_no_access",
+            "position": {
+              "x": 373,
+              "y": 168
+            }
+          },
+          {
+            "name": "terminal_chart",
+            "position": {
+              "x": 91,
+              "y": 238
+            }
+          },
+          {
+            "name": "computer2dial",
+            "position": {
+              "x": 128,
+              "y": 42
+            }
+          },
+          {
+            "name": "terminal_1dial",
+            "position": {
+              "x": 419,
+              "y": 366
+            }
+          },
+          {
+            "name": "lite_number_1",
+            "position": {
+              "x": 33,
+              "y": 249
+            }
+          },
+          {
+            "name": "lite_number_2",
+            "position": {
+              "x": 499,
+              "y": 123
+            }
+          }
+        ],
+        "type": 3,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "Gearbots That Float",
@@ -19016,6 +20867,34 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "computer2dial",
+            "position": {
+              "x": 158,
+              "y": 278
+            }
+          },
+          {
+            "name": "fusebox_pipes_r",
+            "position": {
+              "x": 111,
+              "y": 300
+            }
+          },
+          {
+            "name": "sign_fire",
+            "position": {
+              "x": 156,
+              "y": 244
+            }
+          }
+        ],
+        "type": 2,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "Thermostat",
         "levels": {
           "nextLevel": "LEVEL_36",
@@ -19261,6 +21140,76 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 253,
+              "y": 368
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 56,
+              "y": 74
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 160,
+              "y": 73
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 267,
+              "y": 74
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 375,
+              "y": 75
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 481,
+              "y": 75
+            }
+          },
+          {
+            "name": "door",
+            "position": {
+              "x": 41,
+              "y": 315
+            }
+          },
+          {
+            "name": "fusebox_pipes_d",
+            "position": {
+              "x": 495,
+              "y": 331
+            }
+          },
+          {
+            "name": "computer_matrix",
+            "position": {
+              "x": 491,
+              "y": 318
+            }
+          }
+        ],
+        "type": 5,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "Windy Bridge",
@@ -19734,6 +21683,97 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "arrowld",
+            "position": {
+              "x": 193,
+              "y": 115
+            }
+          },
+          {
+            "name": "arrowrd",
+            "position": {
+              "x": 227,
+              "y": 242
+            }
+          },
+          {
+            "name": "arrowr",
+            "position": {
+              "x": 264,
+              "y": 230
+            }
+          },
+          {
+            "name": "arrowru",
+            "position": {
+              "x": 359,
+              "y": 214
+            }
+          },
+          {
+            "name": "arrowul",
+            "position": {
+              "x": 402,
+              "y": 109
+            }
+          },
+          {
+            "name": "arrowl",
+            "position": {
+              "x": 297,
+              "y": 102
+            }
+          },
+          {
+            "name": "arrowl",
+            "position": {
+              "x": 169,
+              "y": 103
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 48,
+              "y": 139
+            }
+          },
+          {
+            "name": "fusebox_pipes_l",
+            "position": {
+              "x": 33,
+              "y": 371
+            }
+          },
+          {
+            "name": "computer_matrix",
+            "position": {
+              "x": 87,
+              "y": 362
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 387,
+              "y": 48
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 423,
+              "y": 48
+            }
+          }
+        ],
+        "type": 5,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "Perpetual Motion Machine",
@@ -20293,6 +22333,118 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "sign_voltage",
+            "position": {
+              "x": 263,
+              "y": 339
+            }
+          },
+          {
+            "name": "sign_voltage",
+            "position": {
+              "x": 294,
+              "y": 339
+            }
+          },
+          {
+            "name": "sign_voltage",
+            "position": {
+              "x": 233,
+              "y": 339
+            }
+          },
+          {
+            "name": "sign_voltage",
+            "position": {
+              "x": 326,
+              "y": 339
+            }
+          },
+          {
+            "name": "sign_voltage",
+            "position": {
+              "x": 201,
+              "y": 338
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 40,
+              "y": 17
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 99,
+              "y": 17
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 158,
+              "y": 17
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 187,
+              "y": 17
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 246,
+              "y": 17
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 305,
+              "y": 17
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 364,
+              "y": 17
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 423,
+              "y": 17
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 467,
+              "y": 17
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 511,
+              "y": 17
+            }
+          }
+        ],
+        "type": 1,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "Working in the Rain",
         "levels": {
           "nextLevel": "LEVEL_39",
@@ -20647,6 +22799,76 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 36,
+              "y": 382
+            }
+          },
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 125,
+              "y": 382
+            }
+          },
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 215,
+              "y": 383
+            }
+          },
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 307,
+              "y": 382
+            }
+          },
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 395,
+              "y": 382
+            }
+          },
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 485,
+              "y": 382
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 443,
+              "y": 57
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 479,
+              "y": 57
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 407,
+              "y": 57
+            }
+          }
+        ],
+        "type": 3,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "Aerodynamics",
@@ -21256,6 +23478,132 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "sign_keepout",
+            "position": {
+              "x": 410,
+              "y": 91
+            }
+          },
+          {
+            "name": "fusebox_pipes_d",
+            "position": {
+              "x": 339,
+              "y": 365
+            }
+          },
+          {
+            "name": "computer2dial",
+            "position": {
+              "x": 363,
+              "y": 355
+            }
+          },
+          {
+            "name": "fusebox_pipes_d",
+            "position": {
+              "x": 192,
+              "y": 365
+            }
+          },
+          {
+            "name": "computer_matrix",
+            "position": {
+              "x": 216,
+              "y": 356
+            }
+          },
+          {
+            "name": "door",
+            "position": {
+              "x": 41,
+              "y": 352
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 483,
+              "y": 375
+            }
+          },
+          {
+            "name": "number_1",
+            "position": {
+              "x": 193,
+              "y": 223
+            }
+          },
+          {
+            "name": "number_2",
+            "position": {
+              "x": 204,
+              "y": 223
+            }
+          },
+          {
+            "name": "number_2",
+            "position": {
+              "x": 231,
+              "y": 223
+            }
+          },
+          {
+            "name": "number_dash",
+            "position": {
+              "x": 218,
+              "y": 224
+            }
+          },
+          {
+            "name": "number_5",
+            "position": {
+              "x": 245,
+              "y": 223
+            }
+          },
+          {
+            "name": "number_dash",
+            "position": {
+              "x": 260,
+              "y": 223
+            }
+          },
+          {
+            "name": "number_0",
+            "position": {
+              "x": 273,
+              "y": 224
+            }
+          },
+          {
+            "name": "number_1",
+            "position": {
+              "x": 286,
+              "y": 223
+            }
+          },
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 481,
+              "y": 326
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 481,
+              "y": 177
+            }
+          }
+        ],
+        "type": 4,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "Happy Holidays!",
         "levels": {
           "nextLevel": "LEVEL_41",
@@ -21634,6 +23982,139 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "sign_skull",
+            "position": {
+              "x": 52,
+              "y": 331
+            }
+          },
+          {
+            "name": "lite_number_1",
+            "position": {
+              "x": 94,
+              "y": 102
+            }
+          },
+          {
+            "name": "lite_number_2",
+            "position": {
+              "x": 33,
+              "y": 64
+            }
+          },
+          {
+            "name": "lite_number_3",
+            "position": {
+              "x": 348,
+              "y": 86
+            }
+          },
+          {
+            "name": "lite_number_4",
+            "position": {
+              "x": 452,
+              "y": 68
+            }
+          },
+          {
+            "name": "lite_number_5",
+            "position": {
+              "x": 469,
+              "y": 157
+            }
+          },
+          {
+            "name": "lite_number_6",
+            "position": {
+              "x": 213,
+              "y": 247
+            }
+          },
+          {
+            "name": "lite_number_7",
+            "position": {
+              "x": 334,
+              "y": 228
+            }
+          },
+          {
+            "name": "lite_number_8",
+            "position": {
+              "x": 364,
+              "y": 228
+            }
+          },
+          {
+            "name": "lite_number_9",
+            "position": {
+              "x": 424,
+              "y": 319
+            }
+          },
+          {
+            "name": "lite_number_1",
+            "position": {
+              "x": 493,
+              "y": 370
+            }
+          },
+          {
+            "name": "lite_number_0",
+            "position": {
+              "x": 503,
+              "y": 371
+            }
+          },
+          {
+            "name": "lite_number_1",
+            "position": {
+              "x": 325,
+              "y": 333
+            }
+          },
+          {
+            "name": "lite_number_1",
+            "position": {
+              "x": 316,
+              "y": 333
+            }
+          },
+          {
+            "name": "lite_number_1",
+            "position": {
+              "x": 240,
+              "y": 365
+            }
+          },
+          {
+            "name": "lite_number_2",
+            "position": {
+              "x": 251,
+              "y": 365
+            }
+          },
+          {
+            "name": "lite_number_1",
+            "position": {
+              "x": 46,
+              "y": 365
+            }
+          },
+          {
+            "name": "lite_number_3",
+            "position": {
+              "x": 56,
+              "y": 365
+            }
+          }
+        ],
+        "type": 2,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "Junkbot's Lucky Number",
         "levels": {
           "nextLevel": "LEVEL_42",
@@ -21851,6 +24332,76 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "lite_number_4",
+            "position": {
+              "x": 391,
+              "y": 272
+            }
+          },
+          {
+            "name": "arrowr",
+            "position": {
+              "x": 234,
+              "y": 354
+            }
+          },
+          {
+            "name": "lite_number_1",
+            "position": {
+              "x": 119,
+              "y": 272
+            }
+          },
+          {
+            "name": "number_0",
+            "position": {
+              "x": 33,
+              "y": 71
+            }
+          },
+          {
+            "name": "number_2",
+            "position": {
+              "x": 212,
+              "y": 271
+            }
+          },
+          {
+            "name": "number_3",
+            "position": {
+              "x": 305,
+              "y": 270
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 444,
+              "y": 50
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 408,
+              "y": 50
+            }
+          },
+          {
+            "name": "lite_number_5",
+            "position": {
+              "x": 505,
+              "y": 204
+            }
+          }
+        ],
+        "type": 5,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "Look Before You Leap",
@@ -22328,6 +24879,97 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "fusebox_pipes_r",
+            "position": {
+              "x": 342,
+              "y": 394
+            }
+          },
+          {
+            "name": "fusebox_pipes_r",
+            "position": {
+              "x": 182,
+              "y": 229
+            }
+          },
+          {
+            "name": "fusebox_pipes_l",
+            "position": {
+              "x": 223,
+              "y": 220
+            }
+          },
+          {
+            "name": "fusebox_pipes_r",
+            "position": {
+              "x": 286,
+              "y": 229
+            }
+          },
+          {
+            "name": "fusebox_pipes_l",
+            "position": {
+              "x": 291,
+              "y": 219
+            }
+          },
+          {
+            "name": "fusebox_pipes_l",
+            "position": {
+              "x": 267,
+              "y": 219
+            }
+          },
+          {
+            "name": "fusebox_pipes_l",
+            "position": {
+              "x": 401,
+              "y": 90
+            }
+          },
+          {
+            "name": "fusebox_pipes_d",
+            "position": {
+              "x": 470,
+              "y": 90
+            }
+          },
+          {
+            "name": "fusebox_pipes_l",
+            "position": {
+              "x": 446,
+              "y": 90
+            }
+          },
+          {
+            "name": "fusebox_pipes_d",
+            "position": {
+              "x": 357,
+              "y": 91
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 453,
+              "y": 296
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 489,
+              "y": 296
+            }
+          }
+        ],
+        "type": 3,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "Gotcha",
         "levels": {
           "nextLevel": "LEVEL_44",
@@ -22682,6 +25324,76 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "word_level",
+            "position": {
+              "x": 116,
+              "y": 307
+            }
+          },
+          {
+            "name": "number_1",
+            "position": {
+              "x": 163,
+              "y": 307
+            }
+          },
+          {
+            "name": "word_level",
+            "position": {
+              "x": 462,
+              "y": 217
+            }
+          },
+          {
+            "name": "number_2",
+            "position": {
+              "x": 511,
+              "y": 217
+            }
+          },
+          {
+            "name": "word_level",
+            "position": {
+              "x": 217,
+              "y": 64
+            }
+          },
+          {
+            "name": "number_3",
+            "position": {
+              "x": 265,
+              "y": 64
+            }
+          },
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 108,
+              "y": 216
+            }
+          },
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 468,
+              "y": 334
+            }
+          },
+          {
+            "name": "computer_matrix",
+            "position": {
+              "x": 419,
+              "y": 86
+            }
+          }
+        ],
+        "type": 1,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "Traffic",
@@ -23528,6 +26240,90 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "sign_voltage",
+            "position": {
+              "x": 120,
+              "y": 355
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 128,
+              "y": 382
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 187,
+              "y": 382
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 246,
+              "y": 382
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 276,
+              "y": 349
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 305,
+              "y": 382
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 364,
+              "y": 382
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 423,
+              "y": 382
+            }
+          },
+          {
+            "name": "sign_skull",
+            "position": {
+              "x": 150,
+              "y": 355
+            }
+          },
+          {
+            "name": "sign_keepout",
+            "position": {
+              "x": 134,
+              "y": 326
+            }
+          },
+          {
+            "name": "terminal_chart",
+            "position": {
+              "x": 403,
+              "y": 364
+            }
+          }
+        ],
+        "type": 5,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "The Secret Laboratory",
         "levels": {
           "nextLevel": "LEVEL_46",
@@ -24008,6 +26804,188 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 269,
+              "y": 324
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 274,
+              "y": 87
+            }
+          },
+          {
+            "name": "safetystrip_vert",
+            "position": {
+              "x": 369,
+              "y": 211
+            }
+          },
+          {
+            "name": "safetystrip_vert",
+            "position": {
+              "x": 179,
+              "y": 211
+            }
+          },
+          {
+            "name": "safetystrip_vert",
+            "position": {
+              "x": 369,
+              "y": 166
+            }
+          },
+          {
+            "name": "safetystrip_vert",
+            "position": {
+              "x": 369,
+              "y": 136
+            }
+          },
+          {
+            "name": "safetystrip_vert",
+            "position": {
+              "x": 369,
+              "y": 255
+            }
+          },
+          {
+            "name": "safetystrip_vert",
+            "position": {
+              "x": 369,
+              "y": 284
+            }
+          },
+          {
+            "name": "safetystrip_vert",
+            "position": {
+              "x": 179,
+              "y": 270
+            }
+          },
+          {
+            "name": "safetystrip_vert",
+            "position": {
+              "x": 179,
+              "y": 284
+            }
+          },
+          {
+            "name": "safetystrip_vert",
+            "position": {
+              "x": 179,
+              "y": 166
+            }
+          },
+          {
+            "name": "safetystrip_vert",
+            "position": {
+              "x": 179,
+              "y": 136
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 328,
+              "y": 324
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 333,
+              "y": 87
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 229,
+              "y": 87
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 214,
+              "y": 87
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 224,
+              "y": 324
+            }
+          },
+          {
+            "name": "sign_keepout",
+            "position": {
+              "x": 271,
+              "y": 262
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 453,
+              "y": 56
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 418,
+              "y": 56
+            }
+          },
+          {
+            "name": "computer_matrix",
+            "position": {
+              "x": 500,
+              "y": 174
+            }
+          },
+          {
+            "name": "fusebox_pipes_l",
+            "position": {
+              "x": 34,
+              "y": 180
+            }
+          },
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 424,
+              "y": 258
+            }
+          },
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 104,
+              "y": 258
+            }
+          },
+          {
+            "name": "number_7",
+            "position": {
+              "x": 40,
+              "y": 169
+            }
+          }
+        ],
+        "type": 3,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "Scary, Scary Eyebot",
         "levels": {
           "nextLevel": "LEVEL_47",
@@ -24243,6 +27221,55 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "arrowr",
+            "position": {
+              "x": 340,
+              "y": 159
+            }
+          },
+          {
+            "name": "door",
+            "position": {
+              "x": 275,
+              "y": 354
+            }
+          },
+          {
+            "name": "word_danger",
+            "position": {
+              "x": 435,
+              "y": 284
+            }
+          },
+          {
+            "name": "word_danger",
+            "position": {
+              "x": 119,
+              "y": 290
+            }
+          },
+          {
+            "name": "arrowl",
+            "position": {
+              "x": 203,
+              "y": 161
+            }
+          },
+          {
+            "name": "sign_skull",
+            "position": {
+              "x": 274,
+              "y": 157
+            }
+          }
+        ],
+        "type": 5,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "Eyebot on Patrol",
@@ -24824,6 +27851,55 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "fusebox_pipes_l",
+            "position": {
+              "x": 33,
+              "y": 91
+            }
+          },
+          {
+            "name": "fusebox_pipes_r",
+            "position": {
+              "x": 511,
+              "y": 58
+            }
+          },
+          {
+            "name": "arrowld",
+            "position": {
+              "x": 57,
+              "y": 242
+            }
+          },
+          {
+            "name": "arrowl",
+            "position": {
+              "x": 123,
+              "y": 228
+            }
+          },
+          {
+            "name": "arrowrd",
+            "position": {
+              "x": 483,
+              "y": 242
+            }
+          },
+          {
+            "name": "arrowr",
+            "position": {
+              "x": 421,
+              "y": 229
+            }
+          }
+        ],
+        "type": 5,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "Junkbot's Secret Weapon",
         "levels": {
           "nextLevel": "LEVEL_49",
@@ -24980,6 +28056,55 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "terminal_circuit",
+            "position": {
+              "x": 143,
+              "y": 151
+            }
+          },
+          {
+            "name": "sign_voltage",
+            "position": {
+              "x": 237,
+              "y": 129
+            }
+          },
+          {
+            "name": "sign_acid",
+            "position": {
+              "x": 514,
+              "y": 260
+            }
+          },
+          {
+            "name": "sign_acid",
+            "position": {
+              "x": 208,
+              "y": 129
+            }
+          },
+          {
+            "name": "door",
+            "position": {
+              "x": 225,
+              "y": 300
+            }
+          },
+          {
+            "name": "sign_no_access",
+            "position": {
+              "x": 225,
+              "y": 243
+            }
+          }
+        ],
+        "type": 4,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "Raincoat",
@@ -25165,6 +28290,11 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "type": 0,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "Running  the Gauntlet",
@@ -25540,6 +28670,216 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "safetystrip_vert",
+            "position": {
+              "x": 485,
+              "y": 102
+            }
+          },
+          {
+            "name": "safetystrip_vert",
+            "position": {
+              "x": 472,
+              "y": 107
+            }
+          },
+          {
+            "name": "safetystrip_vert",
+            "position": {
+              "x": 460,
+              "y": 112
+            }
+          },
+          {
+            "name": "safetystrip_vert",
+            "position": {
+              "x": 451,
+              "y": 105
+            }
+          },
+          {
+            "name": "safetystrip_vert",
+            "position": {
+              "x": 439,
+              "y": 110
+            }
+          },
+          {
+            "name": "safetystrip_vert",
+            "position": {
+              "x": 426,
+              "y": 114
+            }
+          },
+          {
+            "name": "safetystrip_vert",
+            "position": {
+              "x": 414,
+              "y": 104
+            }
+          },
+          {
+            "name": "safetystrip_vert",
+            "position": {
+              "x": 401,
+              "y": 108
+            }
+          },
+          {
+            "name": "safetystrip_vert",
+            "position": {
+              "x": 388,
+              "y": 112
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 259,
+              "y": 268
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 249,
+              "y": 280
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 308,
+              "y": 280
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 318,
+              "y": 268
+            }
+          },
+          {
+            "name": "fusebox",
+            "position": {
+              "x": 223,
+              "y": 263
+            }
+          },
+          {
+            "name": "fusebox",
+            "position": {
+              "x": 223,
+              "y": 287
+            }
+          },
+          {
+            "name": "fusebox",
+            "position": {
+              "x": 339,
+              "y": 262
+            }
+          },
+          {
+            "name": "fusebox",
+            "position": {
+              "x": 339,
+              "y": 287
+            }
+          },
+          {
+            "name": "fusebox",
+            "position": {
+              "x": 375,
+              "y": 135
+            }
+          },
+          {
+            "name": "fusebox",
+            "position": {
+              "x": 399,
+              "y": 135
+            }
+          },
+          {
+            "name": "fusebox",
+            "position": {
+              "x": 423,
+              "y": 135
+            }
+          },
+          {
+            "name": "fusebox",
+            "position": {
+              "x": 447,
+              "y": 135
+            }
+          },
+          {
+            "name": "fusebox",
+            "position": {
+              "x": 471,
+              "y": 135
+            }
+          },
+          {
+            "name": "fusebox",
+            "position": {
+              "x": 495,
+              "y": 135
+            }
+          },
+          {
+            "name": "fusebox",
+            "position": {
+              "x": 374,
+              "y": 74
+            }
+          },
+          {
+            "name": "fusebox",
+            "position": {
+              "x": 398,
+              "y": 74
+            }
+          },
+          {
+            "name": "fusebox",
+            "position": {
+              "x": 422,
+              "y": 74
+            }
+          },
+          {
+            "name": "fusebox",
+            "position": {
+              "x": 446,
+              "y": 74
+            }
+          },
+          {
+            "name": "fusebox",
+            "position": {
+              "x": 470,
+              "y": 74
+            }
+          },
+          {
+            "name": "fusebox",
+            "position": {
+              "x": 494,
+              "y": 74
+            }
+          }
+        ],
+        "type": 1,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "Off and On",
         "levels": {
           "nextLevel": "LEVEL_52",
@@ -25900,6 +29240,48 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "word_danger",
+            "position": {
+              "x": 266,
+              "y": 290
+            }
+          },
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 348,
+              "y": 273
+            }
+          },
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 194,
+              "y": 272
+            }
+          },
+          {
+            "name": "terminal_1dial",
+            "position": {
+              "x": 67,
+              "y": 295
+            }
+          },
+          {
+            "name": "door",
+            "position": {
+              "x": 54,
+              "y": 63
+            }
+          }
+        ],
+        "type": 3,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "Don't Let the Dogs Out",
@@ -26552,6 +29934,41 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "door",
+            "position": {
+              "x": 40,
+              "y": 63
+            }
+          },
+          {
+            "name": "door",
+            "position": {
+              "x": 505,
+              "y": 64
+            }
+          },
+          {
+            "name": "sign_keepout",
+            "position": {
+              "x": 68,
+              "y": 203
+            }
+          },
+          {
+            "name": "sign_keepout",
+            "position": {
+              "x": 471,
+              "y": 200
+            }
+          }
+        ],
+        "type": 2,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "What  is Project X?",
         "levels": {
           "nextLevel": "LEVEL_54",
@@ -27119,6 +30536,132 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "door",
+            "position": {
+              "x": 492,
+              "y": 47
+            }
+          },
+          {
+            "name": "door",
+            "position": {
+              "x": 42,
+              "y": 48
+            }
+          },
+          {
+            "name": "arrowld",
+            "position": {
+              "x": 39,
+              "y": 187
+            }
+          },
+          {
+            "name": "arrowr",
+            "position": {
+              "x": 404,
+              "y": 53
+            }
+          },
+          {
+            "name": "arrowru",
+            "position": {
+              "x": 356,
+              "y": 233
+            }
+          },
+          {
+            "name": "arrowl",
+            "position": {
+              "x": 331,
+              "y": 247
+            }
+          },
+          {
+            "name": "arrowr",
+            "position": {
+              "x": 287,
+              "y": 288
+            }
+          },
+          {
+            "name": "arrowd",
+            "position": {
+              "x": 264,
+              "y": 296
+            }
+          },
+          {
+            "name": "arrowr",
+            "position": {
+              "x": 406,
+              "y": 145
+            }
+          },
+          {
+            "name": "arrowl",
+            "position": {
+              "x": 471,
+              "y": 145
+            }
+          },
+          {
+            "name": "arrowur",
+            "position": {
+              "x": 71,
+              "y": 160
+            }
+          },
+          {
+            "name": "arrowl",
+            "position": {
+              "x": 376,
+              "y": 53
+            }
+          },
+          {
+            "name": "arrowl",
+            "position": {
+              "x": 117,
+              "y": 265
+            }
+          },
+          {
+            "name": "arrowrd",
+            "position": {
+              "x": 132,
+              "y": 89
+            }
+          },
+          {
+            "name": "arrowl",
+            "position": {
+              "x": 363,
+              "y": 288
+            }
+          },
+          {
+            "name": "sign_fire",
+            "position": {
+              "x": 289,
+              "y": 44
+            }
+          },
+          {
+            "name": "arrowr",
+            "position": {
+              "x": 157,
+              "y": 366
+            }
+          }
+        ],
+        "type": 1,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "Which Switch?",
         "levels": {
           "nextLevel": "LEVEL_55",
@@ -27283,6 +30826,69 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "computer_matrix",
+            "position": {
+              "x": 50,
+              "y": 214
+            }
+          },
+          {
+            "name": "fusebox_pipes_d",
+            "position": {
+              "x": 71,
+              "y": 173
+            }
+          },
+          {
+            "name": "sign_keepout",
+            "position": {
+              "x": 429,
+              "y": 117
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 75,
+              "y": 362
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 349,
+              "y": 395
+            }
+          },
+          {
+            "name": "sign_fire",
+            "position": {
+              "x": 342,
+              "y": 223
+            }
+          },
+          {
+            "name": "word_danger",
+            "position": {
+              "x": 280,
+              "y": 223
+            }
+          },
+          {
+            "name": "sign_fire",
+            "position": {
+              "x": 223,
+              "y": 224
+            }
+          }
+        ],
+        "type": 1,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "Junkbot is Brave",
@@ -27709,6 +31315,76 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 280,
+              "y": 258
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 280,
+              "y": 169
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 280,
+              "y": 78
+            }
+          },
+          {
+            "name": "terminal_1dial",
+            "position": {
+              "x": 413,
+              "y": 241
+            }
+          },
+          {
+            "name": "terminal_circuit",
+            "position": {
+              "x": 412,
+              "y": 156
+            }
+          },
+          {
+            "name": "terminal_chart",
+            "position": {
+              "x": 413,
+              "y": 64
+            }
+          },
+          {
+            "name": "door",
+            "position": {
+              "x": 247,
+              "y": 353
+            }
+          },
+          {
+            "name": "fusebox",
+            "position": {
+              "x": 294,
+              "y": 357
+            }
+          },
+          {
+            "name": "number_3",
+            "position": {
+              "x": 246,
+              "y": 330
+            }
+          }
+        ],
+        "type": 1,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "Elevator Action",
@@ -28141,6 +31817,76 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "fusebox_pipes_d",
+            "position": {
+              "x": 383,
+              "y": 367
+            }
+          },
+          {
+            "name": "sign_keepout",
+            "position": {
+              "x": 303,
+              "y": 363
+            }
+          },
+          {
+            "name": "door",
+            "position": {
+              "x": 51,
+              "y": 115
+            }
+          },
+          {
+            "name": "word_danger",
+            "position": {
+              "x": 125,
+              "y": 307
+            }
+          },
+          {
+            "name": "terminal_1dial",
+            "position": {
+              "x": 361,
+              "y": 274
+            }
+          },
+          {
+            "name": "terminal_circuit",
+            "position": {
+              "x": 42,
+              "y": 364
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 114,
+              "y": 104
+            }
+          },
+          {
+            "name": "fusebox_pipes_r",
+            "position": {
+              "x": 521,
+              "y": 69
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 401,
+              "y": 85
+            }
+          }
+        ],
+        "type": 1,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "The Quest",
         "levels": {
           "nextLevel": "LEVEL_58",
@@ -28438,6 +32184,104 @@
         "zIndex": -50000
       },
       {
+        "decals": [
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 274,
+              "y": 116
+            }
+          },
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 277,
+              "y": 315
+            }
+          },
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 275,
+              "y": 217
+            }
+          },
+          {
+            "name": "arrowl",
+            "position": {
+              "x": 248,
+              "y": 49
+            }
+          },
+          {
+            "name": "computer_matrix",
+            "position": {
+              "x": 48,
+              "y": 352
+            }
+          },
+          {
+            "name": "computer2dial",
+            "position": {
+              "x": 135,
+              "y": 351
+            }
+          },
+          {
+            "name": "arrowr",
+            "position": {
+              "x": 299,
+              "y": 49
+            }
+          },
+          {
+            "name": "fusebox_pipes_r",
+            "position": {
+              "x": 512,
+              "y": 168
+            }
+          },
+          {
+            "name": "terminal_1dial",
+            "position": {
+              "x": 446,
+              "y": 363
+            }
+          },
+          {
+            "name": "lite_number_6",
+            "position": {
+              "x": 460,
+              "y": 376
+            }
+          },
+          {
+            "name": "lite_number_0",
+            "position": {
+              "x": 445,
+              "y": 376
+            }
+          },
+          {
+            "name": "lite_number_0",
+            "position": {
+              "x": 431,
+              "y": 376
+            }
+          },
+          {
+            "name": "fusebox_pipes_l",
+            "position": {
+              "x": 33,
+              "y": 213
+            }
+          }
+        ],
+        "type": 3,
+        "name": "Backdrop",
+        "zIndex": -60000
+      },
+      {
         "levelName": "Wind Tunnel",
         "levels": {
           "nextLevel": "LEVEL_59",
@@ -28682,6 +32526,83 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "window",
+            "position": {
+              "x": 56,
+              "y": 246
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 93,
+              "y": 246
+            }
+          },
+          {
+            "name": "window",
+            "position": {
+              "x": 132,
+              "y": 246
+            }
+          },
+          {
+            "name": "terminal_chart",
+            "position": {
+              "x": 122,
+              "y": 96
+            }
+          },
+          {
+            "name": "door",
+            "position": {
+              "x": 471,
+              "y": 351
+            }
+          },
+          {
+            "name": "terminal_1dial",
+            "position": {
+              "x": 422,
+              "y": 132
+            }
+          },
+          {
+            "name": "safetystrip_horiz",
+            "position": {
+              "x": 424,
+              "y": 148
+            }
+          },
+          {
+            "name": "word_danger",
+            "position": {
+              "x": 238,
+              "y": 330
+            }
+          },
+          {
+            "name": "sign_fire",
+            "position": {
+              "x": 157,
+              "y": 355
+            }
+          },
+          {
+            "name": "arrowu",
+            "position": {
+              "x": 316,
+              "y": 343
+            }
+          }
+        ],
+        "type": 2,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "All Kinds of Trouble",
@@ -29497,6 +33418,20 @@
         "image": "background_level",
         "name": "Sprite",
         "zIndex": -50000
+      },
+      {
+        "decals": [
+          {
+            "name": "sign_keepout",
+            "position": {
+              "x": 43,
+              "y": 303
+            }
+          }
+        ],
+        "type": 4,
+        "name": "Backdrop",
+        "zIndex": -60000
       },
       {
         "levelName": "Art Factory",

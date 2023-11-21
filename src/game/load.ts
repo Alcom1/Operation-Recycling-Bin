@@ -13,6 +13,7 @@ import FPSCounter from "./gameobjects/fpscounter";
 import LevelSequence from "./gameobjects/levelsequence";
 import MobileIndicator from "./gameobjects/mobileindicator";
 import Sprite from "./gameobjects/sprite";
+import Backdrop from "./gameobjects/backdrop";
 import BrickNormal from "game/gameobjects/bricknormal";
 import BrickTileHot from "./gameobjects/bricktilehot";
 import BrickTileFan from "./gameobjects/bricktilefan";
@@ -36,8 +37,9 @@ window.onload = function() {
         canvas, 
         "scenes/",
         "scenes",
-        ["LevelInterface", "LEVEL_28"],
+        ["LevelInterface", "LEVEL_55"],
         [
+            Backdrop,
             BrickHandler,
             BrickHandlerDebug,
             BrickJump,
