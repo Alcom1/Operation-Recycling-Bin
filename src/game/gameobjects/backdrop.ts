@@ -5,6 +5,11 @@ import { Point } from "engine/utilities/vect";
 interface Decal {
     position: Point;
     name: string;
+    image: HTMLImageElement;
+}
+
+interface SpriteOffset extends Point {
+    name: string;
 }
 
 export interface BackdropParams extends GameObjectParams {
@@ -18,6 +23,40 @@ export default class Backdrop extends GameObject {
     private image : HTMLImageElement = new Image();
     private decals : Decal[];
     private type : number;
+    private offsets : SpriteOffset[];
+
+    /** Constructor */
+    constructor(params: BackdropParams) {
+        super(params);
+
+        (params.decals ?? []).forEach(d => console.log(d.name));
+
+        this.offsets = [
+            { x : -60, y : -16, name : "arrowl" },
+            { x : -44, y : -28, name : "arrowur" },
+            { x : -56, y : -16, name : "arrowr" },
+            { x : -54, y :  -8, name : "computer_matrix" },
+            { x : -54, y : -28, name : "terminal_chart" },
+            { x : -54, y : -28, name : "terminal_circuit" },
+            { x : -42, y : -20, name : "fusebox_pipes_d" },
+            { x : -56, y : -54, name : "door" },
+            { x : -64, y :   8, name : "lite_word_level" },
+            { x :  -2, y :   8, name : "lite_number_1" },
+            { x : -14, y : -36, name : "safetystrip_vert" },
+            { x : -50, y :   0, name : "sign_no_access" },
+            { x : -26, y : -10, name : "window" },
+            { x : -80, y :  10, name : "word_danger" }
+        ];
+
+        this.decals = (params.decals ?? [])
+            .filter(d => this.offsets.some(o => o.name === d.name))
+            .map(d => ({ 
+                name : d.name, 
+                position : d.position,
+                image : this.engine.library.getImage("bg_" + d.name)}));
+
+        this.type = params.type;
+    }
 
     /** Initialize brick sprite */
     public init() {
@@ -25,15 +64,6 @@ export default class Backdrop extends GameObject {
         this.image.src = this.engine.baker.bake(ctx => this.drawBackdrop(ctx));
     }
 
-    /** Constructor */
-    constructor(params: BackdropParams) {
-        super(params);
-
-        this.decals = params.decals ?? [];
-        this.type = params.type;
-
-        this.decals.forEach(d => console.log(d.name, d.position.x, d.position.y));
-    }
 
     /** */
     public draw(ctx: CanvasRenderingContext2D) {        
@@ -75,6 +105,7 @@ export default class Backdrop extends GameObject {
                 this.drawRivetLine(ctx, 398, 486,  2);
                 this.drawRivetLine(ctx, 708, 438,  2);
                 break;
+
             case 2:
                 ctx.fillRect(352,  50, 278, 236);
                 ctx.fillRect(392, 320, 236, 234);
@@ -100,6 +131,7 @@ export default class Backdrop extends GameObject {
                 this.drawRivetLine(ctx, 770, 102,  3);
                 this.drawRivetLine(ctx, 956, 102, 15, false);
                 break;
+
             case 3:
                 ctx.fillRect( 44, 138, 278, 236);
                 ctx.fillRect(374,  38, 236, 338);
@@ -122,6 +154,7 @@ export default class Backdrop extends GameObject {
                 this.drawRivetLine(ctx, 832,  54,  7, false);
                 this.drawRivetLine(ctx, 956, 438,  9, false);
                 break;
+
             case 4:
                 ctx.fillRect( 20,  78, 114, 236);
                 ctx.fillRect(350, 408, 278, 236);
@@ -147,6 +180,7 @@ export default class Backdrop extends GameObject {
                 this.drawRivetLine(ctx, 956, 678,  2);
                 this.drawRivetLine(ctx, 956, 726,  3, false);
                 break;
+
             case 5:
                 ctx.fillRect( 20,  38, 528, 224);
                 ctx.fillRect(350, 408, 278, 236);
@@ -171,7 +205,20 @@ export default class Backdrop extends GameObject {
         ctx.translate(0, -24);
 
         ctx.fillStyle = "#444";
-        this.decals.forEach(d => ctx.fillRect(d.position.x * 2, d.position.y * 2, 10, 10));
+
+        this.decals.forEach(d => {
+
+            let offset = this.offsets.filter(o => o.name === d.name)[0];
+
+            if(offset) {
+
+                ctx.drawImage(d.image, d.position.x * 2 + offset.x, d.position.y * 2 + offset.y); 
+            }
+            else {
+
+                ctx.fillRect(d.position.x * 2, d.position.y * 2, 10, 10)
+            }
+        });
     }
 
     /** */
