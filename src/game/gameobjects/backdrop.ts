@@ -29,14 +29,16 @@ export default class Backdrop extends GameObject {
     constructor(params: BackdropParams) {
         super(params);
 
-        (params.decals ?? []).forEach(d => console.log(d.name));
-
         this.offsets = [
-            { x : -60, y : -16, name : "arrowl" },
+            { x : -36, y : -32, name : "arrowd" },
+            { x : -60, y : -14, name : "arrowl" },
             { x : -44, y : -20, name : "arrowld" },
-            { x : -56, y : -16, name : "arrowr" },
+            { x : -56, y : -14, name : "arrowr" },
             { x : -52, y : -20, name : "arrowrd" },
+            { x : -34, y : -32, name : "arrowu" },
+            { x : -48, y : -26, name : "arrowul" },
             { x : -44, y : -28, name : "arrowur" },
+            { x : -46, y : -26, name : "arrowru" },
             { x : -54, y :  -8, name : "computer_matrix" },
             { x : -54, y :  -8, name : "computer2dial" },
             { x : -56, y : -54, name : "door" },
@@ -44,7 +46,7 @@ export default class Backdrop extends GameObject {
             { x : -42, y : -20, name : "fusebox_pipes_d" },
             { x : -48, y : -20, name : "fusebox_pipes_l" },
             { x : -40, y : -24, name : "fusebox_pipes_r" },
-            { x : -10, y :  10, name : "number_0" },
+            { x : -10, y :   8, name : "number_0" },
             { x :  -4, y :  10, name : "number_1" },
             { x : -12, y :  10, name : "number_2" },
             { x : -10, y :  10, name : "number_3" },
@@ -54,6 +56,7 @@ export default class Backdrop extends GameObject {
             { x : -12, y :  10, name : "number_7" },
             { x : -12, y :  10, name : "number_8" },
             { x : -12, y :  10, name : "number_9" },
+            { x : -10, y :  20, name : "number_dash" },
             { x : -60, y :  10, name : "safetystrip_horiz" },
             { x : -14, y : -36, name : "safetystrip_vert" },
             { x : -24, y :   0, name : "sign_acid" },
@@ -62,6 +65,7 @@ export default class Backdrop extends GameObject {
             { x : -50, y :   0, name : "sign_no_access" },
             { x : -24, y :   0, name : "sign_skull" },
             { x : -24, y :   0, name : "sign_voltage" },
+            { x : -54, y : -28, name : "terminal_1dial" },
             { x : -54, y : -28, name : "terminal_chart" },
             { x : -54, y : -28, name : "terminal_circuit" },
             { x : -26, y : -10, name : "window" },
