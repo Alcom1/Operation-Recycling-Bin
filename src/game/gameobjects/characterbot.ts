@@ -378,8 +378,12 @@ export default class CharacterBot extends Character {
                 undefined,
                 this.faction);
 
+            // NO FLOOR - FALL
+            if(!this.getCollisionVertical(-1)) {
+                this.startVertMovement();
+            }
             // WALL - REVERSE
-            if (cbm & gcb.wall) {
+            else if (cbm & gcb.wall) {
                 this.reverse();
             }
             // HEAD-WALL - REVERSE
