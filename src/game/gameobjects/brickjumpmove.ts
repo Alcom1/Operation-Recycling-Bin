@@ -14,5 +14,7 @@ export default class BrickJumpMove extends BrickJump {
     /** Constructor */
     constructor(params: BrickTileParams) {
         super(Object.assign(params, brickJumpMoveOverride));
+
+        this._isBlock = false;
     }
 }
