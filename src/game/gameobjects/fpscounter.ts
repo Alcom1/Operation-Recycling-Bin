@@ -41,9 +41,9 @@ export default class FPSCounter extends GameObject {
 
     /** Draw fps display */
     public draw(ctx: CanvasRenderingContext2D) {
-        ctx.textBaseline = "top";
+        
         ctx.font = this.font;
         ctx.fillStyle = this.color;
-        ctx.fillText(this.text, 0, 1); 
+        ctx.fillText(this.text, 0, 20); 
     }
 }
