@@ -114,7 +114,7 @@ export default class Backdrop extends GameObject {
 
             case 3:
                 ctx.fillRect( 44, 138, 278, 236);
-                ctx.fillRect(374,  38, 236, 338);
+                ctx.fillRect(374,  36, 236, 340);
                 ctx.fillRect(512, 420, 278, 236);
                 this.drawRivetSquare(ctx, 398,  12, 4, 8);
                 this.drawRivetSquare(ctx,  60, 158, 5, 5);
@@ -139,7 +139,7 @@ export default class Backdrop extends GameObject {
                 ctx.fillRect( 20,  78, 114, 236);
                 ctx.fillRect(350, 408, 278, 236);
                 ctx.fillRect(684, 408, 376, 236);
-                ctx.fillRect(834,  38, 226, 72);
+                ctx.fillRect(834,  36, 226, 74);
                 this.drawRivetSquare(ctx, -18,  96, 3, 5);
                 this.drawRivetSquare(ctx, 366, 428, 5, 5);
                 this.drawRivetSquare(ctx, 712, 428, 7, 5);
@@ -162,9 +162,9 @@ export default class Backdrop extends GameObject {
                 break;
 
             case 5:
-                ctx.fillRect( 20,  38, 528, 224);
+                ctx.fillRect( 20,  36, 528, 226);
                 ctx.fillRect(350, 408, 278, 236);
-                ctx.fillRect(930,  38, 130, 224);
+                ctx.fillRect(930,  36, 130, 226);
                 this.drawRivetSquare(ctx,  38,  46, 9, 5);
                 this.drawRivetSquare(ctx, 366, 428, 5, 5);
                 this.drawRivetSquare(ctx, 948,  46, 3, 5);

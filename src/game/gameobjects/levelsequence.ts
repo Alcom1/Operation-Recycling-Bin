@@ -50,10 +50,9 @@ export default class LevelSequence extends GameObject {
     /** Draw the level name */
     public draw(ctx: CanvasRenderingContext2D) {
 
-        ctx.textBaseline = "top";
         ctx.textAlign = "right";
         ctx.font = this.font;
         ctx.fillStyle = this.color;
-        ctx.fillText(this.levelName, 0, 1);
+        ctx.fillText(this.levelName, 0, 20);
     }
 }

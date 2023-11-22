@@ -33,6 +33,7 @@ export default class MouseModule {
         }
         this.mouseElement.onpointerup = () => this.mousePressed = false;
         this.mouseElement.onpointercancel = () => this.mousePressed = false;
+        this.mouseElement.onpointerleave = () => this.mousePressed = false;
     }
 
     /** Update the mouse for a frame (Should be the last action of a frame) */
