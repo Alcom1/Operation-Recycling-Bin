@@ -23,58 +23,12 @@ export default class Backdrop extends GameObject {
     private image : HTMLImageElement = new Image();
     private decals : Decal[];
     private type : number;
-    private offsets : SpriteOffset[];
 
     /** Constructor */
     constructor(params: BackdropParams) {
         super(params);
 
-        this.offsets = [
-            { x : -36, y : -32, name : "arrowd" },
-            { x : -60, y : -14, name : "arrowl" },
-            { x : -44, y : -20, name : "arrowld" },
-            { x : -56, y : -14, name : "arrowr" },
-            { x : -52, y : -20, name : "arrowrd" },
-            { x : -34, y : -32, name : "arrowu" },
-            { x : -48, y : -26, name : "arrowul" },
-            { x : -44, y : -28, name : "arrowur" },
-            { x : -46, y : -26, name : "arrowru" },
-            { x : -54, y :  -8, name : "computer_matrix" },
-            { x : -54, y :  -8, name : "computer2dial" },
-            { x : -56, y : -54, name : "door" },
-            { x : -24, y :   0, name : "fusebox" },
-            { x : -42, y : -20, name : "fusebox_pipes_d" },
-            { x : -48, y : -20, name : "fusebox_pipes_l" },
-            { x : -40, y : -24, name : "fusebox_pipes_r" },
-            { x : -10, y :   8, name : "number_0" },
-            { x :  -4, y :  10, name : "number_1" },
-            { x : -12, y :  10, name : "number_2" },
-            { x : -10, y :  10, name : "number_3" },
-            { x : -10, y :  10, name : "number_4" },
-            { x : -10, y :  10, name : "number_5" },
-            { x : -12, y :  10, name : "number_6" },
-            { x : -12, y :  10, name : "number_7" },
-            { x : -12, y :  10, name : "number_8" },
-            { x : -12, y :  10, name : "number_9" },
-            { x : -10, y :  20, name : "number_dash" },
-            { x : -60, y :  10, name : "safetystrip_horiz" },
-            { x : -14, y : -36, name : "safetystrip_vert" },
-            { x : -24, y :   0, name : "sign_acid" },
-            { x : -24, y :   0, name : "sign_fire" },
-            { x : -50, y :   0, name : "sign_keepout" },
-            { x : -50, y :   0, name : "sign_no_access" },
-            { x : -24, y :   0, name : "sign_skull" },
-            { x : -24, y :   0, name : "sign_voltage" },
-            { x : -54, y : -28, name : "terminal_1dial" },
-            { x : -54, y : -28, name : "terminal_chart" },
-            { x : -54, y : -28, name : "terminal_circuit" },
-            { x : -26, y : -10, name : "window" },
-            { x : -80, y :  10, name : "word_danger" },
-            { x : -64, y :  10, name : "word_level" }
-        ];
-
         this.decals = (params.decals ?? [])
-            .filter(d => this.offsets.some(o => o.name === d.name))
             .map(d => ({ 
                 name : d.name, 
                 position : d.position,
@@ -95,14 +49,15 @@ export default class Backdrop extends GameObject {
         ctx.drawImage(this.image, 0, 0);
     }
 
-    /** Draw this Backdrop */
+    /** Draw this Backdrop, squares, rivets, then decals */
     public drawBackdrop(ctx: CanvasRenderingContext2D): void {
 
+        ctx.save();
         ctx.fillStyle = "#636B6B";
-
         ctx.translate(0, 24);
 
         switch(this.type) {
+
             case 0:
             case 1:
                 ctx.fillRect( 20,  78, 226, 236);
@@ -227,26 +182,12 @@ export default class Backdrop extends GameObject {
                 break;
         }
 
-        ctx.translate(0, -24);
+        ctx.restore();
 
-        ctx.fillStyle = "#444";
-
-        this.decals.forEach(d => {
-
-            let offset = this.offsets.filter(o => o.name === d.name)[0];
-
-            if(offset) {
-
-                ctx.drawImage(d.image, d.position.x * 2 + offset.x, d.position.y * 2 + offset.y); 
-            }
-            else {
-
-                ctx.fillRect(d.position.x * 2, d.position.y * 2, 10, 10)
-            }
-        });
+        this.decals.forEach(d => ctx.drawImage(d.image, d.position.x, d.position.y));
     }
 
-    /** */
+    /** Draw a line of rivets*/
     private drawRivetLine(
         ctx: CanvasRenderingContext2D, 
         x: number,
@@ -254,8 +195,10 @@ export default class Backdrop extends GameObject {
         c: number,
         isHorz : boolean = true): void {
 
+        ctx.save();
         ctx.translate(x, y);
 
+        //Each rivet
         for(let i = 0; i < c; i++) {
 
             this.drawRivet(
@@ -266,10 +209,10 @@ export default class Backdrop extends GameObject {
                 "#7F8887");
         }
 
-        ctx.translate(-x, -y);
+        ctx.restore();
     }
 
-    /** */
+    /** Draw a hollow square of rivets*/
     private drawRivetSquare(
         ctx: CanvasRenderingContext2D, 
         x: number,
@@ -277,12 +220,16 @@ export default class Backdrop extends GameObject {
         w: number,
         h: number): void {
 
+        ctx.save();
         ctx.translate(x, y);
 
+        //Each row
         for(let j = 0; j < h; j++) {
 
+            //Each column
             for(let i = 0; i < w; i++) {
 
+                //Skip inner hollow area
                 if(!(j == 0 || j == h - 1) && !(i == 0 || i == w - 1)) {
                     continue;
                 }
@@ -296,10 +243,10 @@ export default class Backdrop extends GameObject {
             }
         }
 
-        ctx.translate(-x, -y);
+        ctx.restore();
     }
 
-    /** */
+    /** Draw a single rivet */
     private drawRivet(
         ctx: CanvasRenderingContext2D,
         x: number,
