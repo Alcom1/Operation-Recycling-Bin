@@ -44,9 +44,16 @@ export default class Backdrop extends GameObject {
             { x : -42, y : -20, name : "fusebox_pipes_d" },
             { x : -48, y : -20, name : "fusebox_pipes_l" },
             { x : -40, y : -24, name : "fusebox_pipes_r" },
-            { x :  -2, y :   8, name : "lite_number_1" },
-            { x : -64, y :   8, name : "lite_word_level" },
+            { x : -10, y :  10, name : "number_0" },
+            { x :  -4, y :  10, name : "number_1" },
+            { x : -12, y :  10, name : "number_2" },
+            { x : -10, y :  10, name : "number_3" },
             { x : -10, y :  10, name : "number_4" },
+            { x : -10, y :  10, name : "number_5" },
+            { x : -12, y :  10, name : "number_6" },
+            { x : -12, y :  10, name : "number_7" },
+            { x : -12, y :  10, name : "number_8" },
+            { x : -12, y :  10, name : "number_9" },
             { x : -60, y :  10, name : "safetystrip_horiz" },
             { x : -14, y : -36, name : "safetystrip_vert" },
             { x : -24, y :   0, name : "sign_acid" },
@@ -58,7 +65,8 @@ export default class Backdrop extends GameObject {
             { x : -54, y : -28, name : "terminal_chart" },
             { x : -54, y : -28, name : "terminal_circuit" },
             { x : -26, y : -10, name : "window" },
-            { x : -80, y :  10, name : "word_danger" }
+            { x : -80, y :  10, name : "word_danger" },
+            { x : -64, y :  10, name : "word_level" }
         ];
 
         this.decals = (params.decals ?? [])

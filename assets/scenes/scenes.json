@@ -2237,14 +2237,14 @@
             }
           },
           {
-            "name": "lite_word_level",
+            "name": "word_level",
             "position": {
               "x": 53,
               "y": 259
             }
           },
           {
-            "name": "lite_number_1",
+            "name": "number_1",
             "position": {
               "x": 95,
               "y": 259
@@ -19279,7 +19279,7 @@
             }
           },
           {
-            "name": "lite_number_4",
+            "name": "number_4",
             "position": {
               "x": 463,
               "y": 242
@@ -19913,14 +19913,14 @@
             }
           },
           {
-            "name": "lite_number_1",
+            "name": "number_1",
             "position": {
               "x": 33,
               "y": 249
             }
           },
           {
-            "name": "lite_number_2",
+            "name": "number_2",
             "position": {
               "x": 499,
               "y": 123
@@ -23709,27 +23709,6 @@
         }
       },
       {
-        "name": "CharacterBin",
-        "position": {
-          "x": 31,
-          "y": 10
-        }
-      },
-      {
-        "name": "CharacterBin",
-        "position": {
-          "x": 30,
-          "y": 5
-        }
-      },
-      {
-        "name": "CharacterBin",
-        "position": {
-          "x": 33,
-          "y": 22
-        }
-      },
-      {
         "width": 4,
         "name": "BrickNormal",
         "position": {
@@ -23765,20 +23744,6 @@
         }
       },
       {
-        "name": "CharacterBin",
-        "position": {
-          "x": 22,
-          "y": 14
-        }
-      },
-      {
-        "name": "CharacterBin",
-        "position": {
-          "x": 24,
-          "y": 14
-        }
-      },
-      {
         "width": 4,
         "name": "BrickNormal",
         "position": {
@@ -23792,13 +23757,6 @@
         "position": {
           "x": 12,
           "y": 16
-        }
-      },
-      {
-        "name": "CharacterBin",
-        "position": {
-          "x": 14,
-          "y": 15
         }
       },
       {
@@ -23920,60 +23878,11 @@
         }
       },
       {
-        "name": "CharacterBin",
-        "position": {
-          "x": 23,
-          "y": 6
-        }
-      },
-      {
         "width": 4,
         "name": "BrickNormal",
         "position": {
           "x": 0,
           "y": 6
-        }
-      },
-      {
-        "name": "CharacterBin",
-        "position": {
-          "x": 2,
-          "y": 5
-        }
-      },
-      {
-        "name": "CharacterBin",
-        "position": {
-          "x": 6,
-          "y": 7
-        }
-      },
-      {
-        "name": "CharacterBin",
-        "position": {
-          "x": 28,
-          "y": 19
-        }
-      },
-      {
-        "name": "CharacterBin",
-        "position": {
-          "x": 21,
-          "y": 20
-        }
-      },
-      {
-        "name": "CharacterBin",
-        "position": {
-          "x": 16,
-          "y": 22
-        }
-      },
-      {
-        "name": "CharacterBin",
-        "position": {
-          "x": 3,
-          "y": 22
         }
       },
       {
@@ -23991,119 +23900,119 @@
             }
           },
           {
-            "name": "lite_number_1",
+            "name": "number_1",
             "position": {
               "x": 94,
               "y": 102
             }
           },
           {
-            "name": "lite_number_2",
+            "name": "number_2",
             "position": {
               "x": 33,
               "y": 64
             }
           },
           {
-            "name": "lite_number_3",
+            "name": "number_3",
             "position": {
               "x": 348,
               "y": 86
             }
           },
           {
-            "name": "lite_number_4",
+            "name": "number_4",
             "position": {
               "x": 452,
               "y": 68
             }
           },
           {
-            "name": "lite_number_5",
+            "name": "number_5",
             "position": {
               "x": 469,
               "y": 157
             }
           },
           {
-            "name": "lite_number_6",
+            "name": "number_6",
             "position": {
               "x": 213,
               "y": 247
             }
           },
           {
-            "name": "lite_number_7",
+            "name": "number_7",
             "position": {
               "x": 334,
               "y": 228
             }
           },
           {
-            "name": "lite_number_8",
+            "name": "number_8",
             "position": {
               "x": 364,
               "y": 228
             }
           },
           {
-            "name": "lite_number_9",
+            "name": "number_9",
             "position": {
               "x": 424,
               "y": 319
             }
           },
           {
-            "name": "lite_number_1",
+            "name": "number_1",
             "position": {
               "x": 493,
               "y": 370
             }
           },
           {
-            "name": "lite_number_0",
+            "name": "number_0",
             "position": {
               "x": 503,
               "y": 371
             }
           },
           {
-            "name": "lite_number_1",
+            "name": "number_1",
             "position": {
               "x": 325,
               "y": 333
             }
           },
           {
-            "name": "lite_number_1",
+            "name": "number_1",
             "position": {
               "x": 316,
               "y": 333
             }
           },
           {
-            "name": "lite_number_1",
+            "name": "number_1",
             "position": {
               "x": 240,
               "y": 365
             }
           },
           {
-            "name": "lite_number_2",
+            "name": "number_2",
             "position": {
               "x": 251,
               "y": 365
             }
           },
           {
-            "name": "lite_number_1",
+            "name": "number_1",
             "position": {
               "x": 46,
               "y": 365
             }
           },
           {
-            "name": "lite_number_3",
+            "name": "number_3",
             "position": {
               "x": 56,
               "y": 365
@@ -24336,7 +24245,7 @@
       {
         "decals": [
           {
-            "name": "lite_number_4",
+            "name": "number_4",
             "position": {
               "x": 391,
               "y": 272
@@ -24350,7 +24259,7 @@
             }
           },
           {
-            "name": "lite_number_1",
+            "name": "number_1",
             "position": {
               "x": 119,
               "y": 272
@@ -24392,7 +24301,7 @@
             }
           },
           {
-            "name": "lite_number_5",
+            "name": "number_5",
             "position": {
               "x": 505,
               "y": 204
@@ -32249,21 +32158,21 @@
             }
           },
           {
-            "name": "lite_number_6",
+            "name": "number_6",
             "position": {
               "x": 460,
               "y": 376
             }
           },
           {
-            "name": "lite_number_0",
+            "name": "number_0",
             "position": {
               "x": 445,
               "y": 376
             }
           },
           {
-            "name": "lite_number_0",
+            "name": "number_0",
             "position": {
               "x": 431,
               "y": 376
