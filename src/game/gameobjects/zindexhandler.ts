@@ -16,8 +16,6 @@ interface ZPoint {
 export default class ZIndexHandler extends GameObject {
 
     private zPoints : ZPoint[] = [];
-    private get zPointsActive() : ZPoint[] { return this.zPoints.filter(z => z.state) }
-    private zEdges : ZPoint[][] = [];
     private debug : Boolean = false;
 
     /** Initalize the brick handler, get related bricks & game objects, manage bricks */
@@ -48,8 +46,6 @@ export default class ZIndexHandler extends GameObject {
 
     /** Process all zPoints */
     private processZPoints() {
-
-        this.zEdges = [];
         
         //Setup zpoints for current state
         this.zPoints.forEach(z => {
@@ -58,12 +54,24 @@ export default class ZIndexHandler extends GameObject {
             z.layer = z.gameObject.zLayer;
             z.size = this.getTrueZsize(z.gameObject.zSize);
         });
-        
-        //Compare z-points and get the edges between them
-        this.zEdges = this.zPointsActive.flatMap(z => this.processZPoint(z).map(b => [z, b]));
+
+        let zPointsActive = this.zPoints.filter(z => z.state);
+
+        let zEdges : ZPoint[][] = [];
+
+        zPointsActive.forEach(z1 => {
+            zPointsActive.forEach(z2 => {
+                if (this.checkValidComparison(z1, z2) && (
+                    this.processAbove(z1, z2) || 
+                    this.processFront(z1, z2))) {
+                    
+                    zEdges.push([z1, z2]);
+                }
+            })
+        });
 
         //Set z-indicies based on sorted array indicies
-        this.topologicalSort().forEach((z, i) => {
+        this.topologicalSort(zPointsActive, zEdges).forEach((z, i) => {
             z.gameObject.zIndex = i;
         });
     }
@@ -80,69 +88,71 @@ export default class ZIndexHandler extends GameObject {
         return new Vect(zsize.x, Math.max(zsize.y * 2, 1));
     }
 
-    /** Process a single zPoint */
-    private processZPoint(c : ZPoint) : ZPoint[] {
+    /** */
+    private processAbove(c : ZPoint, o : ZPoint) : boolean {
 
-        let ret = [] as ZPoint[];
+        //Is above
+        if (c.pos.y <= o.pos.y) {
 
-        //Game Objects above
-        ret = ret.concat(this.zPointsActive.filter(o => {
+            return false;
+        }
 
-            //If the comparison is invalid, skip
-            if(!this.checkValidComparison(c, o)) {
-                return false;
-            }
+        //Is aligned
+        if (!col1D(
+            c.pos.x,
+            c.pos.x + c.size.x,
+            o.pos.x,
+            o.pos.x + o.size.x)) {
 
-            let isAbove = c.pos.y > o.pos.y;
+            return false;
+        }
 
-            let isAlign = col1D(
-                c.pos.x,
-                c.pos.x + c.size.x,
-                o.pos.x,
-                o.pos.x + o.size.x);
+        //Distance
+        if (gap1D(
+            o.pos.y,
+            o.pos.y + o.size.y,
+            c.pos.y,
+            c.pos.y + c.size.y) > 1) {
 
-            let distance = gap1D(
-                o.pos.y,
-                o.pos.y + o.size.y,
-                c.pos.y,
-                c.pos.y + c.size.y);
+            return false;
+        }
 
-            return (
-                isAbove &&                  //Other object is above 
-                isAlign &&                  //Other object is horizontally aligned 
-                distance <= 1);             //Other object is close
-        }));
+        return true;
+    }
 
-        //Game Objects in front
-        ret = ret.concat(this.zPointsActive.filter(o => {
+    /** */
+    private processFront(c : ZPoint, o : ZPoint) : boolean {
 
-            //If the comparison is invalid, skip
-            if(!this.checkValidComparison(c, o)) {
-                return false;
-            }
+        //Is ahead
+        if (c.pos.x >= o.pos.x) {
 
-            let isAhead = c.pos.x < o.pos.x;
+            return false;
+        }
 
-            let isAlign = col1D(
-                c.pos.y,
-                c.pos.y + c.size.y,
-                o.pos.y,
-                o.pos.y + o.size.y);
+        //Is aligned
+        if (!col1D(
+            c.pos.y,
+            c.pos.y + c.size.y,
+            o.pos.y,
+            o.pos.y + o.size.y)) {
 
-            let distance = gap1D(
-                c.pos.x,
-                c.pos.x + c.size.x,
-                o.pos.x,
-                o.pos.x + o.size.x);
+            return false;
+        }
 
-            return (
-                isAhead &&                  //Other object is ahead
-                isAlign &&                  //Other object is vertically aligned
-                distance <= 1 &&            //Other object is close
-                !(o.flat && distance < 0)); //Overlapping with flat objects does not mean they're in front.
-        }));
+        //Distance
+        let distance = gap1D(
+            c.pos.x,
+            c.pos.x + c.size.x,
+            o.pos.x,
+            o.pos.x + o.size.x);
 
-        return ret;
+        if (distance > 1 ||             //Other object is close
+           (o.flat && distance < 0)) {  //Overlapping with flat objects does not mean they're in front.
+            
+            return false;
+        }
+
+        return true;
     }
 
     /** returns true if a comparison is valid */
@@ -195,7 +205,7 @@ export default class ZIndexHandler extends GameObject {
 
         //Draw z-boxes
         ctx.globalAlpha = 0.75;
-        this.zPointsActive.forEach(p => {
+        this.zPoints.filter(z => z.state).forEach(p => {
 
             let border = p.size.y > 2 ? 3 : 1;
 
@@ -213,18 +223,18 @@ export default class ZIndexHandler extends GameObject {
     }
 
     /** Kahn's algorithm! */
-    private topologicalSort() : ZPoint[] {
+    private topologicalSort(zPoints : ZPoint[], zEdges : ZPoint[][]) : ZPoint[] {
 
         const sorted : ZPoint[] = [];   //Final sorted
         const starts : ZPoint[] = [];   //Starting & curret set of points
 
         //Creat map of points an their quantity of back edges
-        const leads = new Map(this.zPoints.map(z => [z, this.zEdges.filter(e => e[1] === z).length]));
+        const leads = new Map(zPoints.map(z => [z, zEdges.filter(e => e[1] === z).length]));
         leads.forEach((q, p) => {
             if(q === 0) {
                 starts.push(p);
             }
-        })
+        });
 
         //While there are points with zero back edges
         while(starts.length > 0) {
@@ -234,19 +244,19 @@ export default class ZIndexHandler extends GameObject {
             sorted.push(curr);
 
             //Subtract all back edges from the points in front
-            this.zEdges.filter(e => e[0] === curr).forEach(e => {
+            zEdges.filter(e => e[0] === curr).forEach(e => {
                 leads.set(e[1], leads.get(e[1])! - 1)
 
                 //If point has no more back edges, add it.
                 if(leads.get(e[1]) == 0) {
                     starts.push(e[1]);
                 }
-            })
+            });
         }
 
-        if(sorted.length != this.zPoints.length) {
+        if(sorted.length != zPoints.length) {
 
-            console.log(`WARNING, LOOP in Z-SORTING, Sorted : ${sorted.length}, Expected : ${this.zPoints.length}}`);
+            console.log(`WARNING, LOOP in Z-SORTING, Sorted : ${sorted.length}, Expected : ${zPoints.length}}`);
         }
       
         return sorted;
