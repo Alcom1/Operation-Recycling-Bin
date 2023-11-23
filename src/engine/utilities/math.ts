@@ -19,6 +19,7 @@ export const MOBILE_PREVIEW_MAX = new Vect(6, 3);
 
 /** Faction reference enum */
 export const enum Faction {
+    SWISS,
     FRIENDLY,
     NEUTRAL,
     HOSTILE
@@ -26,7 +27,11 @@ export const enum Faction {
 
 /** Returns true if factions are not opposing */
 export function MatchFactions(a : Faction, b : Faction) : boolean {
-    return Math.abs(b - a) < 2;
+
+    return (
+        a == b ||               //Same factions always match
+        a == Faction.NEUTRAL || //Neutral matches with everything
+        b == Faction.NEUTRAL)   //Neutral matches with everything
 }
 
 /** Environment boundary */

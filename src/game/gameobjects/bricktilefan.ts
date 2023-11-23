@@ -1,5 +1,5 @@
 import { Collider } from "engine/modules/collision";
-import { MASKS, Z_DEPTH } from "engine/utilities/math";
+import { Faction, MASKS, Z_DEPTH } from "engine/utilities/math";
 import Anim, { AnimationParams } from "./anim";
 import BrickHandler from "./brickhandler";
 import BrickTile, { BrickTileParams } from "./bricktile";
@@ -71,11 +71,13 @@ export default class BrickTileFan extends BrickTile {
         // Collide wind beams with bricks
         .map(i => {
             return this.brickHandler.checkCollisionRange(            
-                { x : this.gpos.x + i, y : -1 },        // Position
+                { x : this.gpos.x + i, y : -1 },    // Position
                 1,
-                0,                                      // START
-                this.gpos.y - 1,                        // FINAL
-                this.gpos.y - 1).toString(2).length;    // HEIGHT
+                0,                                  // START
+                this.gpos.y - 1,                    // FINAL
+                this.gpos.y - 1,                    // HEIGHT
+                1,
+                Faction.SWISS).toString(2).length   // Characters are ignored here & handled later.
         })
         // Collide wind beams with characters
         .map((b, i) => {
