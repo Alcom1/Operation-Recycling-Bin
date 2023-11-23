@@ -210,7 +210,7 @@ export default class CharacterBot extends Character {
                 
                 // Default - End animation, return to ground movement
                 default :
-                    this.setStateIndex(BotState.NORMAL);
+                    this.setStateIndex(BotState.HALTED);
                     break;
             }
         }
