@@ -466,14 +466,18 @@ export default class CharacterBot extends Character {
     /** Colliders for non-brick collisions */
     public getColliders() : Collider[] {
         
+        //Back half of the bot shouldn't collide with wind when half-way through its step.
+        let xShiftMin = this.stateIndex == 0 && this.timerStp > 0.15 && this.move.x > 0 ? 1 : 0; 
+        let xShiftMax = this.stateIndex == 0 && this.timerStp > 0.15 && this.move.x < 0 ? 1 : 0; 
+        
         return [{ 
             mask : MASKS.death,
             min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
             max : this.gpos.getAdd({ x :  1, y : 1}) 
         },{ 
             mask : MASKS.scrap | MASKS.float,
-            min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
-            max : this.gpos.getAdd({ x :  1, y : 2}) 
+            min : this.gpos.getAdd({ x : -1 + xShiftMin, y : 1 - this.height}),
+            max : this.gpos.getAdd({ x :  1 - xShiftMax, y : 2}) 
         },{ 
             mask : MASKS.super | MASKS.jumps | MASKS.press,
             min : this.gpos.getAdd({ x : -1 - Math.min(this.move.x, 0), y : 0}),
