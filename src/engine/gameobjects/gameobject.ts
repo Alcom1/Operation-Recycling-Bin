@@ -64,7 +64,7 @@ export default class GameObject {
     protected _zNoCompare : boolean;
     public get zNoCompare() : boolean { return this._zNoCompare; }
     public set zIndex(value : number) { this._zIndex = value; }
-    public get zpos() : Vect { return this.gpos; }
+    public get zpos() : Point { return this.gpos; }
     public get zState() : Boolean { return this.isActive; }
     public get zSize() : Point { return {x : 1, y : 1}; }
     public get zLayer() : Number { return 0; }
