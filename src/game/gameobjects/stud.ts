@@ -24,7 +24,7 @@ export default class Stud extends GameObject {
     public set zIndex(value : number) { 
         super.zIndex = value + (this.isSelected && !this.isSnapped ? 2000 : 0);
     }
-    public get zpos() : Vect { 
+    public get zpos() : Point { 
         return (
             this.isSelected ?
             this.gpos.getAdd({

@@ -48,7 +48,7 @@ export default class Character extends GameObject {
         super.zIndex = value; 
         this.animations.forEach(s => s.zIndex = value);
     }
-    public get zpos() : Vect { 
+    public get zpos() : Point { 
         return this.gpos.getAdd({ 
             x : -1 + (this.isGlide && this.stateIndex == 0 && this.move.y == 0 && this.move.x == -1 ? -1 : 0), //Wow!!!
             y : 1 - this.height + (this.spos.y < 0 ? -1 : 0)

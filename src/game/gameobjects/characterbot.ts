@@ -121,6 +121,20 @@ export default class CharacterBot extends Character {
             1)
     }
 
+    /** z-index get/setters */
+    public get zpos() : Point { 
+        return this.gpos.getAdd({ 
+            x : -1,
+            y : 1 - this.height + (this.spos.y < 0 && !this.vertBlock ? -1 : 0)
+        });
+    }
+    public get zSize() : Point {
+        return {
+            x : 2,
+            y : this.height + (this.spos.y != 0 && !this.vertBlock ? 1 : 0)
+        }; 
+    }
+
     /** Constructor */
     constructor(params: CharacterParams) {
         super(Object.assign(params, characterBotOverride));
