@@ -23,8 +23,8 @@ import BrickJump from "./gameobjects/brickjump";
 import BrickHandlerDebug from "./gameobjects/brickhandlerdebug";
 import BrickJumpMove from "./gameobjects/brickjumpmove";
 import BrickTileButton from "./gameobjects/bricktilebutton";
-import CharacterRBG from "./gameobjects/charactergearclimb";
-import CharacterRBC from "./gameobjects/charactergearground";
+import CharacterGearClimb from "./gameobjects/charactergearclimb";
+import CharacterGearGround from "./gameobjects/charactergearground";
 import CharacterHandler from "./gameobjects/characterhandler";
 import ZIndexHandler from "./gameobjects/zindexhandler";
 
@@ -55,8 +55,8 @@ window.onload = function() {
             Character,
             CharacterBot,
             CharacterBin,
-            CharacterRBC,
-            CharacterRBG,
+            CharacterGearClimb,
+            CharacterGearGround,
             CharacterHandler,
             Counter,
             Cursor,
