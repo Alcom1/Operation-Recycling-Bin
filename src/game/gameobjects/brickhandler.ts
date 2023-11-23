@@ -109,8 +109,6 @@ export default class BrickHandler extends GameObject {
 
         let noPlaceZones = this.characterHandler?.getNoPlaceZones();
 
-        let isBlocked = false;  //If the selection is blocked by a blocking brick
-
         brickLoop : for (const brick1 of this.bricks.filter(b => b.isSelected)) {
             
             brick1.setToCursor();   // Force update so the brick position matches this frame and not the previous
@@ -150,27 +148,16 @@ export default class BrickHandler extends GameObject {
 
                 // If row in the direction (above/below) has bricks, check each brick
                 // For each brick in the row in that direction
-                for (var brick2 of this.bricksActive.filter(b => !b.isGlide && b.gpos.y == tposy + dir)) {
+                for (var brick2 of this.bricksActive.filter(b => !b.isBlock && b.gpos.y == tposy + dir)) {
                     
                     if (!brick2.isSelected && col1D(    // If the brick-in-row is colliding with this brick
                         tposx, tposx + brick1.width,
                         brick2.gpos.x, brick2.gpos.x + brick2.width)) {
 
                         adjacents[dir] = true;          // Set adjacency state for this direction.
-                        
-                        //There is a blocking brick, set state and break out of the loop
-                        if (brick2.isBlock) {
-                            isBlocked = true;
-                            break brickLoop;
-                        }
                     }
                 }
             }
-        }
-
-        //Selection is blocked, return false
-        if(isBlocked) {
-            return false;
         }
 
         // LEVEL BOUNDARY CHECK - Check if this brick is inside the boundary

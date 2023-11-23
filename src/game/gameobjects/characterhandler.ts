@@ -83,7 +83,10 @@ export default class CharacterHandler extends GameObject {
                 let proxs : Point[] = [];
 
                 //Proximity check against characters with height 2 and normal movement
-                charactersTagged.slice(0, i).filter(ct2 => ct2.height == 2 && ct2.isNormalMovment).forEach(ct2 => {
+                charactersTagged.slice(0, i).filter(
+                    ct2 => ct2.height == 2 && 
+                    ct2.isNormalMovment &&
+                    ct2.speed != 0).forEach(ct2 => {
 
                     //Distance vector between characters
                     let diff = ct2.gpos.getSub(ct1.gpos);
