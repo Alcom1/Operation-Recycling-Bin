@@ -63,12 +63,12 @@ export default class Brick extends GameObject {
     /** If the brick is attatched to a gliding object */
     protected _isGlide : boolean = false; public get isGlide() : boolean {return this._isGlide};
 
-    /** z-index get/setters */    
+    /** z-index get/setters */
     get zIndex() : number { return super.zIndex; }
     set zIndex(value : number) { 
         super.zIndex = value + (this.isSelected && !this.isSnapped ? 2000 : 0);
     }
-    get zpos() : Vect { 
+    get zpos() : Point { 
         return (
             this.isSelected ?
             this.gpos.getAdd({

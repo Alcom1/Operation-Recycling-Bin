@@ -2,7 +2,7 @@ import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import { Faction, GMULTX, GMULTY } from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 import BrickHandler from "./brickhandler";
-import Brick from "./bricknormal";
+import Brick from "./brick";
 import Anim, { OffsetImageParams, AnimationParams } from "./anim";
 import BrickPhantom from "./brickphantom";
 

@@ -77,7 +77,7 @@ export default class ZIndexHandler extends GameObject {
     }
 
     /** Get the true z-position of a zpoint*/
-    private getTrueZpos(zpos : Vect, flat : Boolean) : Vect {
+    private getTrueZpos(zpos : Point, flat : Boolean) : Vect {
 
         return new Vect(zpos.x, zpos.y * 2 - (flat ? 0 : 1));
     }
@@ -88,7 +88,7 @@ export default class ZIndexHandler extends GameObject {
         return new Vect(zsize.x, Math.max(zsize.y * 2, 1));
     }
 
-    /** */
+    /** returns true if the other point is directly above of the current point */
     private processAbove(c : ZPoint, o : ZPoint) : boolean {
 
         //Is above
@@ -120,7 +120,7 @@ export default class ZIndexHandler extends GameObject {
         return true;
     }
 
-    /** */
+    /** returns true if the other point is directly in front of the current point */
     private processFront(c : ZPoint, o : ZPoint) : boolean {
 
         //Is ahead
@@ -146,7 +146,8 @@ export default class ZIndexHandler extends GameObject {
             o.pos.x,
             o.pos.x + o.size.x);
 
-        if (distance > 1 ||             //Other object is close
+        if (distance > 1 ||             //Other object must be close
+            distance < 0 ||             //Sometimes there is a gross overlap, skip if there is
            (o.flat && distance < 0)) {  //Overlapping with flat objects does not mean they're in front.
             
             return false;
