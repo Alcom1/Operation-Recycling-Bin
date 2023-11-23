@@ -5,7 +5,7 @@ import Vect, {Point} from "engine/utilities/vect";
 export interface BrickParams extends GameObjectParams {
     color?: string;
     width?: number;
-    block?: boolean;
+    blockStrength?: number;
     glide?: boolean;
 }
 
@@ -57,8 +57,13 @@ export default class Brick extends GameObject {
     /** If the mobile preview is flipped */
     private isMobileFlipped : Boolean = false;
 
-    /** If the brick blocks placement */
-    protected _isBlock : boolean = false; public get isBlock() : boolean {return this._isBlock};
+    /** 
+     * Strength of this block's ability to block placement 
+     * 0 = No blocking
+     * 1 = Bricks underneath cannot be moved (used by characters, their phantom bricks)
+     * 2 = Bricks cannot be placed above or below (used by static tiles)
+     */
+    protected _blockStrength : number = 0; public get blockStrength() : number {return this._blockStrength};
 
     /** If the brick is attatched to a gliding object */
     protected _isGlide : boolean = false; public get isGlide() : boolean {return this._isGlide};
@@ -86,7 +91,7 @@ export default class Brick extends GameObject {
         
         this.color = colorTranslate(params.color);
         this._isGrey = !params.color;
-        this._isBlock = params.block ?? false;
+        this._blockStrength = params.blockStrength ?? 0;
         this._isGlide = params.glide ?? false;
 
         this.tags.push("Brick");

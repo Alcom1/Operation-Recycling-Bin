@@ -17,7 +17,7 @@ export default class BrickTile extends Brick {
 
     /** Constructor */
     constructor(params: BrickTileParams) {
-        super({...params, block : true});
+        super({...params, blockStrength : 2});
 
         this.tags.push("BrickTile");
 

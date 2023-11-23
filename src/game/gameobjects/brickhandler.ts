@@ -52,7 +52,7 @@ export default class BrickHandler extends GameObject {
     private get bricksActive() { return this.bricks.filter(b => b.isActive && !b.isSelected); }
 
     /** Grey bricks */
-    private get bricksGrey(): Brick[] { return this.bricks.filter(b => b.isActive && b.isGrey && !b.isBlock); }
+    private get bricksGrey(): Brick[] { return this.bricks.filter(b => b.isActive && b.isGrey && !b.blockStrength); }
 
     /** Initalize the brick handler, get related bricks & game objects, manage bricks */
     public init(ctx: CanvasRenderingContext2D) {
@@ -109,6 +109,8 @@ export default class BrickHandler extends GameObject {
 
         let noPlaceZones = this.characterHandler?.getNoPlaceZones();
 
+        let isBlocked = false;  //If the selection is blocked by a blocking brick
+
         brickLoop : for (const brick1 of this.bricks.filter(b => b.isSelected)) {
             
             brick1.setToCursor();   // Force update so the brick position matches this frame and not the previous
@@ -148,16 +150,27 @@ export default class BrickHandler extends GameObject {
 
                 // If row in the direction (above/below) has bricks, check each brick
                 // For each brick in the row in that direction
-                for (var brick2 of this.bricksActive.filter(b => !b.isBlock && b.gpos.y == tposy + dir)) {
+                for (var brick2 of this.bricksActive.filter(b => !b.isGlide && b.gpos.y == tposy + dir)) {
                     
                     if (!brick2.isSelected && col1D(    // If the brick-in-row is colliding with this brick
                         tposx, tposx + brick1.width,
                         brick2.gpos.x, brick2.gpos.x + brick2.width)) {
 
                         adjacents[dir] = true;          // Set adjacency state for this direction.
+                        
+                        //There is a blocking brick, set state and break out of the loop
+                        if (brick2.blockStrength == 2) {
+                            isBlocked = true;
+                            break brickLoop;
+                        }
                     }
                 }
             }
+        }
+
+        //Selection is blocked, return false
+        if(isBlocked) {
+            return false;
         }
 
         // LEVEL BOUNDARY CHECK - Check if this brick is inside the boundary
@@ -439,7 +452,7 @@ export default class BrickHandler extends GameObject {
         //Row above for brick being evaluated
         for (const brick2 of this.bricksActive.filter(b => b.gpos.y == brick.gpos.y - 1)) {
 
-            if (brick2.isBlock &&   // If a brick in the other row is blocking
+            if (brick2.blockStrength > 0 &&   // If a brick in the other row is blocking
                 col1D(              // And it overlaps with the current brick
                     brick.gpos.x, brick.gpos.x + brick.width, 
                     brick2.gpos.x, brick2.gpos.x + brick2.width)) {
@@ -470,7 +483,7 @@ export default class BrickHandler extends GameObject {
         for (const brick of this.bricksActive) {
 
             //If the brick isn't grounded or selected, it's floating! Add it.
-            if (!brick.isGrounded && !brick.isSelected && !brick.isBlock) {
+            if (!brick.isGrounded && !brick.isSelected && !brick.blockStrength) {
                 ret.push(brick);
             }
 
@@ -542,7 +555,7 @@ export default class BrickHandler extends GameObject {
         let selection = [brick1];
 
         // Recursion should not progress past blocking bricks
-        if (brick1.isBlock) {
+        if (brick1.blockStrength) {
             return selection;
         }
 
@@ -551,7 +564,7 @@ export default class BrickHandler extends GameObject {
 
             // If adjacent row in the direction (above/below) has bricks, check and recurse for each brick
             // Also, skip blocking bricks, so characters do not interfere (Does this break something?)
-            for (const brick2 of this.bricksActive.filter(b => !b.isBlock && b.gpos.y == brick1.gpos.y + dir)) {
+            for (const brick2 of this.bricksActive.filter(b => !b.blockStrength && b.gpos.y == brick1.gpos.y + dir)) {
 
                 if (!brick2.isChecked && col1D(
                     brick1.gpos.x, brick1.gpos.x + brick1.width, 
