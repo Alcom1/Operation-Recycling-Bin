@@ -100,9 +100,10 @@ const acb = Object.freeze({
 /** The one and only. */
 export default class CharacterBot extends Character {
 
-    private timerSpc : number = 0;                          // Timer to track duration of special movements
-    private timerArm : number = 0;                          // Timer to track armor flash
-    private timerStp : number = 0;                          // Timer to track time since previous step
+    private timerSpec : number = 0;                         // Timer to track duration of special movements
+    private timerArmr : number = 0;                         // Timer to track armor flash
+    private timerStep : number = 0;                         // Timer to track time since previous step
+    private timerLand : number = 0;                         // Timer to track time since landing
     private ceilSubOffset : number = -6;                    // Offset for up/down movement
     private vertSpeed : number = 360;                       // Speed of air movement
     private vertMult : -1|1 = 1;                            // Up/Down multiplier for air movement
@@ -117,7 +118,7 @@ export default class CharacterBot extends Character {
     protected get animationSubindex() : number {               // Adjust animation index for armor flash effect
         return this.move.x * (
             this.armorState == ArmorState.ACTIVE ? 2 :
-            this.armorState == ArmorState.FLASH  ? (1 + Math.floor(this.timerArm * this.armorFlashRate) % 2) : 
+            this.armorState == ArmorState.FLASH  ? (1 + Math.floor(this.timerArmr * this.armorFlashRate) % 2) : 
             1)
     }
 
@@ -144,17 +145,18 @@ export default class CharacterBot extends Character {
     public update(dt : number) {
         super.update(dt);
 
-        this.timerStp += dt;    //Update step timer
+        this.timerStep += dt;   //Update step timer
+        this.timerLand += dt;   //Update land timer
 
         // Update armor flash
         if (this.armorState == ArmorState.FLASH) {
-            this.timerArm += dt;
+            this.timerArmr += dt;
             this.animationsCurr.setImageIndex(this.animationSubindex);
 
             // Remove armor after a duration and reset timer
-            if (this.timerArm > this.armorDelay) {
+            if (this.timerArmr > this.armorDelay) {
                 this.armorState = ArmorState.NONE;
-                this.timerArm = 0;
+                this.timerArmr = 0;
             }
         }
     }
@@ -162,7 +164,7 @@ export default class CharacterBot extends Character {
     /** Special movement */
     protected handleSpecialMovement(dt : number) {
 
-        this.timerSpc += dt;   // Update special timer
+        this.timerSpec += dt;   // Update special timer
 
         // Perform special movement
         switch(this.stateIndex) {
@@ -184,10 +186,10 @@ export default class CharacterBot extends Character {
         }
 
         // If the current animation has ended
-        if (this.timerSpc > this.animationsCurr.duration) {
+        if (this.timerSpec > this.animationsCurr.duration) {
 
             // Reset timer
-            this.timerSpc = 0;
+            this.timerSpec = 0;
 
             // Perform ending actions for different states
             switch(this.stateIndex) {
@@ -338,6 +340,7 @@ export default class CharacterBot extends Character {
     private endVertMovement() {
 
         this.spos.setToZero();  // Snap to grid
+        this.timerLand = 0;     // Reset land timer
 
         // Go from air state to walking state for flying & bounce states
         if (this.stateIndex == BotState.FLYING ||
@@ -466,9 +469,9 @@ export default class CharacterBot extends Character {
     /** Colliders for non-brick collisions */
     public getColliders() : Collider[] {
         
-        //Back half of the bot shouldn't collide with wind when half-way through its step.
-        let xShiftMin = this.stateIndex == 0 && this.timerStp > 0.15 && this.move.x > 0 ? 1 : 0; 
-        let xShiftMax = this.stateIndex == 0 && this.timerStp > 0.15 && this.move.x < 0 ? 1 : 0; 
+        //Back half of the bot shouldn't collide with wind, after a delay since stepping or landing
+        let xShiftMin = this.stateIndex == 0 && this.timerLand > 0.15 && this.move.x > 0 ? 1 : 0; 
+        let xShiftMax = this.stateIndex == 0 && this.timerLand > 0.15 && this.move.x < 0 ? 1 : 0; 
         
         return [{ 
             mask : MASKS.death,
@@ -495,12 +498,12 @@ export default class CharacterBot extends Character {
         // Only set state if it's different from the current
         if (this.stateIndex != index) {
 
-            this.timerSpc = 0;          // Timer reset incase we cancelled a previous animation
+            this.timerSpec = 0;         // Timer reset incase we cancelled a previous animation
             super.setStateIndex(index); // Set index
 
             //Force walk animation to sync with steps
             if(this.stateIndex == BotState.NORMAL) {
-                this.animationsCurr.timer = this.timerStp;
+                this.animationsCurr.timer = this.timerStep;
             }
         }
     }
@@ -508,7 +511,7 @@ export default class CharacterBot extends Character {
     /** Check and resolve brick collisions */
     public handleStep() {
 
-        this.timerStp = 0;  //Reset step timer
+        this.timerStep = 0; //Reset step timer
 
         switch(this.stateIndex) {
 
@@ -518,6 +521,7 @@ export default class CharacterBot extends Character {
 
             case BotState.NORMAL :
                 this.handleBrickCollisionNormal();
+                this.timerLand = 0; //Reset land timer for steps, too.
                 break;
 
             default :
