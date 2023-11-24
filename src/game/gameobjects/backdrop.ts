@@ -28,11 +28,14 @@ export default class Backdrop extends GameObject {
     constructor(params: BackdropParams) {
         super(params);
 
+        let svgs = [
+            "door"]
+
         this.decals = (params.decals ?? [])
             .map(d => ({ 
                 name : d.name, 
                 position : d.position,
-                image : this.engine.library.getImage("bg_" + d.name)}));
+                image : this.engine.library.getImage("bg_" + d.name, svgs.some(s => s === d.name) ? "svg" : "png")}));
 
         this.type = params.type;
     }
