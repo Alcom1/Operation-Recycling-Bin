@@ -126,7 +126,7 @@ export default class Brick extends GameObject {
     public superDraw(ctx: CanvasRenderingContext2D): void {
 
         // Debug Z-index
-        // var indexDisplay = "" + this.zIndex;
+        // let indexDisplay = "" + this.zIndex;
         // let indexPos : Point = { x : 5, y : GMULTY - 15};
         // ctx.strokeStyle = "#000";
         // ctx.fillStyle = "#FFF"

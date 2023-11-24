@@ -91,7 +91,7 @@ export default class Anim extends GameObject {
     /** Retrieve an image from the library, set its X Offset */
     private getImage(params : OffsetImageParams) : OffsetImageElement {
 
-        var image = this.engine.library.getImage(
+        let image = this.engine.library.getImage(
             params.name, 
             params.extension) as OffsetImageElement
 

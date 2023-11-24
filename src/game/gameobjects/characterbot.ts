@@ -239,7 +239,7 @@ export default class CharacterBot extends Character {
     /** Move in a jumping arc */
     private moveBounce(dt: number) {
 
-        var index = Math.abs(this.gpos.x - this.jumpOrigin.x);  //Index of current jump height
+        let index = Math.abs(this.gpos.x - this.jumpOrigin.x);  //Index of current jump height
 
         //Don't jump past the level boundary
         if ((index > 0 || Math.abs(this.spos.x) > GMULTX / 2) && (
@@ -305,7 +305,7 @@ export default class CharacterBot extends Character {
         this.animationsCurr.spos = this.spos;               //Update animations to match current position
 
         //store sub-position converted to a grid position
-        var move = {
+        let move = {
             x : Math.abs(this.spos.x) > GMULTX ? Math.sign(this.spos.x) : 0,
             y : Math.abs(this.spos.y) > GMULTY ? Math.sign(this.spos.y) : 0
         };

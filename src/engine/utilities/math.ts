@@ -111,7 +111,7 @@ export function zip(val: number) {
 /** Stack an array of integers into a bitmask */
 export function bitStack(...numbers: number[]): number {
 
-    var ret = 0;
+    let ret = 0;
     numbers.forEach(n => ret += 1 << n);
     return ret;
 }

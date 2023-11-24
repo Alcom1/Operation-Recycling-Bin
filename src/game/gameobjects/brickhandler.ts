@@ -116,8 +116,8 @@ export default class BrickHandler extends GameObject {
             brick1.setToCursor();   // Force update so the brick position matches this frame and not the previous
 
             // Combine grid positions and sub positions for true positions
-            var tposx = brick1.gpos.x + Math.round(brick1.spos.x / GMULTX);
-            var tposy = brick1.gpos.y + Math.round(brick1.spos.y / GMULTY);
+            let tposx = brick1.gpos.x + Math.round(brick1.spos.x / GMULTX);
+            let tposy = brick1.gpos.y + Math.round(brick1.spos.y / GMULTY);
 
             //Do not place bricks in no-place zones (gliding bricks/characters are handled by this, instead)
             if (noPlaceZones?.some(p => 
@@ -146,11 +146,11 @@ export default class BrickHandler extends GameObject {
             }
 
             // Check collision between current selected brick and every brick in its potential adjacent rows.
-            for (var dir of OPPOSITE_DIRS) {            // For each direction
+            for (let dir of OPPOSITE_DIRS) {            // For each direction
 
                 // If row in the direction (above/below) has bricks, check each brick
                 // For each brick in the row in that direction
-                for (var brick2 of this.bricksActive.filter(b => !b.isGlide && b.gpos.y == tposy + dir)) {
+                for (let brick2 of this.bricksActive.filter(b => !b.isGlide && b.gpos.y == tposy + dir)) {
                     
                     if (!brick2.isSelected && col1D(    // If the brick-in-row is colliding with this brick
                         tposx, tposx + brick1.width,
@@ -379,7 +379,7 @@ export default class BrickHandler extends GameObject {
         }
 
         // Top and side face check
-        for (var brick of this.bricksActive) {
+        for (let brick of this.bricksActive) {
             if (// Top Face - if position is over this face
                 colPointParHGrid(
                     pos.x,
@@ -467,7 +467,7 @@ export default class BrickHandler extends GameObject {
     /** Return floating bricks after a selection */
     private getFloatingBricks(): Brick[] {
         
-        var ret : Brick[] = [];
+        let ret : Brick[] = [];
 
         // Recursively check from all grey bricks and mark connected bricks as grounded
         for (const brick of this.bricksGrey) {

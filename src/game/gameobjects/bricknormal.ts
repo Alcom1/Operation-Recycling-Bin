@@ -56,7 +56,7 @@ export default class BrickNormal extends Brick {
     /** Initialize brick sprite */
     public init() {
 
-        var imageName = `BRICK.${this.width}.${this.color}`;
+        let imageName = `BRICK.${this.width}.${this.color}`;
 
         this.image = this.engine.library.getImageWithSrc(
             imageName,
