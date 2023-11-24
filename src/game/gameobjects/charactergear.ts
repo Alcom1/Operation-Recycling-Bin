@@ -44,22 +44,22 @@ export default class CharacterGear extends Character {
 
         this.storedCbm = 0;
 
-        //Characters in proxminity
+        // Characters in proxminity
         proxs.forEach(p => {
 
-            //Below
+            // Below
             if (p.y == 2) {
                 this.storedCbm |= ring.flor
             }
-            //Above
+            // Above
             if (p.y == -2) {
                 this.storedCbm |= ring.roof
             }
-            //Rightward
+            // Rightward
             if (p.x == 2) {
                 this.storedCbm |= (this.move.x > 0 ? ring.face : ring.back)
             }
-            //Leftward
+            // Leftward
             if (p.x == -2) {
                 this.storedCbm |= (this.move.x > 0 ? ring.back : ring.face)
             }

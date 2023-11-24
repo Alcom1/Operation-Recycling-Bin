@@ -111,7 +111,7 @@ export default class Button extends GameObject {
     /** Update this button to match current cursor position & state */
     public update(dt: number): void {
 
-        var pos = this.engine.mouse.getPos();   // Get mouse position
+        let pos = this.engine.mouse.getPos();   // Get mouse position
         
         // Set hover if the cursor is inside the button area
         this.hover = colPointRect(
@@ -178,7 +178,7 @@ export default class Button extends GameObject {
     private drawButton(ctx: CanvasRenderingContext2D, press: boolean, hover: boolean): void {
 
         // Handle button depth
-        var currentDepth = press ? this.depth / 2 : this.depth;             // Depth for pressed or unpressed state
+        let currentDepth = press ? this.depth / 2 : this.depth;             // Depth for pressed or unpressed state
         ctx.translate(this.depth - currentDepth, currentDepth);             // Translate by depth
 
         // Button top face color

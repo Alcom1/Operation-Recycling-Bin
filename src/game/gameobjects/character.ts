@@ -50,13 +50,13 @@ export default class Character extends GameObject {
     }
     public get zpos() : Point { 
         return this.gpos.getAdd({ 
-            x : -1 + (this.isGlide && this.stateIndex == 0 && this.move.y == 0 && this.move.x == -1 ? -1 : 0), //Wow!!!
+            x : -1 + (this.isGlide && this.stateIndex == 0 && this.move.y == 0 && this.move.x == -1 ? -1 : 0), // Wow!!!
             y : 1 - this.height + (this.spos.y < 0 ? -1 : 0)
         });
     }
     public get zSize() : Point {
         return {
-            x : 2 + (this.isGlide && this.stateIndex == 0 && this.move.y == 0 ? 1 : 0), //Wow!
+            x : 2 + (this.isGlide && this.stateIndex == 0 && this.move.y == 0 ? 1 : 0), // Wow!
             y : this.height + (this.spos.y != 0 ? 1 : 0)
         }; 
     }
@@ -99,10 +99,10 @@ export default class Character extends GameObject {
             } as AnimationParams));
         });
 
-        //Add animations to scene
+        // Add animations to scene
         this.animations.forEach(a => this.parent.pushGO(a));
 
-        //Add phantom bricks for this character's collisions
+        // Add phantom bricks for this character's collisions
         for (let i = 0; i < this.height; i++) {
             this.bricks.push(this.parent.pushGO(new BrickPhantom({
                 ...params,

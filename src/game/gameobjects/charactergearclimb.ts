@@ -108,7 +108,7 @@ export default class CharacterGearClimb extends CharacterGear {
                 break;
         }
 
-        //Update burst animation
+        // Update burst animation
         this.burstAnim.reset(this.gpos);
     }    
     
@@ -118,10 +118,10 @@ export default class CharacterGearClimb extends CharacterGear {
 
         switch(this.stateIndex) {
 
-            //Currently moving. Normal checks for FORWARD & DOWN, special check for UP
+            // Currently moving. Normal checks for FORWARD & DOWN, special check for UP
             case GearState.NORMAL :
 
-                //Handle vertical states differently
+                // Handle vertical states differently
                 switch(this.move.y) {
 
                     // Moving forward or down
@@ -132,7 +132,7 @@ export default class CharacterGearClimb extends CharacterGear {
         
                     // Moving up
                     case -1 : 
-                        //Forward ledge, go forward, but don't climb each other
+                        // Forward ledge, go forward, but don't climb each other
                         if(!this.isColFace && this.isColLand &&
                             !proxs.some(p => p.y == 2 && Math.sign(p.x) == this.move.x)) {
 
@@ -140,7 +140,7 @@ export default class CharacterGearClimb extends CharacterGear {
                             this.move.y = 0;
                             this.setStateIndex(GearState.NORMAL);
                         }
-                        //Rear ledge, go backwards, but don't climb each other
+                        // Rear ledge, go backwards, but don't climb each other
                         else if(!this.isColBack && this.isColBand &&
                             !proxs.some(p => p.y == 2 && Math.sign(p.x) == -this.move.x)) {
 
@@ -149,7 +149,7 @@ export default class CharacterGearClimb extends CharacterGear {
                             this.setStateIndex(GearState.NORMAL);
                             this.reverse();
                         }
-                        //Height limit or blocked, stop climbing
+                        // Height limit or blocked, stop climbing
                         else if(this.isColRoof || this.vertCount >= this.vertMax) {
 
                             this.vertCount = 0;
@@ -160,36 +160,36 @@ export default class CharacterGearClimb extends CharacterGear {
                 }
                 break;
 
-            //Currently stuck. Keep checking normal movement while stopped.
+            // Currently stuck. Keep checking normal movement while stopped.
             case GearState.STOP :
                 this.handleStandardStep();
                 break;
 
-            //Currently waiting. Go up if not blocked, do standard check otherwise
+            // Currently waiting. Go up if not blocked, do standard check otherwise
             case GearState.WAIT :
 
-                //Move down if there is no floor
+                // Move down if there is no floor
                 if(!this.isColFlor) {
                     this.move.y = 1;
                     this.setStateIndex(GearState.NORMAL);
                 }
-                //Move up if there is no ceiling
+                // Move up if there is no ceiling
                 else if(!this.isColRoof) {
                     this.move.y = -1;
                     this.setStateIndex(GearState.NORMAL);
                 }
-                //Move back if there is no wall behind
+                // Move back if there is no wall behind
                 else if(!this.isColBack) {
                     this.move.y = 0;
                     this.setStateIndex(GearState.NORMAL);
                     this.reverse();
                 }
-                //Move forward if there is floor
+                // Move forward if there is floor
                 else if(!this.isColFace) {
                     this.move.y = 0;
                     this.setStateIndex(GearState.NORMAL);
                 }
-                //Completely boxed in, just stop
+                // Completely boxed in, just stop
                 else {
                     this.move.y = 0;
                     this.setStateIndex(GearState.STOP);
@@ -201,30 +201,30 @@ export default class CharacterGearClimb extends CharacterGear {
     /** */
     private handleStandardStep() {
 
-        //Move down if there is no floor
+        // Move down if there is no floor
         if(!this.isColFlor) {
             this.move.y = 1;
             this.setStateIndex(GearState.NORMAL);
         }
-        //Move forward if there is floor
+        // Move forward if there is floor
         else if(!this.isColFace) {
 
             this.move.y = 0;
             this.setStateIndex(GearState.NORMAL);
         }
-        //Move up if there is no ceiling
+        // Move up if there is no ceiling
         else if(!this.isColRoof) {
 
             this.move.y = 0;
             this.setStateIndex(GearState.WAIT);
         }
-        //Move back if there is no wall behind
+        // Move back if there is no wall behind
         else if(!this.isColBack) {
 
             this.move.y = 0;
             this.setStateIndex(GearState.WAIT);
         }
-        //Completely boxed in, just stop
+        // Completely boxed in, just stop
         else {
             this.move.y = 0;
             this.setStateIndex(GearState.STOP);

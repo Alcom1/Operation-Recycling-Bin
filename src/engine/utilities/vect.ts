@@ -84,13 +84,13 @@ export default class Vect implements Point {
         return this.x * value.y - this.y * value.x;
     }
     public norm(): void {
-        var length = Math.sqrt(this.x * this.x + this.y * this.y);
+        let length = Math.sqrt(this.x * this.x + this.y * this.y);
         this.x /= length;
         this.y /= length;
     }
 
     public getNorm() {
-        var length = Math.sqrt(this.x * this.x + this.y * this.y);
+        let length = Math.sqrt(this.x * this.x + this.y * this.y);
         return new Vect(this.x / length, this.y / length);
     }
     public getMagnitude(): number {

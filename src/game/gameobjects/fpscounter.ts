@@ -30,7 +30,7 @@ export default class FPSCounter extends GameObject {
     /** Get spaces for FPS display */
     private getSpaces(count: number) : string {
 
-        var ret = "";
+        let ret = "";
 
         for (let i = 0; i < count; i++) {
             ret += " ";

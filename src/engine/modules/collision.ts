@@ -69,8 +69,8 @@ export default class CollisionModule {
             });
 
             // Stair loop to set collisions
-            for(var j = 0; j < gocs.length; j++) {
-                for(var i = 0; i < j; i++) {
+            for(let j = 0; j < gocs.length; j++) {
+                for(let i = 0; i < j; i++) {
                     this.compareGOColliders(gocs[i], gocs[j]);
                 }
             }

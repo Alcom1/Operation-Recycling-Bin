@@ -145,8 +145,8 @@ export default class CharacterBot extends Character {
     public update(dt : number) {
         super.update(dt);
 
-        this.timerStep += dt;   //Update step timer
-        this.timerLand += dt;   //Update land timer
+        this.timerStep += dt;   // Update step timer
+        this.timerLand += dt;   // Update land timer
 
         // Update armor flash
         if (this.armorState == ArmorState.FLASH) {
@@ -219,14 +219,14 @@ export default class CharacterBot extends Character {
     /** Vertical motion */
     private moveVertical(dt: number, dir: number) {
 
-        //Don't update if vertically blocked and moving upward
+        // Don't update if vertically blocked and moving upward
         if(!this.vertBlock) {
 
             this.spos.y -= dt * this.vertSpeed * dir;   // Move subposition vertically based on speed
             this.animationsCurr.spos = this.spos;       // Move animation to match
         }
 
-        //Update grid position
+        // Update grid position
         if (Math.abs(this.spos.y) > GMULTY) {
             this.moveAll({x : 0, y : Math.sign(this.spos.y)}, false)
             this.spos.y -= Math.sign(this.spos.y) * GMULTY;
@@ -239,9 +239,9 @@ export default class CharacterBot extends Character {
     /** Move in a jumping arc */
     private moveBounce(dt: number) {
 
-        var index = Math.abs(this.gpos.x - this.jumpOrigin.x);  //Index of current jump height
+        let index = Math.abs(this.gpos.x - this.jumpOrigin.x);  // Index of current jump height
 
-        //Don't jump past the level boundary
+        // Don't jump past the level boundary
         if ((index > 0 || Math.abs(this.spos.x) > GMULTX / 2) && (
             this.gpos.x - 2 < BOUNDARY.minx || 
             this.gpos.x + 2 > BOUNDARY.maxx)) {
@@ -250,76 +250,76 @@ export default class CharacterBot extends Character {
             return;
         }
 
-        //Collision bitmask
+        // Collision bitmask
         const cbm = this.brickHandler.checkCollisionRange(
             this.gpos.getSub({
                 x : this.move.x > 0 ? 1 : 0, 
                 y : this.height + 1
-            }),             //Position
-            this.move.x,    //Direction
-            5,              //START  n + 1
-            18,             //FINAL
-            6,              //HEIGHT n + 2
-            3);             //Width
+            }),             // Position
+            this.move.x,    // Direction
+            5,              // START  n + 1
+            18,             // FINAL
+            6,              // HEIGHT n + 2
+            3);             // Width
         
-        //Collide face if we're over half-way past the first step
+        // Collide face if we're over half-way past the first step
         if(cbm & acb.face && (index > 0 || Math.abs(this.spos.x) > GMULTX / 2)) {
             this.startVertMovement();
             return;
         }
-        //Collide head if not at the peak of the jump
+        // Collide head if not at the peak of the jump
         else if((cbm & acb.head || this.gpos.y <= BOUNDARY.miny + 3) && index < 2) {
             this.startVertMovement();
             return;
         }
-        //collide shin after the first step
+        // collide shin after the first step
         else if (cbm & acb.shin && index > 0) {
             this.startVertMovement();
             return;
         }
-        //Collide with foot after the arc starts travelling downwards
+        // Collide with foot after the arc starts travelling downwards
         else if (cbm & acb.foot && index > 2) {
             this.startVertMovement();
             return;
         }
-        //Collide with floor after the first step
+        // Collide with floor after the first step
         else if (cbm & acb.flor && index > 0) {
             this.endVertMovement();
             return;
         }
 
-        //End of jump
+        // End of jump
         if(index > this.jumpHeights.length - 2) {
             this.startVertMovement();
             return;
         }
 
-        //Update position, travel in an arc based on the jump heights.
-        this.spos.x += this.move.x * this.horzSpeed * dt;   //Update horizontal position
-        this.spos.y = - GMULTY * (                          //Update vertical position
+        // Update position, travel in an arc based on the jump heights.
+        this.spos.x += this.move.x * this.horzSpeed * dt;   // Update horizontal position
+        this.spos.y = - GMULTY * (                          // Update vertical position
             this.jumpHeights[index] + 
             this.gpos.y - 
             this.jumpOrigin.y +
             Math.abs(this.spos.x / GMULTX) * (this.jumpHeights[index + 1] - this.jumpHeights[index]));
 
-        this.animationsCurr.spos = this.spos;               //Update animations to match current position
+        this.animationsCurr.spos = this.spos;               // Update animations to match current position
 
-        //store sub-position converted to a grid position
-        var move = {
+        // store sub-position converted to a grid position
+        let move = {
             x : Math.abs(this.spos.x) > GMULTX ? Math.sign(this.spos.x) : 0,
             y : Math.abs(this.spos.y) > GMULTY ? Math.sign(this.spos.y) : 0
         };
 
-        //if sub-position is large enough to move, update position
+        // if sub-position is large enough to move, update position
         if(move.x || move.y) {
     
-            this.moveAll(move, false);  //Go up or down to new grid position
-            this.spos.sub({             //Reset subposition to match new grid position
+            this.moveAll(move, false);  // Go up or down to new grid position
+            this.spos.sub({             // Reset subposition to match new grid position
                 x : move.x * GMULTX,
                 y : move.y * GMULTY
             });            
     
-            //Update animation to match
+            // Update animation to match
             this.animationsCurr.gpos.add(move);
         }
     }
@@ -445,7 +445,7 @@ export default class CharacterBot extends Character {
     /** Check and resolve brick collisions - Vertical movement */
     protected handleBrickCollisionVertical() {
 
-        //Reset vertical block for check
+        // Reset vertical block for check
         this.vertBlock = false;
         
         // There is an obstacle, stop based on its direction
@@ -469,7 +469,7 @@ export default class CharacterBot extends Character {
     /** Colliders for non-brick collisions */
     public getColliders() : Collider[] {
         
-        //Back half of the bot shouldn't collide with wind, after a delay since stepping or landing
+        // Back half of the bot shouldn't collide with wind, after a delay since stepping or landing
         let xShiftMin = this.stateIndex == 0 && this.timerLand > 0.15 && this.move.x > 0 ? 1 : 0; 
         let xShiftMax = this.stateIndex == 0 && this.timerLand > 0.15 && this.move.x < 0 ? 1 : 0; 
         
@@ -497,7 +497,7 @@ export default class CharacterBot extends Character {
             this.timerSpec = 0;         // Timer reset incase we cancelled a previous animation
             super.setStateIndex(index); // Set index
 
-            //Force walk animation to sync with steps
+            // Force walk animation to sync with steps
             if(this.stateIndex == BotState.NORMAL) {
                 this.animationsCurr.timer = this.timerStep;
             }
@@ -507,7 +507,7 @@ export default class CharacterBot extends Character {
     /** Check and resolve brick collisions */
     public handleStep() {
 
-        this.timerStep = 0; //Reset step timer
+        this.timerStep = 0; // Reset step timer
 
         switch(this.stateIndex) {
 
@@ -517,7 +517,7 @@ export default class CharacterBot extends Character {
 
             case BotState.NORMAL :
                 this.handleBrickCollisionNormal();
-                this.timerLand = 0; //Reset land timer for steps, too.
+                this.timerLand = 0; // Reset land timer for steps, too.
                 break;
 
             default :
@@ -529,7 +529,7 @@ export default class CharacterBot extends Character {
     protected resolveCollisions(collisions : Collision[]) {
         super.resolveCollisions(collisions);
         
-        //Start going down if flying but there's no float collisions
+        // Start going down if flying but there's no float collisions
         if (!collisions.find(c => c.mask & MASKS.float) && this.stateIndex == BotState.FLYING) {
             this.vertMult = -1;         // Go down please
         }

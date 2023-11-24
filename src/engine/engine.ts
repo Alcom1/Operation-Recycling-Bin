@@ -96,36 +96,36 @@ export default class Engine {
     /** Physics Update loop - Asynchronous */
     private async physicsFrame(): Promise<void> {
 
-        let t1 = Date.now();                        //Previous time
-        let timeCount = 0;                          //Timer for physics
-        let timeMin = 1000 / this.physicsPerSecond; //Number of miliseconds between physics updates
+        let t1 = Date.now();                        // Previous time
+        let timeCount = 0;                          // Timer for physics
+        let timeMin = 1000 / this.physicsPerSecond; // Number of miliseconds between physics updates
 
         let physicsLagCount = 0;
 
         while (true) {
 
-            //Add time difference to count
+            // Add time difference to count
             let t2 = Date.now();
             timeCount += t2 - t1;
             t1 = t2;
 
-            //If time difference is beyond minimum, do at least one physics update
+            // If time difference is beyond minimum, do at least one physics update
             while(timeCount >= timeMin) {
 
-                //If exceeded the maximum number of physics updates for large lag spikes, stop
+                // If exceeded the maximum number of physics updates for large lag spikes, stop
                 if(physicsLagCount >= this.physicsLagUpdateMax) {
-                    timeCount = 0;      //Reset timer, no more updates
-                    break;              //Stop
+                    timeCount = 0;      // Reset timer, no more updates
+                    break;              // Stop
                 }
 
-                //Perform updates
-                this.collision.update();    //Check collisions
-                this.sync.update();         //Resolve statuses
+                // Perform updates
+                this.collision.update();    // Check collisions
+                this.sync.update();         // Resolve statuses
 
-                physicsLagCount++;      //Count lag
-                timeCount -= timeMin;   //Subtract duration from physics timer
+                physicsLagCount++;      // Count lag
+                timeCount -= timeMin;   // Subtract duration from physics timer
             }
-            physicsLagCount = 0;        //Reset lag count after physics updates are finished
+            physicsLagCount = 0;        // Reset lag count after physics updates are finished
 
             await new Promise(resolve => setTimeout(resolve, 2));
         }

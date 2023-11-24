@@ -109,17 +109,17 @@ export default class BrickHandler extends GameObject {
 
         let noPlaceZones = this.characterHandler?.getNoPlaceZones();
 
-        let isBlocked = false;  //If the selection is blocked by a blocking brick
+        let isBlocked = false;  // If the selection is blocked by a blocking brick
 
         brickLoop : for (const brick1 of this.bricks.filter(b => b.isSelected)) {
             
             brick1.setToCursor();   // Force update so the brick position matches this frame and not the previous
 
             // Combine grid positions and sub positions for true positions
-            var tposx = brick1.gpos.x + Math.round(brick1.spos.x / GMULTX);
-            var tposy = brick1.gpos.y + Math.round(brick1.spos.y / GMULTY);
+            let tposx = brick1.gpos.x + Math.round(brick1.spos.x / GMULTX);
+            let tposy = brick1.gpos.y + Math.round(brick1.spos.y / GMULTY);
 
-            //Do not place bricks in no-place zones (gliding bricks/characters are handled by this, instead)
+            // Do not place bricks in no-place zones (gliding bricks/characters are handled by this, instead)
             if (noPlaceZones?.some(p => 
                 p.y == tposy &&
                 p.x >= tposx &&
@@ -146,19 +146,21 @@ export default class BrickHandler extends GameObject {
             }
 
             // Check collision between current selected brick and every brick in its potential adjacent rows.
-            for (var dir of OPPOSITE_DIRS) {            // For each direction
+            for (let dir of OPPOSITE_DIRS) {            // For each direction
 
                 // If row in the direction (above/below) has bricks, check each brick
                 // For each brick in the row in that direction
-                for (var brick2 of this.bricksActive.filter(b => !b.isGlide && b.gpos.y == tposy + dir)) {
+                for (let brick2 of this.bricksActive.filter(b => !b.isGlide && b.gpos.y == tposy + dir)) {
                     
                     if (!brick2.isSelected && col1D(    // If the brick-in-row is colliding with this brick
                         tposx, tposx + brick1.width,
                         brick2.gpos.x, brick2.gpos.x + brick2.width)) {
 
-                        adjacents[dir] = true;          // Set adjacency state for this direction.
+                        if(!brick2.blockStrength) {
+                            adjacents[dir] = true;      // Set adjacency state for this direction.
+                        }
                         
-                        //There is a blocking brick, set state and break out of the loop
+                        // There is a blocking brick, set state and break out of the loop
                         if (brick2.blockStrength == 2) {
                             isBlocked = true;
                             break brickLoop;
@@ -168,7 +170,7 @@ export default class BrickHandler extends GameObject {
             }
         }
 
-        //Selection is blocked, return false
+        // Selection is blocked, return false
         if(isBlocked) {
             return false;
         }
@@ -254,10 +256,10 @@ export default class BrickHandler extends GameObject {
             }
         }
 
-        //Single overhang space
+        // Single overhang space
         if(overhang) {
 
-            //x-pos of new space
+            // x-pos of new space
             let check = dir > 0 ? pos.x + size : pos.x - 1;
 
             // Check each brick int his row.
@@ -379,7 +381,7 @@ export default class BrickHandler extends GameObject {
         }
 
         // Top and side face check
-        for (var brick of this.bricksActive) {
+        for (let brick of this.bricksActive) {
             if (// Top Face - if position is over this face
                 colPointParHGrid(
                     pos.x,
@@ -411,7 +413,7 @@ export default class BrickHandler extends GameObject {
         this.selectedBrick = brick; // Set current selected brick for later use
         this.selections = [];       // Reset selections
 
-        //Dp not proceed if the currently selected brick is blocked
+        // Dp not proceed if the currently selected brick is blocked
         if(this.checkBrickIsBlocked(this.selectedBrick)) {
 
             return BrickHandlerState.NONE;
@@ -425,13 +427,13 @@ export default class BrickHandler extends GameObject {
             // If there are bricks to select
             if (selectionNew!.length > 0) {
 
-                //Add floating bricks to selection
+                // Add floating bricks to selection
                 selectionNew = selectionNew.concat(this.getFloatingBricks());
 
-                //Validate that none of the selected bricks are blocked
+                // Validate that none of the selected bricks are blocked
                 let isAnyBlocked = selectionNew.some(b => this.checkBrickIsBlocked(b));
 
-                //Add floating bricks to direction's selection
+                // Add floating bricks to direction's selection
                 this.selections[dir] = !isAnyBlocked ? selectionNew : null;
             }
 
@@ -449,7 +451,7 @@ export default class BrickHandler extends GameObject {
     /** Check if a single brick is being blocked by a character */
     private checkBrickIsBlocked(brick : Brick) : boolean {
 
-        //Row above for brick being evaluated
+        // Row above for brick being evaluated
         for (const brick2 of this.bricksActive.filter(b => b.gpos.y == brick.gpos.y - 1)) {
 
             if (brick2.blockStrength > 0 &&   // If a brick in the other row is blocking
@@ -467,7 +469,7 @@ export default class BrickHandler extends GameObject {
     /** Return floating bricks after a selection */
     private getFloatingBricks(): Brick[] {
         
-        var ret : Brick[] = [];
+        let ret : Brick[] = [];
 
         // Recursively check from all grey bricks and mark connected bricks as grounded
         for (const brick of this.bricksGrey) {
@@ -482,12 +484,12 @@ export default class BrickHandler extends GameObject {
         // Stop trying to move the selected check! You know why it's there! (I've forgotten why it's there.)
         for (const brick of this.bricksActive) {
 
-            //If the brick isn't grounded or selected, it's floating! Add it.
+            // If the brick isn't grounded or selected, it's floating! Add it.
             if (!brick.isGrounded && !brick.isSelected && !brick.blockStrength) {
                 ret.push(brick);
             }
 
-            //Clear stored recursive results in brick
+            // Clear stored recursive results in brick
             brick.clearRecursion();
         }
 
