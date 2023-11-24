@@ -156,7 +156,9 @@ export default class BrickHandler extends GameObject {
                         tposx, tposx + brick1.width,
                         brick2.gpos.x, brick2.gpos.x + brick2.width)) {
 
-                        adjacents[dir] = true;          // Set adjacency state for this direction.
+                        if(!brick2.blockStrength) {
+                            adjacents[dir] = true;      // Set adjacency state for this direction.
+                        }
                         
                         // There is a blocking brick, set state and break out of the loop
                         if (brick2.blockStrength == 2) {
