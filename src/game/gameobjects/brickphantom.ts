@@ -6,7 +6,7 @@ export default class BrickPhantom extends Brick {
 
     /** Constructor */
     constructor(params: BrickParams) {
-        super({...params, block : true});
+        super({...params, blockStrength : 1});
 
         this.tags.push("BrickPhantom");
     }
