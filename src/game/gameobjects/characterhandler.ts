@@ -19,20 +19,20 @@ export default class CharacterHandler extends GameObject {
     /** A second layer of initialization, gets characters out of unwanted starting positions */
     public update()
     {
-        //If this handler hasn't started yet (after constructor and init)
+        // If this handler hasn't started yet (after constructor and init)
         if(!this.isStart) {
 
-            this.isStart = true;    //Started
+            this.isStart = true;    // Started
 
-            //Map character groups as characters with their specific tag
+            // Map character groups as characters with their specific tag
             let charactersTagged = this.characters;
             
-            //Sort characters by their grid x-pos or grid y-pos.
+            // Sort characters by their grid x-pos or grid y-pos.
             charactersTagged.sort((a, b) => 
                 a.gpos.x - b.gpos.x || 
                 a.gpos.y - b.gpos.y);
 
-            //Update character states by positional order
+            // Update character states by positional order
             this.handleStepUpdate(charactersTagged, 0, 0, true);
         }
     }
@@ -45,15 +45,15 @@ export default class CharacterHandler extends GameObject {
     /** Perform synchronous updates for all characters */
     public updateSync(counter : number, loopLength : number) {
 
-        //Map character groups as characters with their specific tag
+        // Map character groups as characters with their specific tag
         let charactersTagged = this.characters;
         
-        //Sort characters by their grid x-pos or grid y-pos.
+        // Sort characters by their grid x-pos or grid y-pos.
         charactersTagged.sort((a, b) => 
             a.gpos.x - b.gpos.x || 
             b.gpos.y - a.gpos.y);
         
-        //Move characters by positional order
+        // Move characters by positional order
         charactersTagged.forEach(ct => {
 
             // The step matches this character's speed, perform an update
@@ -63,18 +63,18 @@ export default class CharacterHandler extends GameObject {
             }
         });
 
-        //Handle proximity and step updates for all characters
+        // Handle proximity and step updates for all characters
         this.handleStepUpdate(charactersTagged, counter, loopLength)
     }
 
-    //Handle proximity and step updates for all characters
+    // Handle proximity and step updates for all characters
     public handleStepUpdate(
         charactersTagged : Character[], 
         counter : number, 
         loopLength : number, 
         isOverride : boolean = false) {
         
-        //Update character states by positional order
+        // Update character states by positional order
         charactersTagged.forEach((ct1, i) => {
 
             // The step matches this character's speed, perform an update
@@ -82,20 +82,20 @@ export default class CharacterHandler extends GameObject {
 
                 let proxs : Point[] = [];
 
-                //Proximity check against characters with height 2 and normal movement
+                // Proximity check against characters with height 2 and normal movement
                 charactersTagged.slice(0, i).filter(
                     ct2 => ct2.height == 2 && 
                     ct2.isNormalMovment &&
                     ct2.speed != 0).forEach(ct2 => {
 
-                    //Distance vector between characters
+                    // Distance vector between characters
                     let diff = ct2.gpos.getSub(ct1.gpos);
 
-                    //In proximity range
+                    // In proximity range
                     if (Math.abs(diff.x) <= 3 &&
                         Math.abs(diff.y) <= 3) {
 
-                        //Get proximity with future-expected position of other character
+                        // Get proximity with future-expected position of other character
                         proxs.push(diff.getAdd({
                             x : ct2.move.y == 0 ? ct2.move.x : 0,
                             y : ct2.move.y
@@ -104,7 +104,7 @@ export default class CharacterHandler extends GameObject {
 
                 });
 
-                //Handle step with proximity results
+                // Handle step with proximity results
                 ct1.handleStepUpdate(proxs);
             }
         });

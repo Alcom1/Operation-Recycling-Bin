@@ -44,7 +44,7 @@ export default class BrickTileButton extends BrickTile {
     protected resolveCollisions(collisions : Collision[]) {
         super.resolveCollisions(collisions)
 
-        //Unlock this button if it isn't colliding with anything anymore.
+        // Unlock this button if it isn't colliding with anything anymore.
         if(collisions.length == 0) {
 
             this.isLock = false;

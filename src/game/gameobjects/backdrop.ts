@@ -198,7 +198,7 @@ export default class Backdrop extends GameObject {
         ctx.save();
         ctx.translate(x, y);
 
-        //Each rivet
+        // Each rivet
         for(let i = 0; i < c; i++) {
 
             this.drawRivet(
@@ -223,13 +223,13 @@ export default class Backdrop extends GameObject {
         ctx.save();
         ctx.translate(x, y);
 
-        //Each row
+        // Each row
         for(let j = 0; j < h; j++) {
 
-            //Each column
+            // Each column
             for(let i = 0; i < w; i++) {
 
-                //Skip inner hollow area
+                // Skip inner hollow area
                 if(!(j == 0 || j == h - 1) && !(i == 0 || i == w - 1)) {
                     continue;
                 }

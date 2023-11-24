@@ -96,10 +96,10 @@ export default class BrickHandlerDebug extends BrickHandler {
             }
         }
 
-        //Single overhang space
+        // Single overhang space
         if(overhang) {
 
-            //x-pos of new space
+            // x-pos of new space
             let check = dir > 0 ? pos.x + size : pos.x - 1;
             this.debugPoints.push({ x : check, y : pos.y + size - 1, opacity : 1});
 

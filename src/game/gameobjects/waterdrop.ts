@@ -25,7 +25,7 @@ export default class WaterDrop extends Sprite {
     constructor(params: GameObjectParams) {
         super(Object.assign(params, waterDropOverride));
 
-        this.zIndex = 2500; //Big Z-index, should be in front of everything
+        this.zIndex = 2500; // Big Z-index, should be in front of everything
 
         this.animLand = this.parent.pushGO(new Anim({
             ...params,

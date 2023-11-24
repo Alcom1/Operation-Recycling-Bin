@@ -15,7 +15,7 @@ export default class BrickJumpMove extends BrickJump {
     constructor(params: BrickTileParams) {
         super(Object.assign(params, brickJumpMoveOverride));
 
-        //Unlike its parent, this one can move, so it doesn't block
+        // Unlike its parent, this one can move, so it doesn't block
         this._blockStrength = 0;
     }
 }
