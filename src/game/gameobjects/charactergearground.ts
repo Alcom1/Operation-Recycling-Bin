@@ -10,22 +10,22 @@ const CharacterGearGroundOverride = Object.freeze({
     speed : 5.0,
     animMain : {
         images : [        
-            { name : "char_rbg_left", offsetX : 0 },
-            { name : "char_rbg_right", offsetX : 0}],
+            { name : "char_rbg_left", extension : "svg", offsetX : 0 },
+            { name : "char_rbg_right", extension : "svg", offsetX : 0}],
         frameCount : 2,
         animsCount : 1
     },
     isGlide : true,
     animsMisc : [{
             speed : 5.0,
-            images : [{ name : "char_rbg_stop", offsetX : 0 }],
+            images : [{ name : "char_rbg_stop", extension : "svg", offsetX : 0 }],
             frameCount : 2,
             gposOffset : { x : -3, y : 0}
         },{
             speed : 3.0,
             images : [
-                { name : "char_rbg_left", offsetX : 0 },
-                { name : "char_rbg_right", offsetX : 0}],
+                { name : "char_rbg_left", extension : "svg", offsetX : 0 },
+                { name : "char_rbg_right", extension : "svg", offsetX : 0}],
             frameCount : 2,
             gposOffset : { x : -3, y : 0}
         }]
