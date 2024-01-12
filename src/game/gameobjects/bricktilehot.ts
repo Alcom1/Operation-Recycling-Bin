@@ -5,7 +5,7 @@ import BrickTile, { BrickTileParams } from "./bricktile";
 
 /** Specifications of a hot tile */
 const BrickTileHotOverride = Object.freeze({
-    images : ["brick_tile", "brick_tile_hot"],
+    images : [["brick_tile", "svg"], "brick_tile_hot"],
     width : 4
 });
 

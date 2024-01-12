@@ -7,7 +7,7 @@ import Character from "./character";
 
 /** Specifications of a fan tile */
 const BrickTileFanOverride = Object.freeze({
-    images : ["brick_tile", "brick_tile_fan"],
+    images : [["brick_tile", "svg"], "brick_tile_fan"],
     width : 4
 });
 

@@ -3,9 +3,9 @@ import Brick, { BrickParams } from "./brick";
 
 /** Parameters for a tile */
 export interface BrickTileParams extends BrickParams {
-    isOn?: boolean;     // If the tile starts on or off
-    images: string[];   // Images for the tile on/off states
-    circuit: number;    // Circuit number that turns the tile on/off
+    isOn?: boolean;                         // If the tile starts on or off
+    images: (string | [string,string])[];   // Images for the tile on/off states
+    circuit: number;                        // Circuit number that turns the tile on/off
 }
 
 /** A tile, a brick without studs */
@@ -21,7 +21,11 @@ export default class BrickTile extends Brick {
 
         this.tags.push("BrickTile");
 
-        this.images = params.images.map(i => i ? this.engine.library.getImage(i) : {} as HTMLImageElement);
+        this.images = params.images.map(i => {
+            return Array.isArray(i) ?
+                this.engine.library.getImage(i[0], i[1]) as HTMLImageElement :
+                this.engine.library.getImage(i) as HTMLImageElement;
+        });
 
         this.isOn = params.isOn ?? true;
         this.image = this.images[+this.isOn];
