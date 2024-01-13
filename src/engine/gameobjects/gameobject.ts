@@ -46,10 +46,10 @@ export default class GameObject {
     public parent: Scene;
 
     /** If this is an active game object */
-    public isActive: Boolean;
+    public isActive: boolean;
 
     /** If this game object is in a debug state */
-    public isDebug: Boolean;
+    public isDebug: boolean;
 
     /** Stored collisions to be processed */
     private collisions: Collision[] = [];
@@ -65,7 +65,7 @@ export default class GameObject {
     public get zNoCompare() : boolean { return this._zNoCompare; }
     public set zIndex(value : number) { this._zIndex = value; }
     public get zpos() : Point { return this.gpos; }
-    public get zState() : Boolean { return this.isActive; }
+    public get zState() : boolean { return this.isActive; }
     public get zSize() : Point { return {x : 1, y : 1}; }
     public get zLayer() : Number { return 0; }
 

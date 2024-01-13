@@ -2,47 +2,24 @@ import { Collider } from "engine/modules/collision";
 import { MASKS } from "engine/utilities/math";
 import Anim, { AnimationParams } from "./anim";
 import BrickTile, { BrickTileParams } from "./bricktile";
+import BrickTileAnim from "./bricktileanim";
 
 /** Specifications of a hot tile */
 const BrickTileHotOverride = Object.freeze({
-    images : [["brick_tile_hot_off", "svg"], ["brick_tile_hot", "svg"]],
-    width : 4
+    images : [["brick_tile_hot_off", "svg"]],
+    width : 4,
+    animName : "brick_tile_hot",
+    animExtension : "svg",
+    animSpeed : 2,
+    animFrameCount : 7
 });
 
 /** A tile with a HOT effect */
-export default class BrickTileHot extends BrickTile {
-
-    private animation: Anim;    // Tile is animated
-
-    /** z-index get/setters */
-    get zIndex() : number { return super.zIndex; }
-    set zIndex(value : number) { 
-        super.zIndex = value; 
-        this.animation.zIndex = value;
-    }
+export default class BrickTileHot extends BrickTileAnim {
 
     /** Constructor */
     constructor(params: BrickTileParams) {
         super(Object.assign(params, BrickTileHotOverride));
-
-        this.animation = this.parent.pushGO(new Anim({
-            ...params,
-            subPosition : { x : 0, y : -25 },       // For some reason, this animation appears super low by default.
-            images : [{ name : "brick_tile_hot" }], // Single hotplate animation image
-            speed : 2,                              // Hotplate animation is weirdly fast
-            frameCount : 7,
-            isVert : true                           // Hotplate animation frames are stacked vertically
-        } as AnimationParams)) as Anim;
-
-        this.animation.isActive == this.isOn;       // Animation only applies to active hot tiles
-    }
-    
-    /** draw off tile */
-    public draw(ctx : CanvasRenderingContext2D) {
-
-        if (!this.isOn) {       // Tile is off
-            super.draw(ctx);    // Draw the off tile instead of the animation
-        }
     }
 
     /** Get hazard and passive colliders of this brick. */

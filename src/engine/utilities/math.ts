@@ -83,9 +83,15 @@ export const RING_BITSTACKB = Object.freeze({
 });
 
 /** Handles file extension - image */
+export function nameImg(fileName : string, extension?: string) {
+
+    return `${fileName}.${extension ?? "png"}`;    // Default to png
+}
+
+/** Handles file extension - image */
 export function pathImg(fileName : string, extension?: string) {
 
-    return `${PATH_IMG}${fileName}.${extension ?? "png"}`;    // Default to png
+    return `${PATH_IMG}${nameImg(fileName,extension)}`;
 }
 
 /** Constrain value between min and max (inclusive) */
