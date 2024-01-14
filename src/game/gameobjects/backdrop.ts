@@ -29,7 +29,12 @@ export default class Backdrop extends GameObject {
         super(params);
 
         let svgs = [
-            "door"]
+            "door",
+            "window",
+            "sign_acid",
+            "sign_fire",
+            "sign_skull",
+            "sign_voltage"];
 
         this.decals = (params.decals ?? [])
             .map(d => ({ 
