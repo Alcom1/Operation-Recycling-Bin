@@ -10,7 +10,6 @@ interface StudParams extends GameObjectParams {
 /** Pair of studs for a brick */
 export default class Stud extends GameObject {
 
-    private color: string;                              // Stud color
     private image : HTMLImageElement;                   // Image of a pair of studs
     private isPressed : boolean = false;                // Brick is pressed
     private isSelected : boolean = false;               // Brick is selected
@@ -43,9 +42,8 @@ export default class Stud extends GameObject {
 
         this.tags = ["Stud"];
 
-        this.color = colorTranslate(params.color);
-
-        this.image = this.engine.library.getImage(`stud_${this.color.replace("#", "").toLowerCase()}`);
+        this.image = this.engine.library.getImage(
+            `stud_${colorTranslate(params.color).replace("#", "").toLowerCase()}`);
     }
 
     /** Draw studs */

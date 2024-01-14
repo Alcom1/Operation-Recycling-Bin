@@ -15,8 +15,8 @@ export default class LibraryModule {
         return curr == null ? 
             this.storeImage(
                 fullName, 
-                pathImg(name, extension)) :   // If the asset isn't in the library, add it
-            curr;                             // Otherwise, return existing asset
+                pathImg(name, extension)) : // If the asset isn't in the library, add it
+            curr;                           // Otherwise, return existing asset
     }
 
     /** Get an image asset from a full src, store it if it's new. */
@@ -25,8 +25,8 @@ export default class LibraryModule {
         const curr = this.assetsImage.get(name);
 
         return curr == null ? 
-            this.storeImage(name, src) :                        // If the asset isn't in the library, add it
-            curr;                                               // Otherwise, return existing asset
+            this.storeImage(name, src) :    // If the asset isn't in the library, add it
+            curr;                           // Otherwise, return existing asset
     }
 
     /** store and return an image src by its name */
