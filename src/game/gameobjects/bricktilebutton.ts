@@ -5,7 +5,7 @@ import BrickTile, { BrickTileParams } from "./bricktile";
 
 /** Specifications of a button tile */
 const brickButtonOverride = Object.freeze({
-    images : ["brick_button_off", "brick_button_on"],
+    images : [["brick_button_off", "svg"], ["brick_button_on", "svg"]],
     width : 2
 });
 
