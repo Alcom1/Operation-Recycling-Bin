@@ -29,8 +29,19 @@ export default class Backdrop extends GameObject {
         super(params);
 
         let svgs = [
+            "arrowd",
+            "arrowl",
+            "arrowr",
+            "arrowu",
+            "arrowld",
+            "arrowrd",
+            "arrowru",
+            "arrowul",
+            "arrowur",
             "door",
             "window",
+            "safetystrip_horiz",
+            "safetystrip_vert",
             "sign_acid",
             "sign_fire",
             "sign_skull",
