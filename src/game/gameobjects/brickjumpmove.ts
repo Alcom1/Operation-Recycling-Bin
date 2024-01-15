@@ -4,8 +4,9 @@ import { BrickTileParams } from "./bricktile";
 /** Specifications of a moving jump brick (Non-grey color means it can be moved) */
 const brickJumpMoveOverride = Object.freeze({
     color : "yellow",
-    images : ["brick_jump_move_up", "brick_jump_move"],
-    imageTop : "brick_jump_move_top"
+    images : [["brick_jump_move_up", "svg"], ["brick_jump_move", "svg"]],
+    imageTop : "brick_jump_move_top",
+    imageTopExtension : "svg"
 });
 
 /** Jump brick except it can be moved (because it's yellow) */
