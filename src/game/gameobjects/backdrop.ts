@@ -46,7 +46,8 @@ export default class Backdrop extends GameObject {
             "sign_fire",
             "sign_skull",
             "sign_voltage",
-            "word_danger"];
+            "word_danger",
+            "word_level"];
 
         this.decals = (params.decals ?? [])
             .map(d => ({ 
