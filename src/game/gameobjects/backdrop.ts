@@ -57,6 +57,8 @@ export default class Backdrop extends GameObject {
             "safetystrip_vert",
             "sign_acid",
             "sign_fire",
+            "sign_keepout",
+            "sign_no_access",
             "sign_skull",
             "sign_voltage",
             "terminal_1dial",
