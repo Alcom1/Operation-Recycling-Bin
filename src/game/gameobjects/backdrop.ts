@@ -38,6 +38,8 @@ export default class Backdrop extends GameObject {
             "arrowru",
             "arrowul",
             "arrowur",
+            "computer2dial",
+            "computer_matrix",
             "door",
             "window",
             "number_0",
@@ -57,6 +59,9 @@ export default class Backdrop extends GameObject {
             "sign_fire",
             "sign_skull",
             "sign_voltage",
+            "terminal_1dial",
+            "terminal_chart",
+            "terminal_circuit",
             "word_danger",
             "word_level"];
 
