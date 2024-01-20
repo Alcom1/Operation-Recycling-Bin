@@ -28,54 +28,11 @@ export default class Backdrop extends GameObject {
     constructor(params: BackdropParams) {
         super(params);
 
-        let svgs = [
-            "arrowd",
-            "arrowl",
-            "arrowr",
-            "arrowu",
-            "arrowld",
-            "arrowrd",
-            "arrowru",
-            "arrowul",
-            "arrowur",
-            "computer2dial",
-            "computer_matrix",
-            "door",
-            "window",
-            "fusebox",
-            "fusebox_pipes_d",
-            "fusebox_pipes_l",
-            "fusebox_pipes_r",
-            "number_0",
-            "number_1",
-            "number_2",
-            "number_3",
-            "number_4",
-            "number_5",
-            "number_6",
-            "number_7",
-            "number_8",
-            "number_9",
-            "number_dash",
-            "safetystrip_horiz",
-            "safetystrip_vert",
-            "sign_acid",
-            "sign_fire",
-            "sign_keepout",
-            "sign_no_access",
-            "sign_skull",
-            "sign_voltage",
-            "terminal_1dial",
-            "terminal_chart",
-            "terminal_circuit",
-            "word_danger",
-            "word_level"];
-
         this.decals = (params.decals ?? [])
             .map(d => ({ 
                 name : d.name, 
                 position : d.position,
-                image : this.engine.library.getImage("bg_" + d.name, svgs.some(s => s === d.name) ? "svg" : "png")}));
+                image : this.engine.library.getImage(`bg_${d.name}`, "svg")}));
 
         this.type = params.type;
     }
