@@ -9,6 +9,7 @@ import Sprite from "./sprite";
 /** Specifications of a water drop */
 const waterDropOverride = Object.freeze({
     image: "part_water",
+    extension: "svg",
     zIndex: 0,
 });
 
@@ -30,7 +31,7 @@ export default class WaterDrop extends Sprite {
         this.animLand = this.parent.pushGO(new Anim({
             ...params,
             zIndex : this.zIndex,
-            images : [{ name : "part_water_land" }],
+            images : [{ name : "part_water_land", extension : "svg" }],
             speed : 2.5,
             frameCount : 6,
             isVert : true,
@@ -41,7 +42,7 @@ export default class WaterDrop extends Sprite {
         this.animSlip = this.parent.pushGO(new Anim({
             ...params,
             zIndex : this.zIndex,
-            images : [{ name : "part_water_slip" }],
+            images : [{ name : "part_water_slip", extension : "svg" }],
             speed : 1 / this.slipDuration,
             frameCount : 6,
             isVert : true,
