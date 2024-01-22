@@ -11,10 +11,10 @@ const CharacterGearClimbOverride = Object.freeze({
     speed : 3.0,
     animMain : {
         images : [
-            { name : "char_rbc_left",   offsetX : 0 },
-            { name : "char_rbc_right",  offsetX : 0},
-            { name : "char_rbc_up",     offsetX : 0},
-            { name : "char_rbc_down",   offsetX : 0}],
+            { name : "char_rbc_left",   extension : "svg",  offsetX : 0},
+            { name : "char_rbc_right",  extension : "svg",  offsetX : 0},
+            { name : "char_rbc_up",     extension : "svg",  offsetX : 0},
+            { name : "char_rbc_down",   extension : "svg",  offsetX : 0}],
         frameCount : 2,
         animsCount : 1
     },
@@ -23,12 +23,12 @@ const CharacterGearClimbOverride = Object.freeze({
     // Misc animation parameters
     animsMisc : [{
         speed : 3.0,
-        images : [{ name : "char_rbc_stop", offsetX : 0 }],
+        images : [{ name : "char_rbc_stop", extension : "svg",  offsetX : 0 }],
         frameCount : 2,
         gposOffset : { x : -3, y : 0}
     },{
         speed : 3.0,
-        images : [{ name : "char_rbc_up", offsetX : 0 }],
+        images : [{ name : "char_rbc_up",   extension : "svg",  offsetX : 0 }],
         frameCount : 2,
         gposOffset : { x : -3, y : 0}
     }]
