@@ -38,7 +38,7 @@ export default class BrickTileFan extends BrickTileAnim {
                     tags : ["Wind"],
                     position : {x : this.gpos.x + i + 1, y : j},
                     subPosition : { x : Z_DEPTH / 2 - 2, y : -Z_DEPTH / 2 + 2 }, 
-                    images : [{ name : "part_wind" }],
+                    images : [{ name : "part_wind", extension : "svg" }],
                     speed : 2,
                     frameCount : 6,
                     isLoop : true                                        
