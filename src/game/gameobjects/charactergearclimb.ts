@@ -66,8 +66,8 @@ export default class CharacterGearClimb extends CharacterGear {
 
         this.burstAnim = this.parent.pushGO(new Anim({
             ...params,
-            images : [{ name : "char_rbc_burst" }], // Single hotplate animation image
-            speed : 3,                              // Hotplate animation is weirdly fast
+            images : [{ name : "char_rbc_burst", extension : "svg" }],
+            speed : 3,
             frameCount : 6,
             zIndex : 50000
         } as AnimationParams)) as Anim;
