@@ -19,6 +19,7 @@ export default class Backdrop extends GameObject {
     
     private image : HTMLImageElement = new Image();
     private decals : Decal[];
+    private rivets : HTMLImageElement[];
     private type : number;
 
     /** Constructor */
@@ -30,6 +31,8 @@ export default class Backdrop extends GameObject {
                 name : d.name, 
                 position : d.position,
                 image : this.engine.library.getImage(`bg_${d.name}`, "svg")}));
+
+        this.rivets = [1,2].map(x => this.engine.library.getImage(`bg_rivet_${x}`, "svg"));
 
         this.type = params.type;
     }
@@ -202,8 +205,7 @@ export default class Backdrop extends GameObject {
                 ctx, 
                 isHorz ? i * 62 : 0, 
                 isHorz ? 0 : i * 48, 
-                "#5A6363",
-                "#7F8887");
+                0);
         }
 
         ctx.restore();
@@ -235,8 +237,7 @@ export default class Backdrop extends GameObject {
                     ctx, 
                     i * 60, 
                     j * 48, 
-                    "#535C5C",
-                    "#6B7373");
+                    1);
             }
         }
 
@@ -248,8 +249,7 @@ export default class Backdrop extends GameObject {
         ctx: CanvasRenderingContext2D,
         x: number,
         y: number,
-        color1: string,
-        color2: string) {
+        index: number) {
 
         // Translation components of canvas
         var cposx = ctx.getTransform().e;
@@ -271,18 +271,6 @@ export default class Backdrop extends GameObject {
             return;
         }
 
-        //Draw rivet shadow
-        ctx.fillStyle = color1;
-        ctx.beginPath();
-        ctx.arc(x + 2, y + 2, 6, 0, 2 * Math.PI);
-        ctx.closePath();
-        ctx.fill();
-
-        //Draw rivet
-        ctx.fillStyle = color2;
-        ctx.beginPath();
-        ctx.arc(x, y, 6, 0, 2 * Math.PI);
-        ctx.closePath();
-        ctx.fill();
+        ctx.drawImage(this.rivets[index], x - 6, y - 6)
     }
 }
