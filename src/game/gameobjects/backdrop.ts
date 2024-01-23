@@ -1,17 +1,14 @@
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
+import { col1D } from "engine/utilities/math";
 import { Point } from "engine/utilities/vect";
 
-/** Backdrop parameters */
 interface Decal {
     position: Point;
     name: string;
     image: HTMLImageElement;
 }
 
-interface SpriteOffset extends Point {
-    name: string;
-}
-
+/** Backdrop parameters */
 export interface BackdropParams extends GameObjectParams {
     decals : Decal[];
     type : number;
@@ -43,9 +40,9 @@ export default class Backdrop extends GameObject {
         this.image.src = this.engine.baker.bake(ctx => this.drawBackdrop(ctx));
     }
 
+    /** Draw the image saved for this backdrop */
+    public draw(ctx: CanvasRenderingContext2D) {  
 
-    /** */
-    public draw(ctx: CanvasRenderingContext2D) {        
         ctx.drawImage(this.image, 0, 0);
     }
 
@@ -254,12 +251,34 @@ export default class Backdrop extends GameObject {
         color1: string,
         color2: string) {
 
+        // Translation components of canvas
+        var cposx = ctx.getTransform().e;
+        var cposy = ctx.getTransform().f;
+
+        //If there is a decal above this rivet, do not draw it.
+        if (this.decals.some(d => 
+            col1D(
+                d.position.x,
+                d.position.x + d.image.width,
+                cposx + x - 6,
+                cposx + x + 8) &&
+            col1D(
+                d.position.y,
+                d.position.y + d.image.height,
+                cposy + y - 6,
+                cposy + y + 8))) {
+
+            return;
+        }
+
+        //Draw rivet shadow
         ctx.fillStyle = color1;
         ctx.beginPath();
         ctx.arc(x + 2, y + 2, 6, 0, 2 * Math.PI);
         ctx.closePath();
         ctx.fill();
 
+        //Draw rivet
         ctx.fillStyle = color2;
         ctx.beginPath();
         ctx.arc(x, y, 6, 0, 2 * Math.PI);
