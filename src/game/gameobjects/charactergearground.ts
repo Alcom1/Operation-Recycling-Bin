@@ -17,12 +17,12 @@ const CharacterGearGroundOverride = Object.freeze({
     },
     isGlide : true,
     animsMisc : [{
-        speed : 5.0,
+        speed : 6.0,
         images : [{ name : "char_rbg_stop", extension : "svg", offsetX : 0 }],
         frameCount : 2,
         gposOffset : { x : -3, y : 0}
     },{
-        speed : 3.0,
+        speed : 6.0,
         images : [
             { name : "char_rbg_left", extension : "svg", offsetX : 0 },
             { name : "char_rbg_right", extension : "svg", offsetX : 0}],
@@ -43,7 +43,7 @@ export default class CharacterGearGround extends CharacterGear {
     public handleStepUpdate(proxs : Point[]) {
         super.handleStepUpdate(proxs);
 
-        switch(this.stateIndex) {
+        switch(this._stateIndex) {
 
             case GearState.NORMAL :
                 if (this.isColFace || !this.isColLand) {

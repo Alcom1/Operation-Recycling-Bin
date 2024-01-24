@@ -172,12 +172,7 @@ export default class Character extends GameObject {
         this.glideOffset = Vect.zero;
         this.spos = Vect.zero;
         this.animations[0].setImageIndex(this.animationSubindex);   // Establish sprites for new direction
-        this.animationCurr.reset();
-        
-        // If gliding force-reset the sprite to match its current position
-        if (this.isGlide) {
-            this.animationCurr.reset(this.gpos);
-        }
+        this.animationCurr.reset(this.gpos, !this.isGlide);
     }
 
     /** Move this character and its bricks by an offset*/
@@ -198,19 +193,25 @@ export default class Character extends GameObject {
     /** Set current & active group based on the group index */
     protected setStateIndex(index? : number, offset? : Point) {
 
-        //Set subposition and glide offset for next move
+        // Set subposition and glide offset for next move
         if(this.isGlide && offset) {
 
             this.glideOffset.x = (this.spos.x -= offset.x * GMULTX) * Math.sign(offset.x);
             this.glideOffset.y = (this.spos.y -= offset.y * GMULTY) * Math.sign(offset.y);
         }
         
-        this.animationCurr.isActive = false;        // Deactivate old animation
+        var storedTimer = this.animationCurr.timer;
+        this.animationCurr.isActive = false;            // Deactivate old animation
         this._stateIndex = index ?? this._stateIndex;
-        this.animationCurr.isActive = true;         // Active new animation
-        this.animationCurr.spos = this.spos.get();  // Reset active animation subposition
-        this.animationCurr.reset(this.gpos);        // Reset active animation position
+        this.animationCurr.isActive = true;             // Active new animation
+        this.animationCurr.spos = this.spos.get();      // Reset active animation subposition
+        this.animationCurr.reset(this.gpos);            // Reset active animation position
         this.animationCurr.setImageIndex(this.animationSubindex);
+
+        // Keep glider animation timer going across all animations
+        if(this.isGlide) {
+            this.animationCurr.timer = storedTimer;
+        }
     }
 
     /** */
