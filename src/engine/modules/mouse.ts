@@ -56,7 +56,7 @@ export default class MouseModule {
 
     /** Mouse position */
     public getPos(): Vect {
-        return this.mousePos;
+        return this.mousePos.get();
     }
 
     /** Mouse state */
