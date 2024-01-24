@@ -84,7 +84,7 @@ export default class CharacterGearClimb extends CharacterGear {
     public handleStep() {
 
         // Don't update position for special states (WAIT, HALT, etc)
-        if (this.stateIndex != GearState.NORMAL) {
+        if (this._stateIndex != GearState.NORMAL) {
             return;
         }
 
@@ -116,7 +116,7 @@ export default class CharacterGearClimb extends CharacterGear {
     public handleStepUpdate(proxs : Point[]) {
         super.handleStepUpdate(proxs);
 
-        switch(this.stateIndex) {
+        switch(this._stateIndex) {
 
             // Currently moving. Normal checks for FORWARD & DOWN, special check for UP
             case GearState.NORMAL :

@@ -20,27 +20,28 @@ export interface CharacterParams extends GameObjectParams {
 /** Base character */
 export default class Character extends GameObject {
 
-    public get height() { return this._height; }    // Collision height of this character
+    public get height() { return this._height; }            // Collision height of this character
     protected _height: number;
-    public get move() { return this._move; }        // Movement direction of this character
-    protected _move: Vect;                          
-    private _speed: number;                         // Speed of this character
+    public get move() { return this._move; }                // Movement direction of this character
+    protected _move: Vect;                                  
+    private _speed: number;                                 // Speed of this character
     public get speed() { return this._speed }
-    protected brickHandler!: BrickHandler;          // Brick handler for brick pressure (bricks under this character)
-    private isGlide: boolean;                       // If the character sprite matches the character's subposition
-    private glideOffset: Vect;                      // Sub-position offset after physics update to adjust glide speed
+    protected brickHandler!: BrickHandler;                  // Brick handler for brick pressure (bricks under this character)
+    private isGlide: boolean;                               // If the character sprite matches the character's subposition
+    private glideOffset: Vect;                              // Sub-position offset after physics update to adjust glide speed
 
-    protected animations: Anim[] = [];              // Animations, 2D array for character-states and then sub-states
-    protected stateAnimations: number[];            // Array of which animation each state uses. Sometimes it's not 1:1.
-    protected stateIndex: number = 0;               // Current state
+    protected animations: Anim[] = [];                      // Animations, 2D array for character-states and then sub-states
+    protected stateAnimations: number[];                    // Array of which animation each state uses. Sometimes it's not 1:1.
+    public get stateIndex() { return this._stateIndex; }
+    protected _stateIndex: number = 0;                      // Current state
 
-    protected bricks : Brick[] = [];                // Phantom bricks for this character's collisions
+    protected bricks : Brick[] = [];                        // Phantom bricks for this character's collisions
 
     /** Getters */
     protected get animationCurr() : Anim {                                  // The animations for the current state
-        return this.animations[this.stateAnimations[this.stateIndex]]; 
+        return this.animations[this.stateAnimations[this._stateIndex]]; 
     }
-    public get isNormalMovment() : boolean { return this.stateIndex == 0 }  // If the current state is normal movment
+    public get isNormalMovment() : boolean { return this._stateIndex == 0 } // If the current state is normal movment
     protected get animationSubindex() : number { return this.move.x }       // Sub-index for animations (by default, based on horizontal movement)
    
     /** z-index get/setters */
@@ -51,13 +52,13 @@ export default class Character extends GameObject {
     }
     public get zpos() : Point { 
         return this.gpos.getAdd({ 
-            x : -1 + (this.isGlide && this.stateIndex == 0 && this.move.y == 0 && this.move.x == -1 ? -1 : 0), // Wow!!!
+            x : -1 + (this.isGlide && this._stateIndex == 0 && this.move.y == 0 && this.move.x == -1 ? -1 : 0), // Wow!!!
             y : 1 - this.height + (this.spos.y < 0 ? -1 : 0)
         });
     }
     public get zSize() : Point {
         return {
-            x : 2 + (this.isGlide && this.stateIndex == 0 && this.move.y == 0 ? 1 : 0), // Wow!
+            x : 2 + (this.isGlide && this._stateIndex == 0 && this.move.y == 0 ? 1 : 0),    // Wow!
             y : this.height + (this.spos.y != 0 ? 1 : 0)
         }; 
     }
@@ -205,7 +206,7 @@ export default class Character extends GameObject {
         }
         
         this.animationCurr.isActive = false;        // Deactivate old animation
-        this.stateIndex = index ?? this.stateIndex;
+        this._stateIndex = index ?? this._stateIndex;
         this.animationCurr.isActive = true;         // Active new animation
         this.animationCurr.spos = this.spos.get();  // Reset active animation subposition
         this.animationCurr.reset(this.gpos);        // Reset active animation position
