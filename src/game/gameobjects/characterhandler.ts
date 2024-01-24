@@ -1,5 +1,5 @@
 import GameObject from "engine/gameobjects/gameobject";
-import { Point } from "engine/utilities/vect";
+import Vect, { Point } from "engine/utilities/vect";
 import Character from "./character";
 
 /** Handler for brick selection, movement, etc. */
@@ -80,6 +80,7 @@ export default class CharacterHandler extends GameObject {
             // The step matches this character's speed, perform an update
             if (isOverride || counter % (loopLength / ct1.speed) == 0) {
 
+                let oldMove = ct1.move.get();
                 let proxs : Point[] = [];
 
                 // Proximity check against characters with height 2 and normal movement
@@ -106,6 +107,12 @@ export default class CharacterHandler extends GameObject {
 
                 // Handle step with proximity results
                 ct1.handleStepUpdate(proxs);
+
+                //Zero subposition if a character has changed directions for any reason.
+                if(ct1.move.x != oldMove.x || ct1.move.y != oldMove.y) {
+                    
+                    ct1.spos = Vect.zero;
+                }
             }
         });
     }

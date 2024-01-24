@@ -143,7 +143,7 @@ export default class Character extends GameObject {
                 }
                 // Vertical movement (using glide offset to reduce stutter)
                 else {
-                    this.spos.y += this.move.y * this._speed * (GMULTX - this.glideOffset.y) * dt;
+                    this.spos.y += this.move.y * this._speed * (GMULTY - this.glideOffset.y) * dt;
                 }
             }
         }
