@@ -152,7 +152,7 @@ export default class CharacterBot extends Character {
         // Update armor flash
         if (this.armorState == ArmorState.FLASH) {
             this.timerArmr += dt;
-            this.animationsCurr.setImageIndex(this.animationSubindex);
+            this.animationCurr.setImageIndex(this.animationSubindex);
 
             // Remove armor after a duration and reset timer
             if (this.timerArmr > this.armorDelay) {
@@ -187,7 +187,7 @@ export default class CharacterBot extends Character {
         }
 
         // If the current animation has ended
-        if (this.timerSpec > this.animationsCurr.duration) {
+        if (this.timerSpec > this.animationCurr.duration) {
 
             // Reset timer
             this.timerSpec = 0;
@@ -202,7 +202,7 @@ export default class CharacterBot extends Character {
 
                 // Vertical - Reset up/down animation
                 case BotState.FLYING :
-                    this.animationsCurr.reset();
+                    this.animationCurr.reset();
                     break;
 
                 // Bounce - Do nothing
@@ -224,7 +224,7 @@ export default class CharacterBot extends Character {
         if(!this.vertBlock) {
 
             this.spos.y -= dt * this.vertSpeed * dir;   // Move subposition vertically based on speed
-            this.animationsCurr.spos = this.spos;       // Move animation to match
+            this.animationCurr.spos = this.spos;       // Move animation to match
         }
 
         // Update grid position
@@ -233,8 +233,8 @@ export default class CharacterBot extends Character {
             this.spos.y -= Math.sign(this.spos.y) * GMULTY;
         }
         this.handleBrickCollisionVertical();
-        this.animationsCurr.reset(this.gpos, false);
-        this.animationsCurr.spos = this.spos;
+        this.animationCurr.reset(this.gpos, false);
+        this.animationCurr.spos = this.spos;
     }
 
     /** Move in a jumping arc */
@@ -303,7 +303,7 @@ export default class CharacterBot extends Character {
             this.jumpOrigin.y +
             Math.abs(this.spos.x / GMULTX) * (this.jumpHeights[index + 1] - this.jumpHeights[index]));
 
-        this.animationsCurr.spos = this.spos;               // Update animations to match current position
+        this.animationCurr.spos = this.spos;               // Update animations to match current position
 
         // store sub-position converted to a grid position
         let move = {
@@ -321,7 +321,7 @@ export default class CharacterBot extends Character {
             });            
     
             // Update animation to match
-            this.animationsCurr.gpos.add(move);
+            this.animationCurr.gpos.add(move);
         }
     }
 
@@ -458,7 +458,7 @@ export default class CharacterBot extends Character {
             if (this.vertMult > 0) {
 
                 this.spos.y = this.ceilSubOffset;   // Set sub-position for block
-                this.animationsCurr.spos.y = this.ceilSubOffset;
+                this.animationCurr.spos.y = this.ceilSubOffset;
             }
             // If going downwards, reset to walking
             else {
@@ -500,7 +500,7 @@ export default class CharacterBot extends Character {
 
             // Force walk animation to sync with steps
             if(this.stateIndex == BotState.NORMAL) {
-                this.animationsCurr.timer = this.timerStep;
+                this.animationCurr.timer = this.timerStep;
             }
         }
     }
