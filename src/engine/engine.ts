@@ -119,8 +119,10 @@ export default class Engine {
                 }
 
                 // Perform updates
-                this.collision.update();    // Check collisions
-                this.sync.update();         // Resolve statuses
+                if (this.library.getLoaded()) {
+                    this.collision.update();    // Check collisions
+                    this.sync.update();         // Resolve statuses
+                }
 
                 physicsLagCount++;      // Count lag
                 timeCount -= timeMin;   // Subtract duration from physics timer
