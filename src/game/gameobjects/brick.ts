@@ -37,7 +37,7 @@ export default class Brick extends GameObject {
     private isSnapped = false;
 
     /** Relative selected position */
-    private selectedPos = new Vect(0, 0);
+    private selectedPos = Vect.zero;
 
     /** Temporary recursion state */
     public isGrounded = false;
@@ -46,13 +46,13 @@ export default class Brick extends GameObject {
     public isChecked = false;
 
     /** Boundary offset for minimum carried position */
-    private minCarry : Vect = new Vect(0, 0);
+    private minCarry : Vect = Vect.zero;
 
     /** Boundary offset for maximum carried position */
-    private maxCarry : Vect = new Vect(0, 0);
+    private maxCarry : Vect = Vect.zero;
 
     /** Vertical offset for mobile devices*/
-    protected mobilePreviewSize : Vect = new Vect(0, 0);
+    protected mobilePreviewSize : Vect = Vect.zero;
 
     /** If the mobile preview is flipped */
     private isMobileFlipped : Boolean = false;

@@ -15,7 +15,7 @@ export default class Stud extends GameObject {
     private isSelected : boolean = false;               // Brick is selected
     private isSnapped : boolean = false;                // Brick is snapped
     public isVisible : boolean = true;                  // Stud is visible and should be drawn
-    public mobilePreviewSize : Vect = new Vect(0, 0);   // Size for mobile preview
+    public mobilePreviewSize : Vect = Vect.zero;   // Size for mobile preview
     private isMobileFlipped : boolean = false;          // flipped state for mobile preview
 
     /** z-index get/setters */

@@ -7,23 +7,23 @@ import Brick from "./bricknormal";
 export default class MobileIndicator extends GameObject {
     
     /** Position offset of the indicator */
-    private mobileOffset : Vect = new Vect(0, 0);
+    private mobileOffset : Vect = Vect.zero;
     /** If selection is snapped */
     private isSnapped : boolean = false;
     /** If indicator is flipped to fit in window */
     private isFlipped : boolean = false;
 
     /** Boundary offset for minimum carried position */
-    private minBox : Vect = new Vect(0, 0);
+    private minBox : Vect = Vect.zero;
 
     /** Boundary offset for maximum carried position */
-    private box : Vect = new Vect(0, 0);
+    private box : Vect = Vect.zero;
 
     /** Bricks */
     private bricks : Brick[] = [];
 
     /** Stored cursor position from moment of selection */
-    private _cursorPosition : Vect = new Vect(0, 0);
+    private _cursorPosition : Vect = Vect.zero;
     public set cursorPosition(value : Vect) {
         this._cursorPosition = value;
     }

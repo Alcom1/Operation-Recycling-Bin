@@ -16,7 +16,7 @@ enum CursorState {
 export default class Cursor extends GameObject {
 
     /** Previous pressed position */
-    private ppos = new Vect(0, 0);
+    private ppos = Vect.zero;
     /** Distance to enter carry state */
     private pLength = 10;
 

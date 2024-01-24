@@ -109,7 +109,7 @@ export default class CharacterHandler extends GameObject {
                 ct1.handleStepUpdate(proxs);
 
                 //Zero subposition if a character has changed directions for any reason.
-                if(ct1.move.x != oldMove.x || ct1.move.y != oldMove.y) {
+                if(ct1.move.getDiff(oldMove)) {
                     
                     ct1.spos = Vect.zero;
                 }
