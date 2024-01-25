@@ -168,7 +168,7 @@ export default class CharacterBot extends Character {
         this.timerSpec += dt;   // Update special timer
 
         // Perform special movement
-        switch(this.stateIndex) {
+        switch(this._stateIndex) {
 
             // Vertical
             case BotState.EATING :
@@ -193,7 +193,7 @@ export default class CharacterBot extends Character {
             this.timerSpec = 0;
 
             // Perform ending actions for different states
-            switch(this.stateIndex) {
+            switch(this._stateIndex) {
 
                 // Dead - Deactivate this character
                 case BotState.HAZARD :
@@ -344,8 +344,8 @@ export default class CharacterBot extends Character {
         this.timerLand = 0;     // Reset land timer
 
         // Go from air state to walking state for flying & bounce states
-        if (this.stateIndex == BotState.FLYING ||
-            this.stateIndex == BotState.BOUNCE) {
+        if (this._stateIndex == BotState.FLYING ||
+            this._stateIndex == BotState.BOUNCE) {
 
             this.setStateIndex(BotState.HALTED);
         }
@@ -471,8 +471,8 @@ export default class CharacterBot extends Character {
     public getColliders() : Collider[] {
         
         // Back half of the bot shouldn't collide with wind, after a delay since stepping or landing
-        let xShiftMin = this.stateIndex == 0 && this.timerLand > 0.15 && this.move.x > 0 ? 1 : 0; 
-        let xShiftMax = this.stateIndex == 0 && this.timerLand > 0.15 && this.move.x < 0 ? 1 : 0; 
+        let xShiftMin = this._stateIndex == 0 && this.timerLand > 0.15 && this.move.x > 0 ? 1 : 0; 
+        let xShiftMax = this._stateIndex == 0 && this.timerLand > 0.15 && this.move.x < 0 ? 1 : 0; 
         
         return [{ 
             mask : MASKS.death,
@@ -493,13 +493,13 @@ export default class CharacterBot extends Character {
     public setStateIndex(index? : number) {
 
         // Only set state if it's different from the current
-        if (this.stateIndex != index) {
+        if (this._stateIndex != index) {
 
             this.timerSpec = 0;         // Timer reset incase we cancelled a previous animation
             super.setStateIndex(index); // Set index
 
             // Force walk animation to sync with steps
-            if(this.stateIndex == BotState.NORMAL) {
+            if(this._stateIndex == BotState.NORMAL) {
                 this.animationCurr.timer = this.timerStep;
             }
         }
@@ -510,7 +510,7 @@ export default class CharacterBot extends Character {
 
         this.timerStep = 0; // Reset step timer
 
-        switch(this.stateIndex) {
+        switch(this._stateIndex) {
 
             case BotState.HALTED :
                 this.setStateIndex(BotState.NORMAL);
@@ -531,7 +531,7 @@ export default class CharacterBot extends Character {
         super.resolveCollisions(collisions);
         
         // Start going down if flying but there's no float collisions
-        if (!collisions.find(c => c.mask & MASKS.float) && this.stateIndex == BotState.FLYING) {
+        if (!collisions.find(c => c.mask & MASKS.float) && this._stateIndex == BotState.FLYING) {
             this.vertMult = -1;         // Go down please
         }
     }
@@ -545,7 +545,7 @@ export default class CharacterBot extends Character {
             this.setStateIndex(BotState.EATING);
         }
         // Hazard
-        else if (mask & MASKS.death && this.stateIndex != 2) {
+        else if (mask & MASKS.death && this._stateIndex != 2) {
 
             // Start or continue flash after taking armor damage
             if (this.armorState == ArmorState.ACTIVE) {

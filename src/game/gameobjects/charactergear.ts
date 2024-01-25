@@ -91,7 +91,7 @@ export default class CharacterGear extends Character {
     /** */
     public handleStep() {
 
-        if(this.stateIndex == GearState.NORMAL) {
+        if(this._stateIndex == GearState.NORMAL) {
             this.moveAll(this.move);
         }
     }
@@ -101,6 +101,6 @@ export default class CharacterGear extends Character {
 
         return [-1, 0].flatMap(x => [-1, 0].map(y => new Vect(x,y)
             .getAdd(this.gpos)
-            .getAdd(this.stateIndex == 0 ? this.move : {x : 0, y : 0})));
+            .getAdd(this._stateIndex == 0 ? this.move : {x : 0, y : 0})));
     }
 }
