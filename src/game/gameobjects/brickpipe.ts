@@ -3,7 +3,7 @@ import WaterDrop from "./waterdrop";
 
 /** Specifications of a pipe brick */
 const brickPipeOverride = Object.freeze({
-    images : ["brick_pipe", "brick_pipe"],
+    images : [["brick_pipe", "svg"], ["brick_pipe", "svg"]],
     width : 2
 });
 

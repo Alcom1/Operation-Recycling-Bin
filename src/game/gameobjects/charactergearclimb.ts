@@ -11,10 +11,10 @@ const CharacterGearClimbOverride = Object.freeze({
     speed : 3.0,
     animMain : {
         images : [
-            { name : "char_rbc_left",   offsetX : 0 },
-            { name : "char_rbc_right",  offsetX : 0},
-            { name : "char_rbc_up",     offsetX : 0},
-            { name : "char_rbc_down",   offsetX : 0}],
+            { name : "char_rbc_left",   extension : "svg",  offsetX : 0},
+            { name : "char_rbc_right",  extension : "svg",  offsetX : 0},
+            { name : "char_rbc_up",     extension : "svg",  offsetX : 0},
+            { name : "char_rbc_down",   extension : "svg",  offsetX : 0}],
         frameCount : 2,
         animsCount : 1
     },
@@ -23,12 +23,12 @@ const CharacterGearClimbOverride = Object.freeze({
     // Misc animation parameters
     animsMisc : [{
         speed : 3.0,
-        images : [{ name : "char_rbc_stop", offsetX : 0 }],
+        images : [{ name : "char_rbc_stop", extension : "svg",  offsetX : 0 }],
         frameCount : 2,
         gposOffset : { x : -3, y : 0}
     },{
         speed : 3.0,
-        images : [{ name : "char_rbc_up", offsetX : 0 }],
+        images : [{ name : "char_rbc_up",   extension : "svg",  offsetX : 0 }],
         frameCount : 2,
         gposOffset : { x : -3, y : 0}
     }]
@@ -66,8 +66,8 @@ export default class CharacterGearClimb extends CharacterGear {
 
         this.burstAnim = this.parent.pushGO(new Anim({
             ...params,
-            images : [{ name : "char_rbc_burst" }], // Single hotplate animation image
-            speed : 3,                              // Hotplate animation is weirdly fast
+            images : [{ name : "char_rbc_burst", extension : "svg" }],
+            speed : 3,
             frameCount : 6,
             zIndex : 50000
         } as AnimationParams)) as Anim;
@@ -84,7 +84,7 @@ export default class CharacterGearClimb extends CharacterGear {
     public handleStep() {
 
         // Don't update position for special states (WAIT, HALT, etc)
-        if (this.stateIndex != GearState.NORMAL) {
+        if (this._stateIndex != GearState.NORMAL) {
             return;
         }
 
@@ -116,7 +116,7 @@ export default class CharacterGearClimb extends CharacterGear {
     public handleStepUpdate(proxs : Point[]) {
         super.handleStepUpdate(proxs);
 
-        switch(this.stateIndex) {
+        switch(this._stateIndex) {
 
             // Currently moving. Normal checks for FORWARD & DOWN, special check for UP
             case GearState.NORMAL :

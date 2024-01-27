@@ -99,8 +99,8 @@ export default class ZIndexHandler extends GameObject {
 
         // Is aligned
         if (!col1D(
-            c.pos.x,
-            c.pos.x + c.size.x,
+            c.pos.x - (c.size.y == 8 ? 1 : 0),  //Hacky solution to getting bot under bricks above & ahead
+            c.pos.x + c.size.x + (c.size.y == 8 ? 2 : 0),
             o.pos.x,
             o.pos.x + o.size.x)) {
 

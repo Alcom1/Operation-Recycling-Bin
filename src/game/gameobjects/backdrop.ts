@@ -1,17 +1,14 @@
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
+import { col1D } from "engine/utilities/math";
 import { Point } from "engine/utilities/vect";
 
-/** Backdrop parameters */
 interface Decal {
     position: Point;
     name: string;
     image: HTMLImageElement;
 }
 
-interface SpriteOffset extends Point {
-    name: string;
-}
-
+/** Backdrop parameters */
 export interface BackdropParams extends GameObjectParams {
     decals : Decal[];
     type : number;
@@ -22,6 +19,7 @@ export default class Backdrop extends GameObject {
     
     private image : HTMLImageElement = new Image();
     private decals : Decal[];
+    private rivets : HTMLImageElement[];
     private type : number;
 
     /** Constructor */
@@ -32,7 +30,9 @@ export default class Backdrop extends GameObject {
             .map(d => ({ 
                 name : d.name, 
                 position : d.position,
-                image : this.engine.library.getImage("bg_" + d.name)}));
+                image : this.engine.library.getImage(`bg_${d.name}`, "svg")}));
+
+        this.rivets = [1,2].map(x => this.engine.library.getImage(`bg_rivet_${x}`, "svg"));
 
         this.type = params.type;
     }
@@ -43,9 +43,9 @@ export default class Backdrop extends GameObject {
         this.image.src = this.engine.baker.bake(ctx => this.drawBackdrop(ctx));
     }
 
+    /** Draw the image saved for this backdrop */
+    public draw(ctx: CanvasRenderingContext2D) {  
 
-    /** */
-    public draw(ctx: CanvasRenderingContext2D) {        
         ctx.drawImage(this.image, 0, 0);
     }
 
@@ -205,8 +205,7 @@ export default class Backdrop extends GameObject {
                 ctx, 
                 isHorz ? i * 62 : 0, 
                 isHorz ? 0 : i * 48, 
-                "#5A6363",
-                "#7F8887");
+                0);
         }
 
         ctx.restore();
@@ -238,8 +237,7 @@ export default class Backdrop extends GameObject {
                     ctx, 
                     i * 60, 
                     j * 48, 
-                    "#535C5C",
-                    "#6B7373");
+                    1);
             }
         }
 
@@ -251,19 +249,28 @@ export default class Backdrop extends GameObject {
         ctx: CanvasRenderingContext2D,
         x: number,
         y: number,
-        color1: string,
-        color2: string) {
+        index: number) {
 
-        ctx.fillStyle = color1;
-        ctx.beginPath();
-        ctx.arc(x + 2, y + 2, 6, 0, 2 * Math.PI);
-        ctx.closePath();
-        ctx.fill();
+        // Translation components of canvas
+        var cposx = ctx.getTransform().e;
+        var cposy = ctx.getTransform().f;
 
-        ctx.fillStyle = color2;
-        ctx.beginPath();
-        ctx.arc(x, y, 6, 0, 2 * Math.PI);
-        ctx.closePath();
-        ctx.fill();
+        //If there is a decal above this rivet, do not draw it.
+        if (this.decals.some(d => 
+            col1D(
+                d.position.x,
+                d.position.x + d.image.width,
+                cposx + x - 6,
+                cposx + x + 8) &&
+            col1D(
+                d.position.y,
+                d.position.y + d.image.height,
+                cposy + y - 6,
+                cposy + y + 8))) {
+
+            return;
+        }
+
+        ctx.drawImage(this.rivets[index], x - 6, y - 6)
     }
 }

@@ -4,6 +4,7 @@ import Sprite, { SpriteParams } from "./sprite";
 
 export interface BrickTileTopParams extends BrickTileParams {
     imageTop : string
+    imageTopExtension? : string,
     isShowTopIfOn? : boolean
 }
 
@@ -24,6 +25,7 @@ export default class BrickTileTop extends BrickTile {
                     tags: ["Misc"],
                     position : this.gpos.getAdd({x : 0, y : -1}),   // Top sprite is 1 grid above this brick
                     image : params.imageTop,
+                    extension : params.imageTopExtension,
                     size : { x : params.width ?? 2, y : 0 }
                 } as SpriteParams)) as Sprite
 

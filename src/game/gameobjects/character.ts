@@ -20,26 +20,28 @@ export interface CharacterParams extends GameObjectParams {
 /** Base character */
 export default class Character extends GameObject {
 
-    public get height() { return this._height; }    // Collision height of this character
+    public get height() { return this._height; }            // Collision height of this character
     protected _height: number;
-    public get move() { return this._move; }        // Movement direction of this character
-    protected _move: Vect;                          
-    private _speed: number;                         // Speed of this character
+    public get move() { return this._move; }                // Movement direction of this character
+    protected _move: Vect;                                  
+    private _speed: number;                                 // Speed of this character
     public get speed() { return this._speed }
-    protected brickHandler!: BrickHandler;          // Brick handler for brick pressure (bricks under this character)
-    private isGlide: boolean;                       // If the character sprite matches the character's subposition
+    protected brickHandler!: BrickHandler;                  // Brick handler for brick pressure (bricks under this character)
+    private isGlide: boolean;                               // If the character sprite matches the character's subposition
+    private glideOffset: Vect;                              // Sub-position offset after physics update to adjust glide speed
 
-    protected animations: Anim[] = [];              // Animations, 2D array for character-states and then sub-states
-    protected stateAnimations: number[];            // Array of which animation each state uses. Sometimes it's not 1:1.
-    protected stateIndex: number = 0;               // Current state
+    protected animations: Anim[] = [];                      // Animations, 2D array for character-states and then sub-states
+    protected stateAnimations: number[];                    // Array of which animation each state uses. Sometimes it's not 1:1.
+    public get stateIndex() { return this._stateIndex; }
+    protected _stateIndex: number = 0;                      // Current state
 
-    protected bricks : Brick[] = [];                // Phantom bricks for this character's collisions
+    protected bricks : Brick[] = [];                        // Phantom bricks for this character's collisions
 
     /** Getters */
-    protected get animationsCurr() : Anim {                               // The animations for the current state
-        return this.animations[this.stateAnimations[this.stateIndex]]; 
+    protected get animationCurr() : Anim {                                  // The animations for the current state
+        return this.animations[this.stateAnimations[this._stateIndex]]; 
     }
-    public get isNormalMovment() : boolean { return this.stateIndex == 0 }  // If the current state is normal movment
+    public get isNormalMovment() : boolean { return this._stateIndex == 0 } // If the current state is normal movment
     protected get animationSubindex() : number { return this.move.x }       // Sub-index for animations (by default, based on horizontal movement)
    
     /** z-index get/setters */
@@ -50,13 +52,13 @@ export default class Character extends GameObject {
     }
     public get zpos() : Point { 
         return this.gpos.getAdd({ 
-            x : -1 + (this.isGlide && this.stateIndex == 0 && this.move.y == 0 && this.move.x == -1 ? -1 : 0), // Wow!!!
+            x : -1 + (this.isGlide && this._stateIndex == 0 && this.move.y == 0 && this.move.x == -1 ? -1 : 0), // Wow!!!
             y : 1 - this.height + (this.spos.y < 0 ? -1 : 0)
         });
     }
     public get zSize() : Point {
         return {
-            x : 2 + (this.isGlide && this.stateIndex == 0 && this.move.y == 0 ? 1 : 0), // Wow!
+            x : 2 + (this.isGlide && this._stateIndex == 0 && this.move.y == 0 ? 1 : 0),    // Wow!
             y : this.height + (this.spos.y != 0 ? 1 : 0)
         }; 
     }
@@ -74,6 +76,7 @@ export default class Character extends GameObject {
         this._move = new Vect(params.isForward ?? true ? 1 : -1, 0);    // Default move direction
         this._height = params.height ?? 2;                              // Default height for a character
         this.isGlide = params.isGlide ?? false;                         // Default glide state
+        this.glideOffset = Vect.zero;                                   // Default no glide offset
         this.stateAnimations = [0, ...(
             params.stateAnimations ?? (                                 // Get special state animations or...
             params.animsMisc ? params.animsMisc.map((x, i) => i + 1) :  // Get default animations or...
@@ -83,6 +86,7 @@ export default class Character extends GameObject {
         this.animations.push(new Anim({
             ...params,
             ...params.animMain,
+            isActive : false,
             speed : this.isGlide ? 6 : params.speed, 
             isLoop : this.isGlide,          // Loops are handled manually by non-gliders to prevent stuttering
             framesSize : GMULTX * 6,        // Wide frame
@@ -94,6 +98,7 @@ export default class Character extends GameObject {
 
             this.animations.push(new Anim({
                 ...params,
+                isActive : false,
                 speed : null,
                 ...m
             } as AnimationParams));
@@ -133,13 +138,13 @@ export default class Character extends GameObject {
             // Only gliders have gradual normal movement
             if (this.isGlide) {
 
-                // Horizontal movement
+                // Horizontal movement (using glide offset to reduce stutter)
                 if (this.move.y == 0) {
-                    this.spos.x += this.move.x * this._speed * GMULTX * dt;
+                    this.spos.x += this.move.x * this._speed * (GMULTX - this.glideOffset.x) * dt;
                 }
-                // Vertical movement
+                // Vertical movement (using glide offset to reduce stutter)
                 else {
-                    this.spos.y += this.move.y * this._speed * GMULTY * dt;
+                    this.spos.y += this.move.y * this._speed * (GMULTY - this.glideOffset.y) * dt;
                 }
             }
         }
@@ -151,7 +156,7 @@ export default class Character extends GameObject {
         
         // Glide characters move gradually, continously set the animation to match its subposition
         if (this.isGlide) {
-            this.animationsCurr.spos = this.spos;
+            this.animationCurr.spos = this.spos.get();
         }
     }
 
@@ -163,14 +168,11 @@ export default class Character extends GameObject {
     /** Reverse the direction of this character */
     protected reverse() {
 
-        this._move.x *= -1;                                          // Reverse direction
+        this._move.x *= -1;                                         // Reverse direction
+        this.glideOffset = Vect.zero;
+        this.spos = Vect.zero;
         this.animations[0].setImageIndex(this.animationSubindex);   // Establish sprites for new direction
-        this.animationsCurr.reset();
-        
-        // If gliding force-reset the sprite to match its current position
-        if (this.isGlide) {
-            this.animationsCurr.reset(this.gpos);
-        }
+        this.animationCurr.reset(this.gpos, !this.isGlide);
     }
 
     /** Move this character and its bricks by an offset*/
@@ -184,20 +186,32 @@ export default class Character extends GameObject {
 
         if(isAnimReset) {
             
-            this.setStateIndex();
+            this.setStateIndex(undefined, offset);
         }
     }
 
     /** Set current & active group based on the group index */
-    protected setStateIndex(index? : number) {
+    protected setStateIndex(index? : number, offset? : Point) {
+
+        // Set subposition and glide offset for next move
+        if(this.isGlide && offset) {
+
+            this.glideOffset.x = (this.spos.x -= offset.x * GMULTX) * Math.sign(offset.x);
+            this.glideOffset.y = (this.spos.y -= offset.y * GMULTY) * Math.sign(offset.y);
+        }
         
-        this.stateIndex = index ?? this.stateIndex;
-        this.animations.forEach((s, i) => {
-            s.isActive = i == this.stateAnimations[this.stateIndex];
-            s.spos.setToZero(); // Reset subposition
-            s.reset(this.gpos); // Make sure all sprites are in the character's position after set
-        });
-        this.animationsCurr.setImageIndex(this.animationSubindex);
+        var storedTimer = this.animationCurr.timer;
+        this.animationCurr.isActive = false;            // Deactivate old animation
+        this._stateIndex = index ?? this._stateIndex;
+        this.animationCurr.isActive = true;             // Active new animation
+        this.animationCurr.spos = this.spos.get();      // Reset active animation subposition
+        this.animationCurr.reset(this.gpos);            // Reset active animation position
+        this.animationCurr.setImageIndex(this.animationSubindex);
+
+        // Keep glider animation timer going across all animations
+        if(this.isGlide) {
+            this.animationCurr.timer = storedTimer;
+        }
     }
 
     /** */

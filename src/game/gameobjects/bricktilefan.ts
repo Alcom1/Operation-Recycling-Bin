@@ -3,16 +3,21 @@ import { Faction, MASKS, Z_DEPTH } from "engine/utilities/math";
 import Anim, { AnimationParams } from "./anim";
 import BrickHandler from "./brickhandler";
 import BrickTile, { BrickTileParams } from "./bricktile";
+import BrickTileAnim from "./bricktileanim";
 import Character from "./character";
 
 /** Specifications of a fan tile */
 const BrickTileFanOverride = Object.freeze({
-    images : ["brick_tile", "brick_tile_fan"],
-    width : 4
+    images : [["brick_tile_fan_off", "svg"]],
+    width : 4,
+    animName : "brick_tile_fan",
+    animExtension : "svg",
+    animSpeed : 8,
+    animFrameCount : 2
 });
 
 /** Tile with a fan effect */
-export default class BrickTileFan extends BrickTile {
+export default class BrickTileFan extends BrickTileAnim {
 
     private brickHandler!: BrickHandler;    // Brickhandler to get bricks to block wind effects
     private animations: Anim[] = [];        // Wind animations
@@ -33,7 +38,7 @@ export default class BrickTileFan extends BrickTile {
                     tags : ["Wind"],
                     position : {x : this.gpos.x + i + 1, y : j},
                     subPosition : { x : Z_DEPTH / 2 - 2, y : -Z_DEPTH / 2 + 2 }, 
-                    images : [{ name : "part_wind" }],
+                    images : [{ name : "part_wind", extension : "svg" }],
                     speed : 2,
                     frameCount : 6,
                     isLoop : true                                        

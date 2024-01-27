@@ -6,8 +6,9 @@ import BrickTileTop from "./bricktiletop";
 
 /** Specifications of a jump brick */
 const brickJumpOverride = Object.freeze({
-    images : ["brick_jump_up", "brick_jump"],
+    images : [["brick_jump_up", "svg"], ["brick_jump", "svg"]],
     imageTop : "brick_jump_top",
+    imageTopExtension : "svg",
     isShowTopIfOn : false
 });
 
