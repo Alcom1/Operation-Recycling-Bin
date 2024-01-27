@@ -15,9 +15,7 @@ export enum BrickHandlerState {
     /** Downward */
     DOWN,
     /** Upward */
-    UP,
-    /** Unchanged */
-    SAME
+    UP
 }
 
 /** A row of bricks */
@@ -99,8 +97,8 @@ export default class BrickHandler extends GameObject {
         this.cullBrickStuds();  // Initial stud culling
     }
 
-    /** Check selection collision, return true if this is a valid position **/
-    public checkCollisionSelection(): boolean {
+    /** Check selection placement, return true if this is a valid position */
+    public checkSelectionPlacement(): boolean {
 
         const adjacents = [];       // Adjacency states, contains if we're attaching in the indexed direction.
 

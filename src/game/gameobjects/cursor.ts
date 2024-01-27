@@ -63,32 +63,23 @@ export default class Cursor extends GameObject {
             // Reset update forcing
             this.isUpdateForced = false;
             
+            //Different actions depending on what the cursor is currently doing
             switch (this.state) {
 
+                //If cursor is doing nothing, check and set hover state
                 case CursorState.NONE:
                 case CursorState.HOVER:
                     this.hoverBricks(tempSpos);
                     break;
 
+                //If the cursor is dragging, recheck directions and handle them
                 case CursorState.DRAG:
-                    // Get difference between current and previously pressed positions
-                    const diff = this.spos.y - this.ppos.y;
-
-                    // Math.sign only ever returns +/-1, +/-0, or NaN. It won't be NaN,
-                    // and it can never be 0, because we've ensured it's greater than pLength,
-                    // which is never going to be negative anyways
-                    const dir = Math.sign(diff) as (-1 | 1);
-
-                    // If we've dragged a sufficient distance and no bricks in the chosen direction are pressured
-                    if (Math.abs(diff) > this.pLength) {
-                        
-                        // Select bricks in the direction of the difference
-                        this.selectBricks(dir);
-                    }
+                    this.hoverBricksDrag(this.ppos);
                     break;
 
+                //If the cursor is carrying, check if 
                 case CursorState.CARRY:
-                    this.isSnap = this.brickHandler.checkCollisionSelection();
+                    this.isSnap = this.brickHandler.checkSelectionPlacement();
                     this.brickHandler.setSnappedBricks(this.isSnap);
                     break;
             }
@@ -107,19 +98,20 @@ export default class Cursor extends GameObject {
 
                     this.hoverBricks(this.spos);
 
-                } else if (this.state == CursorState.HOVER) {
+                } 
+                else if (this.state == CursorState.HOVER) {
 
                     // If pressing the brick returns true (Indeterminate state)
                     if (this.brickHandler.pressBricks(this.spos)) {
 
-                        this.carry();
+                        this.enterCarryState();
 
                     } else {
                         // No selection occurred - Indeterminate state.
                         // Set pressed position to the current cursor position
                         this.ppos = this.spos;
                         // Enter DRAG state to later determine what direction we're selecting in
-                        this.drag();
+                        this.enterDragState();
                     }
                 }
                 break;
@@ -147,15 +139,64 @@ export default class Cursor extends GameObject {
     /** Hover over bricks, change state based on hover state */
     private hoverBricks(pos: Vect): void {
 
+        //Check what directions are valid
         const hoverState = this.brickHandler.hoverBricks(pos);
 
+        //Reset state if no directions, enter hover state otherwise
         switch(hoverState) {
+
             case BrickHandlerState.NONE:
                 this.resetState();
                 break;
 
             default:
-                this.hover(hoverState);
+                this.enterHoverState(hoverState);
+                break;
+        }
+    }
+
+    /** Hover over bricks, change state based on hover state, for DRAG state */
+    private hoverBricksDrag(pos: Vect): void {
+
+        //Check what directions are still valid
+        const hoverState = this.brickHandler.hoverBricks(pos);
+
+        //Handle all cases of new state
+        switch(hoverState) {
+
+            //There is no longer a valid direction, deselect
+            case BrickHandlerState.NONE :
+                this.resetState();
+                this.brickHandler.deselectBricks();
+                break;
+
+            //There is now only one valid direction, select upwards
+            case BrickHandlerState.UP :
+                this.selectBricks(-1);
+                break;
+
+            //There is now only one valid direction, select downwards
+            case BrickHandlerState.DOWN :
+                this.selectBricks(1);
+                break;
+
+            //There are still two valid direction, handle it normally
+            case BrickHandlerState.INDY :
+        
+                // Get difference between current and previously pressed positions
+                const diff = this.spos.y - pos.y;
+
+                // Math.sign only ever returns +/-1, +/-0, or NaN. It won't be NaN,
+                // and it can never be 0, because we've ensured it's greater than pLength,
+                // which is never going to be negative anyways
+                const dir = Math.sign(diff) as (-1 | 1);
+
+                // If we've dragged a sufficient distance and no bricks in the chosen direction are pressured
+                if (Math.abs(diff) > this.pLength) {
+                    
+                    // Select bricks in the direction of the difference
+                    this.selectBricks(dir);
+                }
                 break;
         }
     }
@@ -166,7 +207,7 @@ export default class Cursor extends GameObject {
         // Initialize the selection. If doing so caused bricks to be carried, enter carry state
         if (this.brickHandler.initSelection(this.ppos, dir)) {
 
-            this.carry();
+            this.enterCarryState();
         }  
     }
 
@@ -183,7 +224,7 @@ export default class Cursor extends GameObject {
     }
 
     /** Set cursor to its over state */
-    private hover(hoverState: BrickHandlerState): void {
+    private enterHoverState(hoverState: BrickHandlerState): void {
 
         if (this.state != CursorState.HOVER || this.hoverState != hoverState) {
 
@@ -208,7 +249,7 @@ export default class Cursor extends GameObject {
     }
 
     /** Set the cursor to its drag state */
-    private drag(): void {
+    private enterDragState(): void {
 
         if (this.state != CursorState.DRAG) {
 
@@ -219,7 +260,7 @@ export default class Cursor extends GameObject {
     }
 
     /** Set the cursor to its carry state */
-    carry(): void {
+    private enterCarryState(): void {
 
         if (this.state != CursorState.CARRY) {
 
