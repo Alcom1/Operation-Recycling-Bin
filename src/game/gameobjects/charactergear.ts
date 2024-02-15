@@ -85,7 +85,8 @@ export default class CharacterGear extends Character {
                 y : -this.height}), 
             4, 
             this.move.x,
-            true);
+            true,
+            this.faction);  //May remove later when bot destruction is different.
     }
 
     /** */

@@ -219,7 +219,12 @@ export default class BrickHandler extends GameObject {
     }
 
     /** Check collisons for a square ring and return a bitmask */
-    public checkCollisionRing(pos: Point, size: number, dir : number = 1, overhang : boolean = true) {
+    public checkCollisionRing(
+        pos: Point, 
+        size: number, 
+        dir : number = 1, 
+        overhang : boolean = true,
+        faction: Faction = Faction.NEUTRAL) : number {
 
         let collisions = 0; // Collision bitbask
         let count = 0;      // Count gridspaces being checked
@@ -229,7 +234,10 @@ export default class BrickHandler extends GameObject {
         for(let j = pos.y; j < pos.y + size; j++) {
 
             // Get this row
-            row = this.bricksActive.filter(b => b.gpos.y == j && !b.isSelected);
+            row = this.bricksActive.filter(
+                b => b.gpos.y == j && 
+                !b.isSelected &&
+                MatchFactions(b.faction, faction));
 
             // Horizontal travel, skip to end unless this is the first or last row to create a ring shape
             for(let i = pos.x; i < pos.x + size; i += ((j > pos.y && j < pos.y + size - 1) ? size - 1 : 1)) {
