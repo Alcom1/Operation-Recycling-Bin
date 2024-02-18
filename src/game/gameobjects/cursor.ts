@@ -55,7 +55,7 @@ export default class Cursor extends GameObject {
     /** Update this cursor */
     public update(dt: number): void {
 
-        let tempSpos = this.engine.mouse.getPos();
+        let tempSpos = this.engine.mouse.pos;
 
         // Handle cursor state
         if (this.isUpdateForced || tempSpos.getDiff(this.spos)) {

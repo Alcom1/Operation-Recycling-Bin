@@ -47,7 +47,7 @@ export default class MobileIndicator extends GameObject {
     public update(dt: number) {
 
         // Get mouse position, clamped within level borders.
-        this.spos = this.engine.mouse.getPos().getSub(this.mobileOffset).getClamp({
+        this.spos = this.engine.mouse.pos.getSub(this.mobileOffset).getClamp({
             // Clamp above minimum-x position
             x: (BOUNDARY.minx) * GMULTX,
             // Clamp above minimum-y position

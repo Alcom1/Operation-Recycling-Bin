@@ -15,10 +15,15 @@ export enum MouseState {
 export default class MouseModule {
     private mouseElement: HTMLElement;
     private mousePos = Vect.zero;
+    private mouseVel = Vect.zero;
+    private mouseVelLimit = 25;
     private mousePressed = false;
     private afterPressed = false;
     private mouseType = "";
     private resolution = Vect.zero;
+
+    public get pos() { return this.mousePos.get(); }
+    public get vel() { return this.mouseVel.getNorm(); }
 
     /** Constructor */
     constructor(element: HTMLElement) {
@@ -45,6 +50,8 @@ export default class MouseModule {
     /** Update the mouse position */
     private updatePos(e: PointerEvent) {
 
+        let prev = this.mousePos.get();
+
         // Prevent scroll events
         e.preventDefault();
         this.mouseType = e.pointerType;
@@ -52,11 +59,12 @@ export default class MouseModule {
             e.offsetX * (this.resolution.x / (e.target as HTMLElement).clientWidth),
             e.offsetY * (this.resolution.y / (e.target as HTMLElement).clientHeight)
         );
-    }
 
-    /** Mouse position */
-    public getPos(): Vect {
-        return this.mousePos.get();
+        let diff = this.mousePos.getSub(prev).getNorm();
+
+        this.mouseVel.add(diff);
+
+        this.mouseVel.limit(this.mouseVelLimit);
     }
 
     /** Mouse state */

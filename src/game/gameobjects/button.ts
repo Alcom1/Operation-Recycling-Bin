@@ -111,7 +111,7 @@ export default class Button extends GameObject {
     /** Update this button to match current cursor position & state */
     public update(dt: number): void {
 
-        let pos = this.engine.mouse.getPos();   // Get mouse position
+        let pos = this.engine.mouse.pos;   // Get mouse position
         
         // Set hover if the cursor is inside the button area
         this.hover = colPointRect(

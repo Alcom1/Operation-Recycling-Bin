@@ -201,7 +201,7 @@ export default class Brick extends GameObject {
 
         // Position based difference between stored selected position and new cursor position
         // Brick position is its position relative to the cursor
-        this.spos = this.engine.mouse.getPos().getSub(this.selectedPos).getClamp({
+        this.spos = this.engine.mouse.pos.getAdd(this.engine.mouse.vel.getMult(50)).getSub(this.selectedPos).getClamp({
             // Clamp above minimum-x position
             x: (BOUNDARY.minx - this.minCarry.x) * GMULTX,
             // Clamp above minimum-y position

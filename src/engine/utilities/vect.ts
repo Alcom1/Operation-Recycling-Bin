@@ -144,7 +144,12 @@ export default class Vect implements Point {
     public getNorm() {
 
         let length = Math.sqrt(this.x * this.x + this.y * this.y);
-        return new Vect(this.x / length, this.y / length);
+        if(length) {
+            return new Vect(this.x / length, this.y / length);
+        }
+        else {
+            return Vect.zero;
+        }
     }
 
     /** Returns the magnitude of this vector */
@@ -157,6 +162,15 @@ export default class Vect implements Point {
     public getMagnitudeSquared(): number {
 
         return this.x * this.x + this.y * this.y;
+    }
+
+    /** Limits the magnitude to a maximum value */
+    public limit(maxMagnitude : number) {
+        
+        if(this.getMagnitudeSquared() > maxMagnitude * maxMagnitude) {
+            this.norm();
+            this.mult(maxMagnitude);
+        }
     }
 
     /** Sets this vector to zero */
