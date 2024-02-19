@@ -173,7 +173,7 @@ export default class Engine {
         }
 
         // Module updates
-        this.mouse.update();
+        this.mouse.update(dt);
     }
 
     /** Initialize all scenes */

@@ -15,15 +15,17 @@ export enum MouseState {
 export default class MouseModule {
     private mouseElement: HTMLElement;
     private mousePos = Vect.zero;
-    private mouseVel = Vect.zero;
-    private mouseVelLimit = 25;
+    private mouseVelNew = Vect.zero;
+    private mouseVelOld = Vect.zero;
+    private mouseVelLimit = 40;
+    private mouseVelDampStrength = 10;
     private mousePressed = false;
     private afterPressed = false;
     private mouseType = "";
     private resolution = Vect.zero;
 
     public get pos() { return this.mousePos.get(); }
-    public get vel() { return this.mouseVel.getNorm(); }
+    public get vel() { return this.mouseVelOld.getNorm(); }
 
     /** Constructor */
     constructor(element: HTMLElement) {
@@ -42,7 +44,11 @@ export default class MouseModule {
     }
 
     /** Update the mouse for a frame (Should be the last action of a frame) */
-    public update() {
+    public update(dt: number) {
+
+        //Dampen
+        this.mouseVelNew.sub(this.mouseVelNew.getNorm().getMult(dt * this.mouseVelDampStrength));
+
         // After a press or release, switch from WAS-state to IS-state
         this.afterPressed = this.mousePressed;
     }
@@ -60,11 +66,13 @@ export default class MouseModule {
             e.offsetY * (this.resolution.y / (e.target as HTMLElement).clientHeight)
         );
 
+        //If the new mouse velocity reaches a threshold, replace the old one and reset for a new velocity.
         let diff = this.mousePos.getSub(prev).getNorm();
-
-        this.mouseVel.add(diff);
-
-        this.mouseVel.limit(this.mouseVelLimit);
+        this.mouseVelNew.add(diff);
+        if(this.mouseVelNew.getMagnitudeSquared() > Math.pow(this.mouseVelLimit, 2)) {
+            this.mouseVelOld = this.mouseVelNew.get();
+            this.mouseVelNew.setToZero();
+        }
     }
 
     /** Mouse state */
