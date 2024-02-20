@@ -3,6 +3,7 @@ import BakerModule from "./modules/baker";
 import CollisionModule from "./modules/collision";
 import LibraryModule from "./modules/library";
 import MouseModule from "./modules/mouse";
+import SettingsModule from "./modules/settings";
 import SyncModule from "./modules/sync";
 import TagModule from "./modules/tag";
 import Scene, {SceneParams} from "./scene/scene";
@@ -43,6 +44,7 @@ export default class Engine {
     public collision: CollisionModule;
     public library: LibraryModule;
     public mouse: MouseModule;
+    public settings: SettingsModule;
     public sync: SyncModule;
     public tag: TagModule;
 
@@ -53,6 +55,7 @@ export default class Engine {
         sceneSource: string,
         startScenes: string[],
         gameObjectTypes: typeof GameObject[],
+        settings: (string | number)[][],
         private debug: boolean = false,
         private width: number = 1296,
         private height: number = 864,
@@ -77,6 +80,7 @@ export default class Engine {
         this.library = new LibraryModule();
         this.mouse = new MouseModule(this.canvas);
         this.mouse.setResolution(this.canvas.width, this.canvas.height);
+        this.settings = new SettingsModule(settings);
         this.sync = new SyncModule(this.physicsPerSecond);
         this.tag = new TagModule();
 

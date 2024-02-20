@@ -27,6 +27,7 @@ import CharacterGearClimb from "./gameobjects/charactergearclimb";
 import CharacterGearGround from "./gameobjects/charactergearground";
 import CharacterHandler from "./gameobjects/characterhandler";
 import ZIndexHandler from "./gameobjects/zindexhandler";
+import { TouchStyle } from "engine/modules/settings";
 
 // Load
 window.onload = function() {
@@ -67,6 +68,9 @@ window.onload = function() {
             Sprite,
             Stud,
             ZIndexHandler
+        ],
+        [
+            ["touchStyle", TouchStyle.PUSH]
         ],
         false
     );

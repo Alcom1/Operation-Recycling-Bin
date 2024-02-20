@@ -35,11 +35,12 @@ export default class MouseModule {
         this.mouseElement = element;
         this.mouseElement.style.touchAction = 'none';
 
-        this.mouseElement.onpointermove = e => this.updatePos(e);
+        this.mouseElement.onpointermove = e => {
+            this.updatePos(e);
+        }
         this.mouseElement.onpointerdown = e => {
             this.mousePressed = true;
-            // On touch devices, we also need to make sure we register this as a change in cursor position
-            this.updatePos(e);
+            this.updatePos(e);  // On touch devices, we also need to make sure we register this as a change in cursor position
         }
         this.mouseElement.onpointerup = () => this.mousePressed = false;
         this.mouseElement.onpointercancel = () => this.mousePressed = false;
@@ -90,7 +91,7 @@ export default class MouseModule {
         );
 
         //If the new mouse velocity reaches a threshold, replace the old one and reset for a new velocity.
-        let diff = this.mousePos.getSub(prev).getNorm();
+        let diff = this.mousePos.getSub(prev);
         this.mouseOffTrk.add(diff);
         if(this.mouseOffTrk.getMagnitudeSquared() > Math.pow(this.mouseOffLimit, 2)) {
             this.mouseOffOld = this.mouseOffNew.get();
