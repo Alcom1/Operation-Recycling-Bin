@@ -15,17 +15,20 @@ export enum MouseState {
 export default class MouseModule {
     private mouseElement: HTMLElement;
     private mousePos = Vect.zero;
-    private mouseVelNew = Vect.zero;
-    private mouseVelOld = Vect.zero;
-    private mouseVelLimit = 40;
-    private mouseVelDampStrength = 10;
+    private mouseOffTrk = Vect.zero;    //Potential new mouse offset being tracked
+    private mouseOffOld = Vect.zero;    //Previous mouse offset
+    private mouseOffLrp = Vect.zero;    //Lerp between old and new offset
+    private mouseOffNew = Vect.zero;    //Newest mouse offset
+    private mouseOffLimit = 20;         //Maximum size where the tracking offset becomes a new offset
+    private mouseOffDampStrength = 60;  //Strength on the dampening effect on the tracking offset
+    private mouseOffCount = 0;
     private mousePressed = false;
     private afterPressed = false;
     private mouseType = "";
     private resolution = Vect.zero;
 
     public get pos() { return this.mousePos.get(); }
-    public get vel() { return this.mouseVelOld.getNorm(); }
+    public get vel() { return this.mouseOffLrp.getMult(1 / this.mouseOffLimit); }
 
     /** Constructor */
     constructor(element: HTMLElement) {
@@ -47,10 +50,30 @@ export default class MouseModule {
     public update(dt: number) {
 
         //Dampen
-        this.mouseVelNew.sub(this.mouseVelNew.getNorm().getMult(dt * this.mouseVelDampStrength));
+        this.mouseOffTrk.sub(this.mouseOffTrk.getNorm().getMult(dt * this.mouseOffDampStrength));
+
+        //Lerp from old to new mouse Vel
+        this.mouseOffCount =    //Track timing for lerp
+            this.mouseOffCount > 0 ? 
+            this.mouseOffCount - dt * 4 : 
+            0;
+        this.mouseOffLrp =      //Calculate lerp
+            this.mouseOffNew.getMult(1 - this.mouseOffCount).getAdd(
+            this.mouseOffOld.getMult(this.mouseOffCount));
 
         // After a press or release, switch from WAS-state to IS-state
         this.afterPressed = this.mousePressed;
+    }
+
+    /** Debug draw */
+    public draw(ctx: CanvasRenderingContext2D) {
+
+        ctx.beginPath();
+        ctx.moveTo(this.mousePos.x, this.mousePos.y);
+        ctx.lineTo(
+            this.mousePos.x + this.mouseOffTrk.x,
+            this.mousePos.y + this.mouseOffTrk.y)
+        ctx.stroke();
     }
 
     /** Update the mouse position */
@@ -68,10 +91,12 @@ export default class MouseModule {
 
         //If the new mouse velocity reaches a threshold, replace the old one and reset for a new velocity.
         let diff = this.mousePos.getSub(prev).getNorm();
-        this.mouseVelNew.add(diff);
-        if(this.mouseVelNew.getMagnitudeSquared() > Math.pow(this.mouseVelLimit, 2)) {
-            this.mouseVelOld = this.mouseVelNew.get();
-            this.mouseVelNew.setToZero();
+        this.mouseOffTrk.add(diff);
+        if(this.mouseOffTrk.getMagnitudeSquared() > Math.pow(this.mouseOffLimit, 2)) {
+            this.mouseOffOld = this.mouseOffNew.get();
+            this.mouseOffNew = this.mouseOffTrk.get();
+            this.mouseOffTrk.setToZero();
+            this.mouseOffCount = 1;
         }
     }
 
