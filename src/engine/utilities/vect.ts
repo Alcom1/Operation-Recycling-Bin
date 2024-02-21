@@ -89,7 +89,7 @@ export default class Vect implements Point {
             this.y * (valueY == null ? value : valueY));
     }
 
-    /** Returns a new vector with the components divided by a single or separate values */
+    /** Divides the components of this by a single or separate values */
     public div(value: number, valueY?: number): void {
 
         this.x /= value;
@@ -184,5 +184,14 @@ export default class Vect implements Point {
     public static get zero() : Vect {
 
         return new Vect(0, 0);
+    }
+
+    /** Returns the average of multiple vectors */
+    public static avg(...args : Vect[]) : Vect {
+
+        let ret = Vect.zero;
+        args.forEach(v => ret.add(v));
+        ret.div(args.length);
+        return ret;
     }
 }

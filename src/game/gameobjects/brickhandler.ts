@@ -1,5 +1,6 @@
 import GameObject from "engine/gameobjects/gameobject";
-import {col1D, GMULTX, GMULTY, colBoundingBoxGrid, colPointRectGrid, colPointParHGrid, colPointParVGrid, OPPOSITE_DIRS, colRectRectCornerSize, MatchFactions, Faction} from "engine/utilities/math";
+import { TouchStyle } from "engine/modules/settings";
+import {col1D, GMULTX, GMULTY, colBoundingBoxGrid, colPointRectGrid, colPointParHGrid, colPointParVGrid, OPPOSITE_DIRS, colRectRectCornerSize, MatchFactions, Faction, Z_DEPTH} from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 import Brick from "./bricknormal";
 import CharacterHandler from "./characterhandler";
@@ -321,27 +322,6 @@ export default class BrickHandler extends GameObject {
         this.bricks.filter(b => b.isSelected && b.hasTag("BrickNormal")).forEach(b => b.showStuds());
     }
 
-    /** Set the minimum and maximum position for selected bricks */
-    public setSelectedMinMax(spos: Vect): void {
-        const selected = this.bricks.filter(b => b.isSelected);
-
-        // Minimum brick position among selected bricks
-        const boundaryMin = new Vect(
-            Math.min(...selected.map(b => b.gpos.x)),
-            Math.min(...selected.map(b => b.gpos.y))
-        );
-        
-        // Maximum brick position among selected bricks
-        const boundaryMax = new Vect(
-            Math.max(...selected.map(b => b.gpos.x + b.width)), // Width included for proper boundary
-            Math.max(...selected.map(b => b.gpos.y + 1))        // Height included for proper boundary
-        );
-
-        // Set min-max for all selected bricks based on boundary
-        selected.forEach(b => b.setMinMax(boundaryMin, boundaryMax));
-        this.mobileIndicator?.setMinMax(boundaryMin, boundaryMax);
-    }
-
     /** Set snapped state of selected bricks */
     public setSnappedBricks(state: boolean): void {
 
@@ -539,12 +519,46 @@ export default class BrickHandler extends GameObject {
     */
     private processSelection(selection: Brick[] | null, pos: Vect) {
 
-        // Select bricks
-        selection?.forEach(b => b.select(pos));
+        // Minimum and maximum boundary for selection
+        let selectionMin = Vect.zero;
+        let selectionMax = Vect.zero;
 
-        this.mobileIndicator!.cursorPosition = pos;
+        // If there is a selection ready, establish the boundary and select those bricks
+        if(selection) {
 
-        this.counter.incrementCount();
+            // Minimum brick position among selected bricks
+            selectionMin = new Vect(
+                Math.min(...selection.map(b => b.gpos.x)),
+                Math.min(...selection.map(b => b.gpos.y))
+            );
+            
+            // Maximum brick position among selected bricks
+            selectionMax = new Vect(
+                Math.max(...selection.map(b => b.gpos.x + b.width)), // Width included for proper boundary
+                Math.max(...selection.map(b => b.gpos.y + 1))        // Height included for proper boundary
+            );
+
+            //Modify position if mobile and the touch style is push.
+            let posCopy = pos.get();
+            if (this.engine.mouse.getMouseType() != "mouse" &&
+                this.engine.settings.getNumber("touchStyle") == TouchStyle.PUSH) {
+                
+                posCopy = Vect.avg(selectionMin, selectionMax)
+                    .getMult(GMULTX, GMULTY)
+                    .getAdd({ x : 8, y : -15});
+            }
+    
+            // Select bricks, set their min-max boundary
+            selection?.forEach(b => b.select(posCopy));
+            selection?.forEach(b => b.setMinMax(selectionMin, selectionMax));
+    
+            // Set cursor position and min-max boundary for mobile indicator
+            this.mobileIndicator!.cursorPosition = posCopy;
+            this.mobileIndicator?.setMinMax(selectionMin, selectionMax);
+    
+            //Increment counter for display
+            this.counter.incrementCount();
+        }
 
         return !!selection;
     }
