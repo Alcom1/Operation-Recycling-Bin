@@ -15,9 +15,33 @@ export default class Vect implements Point {
     constructor(public x: number, public y: number) {}
 
     /** Returns a copy of this vector */
-    public get(): Vect {
+    public get get(): Vect {
 
         return new Vect(this.x, this.y);
+    }
+
+    /** Returns a normalized copy of this vector */
+    public get norm() {
+
+        let length = Math.sqrt(this.x * this.x + this.y * this.y);
+        if(length) {
+            return new Vect(this.x / length, this.y / length);
+        }
+        else {
+            return Vect.zero;
+        }
+    }
+
+    /** Returns the magnitude of this vector */
+    public get magnitude(): number {
+
+        return Math.sqrt(this.magnitudeSquared);
+    }
+
+    /** Returns the squared magnitude of this vector */
+    public get magnitudeSquared(): number {
+
+        return this.x * this.x + this.y * this.y;
     }
 
     /** Sets the individual components */
@@ -130,47 +154,6 @@ export default class Vect implements Point {
     public getCross(value: Point): number {
 
         return this.x * value.y - this.y * value.x;
-    }
-
-    /** Normalizes this vector */
-    public norm(): void {
-
-        let length = Math.sqrt(this.x * this.x + this.y * this.y);
-        this.x /= length;
-        this.y /= length;
-    }
-
-    /** Returns a normalized copy of this vector */
-    public getNorm() {
-
-        let length = Math.sqrt(this.x * this.x + this.y * this.y);
-        if(length) {
-            return new Vect(this.x / length, this.y / length);
-        }
-        else {
-            return Vect.zero;
-        }
-    }
-
-    /** Returns the magnitude of this vector */
-    public getMagnitude(): number {
-
-        return Math.sqrt(this.getMagnitudeSquared());
-    }
-
-    /** Returns the squared magnitude of this vector */
-    public getMagnitudeSquared(): number {
-
-        return this.x * this.x + this.y * this.y;
-    }
-
-    /** Limits the magnitude to a maximum value */
-    public limit(maxMagnitude : number) {
-        
-        if(this.getMagnitudeSquared() > maxMagnitude * maxMagnitude) {
-            this.norm();
-            this.mult(maxMagnitude);
-        }
     }
 
     /** Sets this vector to zero */

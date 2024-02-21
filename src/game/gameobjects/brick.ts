@@ -193,8 +193,8 @@ export default class Brick extends GameObject {
         this.isSelected = false;
         this.isSnapped = false;
         this.isChecked = false; // Fixed bug where selections dragged offscreen wouldn't clear correctly.
-        this.spos.set(0, 0);
-        this.selectedPos.set(0, 0);
+        this.spos.setToZero();
+        this.selectedPos.setToZero();
         // Reset studs to match the final brick position
     }
 

@@ -108,7 +108,7 @@ export default class WaterDrop extends Sprite {
     public reset(gpos : Vect) {
 
         this.isActive = true;
-        this.gpos = gpos.get();
+        this.gpos = gpos.get;
         this.spos.setToZero();
         this.slipTimer = 0;
         this.animSlip.isActive = true;

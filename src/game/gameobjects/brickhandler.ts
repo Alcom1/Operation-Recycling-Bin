@@ -539,7 +539,7 @@ export default class BrickHandler extends GameObject {
             );
 
             //Modify position if mobile and the touch style is push.
-            let posCopy = pos.get();
+            let posCopy = pos.get;
             if (this.engine.mouse.getMouseType() != "mouse" &&
                 this.engine.settings.getNumber("touchStyle") == TouchStyle.PUSH) {
                 

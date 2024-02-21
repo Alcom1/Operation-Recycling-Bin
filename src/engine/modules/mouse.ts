@@ -27,8 +27,12 @@ export default class MouseModule {
     private mouseType = "";
     private resolution = Vect.zero;
 
-    public get pos() { return this.mousePos.get(); }
-    public get vel() { return this.mouseOffLrp.getMult(1 / this.mouseOffLimit); }
+    public get pos() { return this.mousePos.get; }
+    public get vel() {
+        var qq = this.mouseOffLrp.getMult(1 / this.mouseOffLimit);
+        console.log(qq.magnitude);
+        return qq; 
+    }
 
     /** Constructor */
     constructor(element: HTMLElement) {
@@ -51,7 +55,7 @@ export default class MouseModule {
     public update(dt: number) {
 
         //Dampen
-        this.mouseOffTrk.sub(this.mouseOffTrk.getNorm().getMult(dt * this.mouseOffDampStrength));
+        this.mouseOffTrk.sub(this.mouseOffTrk.norm.getMult(dt * this.mouseOffDampStrength));
 
         //Lerp from old to new mouse Vel
         this.mouseOffCount =    //Track timing for lerp
@@ -80,7 +84,7 @@ export default class MouseModule {
     /** Update the mouse position */
     private updatePos(e: PointerEvent) {
 
-        let prev = this.mousePos.get();
+        let prev = this.mousePos.get;
 
         // Prevent scroll events
         e.preventDefault();
@@ -93,9 +97,9 @@ export default class MouseModule {
         //If the new mouse velocity reaches a threshold, replace the old one and reset for a new velocity.
         let diff = this.mousePos.getSub(prev);
         this.mouseOffTrk.add(diff);
-        if(this.mouseOffTrk.getMagnitudeSquared() > Math.pow(this.mouseOffLimit, 2)) {
-            this.mouseOffOld = this.mouseOffNew.get();
-            this.mouseOffNew = this.mouseOffTrk.get();
+        if(this.mouseOffTrk.magnitudeSquared > Math.pow(this.mouseOffLimit, 2)) {
+            this.mouseOffOld = this.mouseOffNew.get;
+            this.mouseOffNew = this.mouseOffTrk.get;
             this.mouseOffTrk.setToZero();
             this.mouseOffCount = 1;
         }

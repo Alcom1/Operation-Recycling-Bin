@@ -80,7 +80,7 @@ export default class CharacterHandler extends GameObject {
             // The step matches this character's speed, perform an update
             if (isOverride || counter % (loopLength / ct1.speed) == 0) {
 
-                let oldState = [ct1.move.get(), ct1.stateIndex] as [Vect, number];
+                let oldState = [ct1.move.get, ct1.stateIndex] as [Vect, number];
                 let proxs : Point[] = [];
 
                 // Proximity check against characters with height 2 and normal movement
