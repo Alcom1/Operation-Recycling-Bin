@@ -55,7 +55,7 @@ export default class Engine {
         sceneSource: string,
         startScenes: string[],
         gameObjectTypes: typeof GameObject[],
-        settings: (string | number)[][],
+        settings: (boolean | number | string)[][],
         private debug: boolean = false,
         private width: number = 1296,
         private height: number = 864,
@@ -78,7 +78,7 @@ export default class Engine {
         this.baker = new BakerModule(this.canvas);
         this.collision = new CollisionModule();
         this.library = new LibraryModule();
-        this.mouse = new MouseModule(this.canvas);
+        this.mouse = new MouseModule(this, this.canvas);
         this.mouse.setResolution(this.canvas.width, this.canvas.height);
         this.settings = new SettingsModule(settings);
         this.sync = new SyncModule(this.physicsPerSecond);

@@ -1,3 +1,4 @@
+import Engine from "engine/engine";
 import Vect from "engine/utilities/vect";
 
 export enum MouseState {
@@ -13,14 +14,16 @@ export enum MouseState {
 
 /** Module that manages mouse and touch input. */
 export default class MouseModule {
+
+    private engine: Engine;
     private mouseElement: HTMLElement;
     private mousePos = Vect.zero;
     private mouseOffTrk = Vect.zero;    //Potential new mouse offset being tracked
     private mouseOffOld = Vect.zero;    //Previous mouse offset
     private mouseOffLrp = Vect.zero;    //Lerp between old and new offset
     private mouseOffNew = Vect.zero;    //Newest mouse offset
-    private mouseOffLimit = 20;         //Maximum size where the tracking offset becomes a new offset
-    private mouseOffDampStrength = 60;  //Strength on the dampening effect on the tracking offset
+    private mouseOffLimit = 100;        //Maximum size where the tracking offset becomes a new offset
+    private mouseOffDampStrength = 100; //Strength on the dampening effect on the tracking offset
     private mouseOffCount = 0;
     private mousePressed = false;
     private afterPressed = false;
@@ -58,8 +61,9 @@ export default class MouseModule {
     }
 
     /** Constructor */
-    constructor(element: HTMLElement) {
+    constructor(engine : Engine, element: HTMLElement) {
         
+        this.engine = engine;
         this.mouseElement = element;
         this.mouseElement.style.touchAction = 'none';
 
@@ -94,17 +98,6 @@ export default class MouseModule {
         this.afterPressed = this.mousePressed;
     }
 
-    /** Debug draw */
-    public draw(ctx: CanvasRenderingContext2D) {
-
-        ctx.beginPath();
-        ctx.moveTo(this.mousePos.x, this.mousePos.y);
-        ctx.lineTo(
-            this.mousePos.x + this.mouseOffTrk.x,
-            this.mousePos.y + this.mouseOffTrk.y)
-        ctx.stroke();
-    }
-
     /** Update the mouse position */
     private updatePos(e: PointerEvent, doUpdateOffset : boolean = true) {
 
@@ -117,11 +110,18 @@ export default class MouseModule {
             e.offsetX * (this.resolution.x / (e.target as HTMLElement).clientWidth),
             e.offsetY * (this.resolution.y / (e.target as HTMLElement).clientHeight));
 
-        //Update the mouse offset
+        //Handle mouse offset update if enabled and not currently lerping
         if (doUpdateOffset && this.mouseOffCount == 0) {
             
             //If the new mouse velocity reaches a threshold, replace the old one and reset for a new velocity.
             let diff = this.mousePos.getSub(prev);
+
+            //Ignore horiziontal difference if drag is 1D.
+            if(this.engine.settings.getBoolean("touchDragIs1D")) {
+                diff.x = 0;
+            }
+
+            //Track and update mouse offset
             this.mouseOffTrk.add(diff);
             if(this.mouseOffTrk.magnitudeSquared > Math.pow(this.mouseOffLimit, 2)) {
 
@@ -141,9 +141,9 @@ export default class MouseModule {
             direction.norm.getMult(this.mouseOffLimit) :
             new Vect(0, Math.sign(direction) * this.mouseOffLimit);
         
-        this.mouseOffTrk.setToZero;
-        this.mouseOffOld.setToZero;
-        this.mouseOffLrp = newOffset.get;
+        this.mouseOffTrk = Vect.zero;
+        this.mouseOffOld = Vect.zero;
+        this.mouseOffLrp = Vect.zero;
         this.mouseOffNew = newOffset.get;
         this.mouseOffCount = 1;
     }
