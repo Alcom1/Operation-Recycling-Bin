@@ -89,7 +89,7 @@ export default class Cursor extends GameObject {
         this.spos = tempSpos;
 
         // Handle mouse state
-        switch (this.engine.mouse.getMouseState()) {
+        switch (this.engine.mouse.mouseState) {
 
             // MOBILE - If a press event occurs in a NONE state/without a press (Only occurs on Mobile)
             case MouseState.WASPRESSED:
@@ -104,7 +104,7 @@ export default class Cursor extends GameObject {
                     // If pressing the brick returns true (Indeterminate state)
                     if (this.brickHandler.pressBricks(this.spos)) {
 
-                        this.enterCarryState();
+                        this.enterCarryState(1);
 
                     } else {
                         // No selection occurred - Indeterminate state.
@@ -207,7 +207,7 @@ export default class Cursor extends GameObject {
         // Initialize the selection. If doing so caused bricks to be carried, enter carry state
         if (this.brickHandler.initSelection(this.ppos, dir)) {
 
-            this.enterCarryState();
+            this.enterCarryState(dir);
         }  
     }
 
@@ -260,16 +260,17 @@ export default class Cursor extends GameObject {
     }
 
     /** Set the cursor to its carry state */
-    private enterCarryState(): void {
+    private enterCarryState(dir: number): void {
 
         if (this.state != CursorState.CARRY) {
 
             this.cursorIcon.setCursor(CursorIconState.CARRY);
         
-            this.brickHandler.cullBrickStuds();             // Reset culled studs
-            this.brickHandler.setSnappedBricks(true);       // Carried bricks should start as snapped
+            this.brickHandler.cullBrickStuds();         // Reset culled studs
+            this.brickHandler.setSnappedBricks(true);   // Carried bricks should start as snapped
+            this.engine.mouse.setMouseOffset(dir);      // Set mouse offset to match selection direction
 
-            this.state = CursorState.CARRY;                 // Set state to NONE stateStart carrying if we selected some bricks
+            this.state = CursorState.CARRY;             // Set state to NONE stateStart carrying if we selected some bricks
         }
     }
 }

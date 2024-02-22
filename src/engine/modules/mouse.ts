@@ -11,7 +11,7 @@ export enum MouseState {
     WASRELEASED
 }
 
-/** Module that manages mouse movement and stateTouches. **/
+/** Module that manages mouse and touch input. */
 export default class MouseModule {
     private mouseElement: HTMLElement;
     private mousePos = Vect.zero;
@@ -24,18 +24,42 @@ export default class MouseModule {
     private mouseOffCount = 0;
     private mousePressed = false;
     private afterPressed = false;
-    private mouseType = "";
+    private _mouseType = "";
     private resolution = Vect.zero;
 
     public get pos() { return this.mousePos.get; }
-    public get vel() {
-        var qq = this.mouseOffLrp.getMult(1 / this.mouseOffLimit);
-        console.log(qq.magnitude);
-        return qq; 
+    public get off() { return this.mouseOffLrp.getMult(1 / this.mouseOffLimit); }
+    
+    /** Mouse state */
+    public get mouseState(): MouseState {
+
+        if (this.mousePressed && !this.afterPressed) {          // If mouse is pressed and afterPressed is different
+
+            return MouseState.WASPRESSED;                       // Mouse was pressed this frame
+        } 
+        else if (this.mousePressed) {                           // If mouse is pressed and afterPressed is same
+
+            return MouseState.ISPRESSED;                        // Mouse is currently pressed
+        } 
+        else if (!this.mousePressed && this.afterPressed) {     // If mouse is released and afterPressed is different
+
+            return MouseState.WASRELEASED;                      // Mouse was released this frame
+        } 
+        else {                                                  // If mouse is released and afterPressed is same
+
+            return MouseState.ISRELEASED;                       // Mouse is currently released
+        }
+    }
+
+    /** Mouse type */
+    public get mouseType(): string {
+
+        return this._mouseType;
     }
 
     /** Constructor */
     constructor(element: HTMLElement) {
+        
         this.mouseElement = element;
         this.mouseElement.style.touchAction = 'none';
 
@@ -44,7 +68,7 @@ export default class MouseModule {
         }
         this.mouseElement.onpointerdown = e => {
             this.mousePressed = true;
-            this.updatePos(e);  // On touch devices, we also need to make sure we register this as a change in cursor position
+            this.updatePos(e, false);   // On touch devices, we also need to make sure we register this as a change in cursor position
         }
         this.mouseElement.onpointerup = () => this.mousePressed = false;
         this.mouseElement.onpointercancel = () => this.mousePressed = false;
@@ -82,54 +106,57 @@ export default class MouseModule {
     }
 
     /** Update the mouse position */
-    private updatePos(e: PointerEvent) {
+    private updatePos(e: PointerEvent, doUpdateOffset : boolean = true) {
 
         let prev = this.mousePos.get;
 
         // Prevent scroll events
         e.preventDefault();
-        this.mouseType = e.pointerType;
+        this._mouseType = e.pointerType;
         this.mousePos.set(
             e.offsetX * (this.resolution.x / (e.target as HTMLElement).clientWidth),
-            e.offsetY * (this.resolution.y / (e.target as HTMLElement).clientHeight)
-        );
+            e.offsetY * (this.resolution.y / (e.target as HTMLElement).clientHeight));
 
-        //If the new mouse velocity reaches a threshold, replace the old one and reset for a new velocity.
-        let diff = this.mousePos.getSub(prev);
-        this.mouseOffTrk.add(diff);
-        if(this.mouseOffTrk.magnitudeSquared > Math.pow(this.mouseOffLimit, 2)) {
-            this.mouseOffOld = this.mouseOffNew.get;
-            this.mouseOffNew = this.mouseOffTrk.get;
-            this.mouseOffTrk.setToZero();
-            this.mouseOffCount = 1;
+        //Update the mouse offset
+        if (doUpdateOffset && this.mouseOffCount == 0) {
+            
+            //If the new mouse velocity reaches a threshold, replace the old one and reset for a new velocity.
+            let diff = this.mousePos.getSub(prev);
+            this.mouseOffTrk.add(diff);
+            if(this.mouseOffTrk.magnitudeSquared > Math.pow(this.mouseOffLimit, 2)) {
+
+                this.mouseOffOld = this.mouseOffNew.get;
+                this.mouseOffNew = this.mouseOffTrk.get;
+                this.mouseOffTrk.setToZero();
+                this.mouseOffCount = 1;
+            }
         }
     }
 
-    /** Mouse state */
-    public getMouseState(): MouseState {
-        if (this.mousePressed && !this.afterPressed) {          // If mouse is pressed and afterPressed is different
-            return MouseState.WASPRESSED;                       // Mouse was pressed this frame
-        } else if (this.mousePressed) {                         // If mouse is pressed and afterPressed is same
-            return MouseState.ISPRESSED;                        // Mouse is currently pressed
-        } else if (!this.mousePressed && this.afterPressed) {   // If mouse is released and afterPressed is different
-            return MouseState.WASRELEASED;                      // Mouse was released this frame
-        } else {                                                // If mouse is released and afterPressed is same
-            return MouseState.ISRELEASED;                       // Mouse is currently released
-        }
-    }
+    /** Sets the mouse offset to a fixed direction */
+    public setMouseOffset(direction : Vect | number) {
 
-    /** Mouse type */
-    public getMouseType(): string {
-        return this.mouseType;
+        let newOffset = 
+            direction instanceof Vect ?
+            direction.norm.getMult(this.mouseOffLimit) :
+            new Vect(0, Math.sign(direction) * this.mouseOffLimit);
+        
+        this.mouseOffTrk.setToZero;
+        this.mouseOffOld.setToZero;
+        this.mouseOffLrp = newOffset.get;
+        this.mouseOffNew = newOffset.get;
+        this.mouseOffCount = 1;
     }
 
     /** Sets the mouse cursor from a URL */
     public setCursorURL(url?: string) {
+
         this.mouseElement.style.cursor = "url(" + url + "), auto";
     }
 
     /** Sets the resolution off the mouse space */
     public setResolution(resx: number, resy: number): void {
+
         this.resolution.set(resx, resy);
     }
 }

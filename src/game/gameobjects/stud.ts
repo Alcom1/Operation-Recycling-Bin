@@ -1,6 +1,6 @@
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import { TouchStyle } from "engine/modules/settings";
-import { colorTranslate, GMULTX, GMULTY, MOBILE_PREVIEW_MAX, Z_DEPTH } from "engine/utilities/math";
+import { colorTranslate, GMULTX, GMULTY, TOUCH_EFFECT_MAX, Z_DEPTH } from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 
 /** Stud parameters */
@@ -67,10 +67,10 @@ export default class Stud extends GameObject {
     /** Draw mobile preview */
     public superDraw(ctx: CanvasRenderingContext2D): void {
 
-        if (this.engine.mouse.getMouseType() == "mouse" ||
+        if (this.engine.mouse.mouseType == "mouse" ||
             this.engine.settings.getNumber("touchStyle") != TouchStyle.PREV ||
            !this.isSelected || 
-           !MOBILE_PREVIEW_MAX.getLessOrEqual(this.mobilePreviewSize)) {
+           !TOUCH_EFFECT_MAX.getLessOrEqual(this.mobilePreviewSize)) {
             return;
         }
 

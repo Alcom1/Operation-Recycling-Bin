@@ -1,6 +1,6 @@
 import GameObject, {GameObjectParams} from "engine/gameobjects/gameobject";
 import { TouchStyle } from "engine/modules/settings";
-import { colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, MOBILE_PREVIEW_MAX } from "engine/utilities/math";
+import { colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, TOUCH_EFFECT_MAX } from "engine/utilities/math";
 import Vect, {Point} from "engine/utilities/vect";
 
 export interface BrickParams extends GameObjectParams {
@@ -137,10 +137,10 @@ export default class Brick extends GameObject {
         // ctx.fillText(indexDisplay, indexPos.x, indexPos.y);
 
         // Only draw preview if on browser, this brick is selected, and the selection size is large enough
-        if (this.engine.mouse.getMouseType() == "mouse" ||
+        if (this.engine.mouse.mouseType == "mouse" ||
             this.engine.settings.getNumber("touchStyle") != TouchStyle.PREV ||
            !this.isSelected || 
-           !MOBILE_PREVIEW_MAX.getLessOrEqual(this.mobilePreviewSize)) {
+           !TOUCH_EFFECT_MAX.getLessOrEqual(this.mobilePreviewSize)) {
             return;
         }
 
@@ -201,11 +201,18 @@ export default class Brick extends GameObject {
     /** Set the brick to match the cursor position, based on its stored selected position */
     public setToCursor(): void {
 
+        // Special push offset for touch screens, set to zero if mouse, not push, or selection is large.
         let touchOffset =
-            this.engine.mouse.getMouseType() == "mouse" ||
-            this.engine.settings.getNumber("touchStyle") != TouchStyle.PUSH ?
+            this.engine.mouse.mouseType == "mouse" ||
+            this.engine.settings.getNumber("touchStyle") != TouchStyle.PUSH ||
+            this.maxCarry.x - this.minCarry.x > TOUCH_EFFECT_MAX.x ||
+            this.maxCarry.y - this.minCarry.y > TOUCH_EFFECT_MAX.y ?
             Vect.zero :
-            this.engine.mouse.vel.getMult(50);
+            this.engine.mouse.off.getMult(
+                50 +                        // Baseline offset
+                GMULTY / 2 * Math.max(      // Increase offset based on selection size
+                    this.maxCarry.x - this.minCarry.x, 
+                    this.maxCarry.y - this.minCarry.y));
 
         // Position based difference between stored selected position and new cursor position
         // Brick position is its position relative to the cursor

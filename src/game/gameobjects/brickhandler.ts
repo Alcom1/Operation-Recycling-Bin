@@ -1,6 +1,6 @@
 import GameObject from "engine/gameobjects/gameobject";
 import { TouchStyle } from "engine/modules/settings";
-import {col1D, GMULTX, GMULTY, colBoundingBoxGrid, colPointRectGrid, colPointParHGrid, colPointParVGrid, OPPOSITE_DIRS, colRectRectCornerSize, MatchFactions, Faction, Z_DEPTH} from "engine/utilities/math";
+import {col1D, GMULTX, GMULTY, colBoundingBoxGrid, colPointRectGrid, colPointParHGrid, colPointParVGrid, OPPOSITE_DIRS, colRectRectCornerSize, MatchFactions, Faction, Z_DEPTH, TOUCH_EFFECT_MAX} from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 import Brick from "./bricknormal";
 import CharacterHandler from "./characterhandler";
@@ -540,7 +540,9 @@ export default class BrickHandler extends GameObject {
 
             //Modify position if mobile and the touch style is push.
             let posCopy = pos.get;
-            if (this.engine.mouse.getMouseType() != "mouse" &&
+            if (this.engine.mouse.mouseType != "mouse" &&
+                selectionMax.x - selectionMin.x <= TOUCH_EFFECT_MAX.x &&
+                selectionMax.y - selectionMin.y <= TOUCH_EFFECT_MAX.y &&
                 this.engine.settings.getNumber("touchStyle") == TouchStyle.PUSH) {
                 
                 posCopy = Vect.avg(selectionMin, selectionMax)

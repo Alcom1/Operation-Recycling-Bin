@@ -1,6 +1,6 @@
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import { TouchStyle } from "engine/modules/settings";
-import { BOUNDARY, GMULTX, GMULTY, MOBILE_PREVIEW_MAX, round } from "engine/utilities/math";
+import { BOUNDARY, GMULTX, GMULTY, TOUCH_EFFECT_MAX, round } from "engine/utilities/math";
 import Vect, { Point }  from "engine/utilities/vect";
 import Brick from "./bricknormal";
 
@@ -76,9 +76,9 @@ export default class MobileIndicator extends GameObject {
     /** Draw this preview */
     public draw(ctx: CanvasRenderingContext2D) {
         
-        if (this.engine.mouse.getMouseType() == "mouse" ||
+        if (this.engine.mouse.mouseType == "mouse" ||
             this.engine.settings.getNumber("touchStyle") != TouchStyle.PREV ||
-           !MOBILE_PREVIEW_MAX.getLessOrEqual(this.box)) {
+           !TOUCH_EFFECT_MAX.getLessOrEqual(this.box)) {
             return;
         }
 

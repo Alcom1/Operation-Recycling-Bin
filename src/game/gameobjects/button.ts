@@ -128,7 +128,7 @@ export default class Button extends GameObject {
 
             // Mouse states
             // Get mouse state for different cursor-button events
-            switch(this.engine.mouse.getMouseState()) {
+            switch(this.engine.mouse.mouseState) {
 
                 case MouseState.ISRELEASED:
                     this.press = false;         // NONE state
@@ -151,7 +151,7 @@ export default class Button extends GameObject {
         else {
 
             // Go from pressed state to none state if cursor is released outside the button
-            if (this.press && this.engine.mouse.getMouseState() == MouseState.ISRELEASED) {
+            if (this.press && this.engine.mouse.mouseState == MouseState.ISRELEASED) {
 
                 this.press = false;             // NONE state
             }
