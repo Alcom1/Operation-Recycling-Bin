@@ -23,12 +23,17 @@ export default class MobileBeam extends MobileIndicator {
                     this.size.x, 
                     this.size.y));
 
+        let xEvenMod = this.size.x % 2 == 0 ? 0 : GMULTX / 2;
+        let yEvenMod = 0;   //this.size.y % 2 == 0 ? 0 : GMULTY / 2;
+
         let snapOffset =
             this.isSnapped ?
             new Vect(
-                round(this.spos.x, GMULTX) - this.spos.x,
-                round(this.spos.y, GMULTY) - this.spos.y) :
+                round(this.spos.x + xEvenMod, GMULTX) - this.spos.x - xEvenMod,
+                round(this.spos.y + yEvenMod, GMULTY) - this.spos.y - yEvenMod) :
             Vect.zero;
+
+        //snapOffset.y = 0;
 
         let rand = Math.random();
 
