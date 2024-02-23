@@ -43,14 +43,6 @@ export default class MobileIndicator extends GameObject {
             // Clamp below maximum-y position
             y: (BOUNDARY.maxy - this.size.y) * GMULTY
         });
-                
-        // Grid positioning
-        if (this.isSnapped) {
-            this.spos.set({
-                x : round(this.spos.x, GMULTX),
-                y : round(this.spos.y, GMULTY)
-            });
-        }
     }
     
     /** Set selection boundaries */
