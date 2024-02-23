@@ -1,6 +1,6 @@
 import GameObject, {GameObjectParams} from "engine/gameobjects/gameobject";
 import { TouchStyle } from "engine/modules/settings";
-import { colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, TOUCH_EFFECT_MAX } from "engine/utilities/math";
+import { colorTranslate, GMULTY, Z_DEPTH, GMULTX, BOUNDARY, round, TOUCH_EFFECT_MAX, TOUCH_PUSH_OFFSET } from "engine/utilities/math";
 import Vect, {Point} from "engine/utilities/vect";
 
 export interface BrickParams extends GameObjectParams {
@@ -209,7 +209,7 @@ export default class Brick extends GameObject {
             this.maxCarry.y - this.minCarry.y > TOUCH_EFFECT_MAX.y ?
             Vect.zero :
             this.engine.mouse.off.getMult(
-                50 +                        // Baseline offset
+                TOUCH_PUSH_OFFSET +         // Baseline offset
                 GMULTY / 2 * Math.max(      // Increase offset based on selection size
                     this.maxCarry.x - this.minCarry.x, 
                     this.maxCarry.y - this.minCarry.y));

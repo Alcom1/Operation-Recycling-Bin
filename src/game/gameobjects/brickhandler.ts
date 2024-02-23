@@ -5,6 +5,8 @@ import Vect, { Point } from "engine/utilities/vect";
 import Brick from "./bricknormal";
 import CharacterHandler from "./characterhandler";
 import Counter from "./counter";
+import MobileBox from "./mobileindicator";
+import MobileBeam from "./mobilebeam";
 import MobileIndicator from "./mobileindicator";
 
 /** States for the brick handler's selection */
@@ -39,7 +41,7 @@ export default class BrickHandler extends GameObject {
     private characterHandler : CharacterHandler | null = null;
 
     /** */
-    private mobileIndicator : MobileIndicator | null = null;
+    private mobileIndicators : MobileIndicator[] = [];
 
     /** Current selected bricks */
     public selectedBrick: Brick | null = null;
@@ -59,9 +61,9 @@ export default class BrickHandler extends GameObject {
         this.characterHandler = this.engine.tag.get(        // Get character handler from scene
             "CharacterHandler", 
             "LevelInterface")[0] as CharacterHandler;
-        this.mobileIndicator = this.engine.tag.get(         // Get mobile indicator from scene
+        this.mobileIndicators = this.engine.tag.get(        // Get mobile indicators from scene
             "MobileIndicator", 
-            "LevelInterface")[0] as MobileIndicator;
+            "LevelInterface") as MobileIndicator[];
         this.counter = this.engine.tag.get(                 // Get counter from scene
             "Counter", 
             "LevelInterface")[0] as Counter;       
@@ -327,7 +329,7 @@ export default class BrickHandler extends GameObject {
 
         // For each selected brick, set its snap to the given state
         this.bricks.filter(b => b.isSelected).forEach(b => b.snap(state));
-        this.mobileIndicator?.snap(state);
+        this.mobileIndicators.forEach(m => m?.snap(state));
     }
 
     /** Deselect all bricks */
@@ -337,8 +339,8 @@ export default class BrickHandler extends GameObject {
         this.selections = [];
         this.bricks.forEach(b => b.deselect());
 
-        // Disable mobile indicator
-        this.mobileIndicator!.isActive = false;
+        // Disable mobile indicators
+        this.mobileIndicators.forEach(m => m!.isActive = false);
     }
 
     /** Check all bricks for hover, return hover state */
@@ -547,16 +549,16 @@ export default class BrickHandler extends GameObject {
                 
                 posCopy = Vect.avg(selectionMin, selectionMax)
                     .getMult(GMULTX, GMULTY)
-                    .getAdd({ x : 8, y : -15});
+                    .getAdd({ x : 2, y : 0});
             }
     
             // Select bricks, set their min-max boundary
             selection?.forEach(b => b.select(posCopy));
             selection?.forEach(b => b.setMinMax(selectionMin, selectionMax));
     
-            // Set cursor position and min-max boundary for mobile indicator
-            this.mobileIndicator!.cursorPosition = posCopy;
-            this.mobileIndicator?.setMinMax(selectionMin, selectionMax);
+            // Set cursor position and min-max boundary for mobile indicators
+            this.mobileIndicators.forEach(m => m!.cursorPosition = posCopy);
+            this.mobileIndicators.forEach(m => m?.setMinMax(selectionMin, selectionMax));
     
             //Increment counter for display
             this.counter.incrementCount();
