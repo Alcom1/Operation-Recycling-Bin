@@ -156,7 +156,7 @@ export default class Character extends GameObject {
         
         // Glide characters move gradually, continously set the animation to match its subposition
         if (this.isGlide) {
-            this.animationCurr.spos = this.spos.get();
+            this.animationCurr.spos = this.spos.get;
         }
     }
 
@@ -204,7 +204,7 @@ export default class Character extends GameObject {
         this.animationCurr.isActive = false;            // Deactivate old animation
         this._stateIndex = index ?? this._stateIndex;
         this.animationCurr.isActive = true;             // Active new animation
-        this.animationCurr.spos = this.spos.get();      // Reset active animation subposition
+        this.animationCurr.spos = this.spos.get;        // Reset active animation subposition
         this.animationCurr.reset(this.gpos);            // Reset active animation position
         this.animationCurr.setImageIndex(this.animationSubindex);
 

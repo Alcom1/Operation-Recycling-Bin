@@ -41,7 +41,10 @@
         "name": "CursorIcon"
       },
       {
-        "name": "MobileIndicator"
+        "name": "MobileBeam"
+      },
+      {
+        "name": "MobileBubble"
       },
       {
         "name": "Counter"

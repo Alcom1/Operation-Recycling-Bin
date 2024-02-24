@@ -563,7 +563,7 @@ export default class CharacterBot extends Character {
         }
         // Bounce
         else if (mask & MASKS.jumps) {
-            this.jumpOrigin = this.gpos.get();
+            this.jumpOrigin = this.gpos.get;
             this.setStateIndex(BotState.BOUNCE);
         }
         // Armor

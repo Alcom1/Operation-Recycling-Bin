@@ -15,9 +15,33 @@ export default class Vect implements Point {
     constructor(public x: number, public y: number) {}
 
     /** Returns a copy of this vector */
-    public get(): Vect {
+    public get get(): Vect {
 
         return new Vect(this.x, this.y);
+    }
+
+    /** Returns a normalized copy of this vector */
+    public get norm() {
+
+        let length = Math.sqrt(this.x * this.x + this.y * this.y);
+        if(length) {
+            return new Vect(this.x / length, this.y / length);
+        }
+        else {
+            return Vect.zero;
+        }
+    }
+
+    /** Returns the magnitude of this vector */
+    public get magnitude(): number {
+
+        return Math.sqrt(this.magnitudeSquared);
+    }
+
+    /** Returns the squared magnitude of this vector */
+    public get magnitudeSquared(): number {
+
+        return this.x * this.x + this.y * this.y;
     }
 
     /** Sets the individual components */
@@ -89,7 +113,7 @@ export default class Vect implements Point {
             this.y * (valueY == null ? value : valueY));
     }
 
-    /** Returns a new vector with the components divided by a single or separate values */
+    /** Divides the components of this by a single or separate values */
     public div(value: number, valueY?: number): void {
 
         this.x /= value;
@@ -132,33 +156,6 @@ export default class Vect implements Point {
         return this.x * value.y - this.y * value.x;
     }
 
-    /** Normalizes this vector */
-    public norm(): void {
-
-        let length = Math.sqrt(this.x * this.x + this.y * this.y);
-        this.x /= length;
-        this.y /= length;
-    }
-
-    /** Returns a normalized copy of this vector */
-    public getNorm() {
-
-        let length = Math.sqrt(this.x * this.x + this.y * this.y);
-        return new Vect(this.x / length, this.y / length);
-    }
-
-    /** Returns the magnitude of this vector */
-    public getMagnitude(): number {
-
-        return Math.sqrt(this.getMagnitudeSquared());
-    }
-
-    /** Returns the squared magnitude of this vector */
-    public getMagnitudeSquared(): number {
-
-        return this.x * this.x + this.y * this.y;
-    }
-
     /** Sets this vector to zero */
     public setToZero(): void {
 
@@ -170,5 +167,14 @@ export default class Vect implements Point {
     public static get zero() : Vect {
 
         return new Vect(0, 0);
+    }
+
+    /** Returns the average of multiple vectors */
+    public static avg(...args : Vect[]) : Vect {
+
+        let ret = Vect.zero;
+        args.forEach(v => ret.add(v));
+        ret.div(args.length);
+        return ret;
     }
 }
