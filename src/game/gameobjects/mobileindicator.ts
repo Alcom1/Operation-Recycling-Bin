@@ -26,6 +26,7 @@ export default class MobileIndicator extends GameObject {
 
         this.tags.push("MobileIndicator");
         this.isActive = false;
+        this.zIndex = 1;
     }
 
     /** Update the indicator to match mouse position. */
