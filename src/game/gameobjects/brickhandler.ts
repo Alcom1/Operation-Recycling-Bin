@@ -547,9 +547,7 @@ export default class BrickHandler extends GameObject {
                 selectionMax.y - selectionMin.y <= TOUCH_EFFECT_MAX.y &&
                 this.engine.settings.getNumber("touchStyle") == TouchStyle.PUSH) {
                 
-                posCopy = Vect.avg(selectionMin, selectionMax)
-                    .getMult(GMULTX, GMULTY)
-                    .getAdd({ x : 2, y : 0});
+                posCopy = Vect.avg(selectionMin, selectionMax).getMult(GMULTX, GMULTY);
             }
     
             // Select bricks, set their min-max boundary

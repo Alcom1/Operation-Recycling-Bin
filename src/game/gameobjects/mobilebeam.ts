@@ -9,6 +9,7 @@ export default class MobileBeam extends MobileIndicator {
     /** Draw this preview */
     public draw(ctx: CanvasRenderingContext2D) {
     
+        //Only display on mobile with push touch-style.
         if (this.engine.mouse.mouseType == "mouse" ||
             this.engine.settings.getNumber("touchStyle") != TouchStyle.PUSH ||
             !TOUCH_EFFECT_MAX.getLessOrEqual(this.size)) {
@@ -16,6 +17,7 @@ export default class MobileBeam extends MobileIndicator {
             return;
         }
 
+        //Offset of the selection
         let touchOffset = 
             this.engine.mouse.off.getMult(
                 TOUCH_PUSH_OFFSET +         // Baseline offset
@@ -23,9 +25,11 @@ export default class MobileBeam extends MobileIndicator {
                     this.size.x, 
                     this.size.y));
 
-        let xEvenMod = this.size.x % 2 == 0 ? 0 : GMULTX / 2;
-        let yEvenMod = 0;   //this.size.y % 2 == 0 ? 0 : GMULTY / 2;
+        //Modifiers for snap offset based on its size and distance
+        let xEvenMod = (this.size.x % 2 == 0 ? 0 : GMULTX / 2);
+        let yEvenMod = (this.size.y % 2 == 0 ? 0 : GMULTY / 2) + touchOffset.y % GMULTY;
 
+        //Additional offset of the selection if it's snapped, otherwise it's zero.
         let snapOffset =
             this.isSnapped ?
             new Vect(
@@ -33,10 +37,8 @@ export default class MobileBeam extends MobileIndicator {
                 round(this.spos.y + yEvenMod, GMULTY) - this.spos.y - yEvenMod) :
             Vect.zero;
 
-        //snapOffset.y = 0;
-
+        //Canvas style for beam
         let rand = Math.random();
-
         ctx.fillStyle = ctx.strokeStyle = "#FFF";
         ctx.lineWidth = 3 + rand * 2;
         ctx.lineCap = "round";
@@ -67,7 +69,7 @@ export default class MobileBeam extends MobileIndicator {
         ctx.closePath();
         ctx.fill();
 
-        //Line again to remove shadow artifacts.
+        //Line again to remove overlapping shadow artifacts.
         ctx.shadowBlur = 0;
         ctx.beginPath();
         ctx.moveTo(0, 0);

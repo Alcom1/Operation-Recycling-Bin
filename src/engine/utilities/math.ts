@@ -17,7 +17,7 @@ export const OPPOSITE_DIRS = [-1, 1] as (-1 | 1)[];
 /** Maximum size of a selection that induces touch effects */
 export const TOUCH_EFFECT_MAX = new Vect(3, 3);
 /** Baseline offset of the push touch effect */
-export const TOUCH_PUSH_OFFSET = 50;
+export const TOUCH_PUSH_OFFSET = GMULTY * 3;
 
 /** Faction reference enum */
 export const enum Faction {

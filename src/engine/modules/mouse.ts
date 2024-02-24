@@ -126,7 +126,7 @@ export default class MouseModule {
             if(this.mouseOffTrk.magnitudeSquared > Math.pow(this.mouseOffLimit, 2)) {
 
                 this.mouseOffOld = this.mouseOffNew.get;
-                this.mouseOffNew = this.mouseOffTrk.get;
+                this.mouseOffNew = this.mouseOffTrk.norm.getMult(this.mouseOffLimit);
                 this.mouseOffTrk.setToZero();
                 this.mouseOffCount = 1;
             }
