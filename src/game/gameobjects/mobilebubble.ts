@@ -1,5 +1,5 @@
 import { TouchStyle } from "engine/modules/settings";
-import { GMULTX, GMULTY, round, TOUCH_EFFECT_MAX } from "engine/utilities/math";
+import { BOUNDARY, GMULTX, GMULTY, round, TOUCH_EFFECT_MAX } from "engine/utilities/math";
 import Vect, { Point }  from "engine/utilities/vect";
 import Brick from "./bricknormal";
 import MobileIndicator from "./mobileindicator";
@@ -24,6 +24,8 @@ export default class MobileBubble extends MobileIndicator {
     /** Update the indicator to match mouse position. */
     public update(dt: number) {
         super.update(dt);
+
+        this.spos = this.getBoundaryClamp();
 
         // Grid positioning
         if (this.isSnapped) {

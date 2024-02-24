@@ -25,6 +25,13 @@ export default class MobileBeam extends MobileIndicator {
                     this.size.x, 
                     this.size.y));
 
+        //Boundary offset
+        let boundaryOffset = this.spos.getSub(
+            this.getBoundaryClamp(
+                new Vect(
+                    GMULTX * this.size.x / 2, 
+                    GMULTY * this.size.y / 2).getAdd(touchOffset.getMult(-1))));
+
         //Modifiers for snap offset based on its size and distance
         let xEvenMod = (this.size.x % 2 == 0 ? 0 : GMULTX / 2);
         let yEvenMod = (this.size.y % 2 == 0 ? 0 : GMULTY / 2) + touchOffset.y % GMULTY;
@@ -33,9 +40,12 @@ export default class MobileBeam extends MobileIndicator {
         let snapOffset =
             this.isSnapped ?
             new Vect(
-                round(this.spos.x + xEvenMod, GMULTX) - this.spos.x - xEvenMod,
-                round(this.spos.y + yEvenMod, GMULTY) - this.spos.y - yEvenMod) :
+                boundaryOffset.x ? 0 : round(this.spos.x + xEvenMod, GMULTX) - this.spos.x - xEvenMod,
+                boundaryOffset.y ? 0 : round(this.spos.y + yEvenMod, GMULTY) - this.spos.y - yEvenMod) :
             Vect.zero;
+
+        //All of the offsets combined
+        let combinedOffset = touchOffset.getSub(boundaryOffset).getAdd(snapOffset);
 
         //Canvas style for beam
         let rand = Math.random();
@@ -48,7 +58,7 @@ export default class MobileBeam extends MobileIndicator {
         //Line
         ctx.beginPath();
         ctx.moveTo(0, 0);
-        ctx.lineTo(touchOffset.x + snapOffset.x, touchOffset.y + snapOffset.y);
+        ctx.lineTo(combinedOffset.x, combinedOffset.y);
         ctx.stroke();
 
         //Near circle
@@ -63,8 +73,7 @@ export default class MobileBeam extends MobileIndicator {
         //Far circle
         ctx.beginPath();
         ctx.arc(
-            touchOffset.x + snapOffset.x, 
-            touchOffset.y + snapOffset.y, 
+            combinedOffset.x, combinedOffset.y,
             5 + rand, 0, Math.PI * 2);
         ctx.closePath();
         ctx.fill();
@@ -73,7 +82,7 @@ export default class MobileBeam extends MobileIndicator {
         ctx.shadowBlur = 0;
         ctx.beginPath();
         ctx.moveTo(0, 0);
-        ctx.lineTo(touchOffset.x + snapOffset.x, touchOffset.y + snapOffset.y);
+        ctx.lineTo(combinedOffset.x, combinedOffset.y);
         ctx.stroke();
     }
 }

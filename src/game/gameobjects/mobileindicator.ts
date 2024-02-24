@@ -32,17 +32,7 @@ export default class MobileIndicator extends GameObject {
     public update(dt: number) {
 
         // Get mouse position, clamped within level borders.
-        this.spos = this.engine.mouse.pos.getSub(this.mobileOffset).getClamp({
-            // Clamp above minimum-x position
-            x: (BOUNDARY.minx) * GMULTX,
-            // Clamp above minimum-y position
-            y: (BOUNDARY.miny) * GMULTY
-        }, {  
-            // Clamp below maximum-x position
-            x: (BOUNDARY.maxx - this.size.x) * GMULTX,
-            // Clamp below maximum-y position
-            y: (BOUNDARY.maxy - this.size.y) * GMULTY
-        });
+        this.spos = this.engine.mouse.pos.getSub(this.mobileOffset);
     }
     
     /** Set selection boundaries */
@@ -59,5 +49,21 @@ export default class MobileIndicator extends GameObject {
     public snap(state : boolean) {
 
         this.isSnapped = state;
+    }
+
+    /** Utility boundary clamp to keep visuals inside gameplay boundary */
+    protected getBoundaryClamp(offset = Vect.zero) : Vect {
+        
+        return this.spos.getClamp({
+            // Clamp above minimum-x position
+            x: (BOUNDARY.minx) * GMULTX + offset.x,
+            // Clamp above minimum-y position
+            y: (BOUNDARY.miny) * GMULTY + offset.y
+        }, {  
+            // Clamp below maximum-x position
+            x: (BOUNDARY.maxx - this.size.x) * GMULTX + offset.x,
+            // Clamp below maximum-y position
+            y: (BOUNDARY.maxy - this.size.y) * GMULTY + offset.y
+        });
     }
 }
