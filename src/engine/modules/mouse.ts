@@ -32,6 +32,7 @@ export default class MouseModule {
 
     public get pos() { return this.mousePos.get; }
     public get off() { return this.mouseOffLrp.getMult(1 / this.mouseOffLimit); }
+    public get trk() { return this.mouseOffTrk.getMult(1 / this.mouseOffLimit); }
     
     /** Mouse state */
     public get mouseState(): MouseState {

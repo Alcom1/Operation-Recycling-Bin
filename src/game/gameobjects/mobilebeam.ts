@@ -6,6 +6,9 @@ import MobileIndicator from "./mobileindicator";
 /** Visual for picking up bricks with push touch */
 export default class MobileBeam extends MobileIndicator {
 
+    private ringSize = 50;
+    private deadZone = 0.25;
+
     /** Draw this preview */
     public draw(ctx: CanvasRenderingContext2D) {
     
@@ -46,8 +49,10 @@ export default class MobileBeam extends MobileIndicator {
 
         //All of the offsets combined
         let combinedOffset = touchOffset.getSub(boundaryOffset).getAdd(snapOffset);
-        let ringSize = 50;
-        let lineStart = combinedOffset.norm.getMult(ringSize + 1);
+        let lineStart = combinedOffset.norm.getMult(this.ringSize + 1);
+
+        //Mouse movement tracking
+        let track = this.engine.mouse.trk.magnitude - this.deadZone;
 
         //Canvas style for beam
         let rand = Math.random();
@@ -68,7 +73,7 @@ export default class MobileBeam extends MobileIndicator {
         ctx.arc(
             0, 
             0, 
-            ringSize + rand, 0, Math.PI * 2);
+            this.ringSize + rand, 0, Math.PI * 2);
         ctx.closePath();
         ctx.stroke();
 
@@ -80,11 +85,59 @@ export default class MobileBeam extends MobileIndicator {
         ctx.closePath();
         ctx.fill();
 
+        //Tracking arc
+        if (track > 0 && 
+            Math.sign(this.engine.mouse.trk.y) != 
+            Math.sign(touchOffset.y)) {
+            
+            ctx.save();
+            let trackArc = (Math.PI * track) * (1 / (1 - this.deadZone));
+            
+            //Up-down reverse direction
+            if (Math.sign(touchOffset.y) > 0) {
+                ctx.rotate(Math.PI);
+            }
+
+            ctx.beginPath();
+            ctx.arc(
+                0, 
+                0, 
+                this.ringSize + 10, 
+                Math.PI / 2 - trackArc, 
+                Math.PI / 2 + trackArc);
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        //Inner circle
+        ctx.shadowColor = "rgba(128, 128, 128, 1)";
+        ctx.beginPath();
+        ctx.arc(
+            0, 
+            0, 
+            this.ringSize - 15, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.fill();
+
         //Line again to remove overlapping shadow artifacts.
         ctx.shadowBlur = 0;
         ctx.beginPath();
         ctx.moveTo(lineStart.x, lineStart.y);
         ctx.lineTo(combinedOffset.x, combinedOffset.y);
         ctx.stroke();
+
+        //Arrows
+        ctx.fillStyle = "#333";
+        ctx.save();
+        for(let i = 0; i <= 3; i++) {
+            ctx.beginPath();
+            ctx.moveTo( 12, 15);
+            ctx.lineTo( 0, 28);
+            ctx.lineTo(-12, 15);
+            ctx.closePath();
+            ctx.fill();
+            ctx.rotate(Math.PI / 2);
+        }
+        ctx.restore();
     }
 }
