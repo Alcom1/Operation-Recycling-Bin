@@ -46,6 +46,7 @@ export default class MobileBeam extends MobileIndicator {
 
         //All of the offsets combined
         let combinedOffset = touchOffset.getSub(boundaryOffset).getAdd(snapOffset);
+        let lineStart = combinedOffset.norm.getMult(32);
 
         //Canvas style for beam
         let rand = Math.random();
@@ -57,7 +58,7 @@ export default class MobileBeam extends MobileIndicator {
 
         //Line
         ctx.beginPath();
-        ctx.moveTo(0, 0);
+        ctx.moveTo(lineStart.x, lineStart.y);
         ctx.lineTo(combinedOffset.x, combinedOffset.y);
         ctx.stroke();
 
@@ -66,9 +67,9 @@ export default class MobileBeam extends MobileIndicator {
         ctx.arc(
             0, 
             0, 
-            8 + rand, 0, Math.PI * 2);
+            30 + rand, 0, Math.PI * 2);
         ctx.closePath();
-        ctx.fill();
+        ctx.stroke();
 
         //Far circle
         ctx.beginPath();
@@ -81,7 +82,7 @@ export default class MobileBeam extends MobileIndicator {
         //Line again to remove overlapping shadow artifacts.
         ctx.shadowBlur = 0;
         ctx.beginPath();
-        ctx.moveTo(0, 0);
+        ctx.moveTo(lineStart.x, lineStart.y);
         ctx.lineTo(combinedOffset.x, combinedOffset.y);
         ctx.stroke();
     }
