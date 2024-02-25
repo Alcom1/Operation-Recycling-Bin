@@ -107,7 +107,7 @@ export default class Cursor extends GameObject {
                     // If pressing the brick returns truthy (up or down)
                     if (direction) {
 
-                        this.enterCarryState(direction);
+                        this.enterCarryState(-direction);
 
                     } else {
                         
