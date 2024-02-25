@@ -101,12 +101,16 @@ export default class Cursor extends GameObject {
                 } 
                 else if (this.state == CursorState.HOVER) {
 
-                    // If pressing the brick returns true (Indeterminate state)
-                    if (this.brickHandler.pressBricks(this.spos)) {
+                    // Direction of selection (0 for indeterminate)
+                    let direction = this.brickHandler.pressBricks(this.spos)
 
-                        this.enterCarryState(1);
+                    // If pressing the brick returns truthy (up or down)
+                    if (direction) {
+
+                        this.enterCarryState(direction);
 
                     } else {
+                        
                         // No selection occurred - Indeterminate state.
                         // Set pressed position to the current cursor position
                         this.ppos = this.spos;

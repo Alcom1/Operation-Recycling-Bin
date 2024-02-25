@@ -47,7 +47,7 @@ export default class MobileBeam extends MobileIndicator {
         //All of the offsets combined
         let combinedOffset = touchOffset.getSub(boundaryOffset).getAdd(snapOffset);
         let ringSize = 50;
-        let lineStart = combinedOffset.norm.getMult(ringSize + 2);
+        let lineStart = combinedOffset.norm.getMult(ringSize + 1);
 
         //Canvas style for beam
         let rand = Math.random();

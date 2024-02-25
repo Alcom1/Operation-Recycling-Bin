@@ -488,16 +488,20 @@ export default class BrickHandler extends GameObject {
      * Check all bricks for press, return press state (none, processed, indeterminate)
      * This entire function is bananas.
     */
-    public pressBricks(pos: Vect): boolean {
+    public pressBricks(pos: Vect): -1 | 0 | 1 {
 
         // Build an array of selections that are not null (invalid)
         // Filter to remove null (invalid) selections
-        const validSelections = OPPOSITE_DIRS.map(d => this.selections[d]).filter(s => s);
+        const validSelections = OPPOSITE_DIRS.map(d => ({
+            dir : d, 
+            sel : this.selections[d]
+        })).filter(ds => ds.sel);
 
         // If there is a single valid selection, use and auto-process it
-        if (validSelections.length == 1) {
-            // Process this selection using bricks in truthy direction, and the position.
-            return this.processSelection(validSelections[0], pos);
+        // Process this selection using bricks in truthy direction, and the position.
+        if (validSelections.length == 1 && this.processSelection(validSelections[0].sel, pos)) {
+            
+            return validSelections[0].dir;
         }
 
         // For the indeterminate state, just press the currently selected brick
@@ -505,8 +509,8 @@ export default class BrickHandler extends GameObject {
             this.selectedBrick.press();
         }
 
-        // Return falsy for indeterminate state
-        return false;
+        // Return zero for indeterminate state
+        return 0;
     }
 
     /** Set bricks to selected based on a provided cursor position */
@@ -519,7 +523,7 @@ export default class BrickHandler extends GameObject {
      * Process a selection, set all its bricks to a selected state,
      * search for floating bricks, return if bricks were selected
     */
-    private processSelection(selection: Brick[] | null, pos: Vect) {
+    private processSelection(selection: Brick[] | null, pos: Vect) : boolean {
 
         // Minimum and maximum boundary for selection
         let selectionMin = Vect.zero;
