@@ -19413,6 +19413,22 @@
         }
       },
       {
+        "isForward": false,
+        "name": "CharacterGearFly",
+        "position": {
+          "x": 3,
+          "y": 8
+        }
+      },
+      {
+        "isForward": false,
+        "name": "CharacterGearFly",
+        "position": {
+          "x": 21,
+          "y": 13
+        }
+      },
+      {
         "width": 2,
         "color": "blue",
         "name": "BrickNormal",
@@ -21036,6 +21052,14 @@
         "position": {
           "x": 33,
           "y": 21
+        }
+      },
+      {
+        "isForward": false,
+        "name": "CharacterGearFly",
+        "position": {
+          "x": 29,
+          "y": 5
         }
       },
       {

@@ -29,6 +29,7 @@ import CharacterHandler from "./gameobjects/characterhandler";
 import ZIndexHandler from "./gameobjects/zindexhandler";
 import { TouchStyle } from "engine/modules/settings";
 import MobileBeam from "./gameobjects/mobilebeam";
+import CharacterGearFly from "./gameobjects/charactergearfly";
 
 // Load
 window.onload = function() {
@@ -58,6 +59,7 @@ window.onload = function() {
             CharacterBot,
             CharacterBin,
             CharacterGearClimb,
+            CharacterGearFly,
             CharacterGearGround,
             CharacterHandler,
             Counter,
