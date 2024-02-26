@@ -1,5 +1,4 @@
-import GameObject, { Collision } from "engine/gameobjects/gameobject";
-import { RING_BITSTACK as gcb, MASKS, zip } from "engine/utilities/math";
+import { zip } from "engine/utilities/math";
 import { Point } from "engine/utilities/vect";
 import Anim, { AnimationParams } from "./anim";
 import { CharacterParams } from "./character";
