@@ -1,5 +1,5 @@
 import { Point } from "engine/utilities/vect";
-import { CharacterParams } from "./character";
+import Character, { CharacterParams } from "./character";
 import CharacterGear, { GearState } from "./charactergear";
 
 /** Specifications of a grounded gearbot */
@@ -28,9 +28,15 @@ const CharacterGearEyeOverride = Object.freeze({
 /**A normal grounded gearbot */
 export default class CharacterGearEye extends CharacterGear {
 
+    private target : Character;
+
     /** Constructor */
     constructor(params: CharacterParams) {
-        super(Object.assign(params, CharacterGearEyeOverride));
+        super(Object.assign(params, CharacterGearEyeOverride));        
+        
+        this.target = this.engine.tag.get(
+            "CharacterBot", 
+            "Level")[0] as Character;
     }
 
     /** */
