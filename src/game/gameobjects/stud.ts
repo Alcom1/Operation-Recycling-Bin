@@ -11,13 +11,13 @@ interface StudParams extends GameObjectParams {
 /** Pair of studs for a brick */
 export default class Stud extends GameObject {
 
-    private image : HTMLImageElement;                   // Image of a pair of studs
-    private isPressed : boolean = false;                // Brick is pressed
-    private isSelected : boolean = false;               // Brick is selected
-    private isSnapped : boolean = false;                // Brick is snapped
-    public isVisible : boolean = true;                  // Stud is visible and should be drawn
-    public mobilePreviewSize : Vect = Vect.zero;   // Size for mobile preview
-    private isMobileFlipped : boolean = false;          // flipped state for mobile preview
+    private image : HTMLImageElement;               // Image of a pair of studs
+    private isPressed : boolean = false;            // Brick is pressed
+    private isSelected : boolean = false;           // Brick is selected
+    private isSnapped : boolean = false;            // Brick is snapped
+    public isVisible : boolean = true;              // Stud is visible and should be drawn
+    public mobilePreviewSize : Vect = Vect.zero;    // Size for mobile preview
+    private isMobileFlipped : boolean = false;      // flipped state for mobile preview
 
     /** z-index get/setters */
     public get zIndex() : number { return super.zIndex; }
