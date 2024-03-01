@@ -17,7 +17,7 @@ export interface GameObjectParams {
     zNoCompare?: boolean;
     scene: Scene;
     name: string;
-    tags?: [string];
+    tags?: string[];
     faction? : Faction;
     isActive?: boolean;
     isDebug: boolean;
