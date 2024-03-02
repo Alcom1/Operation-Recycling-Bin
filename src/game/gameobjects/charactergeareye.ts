@@ -150,17 +150,18 @@ export default class CharacterGearEye extends CharacterGear {
                     col1D(
                         this.gpos.y - this.height,
                         this.gpos.y,
-                        this.target!.gpos.y - this.target!.height,
+                        this.target!.gpos.y - this.target!.height - 1,
                         this.target!.gpos.y)) {
         
                     let distance = this.target!.gpos.x - this.gpos.x;
+                    let preCheck = this.target!.gpos.y - this.gpos.y == 4
                     
                     //Right check
                     if(distance > 0) {
 
                         let right = this.brickHandler.checkCollisionBox(
-                            this.gpos.getAdd({ x : 1,               y : 0}),
-                            this.gpos.getAdd({ x : distance - 2,    y : 0}),
+                            this.gpos.getAdd({ x : 1,               y : preCheck ? -1 : 0}),
+                            this.gpos.getAdd({ x : distance - 1,    y : 0}),
                             this.faction);
         
                         if(right == 0) {
@@ -173,8 +174,8 @@ export default class CharacterGearEye extends CharacterGear {
                     if(distance < 0) {
                 
                         let left = this.brickHandler.checkCollisionBox({ 
-                            x : this.target!.gpos.x + 1,
-                            y : this.gpos.y
+                            x : this.target!.gpos.x,
+                            y : this.gpos.y + (preCheck ? -1 : 0)
                         },{                             
                             x : this.target!.gpos.x - distance - 2,
                             y : this.gpos.y
@@ -201,12 +202,66 @@ export default class CharacterGearEye extends CharacterGear {
         if ((seek.x && (seek.x != this.move.x || this.move.y)) || 
             (seek.y && (seek.y != this.move.y))) {
 
-            if(seek.x) {
+            console.log(seek.x, this.move.x);
+
+            if (seek.x) {
+
+                //If there's still something blocking check the opposite direction
+                if (this.brickHandler.checkCollisionBox(
+                    this.gpos.getAdd({ x : seek.x * 1.5 - 0.5, y : -1}),
+                    this.gpos.getAdd({ x : seek.x * 1.5 - 0.5, y :  0}),
+                    this.faction)) {
+
+                    //Also blocked in opposite direction. Stop.
+                    if (this.brickHandler.checkCollisionBox(
+                        this.gpos.getAdd({ x : -seek.x * 1.5 - 0.5, y : -1}),
+                        this.gpos.getAdd({ x : -seek.x * 1.5 - 0.5, y :  0}),
+                        this.faction)) {
+                        
+                        this.setStateIndex(GearState.STOP);
+                    }
+                    //Otherwise, go in opposite direction
+                    else {
+                    
+                        this.setStateIndex(GearState.NORMAL);
+                        this.move.x = -seek.x;
+                    }
+                }
+                //Free to move in seek direction
+                else {
+                    this.move.x = seek.x;
+                }
+
                 this.move.y = 0;
-                this.move.x = seek.x;
             }
             else if(seek.y) {
-                this.move.y = seek.y;
+
+                //If there's still something blocking go in the opposite direction
+                if (this.brickHandler.checkCollisionBox(
+                    this.gpos.getAdd({ x : -1, y : seek.y * 1.5 - 0.5}),
+                    this.gpos.getAdd({ x :  0, y : seek.y * 1.5 - 0.5}),
+                    this.faction)) {
+
+                    //Also blocked in opposite direction. Stop.
+                    if (this.brickHandler.checkCollisionBox(
+                        this.gpos.getAdd({ x : -1, y : -seek.y * 1.5 - 0.5}),
+                        this.gpos.getAdd({ x :  0, y : -seek.y * 1.5 - 0.5}),
+                        this.faction)) {
+                        
+                        this.setStateIndex(GearState.STOP);
+                    }
+                    //Otherwise, go in opposite direction
+                    else {
+
+                        this.setStateIndex(GearState.NORMAL);
+                        this.move.y = -seek.y;
+                    }
+                }
+                //Free to move in seek direction
+                else {
+
+                    this.move.y = seek.y;
+                }
             }
         }
         //Collision check
