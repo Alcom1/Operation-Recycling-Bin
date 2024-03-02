@@ -36,7 +36,9 @@ const CharacterGearEyeOverride = Object.freeze({
 export default class CharacterGearEye extends CharacterGear {
 
     private target : Character | null = null;
+    private seekDistance = 0;
     private isRage = false;
+    private isRageOffDelay = false;
 
     //
     protected get animationSubindex() : number {
@@ -88,6 +90,14 @@ export default class CharacterGearEye extends CharacterGear {
     public handleStepUpdate(proxs : Point[]) {
         super.handleStepUpdate(proxs);
 
+        if(this.isRageOffDelay || this.seekDistance <= 0) {
+            this.isRage = false;
+            this.isRageOffDelay = false;
+        }
+        else {
+            this.seekDistance--;
+        }
+
         let seek = Vect.zero;
 
         //Seek active target
@@ -110,6 +120,7 @@ export default class CharacterGearEye extends CharacterGear {
                             this.faction);
         
                         if(down == 0) {
+                            this.seekDistance = distance;
                             seek.y = 1;
                             return;
                         }
@@ -127,6 +138,7 @@ export default class CharacterGearEye extends CharacterGear {
                             this.faction);
         
                         if(up == 0) {
+                            this.seekDistance = distance;
                             seek.y = -1;
                             return;
                         }
@@ -152,6 +164,7 @@ export default class CharacterGearEye extends CharacterGear {
                             this.faction);
         
                         if(right == 0) {
+                            this.seekDistance = distance;
                             seek.x = 1;
                             return;
                         }
@@ -169,8 +182,7 @@ export default class CharacterGearEye extends CharacterGear {
                         this.faction);
         
                         if(left == 0) {
-
-                            debugger;
+                            this.seekDistance = distance;
                             seek.x = -1;
                             return;
                         }
@@ -186,8 +198,8 @@ export default class CharacterGearEye extends CharacterGear {
         }
 
         //Seeking overrides collision check if it changes this's movement.
-        if ((seek.x && seek.x != this.move.x) || 
-            (seek.y && seek.y != this.move.y)) {
+        if ((seek.x && (seek.x != this.move.x || this.move.y)) || 
+            (seek.y && (seek.y != this.move.y))) {
 
             if(seek.x) {
                 this.move.y = 0;
@@ -250,6 +262,8 @@ export default class CharacterGearEye extends CharacterGear {
                 case GearState.STOP :
 
                 case GearState.WAIT :
+
+                    this.isRageOffDelay = true;
 
                     switch(this.move.y) {
 
