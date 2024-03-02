@@ -1,5 +1,5 @@
 import { col1D, Faction } from "engine/utilities/math";
-import { Point } from "engine/utilities/vect";
+import Vect, { Point } from "engine/utilities/vect";
 import Character, { CharacterParams } from "./character";
 import CharacterGear, { GearState } from "./charactergear";
 
@@ -17,12 +17,16 @@ const CharacterGearEyeOverride = Object.freeze({
     isGlide : true,
     animsMisc : [{
         speed : 6.0,
-        images : [{ name : "char_rbe", extension : "svg", offsetX : 0 }],
+        images : [
+            { name : "char_rbe", extension : "svg", offsetX : 0 },
+            { name : "char_rbe_rage", extension : "svg", offsetX : 0 }],
         frameCount : 2,
         gposOffset : { x : -3, y : 0}
     },{
         speed : 6.0,
-        images : [{ name : "char_rbe", extension : "svg", offsetX : 0 }],
+        images : [
+            { name : "char_rbe", extension : "svg", offsetX : 0 },
+            { name : "char_rbe_rage", extension : "svg", offsetX : 0 }],
         frameCount : 2,
         gposOffset : { x : -3, y : 0}
     }]
@@ -84,41 +88,110 @@ export default class CharacterGearEye extends CharacterGear {
     public handleStepUpdate(proxs : Point[]) {
         super.handleStepUpdate(proxs);
 
-        let seek = false;
+        let seek = Vect.zero;
 
-        if(this.move.y == 0) {
+        //Seek active target
+        if(this.target?.isActive) {
 
-            [0,1].forEach(o => {
-        
-                let distance = this.target!.gpos.y - this.gpos.y;
+            //Two seek columns, one seek row
+            [0,-1].forEach(o => {
     
+                //Vertical check if horizontally aligned
                 if(Math.abs(this.gpos.x - this.target!.gpos.x) <= 1) {
+        
+                    let distance = this.target!.gpos.y - this.gpos.y;
                 
-                    let qq = this.brickHandler.checkCollisionRange(
-                        this.gpos.getAdd({  // Position
-                            x : o - 1, 
-                            y : 0
-                        }),
-                        1,
-                        0,              // START
-                        distance,       // FINAL
-                        distance,       // HEIGHT
-                        1,
-                        Faction.HOSTILE);
+                    //Down check
+                    if(distance > 0 && this.move.y <= 0) {
     
-                    if(qq == 0) {
-                        seek = true;
-                        return;
+                        let down = this.brickHandler.checkCollisionBox(
+                            this.gpos.getAdd({ x : o, y : 1}),
+                            this.gpos.getAdd({ x : o, y : distance}),
+                            this.faction);
+        
+                        if(down == 0) {
+                            seek.y = 1;
+                            return;
+                        }
+                    }
+                    //Up check
+                    if(distance < 0 && this.move.y >= 0) {
+                
+                        let up = this.brickHandler.checkCollisionBox({ 
+                                x : this.gpos.x + o,
+                                y : this.target!.gpos.y + 1
+                            },{ 
+                                x : this.gpos.x + o,
+                                y : this.target!.gpos.y - distance - this.height
+                            },
+                            this.faction);
+        
+                        if(up == 0) {
+                            seek.y = -1;
+                            return;
+                        }
+                    }
+                }
+                //Horizontal check if vertically aligned
+                else if(
+                    o == 0 &&   //Only one seek row
+                    col1D(
+                        this.gpos.y - this.height,
+                        this.gpos.y,
+                        this.target!.gpos.y - this.target!.height,
+                        this.target!.gpos.y)) {
+        
+                    let distance = this.target!.gpos.x - this.gpos.x;
+                    
+                    //Right check
+                    if(distance > 0 && (this.move.x < 0 || this.move.y != 0)) {
+
+                        let right = this.brickHandler.checkCollisionBox(
+                            this.gpos.getAdd({ x : 1,               y : 0}),
+                            this.gpos.getAdd({ x : distance - 2,    y : 0}),
+                            this.faction);
+        
+                        if(right == 0) {
+                            seek.x = 1;
+                            return;
+                        }
+                    }
+                    //Left check
+                    if(distance < 0 && (this.move.x > 0 || this.move.y != 0)) {
+                
+                        let left = this.brickHandler.checkCollisionBox({ 
+                            x : this.target!.gpos.x + 1,
+                            y : this.gpos.y
+                        },{                             
+                            x : this.target!.gpos.x - distance - 2,
+                            y : this.gpos.y
+                        },
+                        this.faction);
+        
+                        if(left == 0) {
+
+                            debugger;
+                            seek.x = -1;
+                            return;
+                        }
                     }
                 }
             });
         }
 
-        if(seek) {
+        //Seek overrides collision check
+        if(seek.x || seek.y) {
 
-            this.move.y = 1;
+            if(seek.x) {
+                this.move.y = 0;
+                this.move.x = seek.x;
+            }
+            else if(seek.y) {
+                this.move.y = seek.y;
+            }
             this.isRage = true;
         }
+        //Collision check
         else {
 
             switch(this._stateIndex) {
@@ -170,6 +243,7 @@ export default class CharacterGearEye extends CharacterGear {
                 
                 case GearState.STOP :
                 case GearState.WAIT :
+
                     switch(this.move.y) {
 
                         // Moving horizontal

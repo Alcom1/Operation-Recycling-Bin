@@ -41,7 +41,7 @@ window.onload = function() {
         canvas, 
         "scenes/",
         "scenes",
-        ["LevelInterface", "LEVEL_01"],
+        ["LevelInterface", "LEVEL_58"],
         [
             Backdrop,
             BrickHandler,
