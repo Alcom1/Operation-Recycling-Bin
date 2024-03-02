@@ -6,7 +6,7 @@ import CharacterGear, { GearState } from "./charactergear";
 /** Specifications of a grounded gearbot */
 const CharacterGearEyeOverride = Object.freeze({
     height: 2,
-    speed : 5.0,
+    speed : 7.5,
     animMain : {
         images : [
             { name : "char_rbe", extension : "svg", offsetX : 0 },
@@ -16,14 +16,14 @@ const CharacterGearEyeOverride = Object.freeze({
     },
     isGlide : true,
     animsMisc : [{
-        speed : 6.0,
+        speed : 7.5,
         images : [
             { name : "char_rbe", extension : "svg", offsetX : 0 },
             { name : "char_rbe_rage", extension : "svg", offsetX : 0 }],
         frameCount : 2,
         gposOffset : { x : -3, y : 0}
     },{
-        speed : 6.0,
+        speed : 7.5,
         images : [
             { name : "char_rbe", extension : "svg", offsetX : 0 },
             { name : "char_rbe_rage", extension : "svg", offsetX : 0 }],
@@ -102,7 +102,7 @@ export default class CharacterGearEye extends CharacterGear {
                     let distance = this.target!.gpos.y - this.gpos.y;
                 
                     //Down check
-                    if(distance > 0 && this.move.y <= 0) {
+                    if(distance > 0) {
     
                         let down = this.brickHandler.checkCollisionBox(
                             this.gpos.getAdd({ x : o, y : 1}),
@@ -115,7 +115,7 @@ export default class CharacterGearEye extends CharacterGear {
                         }
                     }
                     //Up check
-                    if(distance < 0 && this.move.y >= 0) {
+                    if(distance < 0) {
                 
                         let up = this.brickHandler.checkCollisionBox({ 
                                 x : this.gpos.x + o,
@@ -144,7 +144,7 @@ export default class CharacterGearEye extends CharacterGear {
                     let distance = this.target!.gpos.x - this.gpos.x;
                     
                     //Right check
-                    if(distance > 0 && (this.move.x < 0 || this.move.y != 0)) {
+                    if(distance > 0) {
 
                         let right = this.brickHandler.checkCollisionBox(
                             this.gpos.getAdd({ x : 1,               y : 0}),
@@ -157,7 +157,7 @@ export default class CharacterGearEye extends CharacterGear {
                         }
                     }
                     //Left check
-                    if(distance < 0 && (this.move.x > 0 || this.move.y != 0)) {
+                    if(distance < 0) {
                 
                         let left = this.brickHandler.checkCollisionBox({ 
                             x : this.target!.gpos.x + 1,
@@ -179,8 +179,15 @@ export default class CharacterGearEye extends CharacterGear {
             });
         }
 
-        //Seek overrides collision check
-        if(seek.x || seek.y) {
+        //Get angry if seeking
+        if (seek.x || seek.y) {
+            
+            this.isRage = true;
+        }
+
+        //Seeking overrides collision check if it changes this's movement.
+        if ((seek.x && seek.x != this.move.x) || 
+            (seek.y && seek.y != this.move.y)) {
 
             if(seek.x) {
                 this.move.y = 0;
@@ -189,7 +196,6 @@ export default class CharacterGearEye extends CharacterGear {
             else if(seek.y) {
                 this.move.y = seek.y;
             }
-            this.isRage = true;
         }
         //Collision check
         else {
@@ -197,6 +203,7 @@ export default class CharacterGearEye extends CharacterGear {
             switch(this._stateIndex) {
     
                 case GearState.NORMAL :
+
                     switch(this.move.y) {
 
                         // Moving horizontal
@@ -240,8 +247,8 @@ export default class CharacterGearEye extends CharacterGear {
                     }
                     break;
 
-                
                 case GearState.STOP :
+
                 case GearState.WAIT :
 
                     switch(this.move.y) {
