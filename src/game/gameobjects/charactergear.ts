@@ -48,19 +48,19 @@ export default class CharacterGear extends Character {
         proxs.forEach(p => {
 
             // Below
-            if (p.y == 2) {
+            if (p.y ==  2 && Math.abs(p.x) <= 2) {
                 this.storedCbm |= ring.flor
             }
             // Above
-            if (p.y == -2) {
+            if (p.y == -2 && Math.abs(p.x) <= 2) {
                 this.storedCbm |= ring.roof
             }
             // Rightward
-            if (p.x == 2) {
+            if (p.x ==  2 && Math.abs(p.y) <= 2) {
                 this.storedCbm |= (this.move.x > 0 ? ring.face : ring.back)
             }
             // Leftward
-            if (p.x == -2) {
+            if (p.x == -2 && Math.abs(p.y) <= 2) {
                 this.storedCbm |= (this.move.x > 0 ? ring.back : ring.face)
             }
         })
