@@ -89,8 +89,8 @@ export default class BrickTileFan extends BrickTileAnim {
 
             let ret = b;
 
-            // Collide with each character
-            this.characters.forEach(c => {
+            // Collide with each active character
+            this.characters.filter(c => c.isActive).forEach(c => {
                 if (c.gpos.y <= this.gpos.y &&
                     [1,2].some(x => x == c.gpos.x - this.gpos.x - i)) {
                     ret = Math.max(ret, c.gpos.y - c.height + 3);   // Stop beam underneath characters

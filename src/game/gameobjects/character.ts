@@ -86,6 +86,7 @@ export default class Character extends GameObject {
         this.animations.push(new Anim({
             ...params,
             ...params.animMain,
+            tags : [],
             isActive : false,
             speed : this.isGlide ? 6 : params.speed, 
             isLoop : this.isGlide,          // Loops are handled manually by non-gliders to prevent stuttering
@@ -98,6 +99,7 @@ export default class Character extends GameObject {
 
             this.animations.push(new Anim({
                 ...params,
+                tags : [],
                 isActive : false,
                 speed : null,
                 ...m
@@ -111,6 +113,7 @@ export default class Character extends GameObject {
         for (let i = 0; i < this.height; i++) {
             this.bricks.push(this.parent.pushGO(new BrickPhantom({
                 ...params,
+                tags : [],
                 faction : this.faction,
                 glide : this.isGlide,
                 width : 2,

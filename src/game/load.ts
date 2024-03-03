@@ -24,12 +24,13 @@ import BrickHandlerDebug from "./gameobjects/brickhandlerdebug";
 import BrickJumpMove from "./gameobjects/brickjumpmove";
 import BrickTileButton from "./gameobjects/bricktilebutton";
 import CharacterGearClimb from "./gameobjects/charactergearclimb";
+import CharacterGearEye from "./gameobjects/charactergeareye";
+import CharacterGearFly from "./gameobjects/charactergearfly";
 import CharacterGearGround from "./gameobjects/charactergearground";
 import CharacterHandler from "./gameobjects/characterhandler";
 import ZIndexHandler from "./gameobjects/zindexhandler";
-import { TouchStyle } from "engine/modules/settings";
 import MobileBeam from "./gameobjects/mobilebeam";
-import CharacterGearFly from "./gameobjects/charactergearfly";
+import { TouchStyle } from "engine/modules/settings";
 
 // Load
 window.onload = function() {
@@ -40,7 +41,7 @@ window.onload = function() {
         canvas, 
         "scenes/",
         "scenes",
-        ["LevelInterface", "LEVEL_01"],
+        ["LevelInterface", "LEVEL_58"],
         [
             Backdrop,
             BrickHandler,
@@ -59,6 +60,7 @@ window.onload = function() {
             CharacterBot,
             CharacterBin,
             CharacterGearClimb,
+            CharacterGearEye,
             CharacterGearFly,
             CharacterGearGround,
             CharacterHandler,

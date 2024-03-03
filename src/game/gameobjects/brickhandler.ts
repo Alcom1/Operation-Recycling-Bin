@@ -50,7 +50,7 @@ export default class BrickHandler extends GameObject {
     private selections: (Brick[] | null)[] = [];
 
     /** Active bricks */
-    private get bricksActive() { return this.bricks.filter(b => b.isActive && !b.isSelected); }
+    protected get bricksActive() { return this.bricks.filter(b => b.isActive && !b.isSelected); }
 
     /** Grey bricks */
     private get bricksGrey(): Brick[] { return this.bricks.filter(b => b.isActive && b.isGrey && !b.blockStrength); }
@@ -184,6 +184,41 @@ export default class BrickHandler extends GameObject {
         // We need to attach in one direction but not both. Return true if we are attaching in a single direction.
         // If adjacency states are different, return true
         return adjacents[-1] != adjacents[1];
+    }
+
+    /** Check collisons for a box-area */
+    public checkCollisionBox(
+        min: Point, 
+        max: Point,
+        faction: Faction = Faction.NEUTRAL): number {
+
+        let collisions = 0; // Collision bitbask
+
+        for(let y = min.y; y <= max.y; y++) {
+
+            let bricks = this.bricksActive.filter(
+                b => b.gpos.y == y &&
+                MatchFactions(b.faction, faction));
+
+            if (bricks.length > 0) {
+
+                for(let x = min.x; x <= max.x; x++) {
+                    
+                    bricks.forEach(brick => {
+                        if (col1D(
+                            brick.gpos.x - 1, 
+                            brick.gpos.x + brick.width, 
+                            x,
+                            x
+                        )) {
+                            collisions += 1 << ((y - min.y) * (max.x - min.x + 1) + x - min.x);
+                        }
+                    })
+                }
+            }
+        }
+
+        return collisions;
     }
 
     /** Check collisons for a vertically-looping range and return a bitmask */

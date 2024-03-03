@@ -82,7 +82,7 @@ export default class CharacterGearClimb extends CharacterGear {
     /** Update position to move forward */
     public handleStep() {
 
-        // Don't update position for special states (WAIT, HALT, etc)
+        // Don't update position for special states (WAIT, STOP, etc)
         if (this._stateIndex != GearState.NORMAL) {
             return;
         }

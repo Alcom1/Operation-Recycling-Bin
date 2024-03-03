@@ -545,7 +545,7 @@ export default class CharacterBot extends Character {
             this.setStateIndex(BotState.EATING);
         }
         // Hazard
-        else if (mask & MASKS.death && this._stateIndex != 2) {
+        else if (mask & MASKS.death && this._stateIndex != BotState.EATING) {
 
             // Start or continue flash after taking armor damage
             if (this.armorState == ArmorState.ACTIVE) {
@@ -557,7 +557,7 @@ export default class CharacterBot extends Character {
             }
         }
         // Vertical
-        else if (mask & MASKS.float) {
+        else if (mask & MASKS.float && this._stateIndex != BotState.HAZARD) {
             this.vertMult = 1;          // Default to upward movement
             this.setStateIndex(BotState.FLYING);
         }
