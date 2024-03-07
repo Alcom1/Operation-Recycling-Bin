@@ -1422,7 +1422,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 32,
           "y": 20
@@ -2340,7 +2340,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 28,
           "y": 18
@@ -2757,7 +2757,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 32,
           "y": 11
@@ -2843,7 +2843,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 13,
           "y": 11
@@ -3512,7 +3512,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 33,
           "y": 14
@@ -3584,14 +3584,14 @@
     },
     "gameObjects": [
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 34,
           "y": 22
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 1,
           "y": 22
@@ -4581,7 +4581,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 33,
           "y": 8
@@ -5193,7 +5193,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 1,
           "y": 7
@@ -5987,7 +5987,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 33,
           "y": 17
@@ -6389,7 +6389,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 2,
           "y": 6
@@ -7613,7 +7613,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 33,
           "y": 21
@@ -8799,7 +8799,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 31,
           "y": 11
@@ -9248,7 +9248,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 7,
           "y": 18
@@ -9280,7 +9280,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 29,
           "y": 5
@@ -9295,7 +9295,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 17,
           "y": 10
@@ -9699,7 +9699,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 32,
           "y": 12
@@ -10236,7 +10236,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 28,
           "y": 20
@@ -10578,28 +10578,28 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 34,
           "y": 20
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 1,
           "y": 20
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 34,
           "y": 5
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 1,
           "y": 5
@@ -11339,7 +11339,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 11,
           "y": 18
@@ -11675,7 +11675,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 1,
           "y": 19
@@ -11967,14 +11967,14 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 17,
           "y": 21
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 31,
           "y": 21
@@ -12549,7 +12549,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 34,
           "y": 8
@@ -12661,7 +12661,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 2,
           "y": 16
@@ -13113,7 +13113,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 34,
           "y": 10
@@ -13553,14 +13553,14 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 9,
           "y": 10
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 32,
           "y": 9
@@ -13575,7 +13575,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 13,
           "y": 5
@@ -14448,7 +14448,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 34,
           "y": 7
@@ -14667,7 +14667,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 2,
           "y": 9
@@ -15186,28 +15186,28 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 4,
           "y": 19
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 30,
           "y": 19
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 4,
           "y": 10
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 30,
           "y": 10
@@ -16097,7 +16097,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 2,
           "y": 10
@@ -16400,7 +16400,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 2,
           "y": 11
@@ -16530,7 +16530,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 6,
           "y": 7
@@ -16727,14 +16727,14 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 30,
           "y": 21
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 12,
           "y": 14
@@ -16936,7 +16936,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 26,
           "y": 7
@@ -17123,7 +17123,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 7,
           "y": 8
@@ -17795,7 +17795,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 17,
           "y": 14
@@ -17959,7 +17959,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 2,
           "y": 7
@@ -18231,7 +18231,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 33,
           "y": 22
@@ -18603,7 +18603,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 33,
           "y": 22
@@ -18954,7 +18954,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 33,
           "y": 19
@@ -19483,7 +19483,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 33,
           "y": 8
@@ -19508,7 +19508,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 2,
           "y": 15
@@ -20778,7 +20778,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 29,
           "y": 17
@@ -21157,7 +21157,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 2,
           "y": 20
@@ -21518,7 +21518,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 3,
           "y": 12
@@ -21541,14 +21541,14 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 34,
           "y": 10
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 23,
           "y": 22
@@ -22033,7 +22033,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 17,
           "y": 12
@@ -22175,28 +22175,28 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 3,
           "y": 9
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 3,
           "y": 16
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 32,
           "y": 9
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 32,
           "y": 16
@@ -22559,7 +22559,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 16,
           "y": 6
@@ -23228,7 +23228,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 2,
           "y": 7
@@ -23736,21 +23736,21 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 31,
           "y": 10
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 30,
           "y": 5
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 33,
           "y": 22
@@ -23792,14 +23792,14 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 22,
           "y": 14
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 24,
           "y": 14
@@ -23822,7 +23822,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 14,
           "y": 15
@@ -23947,7 +23947,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 23,
           "y": 6
@@ -23962,42 +23962,42 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 2,
           "y": 5
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 6,
           "y": 7
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 28,
           "y": 19
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 21,
           "y": 20
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 16,
           "y": 22
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 3,
           "y": 22
@@ -24349,7 +24349,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 33,
           "y": 13
@@ -24610,14 +24610,14 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 22,
           "y": 13
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 18,
           "y": 6
@@ -24894,7 +24894,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 10,
           "y": 20
@@ -25192,7 +25192,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 32,
           "y": 8
@@ -25271,7 +25271,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 15,
           "y": 15
@@ -25305,7 +25305,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 20,
           "y": 22
@@ -25767,7 +25767,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 34,
           "y": 18
@@ -26512,14 +26512,14 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 1,
           "y": 12
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 34,
           "y": 12
@@ -26550,14 +26550,14 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 18,
           "y": 6
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 18,
           "y": 22
@@ -27262,7 +27262,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 18,
           "y": 13
@@ -27775,7 +27775,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 32,
           "y": 22
@@ -27826,7 +27826,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 3,
           "y": 22
@@ -28010,7 +28010,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 8,
           "y": 19
@@ -28097,7 +28097,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 33,
           "y": 15
@@ -28271,7 +28271,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 33,
           "y": 22
@@ -28537,7 +28537,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 2,
           "y": 18
@@ -29052,21 +29052,21 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 32,
           "y": 18
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 32,
           "y": 12
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 32,
           "y": 6
@@ -29929,7 +29929,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 33,
           "y": 6
@@ -30117,7 +30117,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 33,
           "y": 5
@@ -30915,7 +30915,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 33,
           "y": 16
@@ -31139,7 +31139,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 2,
           "y": 5
@@ -31214,7 +31214,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 2,
           "y": 10
@@ -31289,7 +31289,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 2,
           "y": 15
@@ -31561,7 +31561,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 33,
           "y": 22
@@ -31885,7 +31885,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 32,
           "y": 12
@@ -32188,14 +32188,14 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 1,
           "y": 6
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 34,
           "y": 6
@@ -32487,7 +32487,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 2,
           "y": 22
@@ -32575,14 +32575,14 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 32,
           "y": 9
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinTall",
         "position": {
           "x": 4,
           "y": 7
@@ -33571,7 +33571,7 @@
         }
       },
       {
-        "name": "CharacterBin",
+        "name": "CharacterBinNormal",
         "position": {
           "x": 5,
           "y": 22
