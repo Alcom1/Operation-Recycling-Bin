@@ -74,16 +74,6 @@ export const RING_BITSTACK = Object.freeze({
     band : bitStack(8)
 });
 
-// 4x5 Collision bitmask with an extra overhang
-// 0123
-// 4  5
-// 6  7
-// 89ABC
-export const RING_BITSTACKB = Object.freeze({
-    ...RING_BITSTACK,
-    hang : RING_BITSTACK.land + bitStack(12)
-});
-
 /** Handles file extension - image */
 export function nameImg(fileName : string, extension?: string) {
 

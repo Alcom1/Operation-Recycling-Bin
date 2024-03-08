@@ -1,6 +1,6 @@
 import GameObject, { Collision } from "engine/gameobjects/gameobject";
 import { Collider } from "engine/modules/collision";
-import { bitStack, BOUNDARY, col1D, RING_BITSTACKB as ring, GMULTX, GMULTY, MASKS, OPPOSITE_DIRS } from "engine/utilities/math";
+import { bitStack, BOUNDARY, col1D, RING_BITSTACK as ring, GMULTX, GMULTY, MASKS, OPPOSITE_DIRS } from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 import Character from "./character";
 
@@ -23,7 +23,6 @@ export default class CharacterGear extends Character {
     protected get isColBack() : boolean { return !!(this.storedCbm & ring.back); }  // Collision back
     protected get isColLand() : boolean { return !!(this.storedCbm & ring.land); }  // Collision front-low corner
     protected get isColBand() : boolean { return !!(this.storedCbm & ring.band); }  // Collision front-rear corner
-    protected get isColHang() : boolean { return !!(this.storedCbm & ring.hang); }  // Collision distant front-low
 
     /** Get colliders */
     public getColliders() : Collider[] {
@@ -85,7 +84,6 @@ export default class CharacterGear extends Character {
                 y : -this.height}), 
             4, 
             this.move.x,
-            true,
             this.faction);  //May remove later when bot destruction is different.
     }
 
