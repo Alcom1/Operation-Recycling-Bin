@@ -9,13 +9,15 @@ interface ZPoint {
     flat : Boolean,
     state : Boolean,
     layer : Number,
-    noCompare : Boolean
+    noCompare : Boolean,
+    static : Boolean
 }
 
 /** Handler for brick selection, movement, etc. */
 export default class ZIndexHandler extends GameObject {
 
     private zPoints : ZPoint[] = [];
+    private zEdgesStatic : ZPoint[][] = [];
     private debug : Boolean = false;
 
     /** Initalize the brick handler, get related bricks & game objects, manage bricks */
@@ -33,9 +35,11 @@ export default class ZIndexHandler extends GameObject {
                     flat : o.zSize.y == 0,
                     state : o.zState,
                     layer : o.zLayer,
-                    noCompare : o.zNoCompare
+                    noCompare : o.zNoCompare,
+                    static : o.zStatic
                 }));
 
+        this.pushEdges(this.zPoints.filter(z => z.state), this.zEdgesStatic, true);
         this.processZPoints();
     }
 
@@ -55,13 +59,16 @@ export default class ZIndexHandler extends GameObject {
             z.size = this.getTrueZsize(z.gameObject.zSize);
         });
 
+        //Start with a copy of the static edges, these ones do not need dynamic comparisons.
+        let zEdges = [...this.zEdgesStatic];
+
+        //Only compare active points
         let zPointsActive = this.zPoints.filter(z => z.state);
 
-        let zEdges : ZPoint[][] = [];
-
+        //Compare points, return valid edges that need to be sorted
         zPointsActive.forEach(z1 => {
             zPointsActive.forEach(z2 => {
-                if (this.checkValidComparison(z1, z2) && (
+                if (this.checkValidComparison(z1, z2, false) && (
                     this.processAbove(z1, z2) || 
                     this.processFront(z1, z2))) {
                     
@@ -70,9 +77,24 @@ export default class ZIndexHandler extends GameObject {
             })
         });
 
-        // Set z-indicies based on sorted array indicies
+        // Perform topological sort. Set z-indicies based on results
         this.topologicalSort(zPointsActive, zEdges).forEach((z, i) => {
             z.gameObject.zIndex = i;
+        });
+    }
+
+    /** */
+    private pushEdges(zPoints : ZPoint[], zEdges : ZPoint[][], doStatic : Boolean) {
+
+        zPoints.forEach(z1 => {
+            zPoints.forEach(z2 => {
+                if (this.checkValidComparison(z1, z2, doStatic) && (
+                    this.processAbove(z1, z2) || 
+                    this.processFront(z1, z2))) {
+                    
+                    zEdges.push([z1, z2]);
+                }
+            })
         });
     }
 
@@ -157,8 +179,13 @@ export default class ZIndexHandler extends GameObject {
     }
 
     /** returns true if a comparison is valid */
-    public checkValidComparison(a : ZPoint, b : ZPoint) : Boolean {
+    public checkValidComparison(a : ZPoint, b : ZPoint, doStatic : Boolean) : Boolean {
         
+        //If static-sort, only sort static pairs. Otherwise, ignore static pairs.
+        if(doStatic != (a.static && b.static)) {
+            return false;
+        }
+
         // Never sort with self
         if(a === b) {
             return false;
@@ -189,8 +216,7 @@ export default class ZIndexHandler extends GameObject {
         // Position
         ctx.translate(
             1 * GMULTX, 
-            2 * GMULTY
-        );
+            2 * GMULTY);
 
         // Scale
         let scale = 10;
@@ -255,7 +281,7 @@ export default class ZIndexHandler extends GameObject {
             });
         }
 
-        if(sorted.length != zPoints.length) {
+        if (sorted.length != zPoints.length) {
 
             console.log(`WARNING, LOOP in Z-SORTING, Sorted : ${sorted.length}, Expected : ${zPoints.length}}`);
         }

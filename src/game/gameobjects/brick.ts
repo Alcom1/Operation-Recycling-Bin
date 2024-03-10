@@ -85,6 +85,7 @@ export default class Brick extends GameObject {
     }
     public get zSize() : Point { return {x : this.width, y : 1 }; }
     public get zLayer() : Number { return this.isSelected && !this.isSnapped ? 1 : 0 }
+    public get zStatic() : Boolean { return this.isGrey }
 
     /** Constructor */
     constructor(params: BrickParams) {

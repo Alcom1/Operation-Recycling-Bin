@@ -4,7 +4,8 @@ import Stud from "./gameobjects/stud";
 import Button from "./gameobjects/button";
 import ButtonScene from "./gameobjects/buttonscene";
 import Character from "./gameobjects/character";
-import CharacterBin from "./gameobjects/characterbin";
+import CharacterBinNormal from "./gameobjects/characterbinnormal";
+import CharacterBinTall from "./gameobjects/characterbintall";
 import CharacterBot from "./gameobjects/characterbot";
 import Counter from "./gameobjects/counter";
 import Cursor from "./gameobjects/cursor";
@@ -58,7 +59,8 @@ window.onload = function() {
             ButtonScene,
             Character,
             CharacterBot,
-            CharacterBin,
+            CharacterBinNormal,
+            CharacterBinTall,
             CharacterGearClimb,
             CharacterGearEye,
             CharacterGearFly,
