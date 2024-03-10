@@ -1,8 +1,10 @@
 import Character, { CharacterParams } from "./character";
-import { BOUNDARY, bitStack, GMULTY, GMULTX, MASKS, Faction} from "engine/utilities/math";
+import { BOUNDARY, bitStack, GMULTY, GMULTX, MASKS, Faction, Z_DEPTH} from "engine/utilities/math";
 import { Collider } from "engine/modules/collision";
 import { Point } from "engine/utilities/vect";
 import { Collision } from "engine/gameobjects/gameobject";
+import Sprite, { SpriteParams } from "./sprite";
+import CharacterBotPart, { CharacterBotPartParams } from "./characterbotpart";
 
 /** Armor states of a bot character */
 enum ArmorState {
@@ -55,12 +57,11 @@ const characterBotOverride = Object.freeze({
         speed : 2 / 3,
         gposOffset : { x : -1, y : 0},
         frameCount : 18
-    },{             // Bot explosion animation
-        images : [{ name : "char_bot_explosion" }],
-        gposOffset : { x : -3, y : 0},
-        frameCount : 16,
+    },{ // Bot explodes, etc
+        images : [{ name : "empty" }],
+        frameCount : 1,
         isLoop : false
-    },{             // Bot up animation
+    },{ // Bot up animation
         images : [  // Flying has left & right animations
             { name : "char_bot_fly_left" },
             { name : "char_bot_fly_right" },
@@ -70,7 +71,7 @@ const characterBotOverride = Object.freeze({
         gposOffset : { x : -3, y : 0},
         frameCount : 10,
         animsCount : 2
-    },{             // Bot armor animation
+    },{ // Bot armor animation
         images : [
             { name : "char_bot_armor_left", offsetX : 36 },
             { name : "char_bot_armor_right", offsetX : 14 }],
@@ -115,6 +116,7 @@ export default class CharacterBot extends Character {
     private armorDelay : number = 2;                        // Delay where armor remains after taking damage
     private armorFlashRate : number = 8;                    // Rate of the armor flashing effect
     private armorState : ArmorState = ArmorState.NONE;      // Current state of the armor
+    private parts : CharacterBotPart[] = [];
     
     protected get animationSubindex() : number {               // Adjust animation index for armor flash effect
         return this.move.x * (
@@ -140,6 +142,19 @@ export default class CharacterBot extends Character {
     /** Constructor */
     constructor(params: CharacterParams) {
         super(Object.assign(params, characterBotOverride));
+
+        for(let i = 0; i < 4; i++) {
+
+            this.parts.push(this.parent.pushGO(new CharacterBotPart({
+                ...params,
+                tags: [],
+                position : this.gpos,
+                image : "char_bot_des_b" + i,
+                extension : "svg",
+                isActive : false,
+                index : i
+            } as CharacterBotPartParams)) as CharacterBotPart);
+        }
     }
 
     /** Unique bot update to update armor flash */
@@ -501,6 +516,15 @@ export default class CharacterBot extends Character {
             // Force walk animation to sync with steps
             if(this._stateIndex == BotState.NORMAL) {
                 this.animationCurr.timer = this.timerStep;
+            }
+
+            if(this._stateIndex == BotState.HAZARD) {
+                this.parts.forEach((p,i) => {
+                    p.zIndex = this.zIndex + p.index * 0.1;
+                    p.isActive = true;
+                    p.gpos = this.gpos.getAdd({x : -1, y : -this.height});
+                    p.spos.y = Z_DEPTH;
+                });
             }
         }
     }
