@@ -29,6 +29,7 @@ export default class CharacterBotPart extends Sprite {
         split : -36,
         end : Z_DEPTH
     }];
+    private indexOffsets : number[] = [0, 1, 2.3, 3]
 
     /** Constructor */
     constructor(params: CharacterBotPartParams) {
@@ -47,7 +48,7 @@ export default class CharacterBotPart extends Sprite {
             let stage = this.stages[this.stageIndex];
 
             //Update vertical position and speed
-            this.spos.y += (stage.speed + stage.split * this.index) * dt;
+            this.spos.y += (stage.speed + stage.split * this.indexOffsets[this.index]) * dt;
             stage.speed += stage.accel * dt;
 
             //Check if end of this stage has been reached, go to next stage
