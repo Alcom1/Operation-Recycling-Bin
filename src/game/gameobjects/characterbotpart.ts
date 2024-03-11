@@ -2,27 +2,32 @@ import { Z_DEPTH } from "engine/utilities/math";
 import Sprite, { SpriteParams } from "./sprite";
 
 export interface CharacterBotPartParams extends SpriteParams {
-
     index : number;
 }
 
-interface PartBounce {
+interface LiftStage {
     speed : number,
-    accel : number
+    accel : number,
+    split : number,
+    end : number
 }
 
 /** Single image gameobject */
 export default class CharacterBotPart extends Sprite {
 
-    private _index : number;
+    private _index : number;            //Index of this part
     public get index() : number { return this._index };
-    private bounceIndex : number = 0;
-    private bounces : PartBounce[] = [{
-        speed : -150,
-        accel : 600
+    private stageIndex : number = 0;    //Current stage for this part's lift effect
+    private stages : LiftStage[] = [{ //Stages for lift effects
+        speed : -250,
+        accel : 0,
+        split : 0,
+        end : 0
     },{
-        speed : -50,
-        accel : 250
+        speed : -250,
+        accel : 750,
+        split : -36,
+        end : Z_DEPTH
     }];
 
     /** Constructor */
@@ -35,17 +40,27 @@ export default class CharacterBotPart extends Sprite {
     /** Update position to bounce once active */
     public update(dt: number) {
 
-        //If bouncing
-        if(this.bounceIndex < this.bounces.length) {
+        //Only update if not the bottom part, and if there are still stages left
+        if (this.index > 0 && this.stageIndex < this.stages.length) {
 
-            this.spos.y += this.bounces[this.bounceIndex].speed * dt * this._index;
-            this.bounces[this.bounceIndex].speed += this.bounces[this.bounceIndex].accel * dt;
+            //Current stage
+            let stage = this.stages[this.stageIndex];
+
+            //Update vertical position and speed
+            this.spos.y += (stage.speed + stage.split * this.index) * dt;
+            stage.speed += stage.accel * dt;
+
+            //Check if end of this stage has been reached, go to next stage
+            if ((stage.end < -20 && this.spos.y < stage.end) ||
+                (stage.end > -20 && this.spos.y > stage.end)) {
+                
+                this.stageIndex++;
+            }
         }
-        //If bounce is complete, increment to next bounce
-        if(this.spos.y > Z_DEPTH) {
+        //If there are no stages to run, reset position
+        else {
 
             this.spos.y = Z_DEPTH;
-            this.bounceIndex++;
         }
     }
 }
