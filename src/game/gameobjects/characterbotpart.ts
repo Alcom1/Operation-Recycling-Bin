@@ -6,15 +6,24 @@ export interface CharacterBotPartParams extends SpriteParams {
     index : number;
 }
 
+interface PartBounce {
+    speed : number,
+    accel : number
+}
+
 /** Single image gameobject */
 export default class CharacterBotPart extends Sprite {
 
     private _index : number;
     public get index() : number { return this._index };
-    private isBouncing = true;
-    private speed = -100;
-    private accel = 200;
-    private timer = 0;
+    private bounceIndex : number = 0;
+    private bounces : PartBounce[] = [{
+        speed : -150,
+        accel : 600
+    },{
+        speed : -50,
+        accel : 250
+    }];
 
     /** Constructor */
     constructor(params: CharacterBotPartParams) {
@@ -26,15 +35,17 @@ export default class CharacterBotPart extends Sprite {
     /** Update position to bounce once active */
     public update(dt: number) {
 
-        if(this.isBouncing) {
-            this.timer += dt;
-            this.spos.y += this.speed * dt * this._index;
-            this.speed += this.accel * dt;
+        //If bouncing
+        if(this.bounceIndex < this.bounces.length) {
+
+            this.spos.y += this.bounces[this.bounceIndex].speed * dt * this._index;
+            this.bounces[this.bounceIndex].speed += this.bounces[this.bounceIndex].accel * dt;
         }
+        //If bounce is complete, increment to next bounce
         if(this.spos.y > Z_DEPTH) {
-            console.log(this.timer);
+
             this.spos.y = Z_DEPTH;
-            this.isBouncing = false;
+            this.bounceIndex++;
         }
     }
 }
