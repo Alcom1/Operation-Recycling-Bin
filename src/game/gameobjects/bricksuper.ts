@@ -16,7 +16,7 @@ export default class BrickSuper extends BrickTileTop {
         super(Object.assign(params, brickSuperOverride));
     }
 
-    /** Get hazard and passive colliders of this brick. */
+    /** Get colliders for this brick. */
     public getColliders() : Collider[] {
 
         // Combine with passive collider from base class, only return jump hitbox if this plate is on and not selected

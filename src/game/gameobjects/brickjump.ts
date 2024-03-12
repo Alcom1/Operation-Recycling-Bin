@@ -78,7 +78,7 @@ export default class BrickJump extends BrickTileTop {
             Faction.HOSTILE);
     }
 
-    /** Get hazard and passive colliders of this brick. */
+    /** Get colliders for this brick. */
     public getColliders() : Collider[] {
 
         // Combine with passive collider from base class, only return jump hitbox if the plate is on and not selected

@@ -128,7 +128,7 @@ export default class WaterDrop extends Sprite {
         this.animLand.reset(this.gpos);
     }
 
-    /** Get hazard and passive colliders of this brick. */
+    /** Waterdrop has water and death colliders */
     public getColliders() : Collider[] {
 
         // Return hazard hitbox

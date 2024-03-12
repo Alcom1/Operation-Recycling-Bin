@@ -18,7 +18,7 @@ enum BotState {
     NORMAL,
     HALTED,
     EATING,
-    HAZARD,
+    OUCHIE,
     FLYING,
     BOUNCE,
     SHIELD
@@ -126,6 +126,16 @@ export default class CharacterBot extends Character {
     }
 
     /** z-index get/setters */
+    public get zIndex() : number { return super.zIndex; }
+    public set zIndex(value : number) {
+        super.zIndex = value;
+        
+        if(this.stateIndex == BotState.OUCHIE) {
+            this.parts.forEach(p => {
+                p.zIndex = this.zIndex + p.index * 0.1;
+            });
+        }
+    }
     public get zpos() : Point { 
         return this.gpos.getAdd({ 
             x : -1,
@@ -210,9 +220,8 @@ export default class CharacterBot extends Character {
             // Perform ending actions for different states
             switch(this._stateIndex) {
 
-                // Dead - Deactivate this character
-                case BotState.HAZARD :
-                    this.deactivate();
+                // Dead - ???
+                case BotState.OUCHIE :
                     break;
 
                 // Vertical - Reset up/down animation
@@ -518,9 +527,8 @@ export default class CharacterBot extends Character {
                 this.animationCurr.timer = this.timerStep;
             }
 
-            if(this._stateIndex == BotState.HAZARD) {
-                this.parts.forEach((p,i) => {
-                    p.zIndex = this.zIndex + p.index * 0.1;
+            if(this._stateIndex == BotState.OUCHIE) {
+                this.parts.forEach(p => {
                     p.isActive = true;
                     p.gpos = this.gpos.getAdd({x : -1, y : -this.height});
                     p.spos.y = Z_DEPTH;
@@ -568,7 +576,7 @@ export default class CharacterBot extends Character {
             this.vertMult = -1;         // Default to downward movement
             this.setStateIndex(BotState.EATING);
         }
-        // Hazard
+        // Ouchie!!!
         else if (mask & MASKS.death && this._stateIndex != BotState.EATING) {
 
             // Start or continue flash after taking armor damage
@@ -577,11 +585,11 @@ export default class CharacterBot extends Character {
             }
             // If unarmored, die.
             else if (this.armorState == ArmorState.NONE) {
-                this.setStateIndex(BotState.HAZARD);
+                this.setStateIndex(BotState.OUCHIE);
             }
         }
         // Vertical
-        else if (mask & MASKS.float && this._stateIndex != BotState.HAZARD) {
+        else if (mask & MASKS.float && this._stateIndex != BotState.OUCHIE) {
             this.vertMult = 1;          // Default to upward movement
             this.setStateIndex(BotState.FLYING);
         }

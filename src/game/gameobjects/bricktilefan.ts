@@ -110,7 +110,7 @@ export default class BrickTileFan extends BrickTileAnim {
         });
     }
 
-    /** Get hazard and passive colliders of this brick. */
+    /** Get colliders for this brick. */
     public getColliders() : Collider[] {
         
         // Combine with passive collider from base class
