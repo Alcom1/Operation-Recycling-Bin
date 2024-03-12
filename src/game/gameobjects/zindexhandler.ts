@@ -17,7 +17,6 @@ interface ZPoint {
 export default class ZIndexHandler extends GameObject {
 
     private zPoints : ZPoint[] = [];
-    private zEdgesStatic : ZPoint[][] = [];
     private debug : Boolean = false;
 
     /** Initalize the brick handler, get related bricks & game objects, manage bricks */
@@ -39,7 +38,6 @@ export default class ZIndexHandler extends GameObject {
                     static : o.zStatic
                 }));
 
-        this.pushEdges(this.zPoints.filter(z => z.state), this.zEdgesStatic, true);
         this.processZPoints();
     }
 
@@ -60,7 +58,7 @@ export default class ZIndexHandler extends GameObject {
         });
 
         //Start with a copy of the static edges, these ones do not need dynamic comparisons.
-        let zEdges = [...this.zEdgesStatic];
+        let zEdges : ZPoint[][] = [];
 
         //Only compare active points
         let zPointsActive = this.zPoints.filter(z => z.state);
@@ -68,7 +66,7 @@ export default class ZIndexHandler extends GameObject {
         //Compare points, return valid edges that need to be sorted
         zPointsActive.forEach(z1 => {
             zPointsActive.forEach(z2 => {
-                if (this.checkValidComparison(z1, z2, false) && (
+                if (this.checkValidComparison(z1, z2) && (
                     this.processAbove(z1, z2) || 
                     this.processFront(z1, z2))) {
                     
@@ -80,21 +78,6 @@ export default class ZIndexHandler extends GameObject {
         // Perform topological sort. Set z-indicies based on results
         this.topologicalSort(zPointsActive, zEdges).forEach((z, i) => {
             z.gameObject.zIndex = i;
-        });
-    }
-
-    /** */
-    private pushEdges(zPoints : ZPoint[], zEdges : ZPoint[][], doStatic : Boolean) {
-
-        zPoints.forEach(z1 => {
-            zPoints.forEach(z2 => {
-                if (this.checkValidComparison(z1, z2, doStatic) && (
-                    this.processAbove(z1, z2) || 
-                    this.processFront(z1, z2))) {
-                    
-                    zEdges.push([z1, z2]);
-                }
-            })
         });
     }
 
@@ -130,12 +113,17 @@ export default class ZIndexHandler extends GameObject {
         }
 
         // Distance
-        if (gap1D(
+        let distance = gap1D(
             o.pos.y,
             o.pos.y + o.size.y,
             c.pos.y,
-            c.pos.y + c.size.y) > 1) {
+            c.pos.y + c.size.y);
 
+        if (distance > 1 || (                   // Other object must be close
+            distance < 0 && (                   // Special case where distance is < zero (vertical overlap)...
+            c.size.y == 8 || o.size.y == 8) &&  // One object is a bot...
+            !c.flat && !o.flat)) {              // And neither are flat
+            
             return false;
         }
 
@@ -168,9 +156,8 @@ export default class ZIndexHandler extends GameObject {
             o.pos.x,
             o.pos.x + o.size.x);
 
-        if (distance > 1 ||             // Other object must be close
-            distance < 0 ||             // Sometimes there is a gross overlap, skip if there is
-           (o.flat && distance < 0)) {  // Overlapping with flat objects does not mean they're in front.
+        if (distance > 1 ||                         // Other object must be close
+           (distance < 0 && (c.flat || o.flat))) {  // Sometimes there is a gross overlap, skip if there is
             
             return false;
         }
@@ -179,12 +166,7 @@ export default class ZIndexHandler extends GameObject {
     }
 
     /** returns true if a comparison is valid */
-    public checkValidComparison(a : ZPoint, b : ZPoint, doStatic : Boolean) : Boolean {
-        
-        //If static-sort, only sort static pairs. Otherwise, ignore static pairs.
-        if(doStatic != (a.static && b.static)) {
-            return false;
-        }
+    public checkValidComparison(a : ZPoint, b : ZPoint) : Boolean {
 
         // Never sort with self
         if(a === b) {
