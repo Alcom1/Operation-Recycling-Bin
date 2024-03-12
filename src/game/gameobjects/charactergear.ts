@@ -30,12 +30,27 @@ export default class CharacterGear extends Character {
         return [{ 
             mask : MASKS.death,
             min : this.gpos
-                .getAdd({ x : -1, y : 1 - this.height})
-                .getMult(GMULTX, GMULTY),
+                .getAdd({ 
+                    x : (
+                        this.move.y != 0 ? 0 :
+                        this.stateIndex != GearState.NORMAL ? -1 : 
+                        this.move.x) - 1,
+                    y : (
+                        this.move.y == 0 ? 0 :
+                        this.stateIndex != GearState.NORMAL ? -1 : 
+                        this.move.y) - 1
+                }),
             max : this.gpos
-                .getAdd({ x :  1, y : 1})
-                .getMult(GMULTX, GMULTY),
-            isSub : true
+                .getAdd({ 
+                    x : (
+                        this.move.y != 0 ? 0 :
+                        this.stateIndex != GearState.NORMAL ? 1 : 
+                        this.move.x) + 1,
+                    y : (
+                        this.move.y == 0 ? 0 :
+                        this.stateIndex != GearState.NORMAL ? 1 : 
+                        this.move.y) + 1
+                })
         }];
     }
 

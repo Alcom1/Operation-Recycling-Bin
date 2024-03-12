@@ -202,8 +202,6 @@ export default class CharacterGearEye extends CharacterGear {
         if ((seek.x && (seek.x != this.move.x || this.move.y)) || 
             (seek.y && (seek.y != this.move.y))) {
 
-            console.log(seek.x, this.move.x);
-
             if (seek.x) {
 
                 //If there's still something blocking check the opposite direction

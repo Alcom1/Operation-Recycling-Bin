@@ -6,8 +6,7 @@ import Vect, { Point } from "engine/utilities/vect";
 export interface Collider {
     mask : number,
     min : Point,
-    max : Point,
-    isSub? : Boolean
+    max : Point
 }
 
 export enum StepType {
