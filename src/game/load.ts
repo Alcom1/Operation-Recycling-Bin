@@ -13,7 +13,7 @@ import CursorIcon from "./gameobjects/cursoricon";
 import FPSCounter from "./gameobjects/fpscounter";
 import LevelSequence from "./gameobjects/levelsequence";
 import MobileBubble from "./gameobjects/mobilebubble";
-import Sprite from "./gameobjects/sprite";
+import SpriteSet from "./gameobjects/spriteset";
 import Backdrop from "./gameobjects/backdrop";
 import BrickNormal from "game/gameobjects/bricknormal";
 import BrickTileHot from "./gameobjects/bricktilehot";
@@ -42,7 +42,7 @@ window.onload = function() {
         canvas, 
         "scenes/",
         "scenes",
-        ["LevelInterface", "LEVEL_58"],
+        ["LevelInterface", "LEVEL_05"],
         [
             Backdrop,
             BrickHandler,
@@ -73,7 +73,7 @@ window.onload = function() {
             LevelSequence,
             MobileBeam,
             MobileBubble,
-            Sprite,
+            SpriteSet,
             Stud,
             ZIndexHandler
         ],

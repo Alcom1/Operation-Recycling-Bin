@@ -4,7 +4,7 @@ import { BOUNDARY, Faction, GMULTX, GMULTY, MASKS } from "engine/utilities/math"
 import Vect from "engine/utilities/vect";
 import Anim, { AnimationParams } from "./anim";
 import BrickHandler from "./brickhandler";
-import Sprite from "./sprite";
+import SpriteSet from "./spriteset";
 
 /** Specifications of a water drop */
 const waterDropOverride = Object.freeze({
@@ -14,7 +14,7 @@ const waterDropOverride = Object.freeze({
 });
 
 /** Single image gameobject */
-export default class WaterDrop extends Sprite {
+export default class WaterDrop extends SpriteSet {
     private speed : number = 500;
     private brickHandler! : BrickHandler;
     private animLand: Anim;

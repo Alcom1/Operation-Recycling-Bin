@@ -50,7 +50,7 @@
         "name": "Counter"
       },
       {
-        "name": "Sprite",
+        "name": "SpriteSet",
         "image": "background_menu",
         "zIndex": -50000
       },
@@ -1157,7 +1157,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "type": 2,
@@ -2214,7 +2214,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -2632,7 +2632,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -2878,7 +2878,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -3521,7 +3521,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -4117,7 +4117,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -4638,7 +4638,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -5469,7 +5469,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -6242,7 +6242,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -7126,7 +7126,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -7718,7 +7718,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -8808,7 +8808,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -9456,7 +9456,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -10129,7 +10129,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -10395,7 +10395,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -10608,7 +10608,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -11427,7 +11427,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -11764,7 +11764,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -12171,7 +12171,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -12687,7 +12687,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -13223,7 +13223,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -13584,7 +13584,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -14473,7 +14473,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -14676,7 +14676,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -15836,7 +15836,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -16186,7 +16186,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -16417,7 +16417,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "type": 0,
@@ -16945,7 +16945,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -17530,7 +17530,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -17838,7 +17838,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -18100,7 +18100,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -18471,7 +18471,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -18776,7 +18776,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -19256,7 +19256,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -19885,7 +19885,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -20883,7 +20883,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -21166,7 +21166,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -21709,7 +21709,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -22357,7 +22357,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -22825,7 +22825,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -23502,7 +23502,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -24006,7 +24006,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -24358,7 +24358,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -24903,7 +24903,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -25350,7 +25350,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -26272,7 +26272,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -26844,7 +26844,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -27271,7 +27271,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -27899,7 +27899,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -28106,7 +28106,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -28388,7 +28388,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "type": 0,
@@ -28766,7 +28766,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -29354,7 +29354,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -30046,7 +30046,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -30648,7 +30648,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -30940,7 +30940,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -31429,7 +31429,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -31929,7 +31929,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -32344,7 +32344,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -32688,7 +32688,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [
@@ -33580,7 +33580,7 @@
       {
         "image": "background_level",
         "zIndex": -50000,
-        "name": "Sprite"
+        "name": "SpriteSet"
       },
       {
         "decals": [

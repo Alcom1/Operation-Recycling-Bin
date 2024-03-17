@@ -3,7 +3,7 @@ import { BOUNDARY, bitStack, GMULTY, GMULTX, MASKS, Faction, Z_DEPTH} from "engi
 import { Collider } from "engine/modules/collision";
 import { Point } from "engine/utilities/vect";
 import { Collision } from "engine/gameobjects/gameobject";
-import Sprite, { SpriteParams } from "./sprite";
+import SpriteSet, { SpriteParams } from "./spriteset";
 import CharacterBotPart, { CharacterBotPartParams } from "./characterbotpart";
 
 /** Armor states of a bot character */
@@ -159,7 +159,10 @@ export default class CharacterBot extends Character {
                 ...params,
                 tags: [],
                 position : this.gpos,
-                image : "char_bot_des_b" + i,
+                image :
+                    i == 1 ? [0,1].map(n => `char_bot_des_b${i}_${n}`) :
+                    i == 2 ? [0,1].map(n => `char_bot_des_b${i}_${n}`) : 
+                    `char_bot_des_b${i}`,
                 extension : "svg",
                 isActive : false,
                 index : i
