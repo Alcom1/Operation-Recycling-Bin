@@ -31,11 +31,16 @@ export default class CharacterBotPart extends SpriteSet {
     }];
     private indexOffsets : number[] = [0, 1, 2.3, 3];   // y-offset of each part by its index
     private indexEmoteTimer = 0;                        // How long current emote has been active
-    private indexEmoteTimerLimits : number[] = [0.1];   // Limit for timer, when next emote is used
+    private indexEmoteTimerLimits : number[] = [        // Limit for timer, when next emote is used
+        0.1, 
+        0.8,
+        0.1];
     private indexEmote = 0;                             // Index of current emote
     private indexEmotes : number[][] = [                // Sprite indexes for each emote
         [0, 0, 0, 0],
-        [0, 1, 1, 0]];
+        [0, 1, 1, 0],
+        [0, 2, 1, 0],
+        [1, 3, 2, 1]];
 
     /** Constructor */
     constructor(params: CharacterBotPartParams) {
@@ -60,6 +65,7 @@ export default class CharacterBotPart extends SpriteSet {
                 //Increment and display next emotion
                 this.indexEmote++;
                 this.imageIndex = this.indexEmotes[this.indexEmote][this.index];
+                this.indexEmoteTimer = 0;
             }
         }
 

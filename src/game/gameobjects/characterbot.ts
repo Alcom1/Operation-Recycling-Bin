@@ -160,9 +160,10 @@ export default class CharacterBot extends Character {
                 tags: [],
                 position : this.gpos,
                 image :
-                    i == 1 ? [0,1].map(n => `char_bot_des_b${i}_${n}`) :
-                    i == 2 ? [0,1].map(n => `char_bot_des_b${i}_${n}`) : 
-                    `char_bot_des_b${i}`,
+                    i == 0 ? [0,1].map(n => `char_bot_des_b${i}_${n}`) :
+                    i == 1 ? [0,1,2,3].map(n => `char_bot_des_b${i}_${n}`) :
+                    i == 2 ? [0,1,2].map(n => `char_bot_des_b${i}_${n}`) : 
+                             [0,1].map(n => `char_bot_des_b${i}_${n}`),
                 extension : "svg",
                 isActive : false,
                 index : i
