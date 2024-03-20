@@ -195,7 +195,7 @@ export default class CharacterBot extends Character {
 
         this.partZap = this.parent.pushGO(new Anim({
             ...params,
-            images : [{ name : "zap" }],
+            images : [{ name : "zap", extension : "svg" }],
             speed : 1,
             frameCount : 10,
             zIndex : 50000,
