@@ -2,9 +2,10 @@ import Character, { CharacterParams } from "./character";
 import { BOUNDARY, bitStack, GMULTY, GMULTX, MASKS, Faction, Z_DEPTH} from "engine/utilities/math";
 import { Collider } from "engine/modules/collision";
 import { Point } from "engine/utilities/vect";
-import { Collision } from "engine/gameobjects/gameobject";
+import GameObject, { Collision } from "engine/gameobjects/gameobject";
 import SpriteSet, { SpriteParams } from "./spriteset";
 import CharacterBotPart, { CharacterBotPartParams } from "./characterbotpart";
+import Anim, { AnimationParams } from "./anim";
 
 /** Armor states of a bot character */
 enum ArmorState {
@@ -116,7 +117,8 @@ export default class CharacterBot extends Character {
     private armorDelay : number = 2;                        // Delay where armor remains after taking damage
     private armorFlashRate : number = 8;                    // Rate of the armor flashing effect
     private armorState : ArmorState = ArmorState.NONE;      // Current state of the armor
-    private parts : CharacterBotPart[] = [];
+    private parts : GameObject[][] = [[],[]];
+    private isZap : boolean = false;
     
     protected get animationSubindex() : number {               // Adjust animation index for armor flash effect
         return this.move.x * (
@@ -130,10 +132,20 @@ export default class CharacterBot extends Character {
     public set zIndex(value : number) {
         super.zIndex = value;
         
+        //Z-index for ouchie effects
         if(this.stateIndex == BotState.OUCHIE) {
-            this.parts.forEach(p => {
-                p.zIndex = this.zIndex + p.index * 0.1;
-            });
+
+            //Zappy effect
+            if(this.isZap) {
+
+            }
+            //Normal effect
+            else {
+
+                this.parts[0].forEach((p,i) => {
+                    p.zIndex = this.zIndex + i * 0.1;
+                });
+            }
         }
     }
     public get zpos() : Point { 
@@ -155,7 +167,7 @@ export default class CharacterBot extends Character {
 
         for(let i = 0; i < 4; i++) {
 
-            this.parts.push(this.parent.pushGO(new CharacterBotPart({
+            this.parts[0].push(this.parent.pushGO(new CharacterBotPart({
                 ...params,
                 tags: [],
                 position : this.gpos,
@@ -169,6 +181,16 @@ export default class CharacterBot extends Character {
                 index : i
             } as CharacterBotPartParams)) as CharacterBotPart);
         }
+
+        this.parts[1].push(this.parent.pushGO(new Anim({
+            ...params,
+            images : [{ name : "zap" }],
+            speed : 1,
+            frameCount : 10,
+            zIndex : 50000,
+            isActive : false,
+            isLoop : false,
+        } as AnimationParams)))
     }
 
     /** Unique bot update to update armor flash */
@@ -224,7 +246,7 @@ export default class CharacterBot extends Character {
             // Perform ending actions for different states
             switch(this._stateIndex) {
 
-                // Dead - ???
+                // Dead - Do nothing
                 case BotState.OUCHIE :
                     break;
 
@@ -503,7 +525,7 @@ export default class CharacterBot extends Character {
         let xShiftMax = this._stateIndex == 0 && this.timerLand > 0.15 && this.move.x < 0 ? 1 : 0; 
         
         return [{ 
-            mask : MASKS.death,
+            mask : MASKS.death | MASKS.zappy,
             min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
             max : this.gpos.getAdd({ x :  1, y : 1}) 
         },{ 
@@ -531,12 +553,26 @@ export default class CharacterBot extends Character {
                 this.animationCurr.timer = this.timerStep;
             }
 
+            //Ouchie effects
             if(this._stateIndex == BotState.OUCHIE) {
-                this.parts.forEach(p => {
-                    p.isActive = true;
-                    p.gpos = this.gpos.getAdd({x : -1, y : -this.height});
-                    p.spos.y = Z_DEPTH;
-                });
+
+                //Zappy effect
+                if(this.isZap) {
+
+                    this.parts[1].forEach(p => {
+                        p.isActive = true;
+                        p.gpos = this.gpos.getAdd({x : -1, y : 0});
+                    });
+                }
+                //Normal effect
+                else {
+
+                    this.parts[0].forEach(p => {
+                        p.isActive = true;
+                        p.gpos = this.gpos.getAdd({x : -1, y : -this.height});
+                        p.spos.y = Z_DEPTH;
+                    });
+                }
             }
         }
     }
@@ -581,7 +617,7 @@ export default class CharacterBot extends Character {
             this.setStateIndex(BotState.EATING);
         }
         // Ouchie!!!
-        else if (mask & MASKS.death && this._stateIndex != BotState.EATING) {
+        else if ((mask & MASKS.death || mask & MASKS.zappy) && this._stateIndex != BotState.EATING) {
 
             // Start or continue flash after taking armor damage
             if (this.armorState == ArmorState.ACTIVE) {
@@ -589,6 +625,12 @@ export default class CharacterBot extends Character {
             }
             // If unarmored, die.
             else if (this.armorState == ArmorState.NONE) {
+
+                //Use zap effect instead of normal effect
+                if(mask & MASKS.zappy) {
+                    this.isZap = true;
+                }
+
                 this.setStateIndex(BotState.OUCHIE);
             }
         }

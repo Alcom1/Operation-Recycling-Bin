@@ -133,7 +133,7 @@ export default class WaterDrop extends SpriteSet {
 
         // Return hazard hitbox
         return [{
-            mask : MASKS.water | MASKS.death,
+            mask : MASKS.water | MASKS.zappy,
             min : this.gpos,
             max : this.gpos.getAdd({ x : 2, y :  1}) 
         }];
