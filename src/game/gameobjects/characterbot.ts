@@ -117,7 +117,9 @@ export default class CharacterBot extends Character {
     private armorDelay : number = 2;                        // Delay where armor remains after taking damage
     private armorFlashRate : number = 8;                    // Rate of the armor flashing effect
     private armorState : ArmorState = ArmorState.NONE;      // Current state of the armor
-    private parts : GameObject[][] = [[],[]];
+    private parts : CharacterBotPart[] = [];
+    private partShock : SpriteSet;
+    private partZap : Anim;
     private isZap : boolean = false;
     
     protected get animationSubindex() : number {               // Adjust animation index for armor flash effect
@@ -137,13 +139,13 @@ export default class CharacterBot extends Character {
 
             //Zappy effect
             if(this.isZap) {
-
+                this.partShock.zIndex = this.zIndex;
             }
             //Normal effect
             else {
 
-                this.parts[0].forEach((p,i) => {
-                    p.zIndex = this.zIndex + i * 0.1;
+                this.parts.forEach(p => {
+                    p.zIndex = this.zIndex + p.index * 0.1;
                 });
             }
         }
@@ -167,7 +169,7 @@ export default class CharacterBot extends Character {
 
         for(let i = 0; i < 4; i++) {
 
-            this.parts[0].push(this.parent.pushGO(new CharacterBotPart({
+            this.parts.push(this.parent.pushGO(new CharacterBotPart({
                 ...params,
                 tags: [],
                 position : this.gpos,
@@ -182,7 +184,16 @@ export default class CharacterBot extends Character {
             } as CharacterBotPartParams)) as CharacterBotPart);
         }
 
-        this.parts[1].push(this.parent.pushGO(new Anim({
+        this.partShock = this.parent.pushGO(new SpriteSet({
+            ...params,
+            tags: [],
+            position : this.gpos,
+            image : "char_bot_des_z",
+            extension : "svg",
+            isActive : false,
+        } as SpriteParams)) as SpriteSet
+
+        this.partZap = this.parent.pushGO(new Anim({
             ...params,
             images : [{ name : "zap" }],
             speed : 1,
@@ -190,7 +201,7 @@ export default class CharacterBot extends Character {
             zIndex : 50000,
             isActive : false,
             isLoop : false,
-        } as AnimationParams)))
+        } as AnimationParams)) as Anim;
     }
 
     /** Unique bot update to update armor flash */
@@ -246,8 +257,23 @@ export default class CharacterBot extends Character {
             // Perform ending actions for different states
             switch(this._stateIndex) {
 
-                // Dead - Do nothing
+                // Dead - Do nothing, or force dead state for zap
                 case BotState.OUCHIE :
+                    if(this.isZap) {
+
+                        //End zap effect
+                        this.isZap = false;
+                        this.partShock.isActive = false;
+                        this.partZap.isActive = false;
+
+                        //Show final ouch sprites
+                        this.parts.forEach(p => {
+                            p.isActive = true;
+                            p.gpos = this.gpos.getAdd({x : -1, y : -this.height});
+                            p.spos.y = Z_DEPTH;
+                            p.goToEnd();
+                        });
+                    }
                     break;
 
                 // Vertical - Reset up/down animation
@@ -558,16 +584,16 @@ export default class CharacterBot extends Character {
 
                 //Zappy effect
                 if(this.isZap) {
-
-                    this.parts[1].forEach(p => {
-                        p.isActive = true;
-                        p.gpos = this.gpos.getAdd({x : -1, y : 0});
-                    });
+                    this.partShock.isActive = true;
+                    this.partShock.gpos = this.gpos.getAdd({x : -1, y : -this.height});
+                    this.partShock.spos.y = Z_DEPTH;
+                    this.partZap.isActive = true;
+                    this.partZap.gpos = this.gpos.getAdd({x : -1, y : 0});
                 }
                 //Normal effect
                 else {
 
-                    this.parts[0].forEach(p => {
+                    this.parts.forEach(p => {
                         p.isActive = true;
                         p.gpos = this.gpos.getAdd({x : -1, y : -this.height});
                         p.spos.y = Z_DEPTH;

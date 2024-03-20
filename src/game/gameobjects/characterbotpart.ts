@@ -92,4 +92,11 @@ export default class CharacterBotPart extends SpriteSet {
             this.spos.y = Z_DEPTH;
         }
     }
+
+    /** Force this part to go to it's end state */
+    public goToEnd() {
+        this.indexEmote = this.indexEmotes.length - 1;
+        this.stageIndex = this.stages.length;
+        this.imageIndex = this.indexEmotes[this.indexEmote][this.index];
+    }
 }
