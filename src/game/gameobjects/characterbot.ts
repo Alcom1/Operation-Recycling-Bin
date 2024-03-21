@@ -1,8 +1,11 @@
 import Character, { CharacterParams } from "./character";
-import { BOUNDARY, bitStack, GMULTY, GMULTX, MASKS, Faction} from "engine/utilities/math";
+import { BOUNDARY, bitStack, GMULTY, GMULTX, MASKS, Faction, Z_DEPTH} from "engine/utilities/math";
 import { Collider } from "engine/modules/collision";
 import { Point } from "engine/utilities/vect";
-import { Collision } from "engine/gameobjects/gameobject";
+import GameObject, { Collision } from "engine/gameobjects/gameobject";
+import SpriteSet, { SpriteParams } from "./spriteset";
+import CharacterBotPart, { CharacterBotPartParams } from "./characterbotpart";
+import Anim, { AnimationParams } from "./anim";
 
 /** Armor states of a bot character */
 enum ArmorState {
@@ -16,7 +19,7 @@ enum BotState {
     NORMAL,
     HALTED,
     EATING,
-    HAZARD,
+    OUCHIE,
     FLYING,
     BOUNCE,
     SHIELD
@@ -55,12 +58,11 @@ const characterBotOverride = Object.freeze({
         speed : 2 / 3,
         gposOffset : { x : -1, y : 0},
         frameCount : 18
-    },{             // Bot explosion animation
-        images : [{ name : "char_bot_explosion" }],
-        gposOffset : { x : -3, y : 0},
-        frameCount : 16,
+    },{ // Bot explodes, etc
+        images : [{ name : "empty" }],
+        frameCount : 1,
         isLoop : false
-    },{             // Bot up animation
+    },{ // Bot up animation
         images : [  // Flying has left & right animations
             { name : "char_bot_fly_left" },
             { name : "char_bot_fly_right" },
@@ -70,7 +72,7 @@ const characterBotOverride = Object.freeze({
         gposOffset : { x : -3, y : 0},
         frameCount : 10,
         animsCount : 2
-    },{             // Bot armor animation
+    },{ // Bot armor animation
         images : [
             { name : "char_bot_armor_left", offsetX : 36 },
             { name : "char_bot_armor_right", offsetX : 14 }],
@@ -115,6 +117,10 @@ export default class CharacterBot extends Character {
     private armorDelay : number = 2;                        // Delay where armor remains after taking damage
     private armorFlashRate : number = 8;                    // Rate of the armor flashing effect
     private armorState : ArmorState = ArmorState.NONE;      // Current state of the armor
+    private parts : CharacterBotPart[] = [];
+    private partShock : SpriteSet;
+    private partZap : Anim;
+    private isZap : boolean = false;
     
     protected get animationSubindex() : number {               // Adjust animation index for armor flash effect
         return this.move.x * (
@@ -124,6 +130,26 @@ export default class CharacterBot extends Character {
     }
 
     /** z-index get/setters */
+    public get zIndex() : number { return super.zIndex; }
+    public set zIndex(value : number) {
+        super.zIndex = value;
+        
+        //Z-index for ouchie effects
+        if(this.stateIndex == BotState.OUCHIE) {
+
+            //Zappy effect
+            if(this.isZap) {
+                this.partShock.zIndex = this.zIndex;
+            }
+            //Normal effect
+            else {
+
+                this.parts.forEach(p => {
+                    p.zIndex = this.zIndex + p.index * 0.1;
+                });
+            }
+        }
+    }
     public get zpos() : Point { 
         return this.gpos.getAdd({ 
             x : -1,
@@ -140,6 +166,42 @@ export default class CharacterBot extends Character {
     /** Constructor */
     constructor(params: CharacterParams) {
         super(Object.assign(params, characterBotOverride));
+
+        for(let i = 0; i < 4; i++) {
+
+            this.parts.push(this.parent.pushGO(new CharacterBotPart({
+                ...params,
+                tags: [],
+                position : this.gpos,
+                image :
+                    i == 0 ? [0,1].map(n => `char_bot_des_b${i}_${n}`) :
+                    i == 1 ? [0,1,2,3].map(n => `char_bot_des_b${i}_${n}`) :
+                    i == 2 ? [0,1,2].map(n => `char_bot_des_b${i}_${n}`) : 
+                             [0,1].map(n => `char_bot_des_b${i}_${n}`),
+                extension : "svg",
+                isActive : false,
+                index : i
+            } as CharacterBotPartParams)) as CharacterBotPart);
+        }
+
+        this.partShock = this.parent.pushGO(new SpriteSet({
+            ...params,
+            tags: [],
+            position : this.gpos,
+            image : "char_bot_des_z",
+            extension : "svg",
+            isActive : false,
+        } as SpriteParams)) as SpriteSet
+
+        this.partZap = this.parent.pushGO(new Anim({
+            ...params,
+            images : [{ name : "zap", extension : "svg" }],
+            speed : 1,
+            frameCount : 10,
+            zIndex : 50000,
+            isActive : false,
+            isLoop : false,
+        } as AnimationParams)) as Anim;
     }
 
     /** Unique bot update to update armor flash */
@@ -195,9 +257,23 @@ export default class CharacterBot extends Character {
             // Perform ending actions for different states
             switch(this._stateIndex) {
 
-                // Dead - Deactivate this character
-                case BotState.HAZARD :
-                    this.deactivate();
+                // Dead - Do nothing, or force dead state for zap
+                case BotState.OUCHIE :
+                    if(this.isZap) {
+
+                        //End zap effect
+                        this.isZap = false;
+                        this.partShock.isActive = false;
+                        this.partZap.isActive = false;
+
+                        //Show final ouch sprites
+                        this.parts.forEach(p => {
+                            p.isActive = true;
+                            p.gpos = this.gpos.getAdd({x : -1, y : -this.height});
+                            p.spos.y = Z_DEPTH;
+                            p.goToEnd();
+                        });
+                    }
                     break;
 
                 // Vertical - Reset up/down animation
@@ -475,7 +551,7 @@ export default class CharacterBot extends Character {
         let xShiftMax = this._stateIndex == 0 && this.timerLand > 0.15 && this.move.x < 0 ? 1 : 0; 
         
         return [{ 
-            mask : MASKS.death,
+            mask : MASKS.death | MASKS.zappy,
             min : this.gpos.getAdd({ x : -1, y : 1 - this.height}),
             max : this.gpos.getAdd({ x :  1, y : 1}) 
         },{ 
@@ -501,6 +577,28 @@ export default class CharacterBot extends Character {
             // Force walk animation to sync with steps
             if(this._stateIndex == BotState.NORMAL) {
                 this.animationCurr.timer = this.timerStep;
+            }
+
+            //Ouchie effects
+            if(this._stateIndex == BotState.OUCHIE) {
+
+                //Zappy effect
+                if(this.isZap) {
+                    this.partShock.isActive = true;
+                    this.partShock.gpos = this.gpos.getAdd({x : -1, y : -this.height});
+                    this.partShock.spos.y = Z_DEPTH;
+                    this.partZap.isActive = true;
+                    this.partZap.gpos = this.gpos.getAdd({x : -1, y : 0});
+                }
+                //Normal effect
+                else {
+
+                    this.parts.forEach(p => {
+                        p.isActive = true;
+                        p.gpos = this.gpos.getAdd({x : -1, y : -this.height});
+                        p.spos.y = Z_DEPTH;
+                    });
+                }
             }
         }
     }
@@ -544,8 +642,8 @@ export default class CharacterBot extends Character {
             this.vertMult = -1;         // Default to downward movement
             this.setStateIndex(BotState.EATING);
         }
-        // Hazard
-        else if (mask & MASKS.death && this._stateIndex != BotState.EATING) {
+        // Ouchie!!!
+        else if ((mask & MASKS.death || mask & MASKS.zappy) && this._stateIndex != BotState.EATING) {
 
             // Start or continue flash after taking armor damage
             if (this.armorState == ArmorState.ACTIVE) {
@@ -553,11 +651,17 @@ export default class CharacterBot extends Character {
             }
             // If unarmored, die.
             else if (this.armorState == ArmorState.NONE) {
-                this.setStateIndex(BotState.HAZARD);
+
+                //Use zap effect instead of normal effect
+                if(mask & MASKS.zappy) {
+                    this.isZap = true;
+                }
+
+                this.setStateIndex(BotState.OUCHIE);
             }
         }
         // Vertical
-        else if (mask & MASKS.float && this._stateIndex != BotState.HAZARD) {
+        else if (mask & MASKS.float && this._stateIndex != BotState.OUCHIE) {
             this.vertMult = 1;          // Default to upward movement
             this.setStateIndex(BotState.FLYING);
         }

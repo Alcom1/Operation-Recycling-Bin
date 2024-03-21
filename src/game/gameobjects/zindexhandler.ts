@@ -9,7 +9,8 @@ interface ZPoint {
     flat : Boolean,
     state : Boolean,
     layer : Number,
-    noCompare : Boolean
+    noCompare : Boolean,
+    static : Boolean
 }
 
 /** Handler for brick selection, movement, etc. */
@@ -33,7 +34,8 @@ export default class ZIndexHandler extends GameObject {
                     flat : o.zSize.y == 0,
                     state : o.zState,
                     layer : o.zLayer,
-                    noCompare : o.zNoCompare
+                    noCompare : o.zNoCompare,
+                    static : o.zStatic
                 }));
 
         this.processZPoints();
@@ -55,10 +57,13 @@ export default class ZIndexHandler extends GameObject {
             z.size = this.getTrueZsize(z.gameObject.zSize);
         });
 
-        let zPointsActive = this.zPoints.filter(z => z.state);
-
+        //Start with a copy of the static edges, these ones do not need dynamic comparisons.
         let zEdges : ZPoint[][] = [];
 
+        //Only compare active points
+        let zPointsActive = this.zPoints.filter(z => z.state);
+
+        //Compare points, return valid edges that need to be sorted
         zPointsActive.forEach(z1 => {
             zPointsActive.forEach(z2 => {
                 if (this.checkValidComparison(z1, z2) && (
@@ -70,7 +75,7 @@ export default class ZIndexHandler extends GameObject {
             })
         });
 
-        // Set z-indicies based on sorted array indicies
+        // Perform topological sort. Set z-indicies based on results
         this.topologicalSort(zPointsActive, zEdges).forEach((z, i) => {
             z.gameObject.zIndex = i;
         });
@@ -108,12 +113,17 @@ export default class ZIndexHandler extends GameObject {
         }
 
         // Distance
-        if (gap1D(
+        let distance = gap1D(
             o.pos.y,
             o.pos.y + o.size.y,
             c.pos.y,
-            c.pos.y + c.size.y) > 1) {
+            c.pos.y + c.size.y);
 
+        if (distance > 1 || (                   // Other object must be close
+            distance < 0 && (                   // Special case where distance is < zero (vertical overlap)...
+            c.size.y == 8 || o.size.y == 8) &&  // One object is a bot...
+            !c.flat && !o.flat)) {              // And neither are flat
+            
             return false;
         }
 
@@ -146,9 +156,8 @@ export default class ZIndexHandler extends GameObject {
             o.pos.x,
             o.pos.x + o.size.x);
 
-        if (distance > 1 ||             // Other object must be close
-            distance < 0 ||             // Sometimes there is a gross overlap, skip if there is
-           (o.flat && distance < 0)) {  // Overlapping with flat objects does not mean they're in front.
+        if (distance > 1 ||                         // Other object must be close
+           (distance < 0 && (c.flat || o.flat))) {  // Sometimes there is a gross overlap, skip if there is
             
             return false;
         }
@@ -158,7 +167,7 @@ export default class ZIndexHandler extends GameObject {
 
     /** returns true if a comparison is valid */
     public checkValidComparison(a : ZPoint, b : ZPoint) : Boolean {
-        
+
         // Never sort with self
         if(a === b) {
             return false;
@@ -189,8 +198,7 @@ export default class ZIndexHandler extends GameObject {
         // Position
         ctx.translate(
             1 * GMULTX, 
-            2 * GMULTY
-        );
+            2 * GMULTY);
 
         // Scale
         let scale = 10;
@@ -255,7 +263,7 @@ export default class ZIndexHandler extends GameObject {
             });
         }
 
-        if(sorted.length != zPoints.length) {
+        if (sorted.length != zPoints.length) {
 
             console.log(`WARNING, LOOP in Z-SORTING, Sorted : ${sorted.length}, Expected : ${zPoints.length}}`);
         }

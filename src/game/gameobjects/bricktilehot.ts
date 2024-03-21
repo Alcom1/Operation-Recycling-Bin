@@ -22,11 +22,11 @@ export default class BrickTileHot extends BrickTileAnim {
         super(Object.assign(params, BrickTileHotOverride));
     }
 
-    /** Get hazard and passive colliders of this brick. */
+    /** Get colliders for this brick. */
     public getColliders() : Collider[] {
 
         // Combine with passive collider from base class
-        return super.getColliders().concat(this.isOn ? [{// Only return hazard hitbox if this plate is on.
+        return super.getColliders().concat(this.isOn ? [{   // Only return death hitbox if this plate is on.
             mask : MASKS.death,
             min : this.gpos.getAdd({ x : 1,              y : -1}),
             max : this.gpos.getAdd({ x : this.width - 1, y :  0}) 

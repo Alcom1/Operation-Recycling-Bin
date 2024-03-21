@@ -66,6 +66,7 @@ export default class GameObject {
     public set zIndex(value : number) { this._zIndex = value; }
     public get zpos() : Point { return this.gpos; }
     public get zState() : Boolean { return this.isActive; }
+    public get zStatic() : Boolean { return false; }
     public get zSize() : Point { return {x : 1, y : 1}; }
     public get zLayer() : Number { return 0; }
 

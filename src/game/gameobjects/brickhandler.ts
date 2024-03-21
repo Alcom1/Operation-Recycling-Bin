@@ -261,7 +261,6 @@ export default class BrickHandler extends GameObject {
         pos: Point, 
         size: number, 
         dir : number = 1, 
-        overhang : boolean = true,
         faction: Faction = Faction.NEUTRAL) : number {
 
         let collisions = 0; // Collision bitbask
@@ -298,28 +297,6 @@ export default class BrickHandler extends GameObject {
 
                 count++;
             }
-        }
-
-        // Single overhang space
-        if(overhang) {
-
-            // x-pos of new space
-            let check = dir > 0 ? pos.x + size : pos.x - 1;
-
-            // Check each brick int his row.
-            row.forEach(brick => {
-
-                if (col1D(
-                    brick.gpos.x - 1, 
-                    brick.gpos.x + brick.width,
-                    check,
-                    check
-                )) {
-                    collisions += 1 << (count);
-                }
-            });
-
-            count++;
         }
 
         return collisions;

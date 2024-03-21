@@ -1,6 +1,6 @@
 import { Point } from "engine/utilities/vect";
 import BrickTile, { BrickTileParams } from "./bricktile";
-import Sprite, { SpriteParams } from "./sprite";
+import SpriteSet, { SpriteParams } from "./spriteset";
 
 export interface BrickTileTopParams extends BrickTileParams {
     imageTop : string
@@ -11,7 +11,7 @@ export interface BrickTileTopParams extends BrickTileParams {
 /** Tile with a top plate, like a jump */
 export default class BrickTileTop extends BrickTile {
 
-    private topSprite : Sprite;             // The sprite to be shown on top of this brick
+    private topSprite : SpriteSet;             // The sprite to be shown on top of this brick
     private isShowTopIfOn : boolean = true; // If the top sprite should be active for the ON or OFF state.
 
     /** Constructor */
@@ -20,14 +20,14 @@ export default class BrickTileTop extends BrickTile {
 
         // Create top sprite
         this.topSprite = this.parent.pushGO(
-            new Sprite({
+            new SpriteSet({
                     ...params,
                     tags: ["Misc"],
                     position : this.gpos.getAdd({x : 0, y : -1}),   // Top sprite is 1 grid above this brick
                     image : params.imageTop,
                     extension : params.imageTopExtension,
                     size : { x : params.width ?? 2, y : 0 }
-                } as SpriteParams)) as Sprite
+                } as SpriteParams)) as SpriteSet
 
         this.isShowTopIfOn = params.isShowTopIfOn ?? true;          // Top sprite show condition
         this.topSprite.isActive = this.isOn == this.isShowTopIfOn;  // Deactivate top sprite if it starts hidden

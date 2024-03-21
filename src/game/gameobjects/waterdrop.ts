@@ -4,7 +4,7 @@ import { BOUNDARY, Faction, GMULTX, GMULTY, MASKS } from "engine/utilities/math"
 import Vect from "engine/utilities/vect";
 import Anim, { AnimationParams } from "./anim";
 import BrickHandler from "./brickhandler";
-import Sprite from "./sprite";
+import SpriteSet from "./spriteset";
 
 /** Specifications of a water drop */
 const waterDropOverride = Object.freeze({
@@ -14,7 +14,7 @@ const waterDropOverride = Object.freeze({
 });
 
 /** Single image gameobject */
-export default class WaterDrop extends Sprite {
+export default class WaterDrop extends SpriteSet {
     private speed : number = 500;
     private brickHandler! : BrickHandler;
     private animLand: Anim;
@@ -128,12 +128,12 @@ export default class WaterDrop extends Sprite {
         this.animLand.reset(this.gpos);
     }
 
-    /** Get hazard and passive colliders of this brick. */
+    /** Waterdrop has water and death colliders */
     public getColliders() : Collider[] {
 
         // Return hazard hitbox
         return [{
-            mask : MASKS.water | MASKS.death,
+            mask : MASKS.water | MASKS.zappy,
             min : this.gpos,
             max : this.gpos.getAdd({ x : 2, y :  1}) 
         }];

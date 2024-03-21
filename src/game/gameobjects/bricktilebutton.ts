@@ -29,7 +29,7 @@ export default class BrickTileButton extends BrickTile {
             "Level") as BrickTile[]).filter(p => p.circuit == this.circuit);
     }
 
-    /** Get hazard and passive colliders of this brick. */
+    /** Get colliders for this brick. */
     public getColliders() : Collider[] {
 
         // Combine with passive collider from base class

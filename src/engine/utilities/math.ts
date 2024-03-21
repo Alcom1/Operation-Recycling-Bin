@@ -52,12 +52,13 @@ export const MASKS = Object.freeze({
     block: 0b1,
     scrap: 0b10,
     death: 0b100,
-    float: 0b1000,
-    super: 0b10000,
-    water: 0b100000,
-    jumps: 0b1000000,
-    press: 0b10000000,
-    enemy: 0b100000000,
+    zappy: 0b1000,
+    float: 0b10000,
+    super: 0b100000,
+    water: 0b1000000,
+    jumps: 0b10000000,
+    press: 0b100000000,
+    enemy: 0b1000000000,
 })
 
 // 4x4 Collision bitmasks
@@ -72,16 +73,6 @@ export const RING_BITSTACK = Object.freeze({
     back : bitStack(4, 6),
     land : bitStack(11),
     band : bitStack(8)
-});
-
-// 4x5 Collision bitmask with an extra overhang
-// 0123
-// 4  5
-// 6  7
-// 89ABC
-export const RING_BITSTACKB = Object.freeze({
-    ...RING_BITSTACK,
-    hang : RING_BITSTACK.land + bitStack(12)
 });
 
 /** Handles file extension - image */
