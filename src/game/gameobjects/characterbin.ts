@@ -1,10 +1,17 @@
 import { Collider } from "engine/modules/collision";
 import { MASKS } from "engine/utilities/math";
 import { Point } from "engine/utilities/vect";
-import Character from "./character";
+import Character, { CharacterParams } from "./character";
 
 /** A bin full of junk. Eat it. */
 export default class CharacterBin extends Character {
+
+    /** Constructor */
+    constructor(params: CharacterParams) {
+        super(params);
+
+        this.tags.push("CharacterBin");
+    }
     
     /** Get bin colliders */
     public getColliders() : Collider[] {

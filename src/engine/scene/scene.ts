@@ -12,11 +12,14 @@ export interface SceneParams {
 }
 
 export default class Scene {
+
     public name: string;
-    private need: string[];
     public zIndex: number;
+    private need: string[];
     private gameObjects: GameObject[];
     private initialized: boolean;
+    private isUpdate: boolean = true;
+    private isDraw: boolean = true;
 
     /** Constructor */
     constructor(
@@ -58,14 +61,18 @@ export default class Scene {
         // Establish parent scene before pushing
         gameObject.parent = this;
         this.gameObjects.push(gameObject);
-        this.engine.tag.pushGO(gameObject, this.name);
+        this.engine.tag.pushGO(this, gameObject, this.name);
         return gameObject;
+    }
+
+    public pause() {
+        this.isUpdate = false;
     }
 
     public update(dt: number) {
 
         // Update all game objects
-        if (this.initialized) {
+        if (this.initialized && this.isUpdate) {
             this.gameObjects.filter(go => go.isActive).forEach(go => go.update(dt));
         }
     }
@@ -75,14 +82,14 @@ export default class Scene {
         // Sort all game objects for drawing - unconditionally
         this.gameObjects.sort((a, b) => a.zIndex - b.zIndex);
 
-        if (this.initialized) {
+        if (this.initialized && this.isDraw) {
             this.gameObjects.filter(go => go.isActive).forEach(go => this.subDraw(ctx, go, go.draw));
         }
     }
 
     public superDraw(ctx: CanvasRenderingContext2D) {
 
-        if (this.initialized) {
+        if (this.initialized && this.isDraw) {
             this.gameObjects.filter(go => go.isActive).forEach(go => this.subDraw(ctx, go, go.superDraw));
         }
     }

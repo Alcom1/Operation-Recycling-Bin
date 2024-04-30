@@ -6,6 +6,7 @@ import GameObject, { Collision } from "engine/gameobjects/gameobject";
 import SpriteSet, { SpriteParams } from "./spriteset";
 import CharacterBotPart, { CharacterBotPartParams } from "./characterbotpart";
 import Anim, { AnimationParams } from "./anim";
+import Signage from "./signage";
 
 /** Armor states of a bot character */
 enum ArmorState {
@@ -121,6 +122,7 @@ export default class CharacterBot extends Character {
     private partShock : SpriteSet;
     private partZap : Anim;
     private isZap : boolean = false;
+    private signage : Signage | null = null;
     
     protected get animationSubindex() : number {               // Adjust animation index for armor flash effect
         return this.move.x * (
@@ -204,6 +206,15 @@ export default class CharacterBot extends Character {
         } as AnimationParams)) as Anim;
     }
 
+    /** Get bot for tracking */
+    public init() {
+        super.init();
+        
+        this.signage = this.engine.tag.get(
+            "Signage", 
+            "LevelInterface")[0] as Signage;
+    }
+
     /** Unique bot update to update armor flash */
     public update(dt : number) {
         super.update(dt);
@@ -256,6 +267,12 @@ export default class CharacterBot extends Character {
 
             // Perform ending actions for different states
             switch(this._stateIndex) {
+
+                // Eat - Mark bin as eaten
+                case BotState.EATING :
+                    this.signage?.incrementEaten();
+                    this.setStateIndex(BotState.HALTED);
+                    break;
 
                 // Dead - Do nothing, or force dead state for zap
                 case BotState.OUCHIE :

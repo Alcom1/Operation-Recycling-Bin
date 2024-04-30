@@ -1,4 +1,5 @@
 import GameObject from "engine/gameobjects/gameobject";
+import Scene from "engine/scene/scene";
 
 interface TagGroup {
     tag: string;
@@ -7,6 +8,7 @@ interface TagGroup {
 
 interface TaggedScene {
     name: string;
+    scene : Scene;
     tags: TagGroup[];
 }
 
@@ -20,7 +22,7 @@ export default class TagModule {
     }
 
     /** Push a game object to the scene */
-    public pushGO(gameObject: GameObject, sceneName: string): void {
+    public pushGO(scene : Scene, gameObject: GameObject, sceneName: string): void {
 
         // Get scene with name
         const curr = this.scenes.find(sg => sg.name == sceneName );
@@ -30,6 +32,7 @@ export default class TagModule {
             
             this.scenes.push({
                 name : sceneName,
+                scene : scene,
                 tags : gameObject.tags.map(tag => { 
                     return {
                         tag : tag,
@@ -70,6 +73,12 @@ export default class TagModule {
         )?.tags.filter(
             gos => Array.isArray(tag) ? tag.includes(gos.tag) : gos.tag == tag
         )?.flatMap(t => t.tagObjects) ?? [];
+    }
+
+    /** Returns a scene */
+    public getScene(sceneName: string) : Scene | null {
+        
+        return this.scenes.find(s => s.name == sceneName)?.scene ?? null;
     }
 
     /** Remove scenes with names in the provided list */
