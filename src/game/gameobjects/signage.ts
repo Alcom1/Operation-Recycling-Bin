@@ -4,6 +4,7 @@ import { wrapText } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 import ButtonHintOkay from "./buttonhintokay";
 import LevelSequence from "./levelsequence";
+import SpriteSet from "./spriteset";
 
 /** Armor states of a bot character */
 enum SignState {
@@ -38,12 +39,10 @@ export default class Signage extends GameObject {
     private binEaten : number = 0;                          // Number of bins consumed
     private hint : string = "";                             // Hint text for this level
     private level : Scene | null = null;                    // Current level scene
-    private sign : HTMLImageElement;                        // Background image for signs
 
     private signSpeed : number = 800;                       // Speed of sign transitions
-    private initialSignOffset : Vect = new Vect(216, -400); // Starting position of signs
     private signOffset : Vect = Vect.zero;                  // Current position of sign
-    private openStop : number = 274;                        // Vertical position where sign stops
+    private openStop : number = 674;                        // Vertical position where sign stops
 
     /** Constructor */
     constructor(params: GameObjectParams) {
@@ -51,9 +50,6 @@ export default class Signage extends GameObject {
 
         // Sign is behind its objects
         this.zIndex = 0;
-
-        // Sign background image
-        this.sign = this.engine.library.getImage("sign", "svg");
 
         // Objects for hint sign
         let objectsHint : OffsetGameObject[] = [];
@@ -64,15 +60,33 @@ export default class Signage extends GameObject {
                 size : { x : 136, y : 68},
                 text : "OK",
                 zIndex : 100,
-                font : "64px Font04b_08",
-                isActive : false
+                font : "64px Font04b_08"
             })),
             offset : new Vect(530, -100)
+        },{
+            gameObject : this.parent.pushGO(new SpriteSet({
+                ...params,
+                tags : [],
+                image : "sign_medium",
+                extension : "svg",
+                zIndex : -100
+            })),
+            offset : new Vect(216, -400)
         });
         this.signObjects[SignType.HINT] = objectsHint;
 
         // Objects for victory sign
-        let objectsWin : OffsetGameObject[] = [];
+        let objectsWin : OffsetGameObject[] = [];        
+        objectsWin.push({
+            gameObject : this.parent.pushGO(new SpriteSet({
+                ...params,
+                tags : [],
+                image : "sign_large",
+                extension : "svg",
+                zIndex : -100
+            })),
+            offset : new Vect(122, -462)
+        });
         this.signObjects[SignType.WIN] = objectsWin;
 
         // Objects for failure sign
@@ -82,6 +96,9 @@ export default class Signage extends GameObject {
         // Objects for level start sign
         let objectsStart : OffsetGameObject[] = [];
         this.signObjects[SignType.START] = objectsStart;
+
+        //All sign objects start as inactive
+        this.signObjects.forEach(so => so.forEach(oo => oo.gameObject.isActive = false));
     }
 
     /** Initalize the game object, get related objects */
@@ -148,24 +165,33 @@ export default class Signage extends GameObject {
         if(this.signState != SignState.OFF) {
 
             // Sign drop shadow
-            ctx.shadowColor = "rgba(0, 0, 0, 0.1)";
-            ctx.shadowBlur = 25;
-            ctx.fillRect(this.signOffset.x, this.signOffset.y, 670, 400);
-
-            // Sign
-            ctx.drawImage(this.sign, this.signOffset.x, this.signOffset.y);
+            // ctx.shadowColor = "rgba(0, 0, 0, 0.1)";
+            // ctx.shadowBlur = 25;
+            // ctx.fillRect(this.signOffset.x, this.signOffset.y, 670, 400);
 
             // Sign text & non-objects
-            if(this.signType == SignType.HINT) {
-                ctx.fillStyle = "#111";
-                ctx.font = "32px Font04b_08";
+            switch(this.signType) {
 
-                ctx.fillText("Hint :", this.signOffset.x + 56, this.signOffset.y + 72);
+                case SignType.HINT : {
+                        ctx.fillStyle = "#111";
+                        ctx.font = "32px Font04b_08";
+        
+                        ctx.fillText("Hint :", this.signOffset.x + 272, this.signOffset.y - 328);
+        
+                        wrapText(ctx, this.hint, 556).forEach((l, i) => {
+        
+                            ctx.fillText(l, this.signOffset.x + 272, this.signOffset.y - 328 + i * 32 + 32);
+                        });
+                    }
+                    break;
+                
+                case SignType.WIN : {
+                        ctx.fillStyle = "#FFF";
+                        ctx.font = "64px Font04b_08";
 
-                wrapText(ctx, this.hint, 556).forEach((l, i) => {
-
-                    ctx.fillText(l, this.signOffset.x + 56, this.signOffset.y + 72 + i * 32 + 32);
-                });
+                        ctx.fillText("level complete!", this.signOffset.x + 194, this.signOffset.y - 360);
+                    }
+                    break;
             }
         }
     }
@@ -196,7 +222,7 @@ export default class Signage extends GameObject {
 
         // Setup and activate sign
         this.signState = SignState.OPEN;                // Sign starts by opening
-        this.signOffset = this.initialSignOffset.get;   // Reset sign position
+        this.signOffset = Vect.zero;                    // Reset sign position
         this.signType = signType;                       // Set sign type
         this.signObjects[signType].forEach(oo => {      // Reset objects for this type
             oo.gameObject.isActive = true;
