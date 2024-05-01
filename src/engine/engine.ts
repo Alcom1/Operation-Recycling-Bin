@@ -300,6 +300,11 @@ export default class Engine {
         this.isPaused = true;
     }
 
+    /** Unpause physics and collision updates */
+    public unpause() {
+        this.isPaused = false;
+    }
+
     /** 
      * Get time since last frame
      * @returns Time since last frame

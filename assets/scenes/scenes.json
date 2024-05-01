@@ -58,6 +58,19 @@
         "zIndex": -50000
       },
       {
+        "name": "ButtonPause",
+        "subPosition": {
+          "x": 0,
+          "y": 660
+        },
+        "isCenterUI": true,
+        "size": {
+          "x": 200,
+          "y": 64
+        },
+        "text": "Pause"
+      },
+      {
         "name": "ButtonScene",
         "subPosition": {
           "x": 0,

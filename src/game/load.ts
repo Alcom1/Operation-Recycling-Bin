@@ -33,6 +33,7 @@ import ZIndexHandler from "./gameobjects/zindexhandler";
 import MobileBeam from "./gameobjects/mobilebeam";
 import { TouchStyle } from "engine/modules/settings";
 import Signage from "./gameobjects/signage";
+import ButtonPause from "./gameobjects/buttonpause";
 
 // Load
 window.onload = function() {
@@ -57,6 +58,7 @@ window.onload = function() {
             BrickTileHot,
             BrickSuper,
             Button,
+            ButtonPause,
             ButtonScene,
             Character,
             CharacterBot,

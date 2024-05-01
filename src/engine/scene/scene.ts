@@ -70,6 +70,11 @@ export default class Scene {
         this.engine.pause();
     }
 
+    public unpause() {
+        this.isUpdate = true;
+        this.engine.unpause();
+    }
+
     public update(dt: number) {
 
         // Update all game objects
