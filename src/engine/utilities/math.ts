@@ -302,3 +302,41 @@ export function colorChange(color: string, value: number, func: (color: number, 
     // Return recomposed color
     return "#" + channels.join('');
 }
+
+/** Measure and wrap text into array of strings */
+export function wrapText(ctx: CanvasRenderingContext2D, text : string, width : number) : string[] {
+
+    let start = 0;                                  // Start of current segment
+    let lines : string[] = [];                      // Lines of text
+
+    let spaces = [0, ...text]                       // Text to character array
+        .map((c, i) => { return {c : c, i : i} })   // Character-index pairs
+        .filter(ci => ci.c == " ")                  // Pairs that are spaces
+        .map(ci => ci.i);                           // Indicies only
+    let spaceIndex = 1;                             // Index of current space being checked
+
+    // Test each space and the resulting length for a new line
+    while(spaceIndex < spaces.length) {
+
+        // Get next substring to test
+        let testLine = text.substr(spaces[start], spaces[spaceIndex] - spaces[start]).trim();
+
+        // If test line exceeds length, add new line
+        if(ctx.measureText(testLine).width >= width) {
+
+            lines.push(testLine.substr(         // Next line
+                0, 
+                testLine.lastIndexOf(" ")));    // Go back one word
+            start = spaceIndex - 1;             // Start one word behind
+        }
+        // Otherwise, increment for next text
+        else {
+            spaceIndex++;
+        }
+    }
+
+    // Add remaining text as a final line
+    lines.push(text.substr(spaces[start], text.length - 1));
+
+    return lines;
+}

@@ -228,13 +228,14 @@ export default class Button extends GameObject {
         );
 
         // Draw button text
+        let fontSize = Number(this.font.split("px ")[0]);
         ctx.textAlign = "center";       // Center horizontal
         ctx.font = this.font;           // Font
         ctx.fillStyle = this.color;     // Color
         ctx.fillText(
             this.text,                  // Fill button text
-            this.size.x / 2, 
-            this.size.y / 2 + 4
+            this.size.x / 2 + (fontSize - 16) / 16, 
+            this.size.y / 2 + fontSize * 4.7 / 16
         );
     }
 }

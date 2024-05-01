@@ -1,7 +1,9 @@
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import Scene from "engine/scene/scene";
+import { wrapText } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 import ButtonHintOkay from "./buttonhintokay";
+import LevelSequence from "./levelsequence";
 
 /** Armor states of a bot character */
 enum SignState {
@@ -34,6 +36,7 @@ export default class Signage extends GameObject {
 
     private binCount : number = 0;
     private binEaten : number = 0;
+    private hint : string = "";
     private level : Scene | null = null;
     private sign : HTMLImageElement;
 
@@ -56,8 +59,9 @@ export default class Signage extends GameObject {
                 ...params,
                 tags : [],
                 size : { x : 136, y : 68},
-                text : "Ok",
+                text : "OK",
                 zIndex : 100,
+                font : "64px Font04b_08",
                 isActive : false
             })),
             offset : new Vect(530, -100)
@@ -65,13 +69,13 @@ export default class Signage extends GameObject {
         this.signObjects[SignType.HINT] = objectsHint;
 
         let objectsWin : OffsetGameObject[] = [];
-        this.signObjects[SignType.WIN] = objectsHint;
+        this.signObjects[SignType.WIN] = objectsWin;
 
         let objectsFail : OffsetGameObject[] = [];
-        this.signObjects[SignType.FAIL] = objectsHint;
+        this.signObjects[SignType.FAIL] = objectsFail;
         
         let objectsStart : OffsetGameObject[] = [];
-        this.signObjects[SignType.START] = objectsHint;
+        this.signObjects[SignType.START] = objectsStart;
     }
 
     /** Initalize the brick handler, get related bricks & game objects, manage bricks */
@@ -80,6 +84,11 @@ export default class Signage extends GameObject {
         this.binCount = this.engine.tag.get(
             "CharacterBin", 
             "Level").length;
+
+        this.hint = (
+            this.engine.tag.get(
+                "LevelSequence", 
+                "Level")[0] as LevelSequence).hint;
 
         this.level = this.engine.tag.getScene("Level");
     }
@@ -131,6 +140,18 @@ export default class Signage extends GameObject {
             ctx.fillRect(this.signOffset.x, this.signOffset.y, 670, 400);
 
             ctx.drawImage(this.sign, this.signOffset.x, this.signOffset.y);
+
+            if(this.signType == SignType.HINT) {
+                ctx.fillStyle = "#111";
+                ctx.font = "32px Font04b_08";
+
+                ctx.fillText("Hint :", this.signOffset.x + 56, this.signOffset.y + 72);
+
+                wrapText(ctx, this.hint, 556).forEach((l, i) => {
+
+                    ctx.fillText(l, this.signOffset.x + 56, this.signOffset.y + 72 + i * 32 + 32);
+                });
+            }
         }
     }
 
@@ -146,6 +167,17 @@ export default class Signage extends GameObject {
 
     /** Activate the sign */
     public openSign(signType : SignType = SignType.HINT) {
+
+        // Hints cannot interupt other signs
+        if(signType == SignType.HINT && this.signType != SignType.HINT) {
+            return;
+        }
+
+        // Do not interupt a sign sequence with itself
+        if(signType == this.signType && this.signState != SignState.OFF) {
+            return;
+        }
+
 
         this.signState = SignState.OPEN;
         this.signOffset = this.initialSignOffset.get;
