@@ -99,8 +99,8 @@ export default class Signage extends GameObject {
 
                     let signObjectsCurr = this.signObjects[this.signType];
 
-                    this.signOffset.x -= dt * this.signSpeed;
-                    signObjectsCurr.forEach(o => o.gameObject.spos.x -= dt * this.signSpeed);
+                    this.signOffset.x -= dt * this.signSpeed * 1.5;
+                    signObjectsCurr.forEach(o => o.gameObject.spos.x -= dt * this.signSpeed * 1.5);
                     
                     if(this.signOffset.x < -670) {
                         this.signState = SignState.OFF;
@@ -116,6 +116,11 @@ export default class Signage extends GameObject {
     public draw(ctx : CanvasRenderingContext2D) {
 
         if(this.signState != SignState.OFF) {
+
+            ctx.shadowColor = "rgba(0, 0, 0, 0.1)";
+            ctx.shadowBlur = 25;
+            ctx.fillRect(this.signOffset.x, this.signOffset.y, 670, 400);
+
             ctx.drawImage(this.sign, this.signOffset.x, this.signOffset.y);
         }
     }
