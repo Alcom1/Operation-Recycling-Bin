@@ -89,8 +89,8 @@ export default class Button extends GameObject {
 
                 img.src = this.engine.baker.bake(
                     ctx => this.drawButton(ctx, press, hover),
-                    this.size.x + this.depth,   
-                    this.size.y + this.depth,   
+                    this.size.x + this.depth + 100,   
+                    this.size.y + this.depth + 100,   
                     `BUTTON.${this.text}.${press ? "PRESS" : "UNPRS"}.${hover ? "HOVER" : "OUTSD"}`            
                 );
 
@@ -178,18 +178,31 @@ export default class Button extends GameObject {
     private drawButton(ctx: CanvasRenderingContext2D, press: boolean, hover: boolean): void {
 
         // Handle button depth
-        let currentDepth = press ? this.depth / 2 : this.depth;             // Depth for pressed or unpressed state
-        ctx.translate(this.depth - currentDepth, currentDepth);             // Translate by depth
+        let currentDepth = press ? this.depth / 2 : this.depth; // Depth for pressed or unpressed state
+        let shadowDepth = currentDepth * 1.2;
+        ctx.translate(this.depth - currentDepth, currentDepth); // Translate by depth
+
+        // Button shadow color
+        ctx.fillStyle = "rgba(0, 0, 0, 0.1)"
+
+        // Draw button shadow
+        ctx.beginPath();
+        ctx.moveTo(12 - shadowDepth, this.size.y);
+        ctx.lineTo(12              , this.size.y + shadowDepth);
+        ctx.lineTo(this.size.x + shadowDepth * 2, shadowDepth + this.size.y);
+        ctx.lineTo(this.size.x + shadowDepth * 2, shadowDepth - currentDepth);
+        ctx.lineTo(this.size.x + currentDepth,                - currentDepth);
+        ctx.fill();
 
         // Button top face color
         ctx.fillStyle = hover ? this.bhColorBright : this.bgColorBright;
 
         // Draw button top face
         ctx.beginPath();
-        ctx.moveTo(0,                          0);                          // Lower Right
-        ctx.lineTo(              currentDepth, -currentDepth);              // Upper Right
-        ctx.lineTo(this.size.x + currentDepth, -currentDepth);              // Upper Left
-        ctx.lineTo(this.size.x,                0);                          // Lower Left
+        ctx.moveTo(0,                          0);              // Lower Right
+        ctx.lineTo(              currentDepth, -currentDepth);  // Upper Right
+        ctx.lineTo(this.size.x + currentDepth, -currentDepth);  // Upper Left
+        ctx.lineTo(this.size.x,                0);              // Lower Left
         ctx.fill();
 
         // Button right face color
