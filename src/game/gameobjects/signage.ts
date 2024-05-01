@@ -50,8 +50,8 @@ export default class Signage extends GameObject {
 
         this.sign = this.engine.library.getImage("sign", "svg");
 
-        let hintObjects : OffsetGameObject[] = [];
-        hintObjects.push({
+        let objectsHint : OffsetGameObject[] = [];
+        objectsHint.push({
             gameObject : this.parent.pushGO(new ButtonHintOkay({
                 ...params,
                 tags : [],
@@ -62,7 +62,16 @@ export default class Signage extends GameObject {
             })),
             offset : new Vect(530, -100)
         });
-        this.signObjects[SignType.HINT] = hintObjects;
+        this.signObjects[SignType.HINT] = objectsHint;
+
+        let objectsWin : OffsetGameObject[] = [];
+        this.signObjects[SignType.WIN] = objectsHint;
+
+        let objectsFail : OffsetGameObject[] = [];
+        this.signObjects[SignType.FAIL] = objectsHint;
+        
+        let objectsStart : OffsetGameObject[] = [];
+        this.signObjects[SignType.START] = objectsHint;
     }
 
     /** Initalize the brick handler, get related bricks & game objects, manage bricks */
