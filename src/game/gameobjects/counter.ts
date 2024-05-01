@@ -45,7 +45,7 @@ export default class Counter extends GameObject {
         // Par
         ctx.fillStyle = "#000";
         ctx.font = "16px " + this.fontFamily;
-        ctx.fillText(this.par + " or fewer", GMULTX * 35 + 203.5, 484);
+        ctx.fillText(this.par + " or fewer", GMULTX * 35 + 203, 484);
 
         // Par checkbox
         if (this.par >= this.count) {
