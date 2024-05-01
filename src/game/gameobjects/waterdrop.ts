@@ -88,9 +88,7 @@ export default class WaterDrop extends SpriteSet {
                 2,          // FINAL
                 1,          // HEIGHT
                 undefined,
-                Faction.HOSTILE))
-                {
-                      
+                Faction.HOSTILE)) {
 
                 this.doLandAnimation();
             } 

@@ -1,5 +1,6 @@
 import GameObject from "engine/gameobjects/gameobject";
 import { MouseState } from "engine/modules/mouse";
+import Scene from "engine/scene/scene";
 import Vect from "engine/utilities/vect";
 import BrickHandler, { BrickHandlerState } from "./brickhandler";
 import CursorIcon, { CursorIconState } from "./cursoricon";
@@ -35,6 +36,12 @@ export default class Cursor extends GameObject {
     /** Cursor icon to display */
     private cursorIcon!: CursorIcon;
 
+    
+    /** Level scene to track pausing */
+    private levelScene: Scene | null = null;
+    /** If level is paused */
+    private get isPaused() : boolean { return this.levelScene?.isPaused ?? false }
+
     /** Initialize this cursor, get brickhandler and icon */
     public init(ctx: CanvasRenderingContext2D) {
 
@@ -45,15 +52,22 @@ export default class Cursor extends GameObject {
         const cursorIcon = this.engine.tag.get("CursorIcon", "LevelInterface")[0];
         if (!cursorIcon) throw new Error("Can't find CursorIcon");
         this.cursorIcon = cursorIcon as CursorIcon;
+
+        this.levelScene = this.engine.tag.getScene("Level");
     }
 
-    public updateSync()
-    {
+    public updateSync() {
         this.isUpdateForced = true;
     }
 
     /** Update this cursor */
     public update(dt: number): void {
+
+        // If level is paused, set paused state and don't update
+        if(this.isPaused) {
+            this.enterPausedState();
+            return;
+        }
 
         let tempSpos = this.engine.mouse.pos;
 
@@ -276,5 +290,11 @@ export default class Cursor extends GameObject {
 
             this.state = CursorState.CARRY;             // Set state to NONE stateStart carrying if we selected some bricks
         }
+    }
+
+    /** Set the cursor to its paused state */
+    private enterPausedState() : void {
+        
+        this.cursorIcon.setCursor(CursorIconState.NONE);
     }
 }

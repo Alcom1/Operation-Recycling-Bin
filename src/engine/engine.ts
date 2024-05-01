@@ -35,6 +35,8 @@ export default class Engine {
     private killSceneNames: string[] = [];
     /** All possible types of Game Objects */
     private gameObjectTypes = new Map<string, typeof GameObject>();
+    /** */
+    private isPaused: boolean = false;
 
     /** If the last frame threw an error */
     private crashed = false;
@@ -123,7 +125,7 @@ export default class Engine {
                 }
 
                 // Perform updates
-                if (this.library.getLoaded()) {
+                if (this.library.getLoaded() && !this.isPaused) {
                     this.collision.update();    // Check collisions
                     this.sync.update();         // Resolve statuses
                 }
@@ -240,6 +242,7 @@ export default class Engine {
             this.sync.clear(this.killSceneNames);
             this.collision.clear(this.killSceneNames);
             this.killSceneNames = [];
+            this.isPaused = false;
         }
     }
 
@@ -290,6 +293,11 @@ export default class Engine {
     /** Unload all current scenes */
     public killAllScenes(): void {
         this.killScenes(this.scenesActive.map(s => s.name));
+    }
+
+    /** Pause physics and collision updates */
+    public pause() {
+        this.isPaused = true;
     }
 
     /** 

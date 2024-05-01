@@ -20,16 +20,16 @@ export default class Scene {
     private initialized: boolean;
     private isUpdate: boolean = true;
     private isDraw: boolean = true;
+    public get isPaused() : boolean { return !this.isUpdate }
 
     /** Constructor */
     constructor(
-        private engine: Engine,
-        {
+        private engine: Engine, {
             name = "unnamed",
             need = [],
             zIndex = 0
-        }: SceneParams) 
-    {
+        }: SceneParams) {
+        
         this.name = name;
         // Required scenes for this scene to initialize
         this.need = need;
@@ -67,6 +67,7 @@ export default class Scene {
 
     public pause() {
         this.isUpdate = false;
+        this.engine.pause();
     }
 
     public update(dt: number) {
