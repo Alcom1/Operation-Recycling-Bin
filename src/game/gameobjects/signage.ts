@@ -1,21 +1,68 @@
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import Scene from "engine/scene/scene";
+import Vect from "engine/utilities/vect";
+import ButtonHintOkay from "./buttonhintokay";
+
+/** Armor states of a bot character */
+enum SignState {
+    OFF,
+    OPEN,
+    CLOSE
+}
+
+/** types of signs */
+export enum SignType {
+    HINT,
+    WIN,
+    FAIL,
+    START
+}
+
+/** Parameters for an offset game object */
+export interface OffsetGameObject {
+    gameObject : GameObject;
+    offset : Vect;
+}
 
 /** Handles signs and pausing for signs */
 export default class Signage extends GameObject {
 
+    private signState : SignState = SignState.OFF;
+    private signType : SignType = SignType.HINT;
+
+    private signObjects : OffsetGameObject[][] = [];
+
     private binCount : number = 0;
     private binEaten : number = 0;
     private level : Scene | null = null;
-    private showSign : boolean = false;
     private sign : HTMLImageElement;
-    private signOffset : number = -400;
+
+    private signSpeed : number = 800;
+    private initialSignOffset : Vect = new Vect(216, -400);
+    private signOffset : Vect = Vect.zero;
+    private openStop : number = 274;
 
     /** Constructor */
     constructor(params: GameObjectParams) {
         super(params);
 
+        this.zIndex = 0;
+
         this.sign = this.engine.library.getImage("sign", "svg");
+
+        let hintObjects : OffsetGameObject[] = [];
+        hintObjects.push({
+            gameObject : this.parent.pushGO(new ButtonHintOkay({
+                ...params,
+                tags : [],
+                size : { x : 136, y : 68},
+                text : "Ok",
+                zIndex : 100,
+                isActive : false
+            })),
+            offset : new Vect(530, -100)
+        });
+        this.signObjects[SignType.HINT] = hintObjects;
     }
 
     /** Initalize the brick handler, get related bricks & game objects, manage bricks */
@@ -31,40 +78,74 @@ export default class Signage extends GameObject {
     /** Update sign */
     public update(dt : number) {
 
-        if(this.showSign) {
+        switch(this.signState) {
 
-            if(this.signOffset < 274) {
-                this.signOffset += dt * 800;
-            }
-            if(this.signOffset >= 274) {
-                this.signOffset = 274;
-            }
+            case SignState.OPEN : {
+
+                    let signObjectsCurr = this.signObjects[this.signType];
+
+                    if(this.signOffset.y < this.openStop) {
+                        this.signOffset.y += dt * this.signSpeed;
+                        signObjectsCurr.forEach(o => o.gameObject.spos.y += dt * this.signSpeed);
+                    }
+                    if(this.signOffset.y >= this.openStop) {
+                        signObjectsCurr.forEach(o => o.gameObject.spos.y += this.openStop - this.signOffset.y);
+                        this.signOffset.y = this.openStop;
+                    }
+                }
+                break;
+
+            case SignState.CLOSE : {
+
+                    let signObjectsCurr = this.signObjects[this.signType];
+
+                    this.signOffset.x -= dt * this.signSpeed;
+                    signObjectsCurr.forEach(o => o.gameObject.spos.x -= dt * this.signSpeed);
+                    
+                    if(this.signOffset.x < -670) {
+                        this.signState = SignState.OFF;
+                        signObjectsCurr.forEach(o => o.gameObject.isActive = false);
+                        this.level?.unpause();
+                    }
+                }
+                break;
         }
     }
 
     /** Draw sign */
     public draw(ctx : CanvasRenderingContext2D) {
 
-        if(this.showSign) {
-            ctx.drawImage(this.sign, 216, this.signOffset);
+        if(this.signState != SignState.OFF) {
+            ctx.drawImage(this.sign, this.signOffset.x, this.signOffset.y);
         }
     }
 
     /** Increment eat counter, check if all bins have been eaten, pause if so */
     public incrementEaten() {
+
         this.binEaten++;
 
         if(this.binCount > 0 && this.binEaten >= this.binCount) {
-
-            this.activateSign();
+            this.openSign(SignType.WIN);
         }
     }
 
     /** Activate the sign */
-    public activateSign() {
+    public openSign(signType : SignType = SignType.HINT) {
 
-        this.showSign = true;
-        this.signOffset = -400;
+        this.signState = SignState.OPEN;
+        this.signOffset = this.initialSignOffset.get;
+        this.signType = signType;
+        this.signObjects[signType].forEach(oo => {
+            oo.gameObject.isActive = true;
+            oo.gameObject.spos = oo.offset.get;
+        });
         this.level?.pause();
+    }
+
+    /** Activate the sign */
+    public closeSign() {
+
+        this.signState = SignState.CLOSE;
     }
 }

@@ -3,7 +3,7 @@ import Button from "./button";
 import LevelSequence from "./levelsequence";
 import Signage from "./signage";
 
-export default class ButtonHint extends Button {
+export default class ButtonHintOkay extends Button {
 
     /** */
     private signage : Signage | null = null;
@@ -18,6 +18,6 @@ export default class ButtonHint extends Button {
     /** Scene button action */
     protected doButtonAction() {
         
-        this.signage?.openSign();
+        this.signage?.closeSign();
     }
 }
