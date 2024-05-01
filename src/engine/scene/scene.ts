@@ -13,14 +13,16 @@ export interface SceneParams {
 
 export default class Scene {
 
-    public name: string;
-    public zIndex: number;
-    private need: string[];
-    private gameObjects: GameObject[];
-    private initialized: boolean;
-    private isUpdate: boolean = true;
-    private isDraw: boolean = true;
-    public get isPaused() : boolean { return !this.isUpdate }
+    public name: string;                // Name of this scene
+    public zIndex: number;              // Z-index of this scene, compared to other scenes
+    private need: string[];             // Scenes this scene requires
+    private gameObjects: GameObject[];  // Game objects in this scene
+    private initialized: boolean;       // If scene is initialized
+    private isUpdate: boolean = true;   // If scene should be updating
+    private isDraw: boolean = true;     // If scene should be drawing
+    public get isPaused() : boolean {   // Scene's paused state
+        return !this.isUpdate 
+    }
 
     /** Constructor */
     constructor(
@@ -38,6 +40,7 @@ export default class Scene {
         this.initialized = false;
     }
 
+    /** Initialize this scene */
     public init(ctx: CanvasRenderingContext2D) {
         
         if (
@@ -56,6 +59,7 @@ export default class Scene {
         }
     }
 
+    /** Add a new game object */
     public pushGO(gameObject: GameObject) : GameObject {
 
         // Establish parent scene before pushing
@@ -65,16 +69,19 @@ export default class Scene {
         return gameObject;
     }
 
+    /** Pause this scene and also the sync updates in the engine */
     public pause() {
         this.isUpdate = false;
         this.engine.pause();
     }
 
+    /** Unpause this scene and also the sync updates in the engine */
     public unpause() {
         this.isUpdate = true;
         this.engine.unpause();
     }
 
+    /** Update all active game objects in this scene if ready */
     public update(dt: number) {
 
         // Update all game objects
@@ -83,6 +90,7 @@ export default class Scene {
         }
     }
 
+    /** Draw all active game objects in this scene if ready */
     public draw(ctx: CanvasRenderingContext2D) {
 
         // Sort all game objects for drawing - unconditionally
@@ -93,6 +101,7 @@ export default class Scene {
         }
     }
 
+    /** Draw all active game objects in this scene if ready */
     public superDraw(ctx: CanvasRenderingContext2D) {
 
         if (this.initialized && this.isDraw) {
@@ -100,6 +109,7 @@ export default class Scene {
         }
     }
 
+    /** Perform drawing for a game object */
     private subDraw(ctx: CanvasRenderingContext2D, gameObject : GameObject, drawAction : Function) {
 
         ctx.save();

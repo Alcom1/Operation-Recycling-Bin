@@ -11,7 +11,7 @@ export default class CharacterHandler extends GameObject {
     private isStart: boolean = false;
     private get isPaused() : boolean { return this.levelScene?.isPaused ?? false }
 
-    /** Initalize the brick handler, get related bricks & game objects, manage bricks */
+    /** Initalize the game object, get related objects */
     public init() {
          
         this.characters = this.engine.tag.get(  // Get bricks from scene

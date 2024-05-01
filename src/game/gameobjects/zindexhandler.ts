@@ -25,7 +25,7 @@ export default class ZIndexHandler extends GameObject {
     /** If level is paused */
     private get isPaused() : boolean { return this.levelScene?.isPaused ?? false }
 
-    /** Initalize the brick handler, get related bricks & game objects, manage bricks */
+    /** Initalize the game object, get related objects */
     public init() {
 
         this.engine.tag.get(

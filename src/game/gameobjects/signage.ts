@@ -29,30 +29,33 @@ export interface OffsetGameObject {
 /** Handles signs and pausing for signs */
 export default class Signage extends GameObject {
 
-    private signState : SignState = SignState.OFF;
-    private signType : SignType = SignType.HINT;
+    private signState : SignState = SignState.OFF;          // State of the current sign
+    private signType : SignType = SignType.HINT;            // Current type of sign
 
-    private signObjects : OffsetGameObject[][] = [];
+    private signObjects : OffsetGameObject[][] = [];        // Objects to be displayed for each sign type
 
-    private binCount : number = 0;
-    private binEaten : number = 0;
-    private hint : string = "";
-    private level : Scene | null = null;
-    private sign : HTMLImageElement;
+    private binCount : number = 0;                          // Number of bins in the level
+    private binEaten : number = 0;                          // Number of bins consumed
+    private hint : string = "";                             // Hint text for this level
+    private level : Scene | null = null;                    // Current level scene
+    private sign : HTMLImageElement;                        // Background image for signs
 
-    private signSpeed : number = 800;
-    private initialSignOffset : Vect = new Vect(216, -400);
-    private signOffset : Vect = Vect.zero;
-    private openStop : number = 274;
+    private signSpeed : number = 800;                       // Speed of sign transitions
+    private initialSignOffset : Vect = new Vect(216, -400); // Starting position of signs
+    private signOffset : Vect = Vect.zero;                  // Current position of sign
+    private openStop : number = 274;                        // Vertical position where sign stops
 
     /** Constructor */
     constructor(params: GameObjectParams) {
         super(params);
 
+        // Sign is behind its objects
         this.zIndex = 0;
 
+        // Sign background image
         this.sign = this.engine.library.getImage("sign", "svg");
 
+        // Objects for hint sign
         let objectsHint : OffsetGameObject[] = [];
         objectsHint.push({
             gameObject : this.parent.pushGO(new ButtonHintOkay({
@@ -68,36 +71,44 @@ export default class Signage extends GameObject {
         });
         this.signObjects[SignType.HINT] = objectsHint;
 
+        // Objects for victory sign
         let objectsWin : OffsetGameObject[] = [];
         this.signObjects[SignType.WIN] = objectsWin;
 
+        // Objects for failure sign
         let objectsFail : OffsetGameObject[] = [];
         this.signObjects[SignType.FAIL] = objectsFail;
         
+        // Objects for level start sign
         let objectsStart : OffsetGameObject[] = [];
         this.signObjects[SignType.START] = objectsStart;
     }
 
-    /** Initalize the brick handler, get related bricks & game objects, manage bricks */
+    /** Initalize the game object, get related objects */
     public init(ctx: CanvasRenderingContext2D) {
 
+        // Get number of bins in the level
         this.binCount = this.engine.tag.get(
             "CharacterBin", 
             "Level").length;
 
+        // Get hint text
         this.hint = (
             this.engine.tag.get(
                 "LevelSequence", 
                 "Level")[0] as LevelSequence).hint;
 
+        // Get level scene
         this.level = this.engine.tag.getScene("Level");
     }
 
     /** Update sign */
     public update(dt : number) {
 
+        // Different sign transitions
         switch(this.signState) {
 
+            // Open transition, move down
             case SignState.OPEN : {
 
                     let signObjectsCurr = this.signObjects[this.signType];
@@ -113,6 +124,7 @@ export default class Signage extends GameObject {
                 }
                 break;
 
+            // Close transition, move left then unpause
             case SignState.CLOSE : {
 
                     let signObjectsCurr = this.signObjects[this.signType];
@@ -135,12 +147,15 @@ export default class Signage extends GameObject {
 
         if(this.signState != SignState.OFF) {
 
+            // Sign drop shadow
             ctx.shadowColor = "rgba(0, 0, 0, 0.1)";
             ctx.shadowBlur = 25;
             ctx.fillRect(this.signOffset.x, this.signOffset.y, 670, 400);
 
+            // Sign
             ctx.drawImage(this.sign, this.signOffset.x, this.signOffset.y);
 
+            // Sign text & non-objects
             if(this.signType == SignType.HINT) {
                 ctx.fillStyle = "#111";
                 ctx.font = "32px Font04b_08";
@@ -160,12 +175,13 @@ export default class Signage extends GameObject {
 
         this.binEaten++;
 
+        // All bins have been eaten, show win sign
         if(this.binCount > 0 && this.binEaten >= this.binCount) {
             this.openSign(SignType.WIN);
         }
     }
 
-    /** Activate the sign */
+    /** Activate and open the sign */
     public openSign(signType : SignType = SignType.HINT) {
 
         // Hints cannot interupt other signs
@@ -178,18 +194,18 @@ export default class Signage extends GameObject {
             return;
         }
 
-
-        this.signState = SignState.OPEN;
-        this.signOffset = this.initialSignOffset.get;
-        this.signType = signType;
-        this.signObjects[signType].forEach(oo => {
+        // Setup and activate sign
+        this.signState = SignState.OPEN;                // Sign starts by opening
+        this.signOffset = this.initialSignOffset.get;   // Reset sign position
+        this.signType = signType;                       // Set sign type
+        this.signObjects[signType].forEach(oo => {      // Reset objects for this type
             oo.gameObject.isActive = true;
             oo.gameObject.spos = oo.offset.get;
         });
-        this.level?.pause();
+        this.level?.pause();                            // Pause the level
     }
 
-    /** Activate the sign */
+    /** Close the sign */
     public closeSign() {
 
         this.signState = SignState.CLOSE;
