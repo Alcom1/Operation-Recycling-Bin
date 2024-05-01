@@ -58,7 +58,7 @@
         "zIndex": -50000
       },
       {
-        "name": "ButtonPause",
+        "name": "ButtonHint",
         "subPosition": {
           "x": 0,
           "y": 660
@@ -68,7 +68,7 @@
           "x": 200,
           "y": 64
         },
-        "text": "Pause"
+        "text": "Hint"
       },
       {
         "name": "ButtonScene",
