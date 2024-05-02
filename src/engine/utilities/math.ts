@@ -306,6 +306,9 @@ export function colorChange(color: string, value: number, func: (color: number, 
 /** Measure and wrap text into array of strings */
 export function wrapText(ctx: CanvasRenderingContext2D, text : string, width : number) : string[] {
 
+    // Stops last line from being 1 word too long
+    text = text + " ";
+
     let start = 0;                                  // Start of current segment
     let lines : string[] = [];                      // Lines of text
 
