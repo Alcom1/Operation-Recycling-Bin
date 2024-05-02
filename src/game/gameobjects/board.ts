@@ -1,8 +1,7 @@
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import Scene from "engine/scene/scene";
-import { wrapText } from "engine/utilities/math";
+import { colPointRect, wrapText } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
-import ButtonHintOkay from "./buttonhintokay";
 import ButtonScene from "./buttonscene";
 import Counter from "./counter";
 import LevelSequence from "./levelsequence";
@@ -10,6 +9,7 @@ import BoxShadow from "./boxshadow";
 import SpriteSet from "./spriteset";
 import Button from "./button";
 import ButtonFailHint from "./buttonfailhint";
+import { MouseState } from "engine/modules/mouse";
 
 /** Armor states of a bot character */
 enum BoardState {
@@ -32,6 +32,20 @@ export interface OffsetGameObject {
     offset : Vect;
 }
 
+/** Board with its set of objects and attributes */
+export interface BoardSet {
+    boardObjects : OffsetGameObject[];
+    stopHeight : number;
+    size : Vect;
+    offset : Vect;
+    pressExit : boolean;
+}
+
+/** Extend canvas context for letter spacing */
+interface Board_CanvasRenderingContext2D extends CanvasRenderingContext2D {
+    letterSpacing : string;
+}
+ 
 /** Handles boards and pausing for boards */
 export default class Board extends GameObject {
 
@@ -39,25 +53,19 @@ export default class Board extends GameObject {
     private boardType : BoardType = BoardType.HINT;     // Current type of board
     private nextBoardType : BoardType | null = null     // Next board type queued
 
-    private boardObjects : OffsetGameObject[][] = [];   // Objects to be displayed for each board type
+    private boardSets : BoardSet[] = [];                // Objects to be displayed for each board type
 
     private binCount : number = 0;                      // Number of bins in the level
     private binEaten : number = 0;                      // Number of bins consumed
     private hint : string = "";                         // Hint text for this level
     private counter : Counter | null = null;            // Counter for current level
+    private sequence : LevelSequence | null = null;     // Level sequence
     private level : Scene | null = null;                // Current level scene
 
     private boardSpeed : number = 1000;                 // Speed of board transitions
     private boardOffset : Vect = Vect.zero;             // Current position of board
-    private openStops : number[] = [                    // Vertical position where board stops
-        674,    //HINT
-        730,    //WIN
-        674,    //FAIL
-        674]    //START
-    private get openStop() : number {                   // Vertical board stop position for the current state
-        return this.openStops[this.boardType]; 
-    }
     private gold : HTMLImageElement;                    // Gold square
+    private buildings : HTMLImageElement[] = [];        // Buildings
 
     /** Constructor */
     constructor(params: GameObjectParams) {
@@ -65,6 +73,11 @@ export default class Board extends GameObject {
 
         //Gold square image
         this.gold = this.engine.library.getImage("gold", "svg");
+
+        //Building images
+        for(let i = 0; i < 4; i++) {
+            this.buildings.push(this.engine.library.getImage(`building_${i}`, "svg"));
+        }
 
         // Objects for hint board
         let objectsHint : OffsetGameObject[] = [];
@@ -86,7 +99,7 @@ export default class Board extends GameObject {
             })),
             offset : new Vect(216, -400)
         },{
-            gameObject : this.parent.pushGO(new ButtonHintOkay({
+            gameObject : this.parent.pushGO(new Button({
                 ...params,
                 tags : [],
                 size : { x : 136, y : 68},
@@ -96,7 +109,13 @@ export default class Board extends GameObject {
             })),
             offset : new Vect(530, -100)
         });
-        this.boardObjects[BoardType.HINT] = objectsHint;
+        this.boardSets[BoardType.HINT] = {
+            boardObjects : objectsHint,
+            stopHeight : 674,
+            size : new Vect(670, 400),
+            offset : new Vect(216, -400),
+            pressExit : true
+        };
 
         // Objects for victory board
         let objectsWin : OffsetGameObject[] = [];        
@@ -137,7 +156,13 @@ export default class Board extends GameObject {
             })),
             offset : new Vect(760, -82)
         });
-        this.boardObjects[BoardType.WIN] = objectsWin;
+        this.boardSets[BoardType.WIN] = {
+            boardObjects : objectsWin,
+            stopHeight : 730,
+            size : new Vect(670, 400),
+            offset : new Vect(216, -400),
+            pressExit : false
+        };
 
         // Objects for failure board
         let objectsFail : OffsetGameObject[] = [];
@@ -158,6 +183,15 @@ export default class Board extends GameObject {
                 zIndex : -100
             })),
             offset : new Vect(216, -400)
+        },{
+            gameObject : this.parent.pushGO(new SpriteSet({
+                ...params,
+                tags : [],
+                image : "disappointed",
+                extension : "svg",
+                zIndex : 50
+            })),
+            offset : new Vect(276, -340)
         },{
             gameObject : this.parent.pushGO(new Button({
                 ...params,
@@ -189,14 +223,44 @@ export default class Board extends GameObject {
             })),
             offset : new Vect(735, -175)
         });
-        this.boardObjects[BoardType.FAIL] = objectsFail;
+        this.boardSets[BoardType.FAIL] = {
+            boardObjects : objectsFail,
+            stopHeight : 674,
+            size : new Vect(670, 328),
+            offset : new Vect(216, -400),
+            pressExit : false
+        };
         
         // Objects for level start board
         let objectsStart : OffsetGameObject[] = [];
-        this.boardObjects[BoardType.START] = objectsStart;
+        objectsStart.push({
+            gameObject : this.parent.pushGO(new BoxShadow({
+                ...params,
+                tags : [],
+                size : { x : 670, y : 328},
+                zIndex : -200,
+            })),
+            offset : new Vect(216, -400)
+        },{
+            gameObject : this.parent.pushGO(new SpriteSet({
+                ...params,
+                tags : [],
+                image : "board_small",
+                extension : "svg",
+                zIndex : -100
+            })),
+            offset : new Vect(216, -400)
+        });
+        this.boardSets[BoardType.START] = {
+            boardObjects : objectsStart,
+            stopHeight : 674,
+            size : new Vect(670, 328),
+            offset : new Vect(216, -400),
+            pressExit : true
+        };
 
         //All board objects start as inactive
-        this.boardObjects.forEach(so => so.forEach(oo => oo.gameObject.isActive = false));
+        this.boardSets.forEach(so => so.boardObjects.forEach(oo => oo.gameObject.isActive = false));
     }
 
     /** Initalize the game object, get related objects */
@@ -219,8 +283,17 @@ export default class Board extends GameObject {
                 "Counter", 
                 "LevelInterface")[0] as Counter);
 
+        // Get level sequence
+        this.sequence = (
+            this.engine.tag.get(
+                "LevelSequence", 
+                "Level")[0] as LevelSequence);
+
         // Get level scene
         this.level = this.engine.tag.getScene("Level");
+
+        //Start level with starting board
+        this.openBoard(BoardType.START);
     }
 
     /** Update board */
@@ -232,15 +305,33 @@ export default class Board extends GameObject {
             // Open transition, move down
             case BoardState.OPEN : {
 
-                    let boardObjectsCurr = this.boardObjects[this.boardType];
+                    let boardObjectsCurr = this.boardSets[this.boardType].boardObjects;
+                    let stopHeight = this.boardSets[this.boardType].stopHeight;
 
-                    if(this.boardOffset.y < this.openStop) {
+                    if(this.boardOffset.y < stopHeight) {
                         this.boardOffset.y += dt * this.boardSpeed;
                         boardObjectsCurr.forEach(o => o.gameObject.spos.y += dt * this.boardSpeed);
                     }
-                    if(this.boardOffset.y >= this.openStop) {
-                        boardObjectsCurr.forEach(o => o.gameObject.spos.y += this.openStop - this.boardOffset.y);
-                        this.boardOffset.y = this.openStop;
+                    if(this.boardOffset.y >= stopHeight) {
+                        boardObjectsCurr.forEach(o => o.gameObject.spos.y += stopHeight - this.boardOffset.y);
+                        this.boardOffset.y = stopHeight;
+                    }
+
+                    let offset = this.boardSets[this.boardType].offset;
+                    let size = this.boardSets[this.boardType].size;
+
+                    if (this.boardSets[this.boardType].pressExit &&
+                        this.engine.mouse.mouseState == MouseState.WASRELEASED &&
+                        colPointRect(
+                            this.engine.mouse.pos.x,
+                            this.engine.mouse.pos.y,
+                            offset.x + this.boardOffset.x,
+                            offset.y + this.boardOffset.y,
+                            size.x,
+                            size.y
+                        )) {
+                        
+                        this.closeBoard();
                     }
                 }
                 break;
@@ -248,7 +339,7 @@ export default class Board extends GameObject {
             // Close transition, move left then unpause
             case BoardState.CLOSE : {
 
-                    let boardObjectsCurr = this.boardObjects[this.boardType];
+                    let boardObjectsCurr = this.boardSets[this.boardType].boardObjects;
 
                     this.boardOffset.x -= dt * this.boardSpeed * 1.5;
                     boardObjectsCurr.forEach(o => o.gameObject.spos.x -= dt * this.boardSpeed * 1.5);
@@ -267,13 +358,15 @@ export default class Board extends GameObject {
                     }
                 }
                 break;
-        }
+            }
     }
 
     /** Draw board */
-    public draw(ctx : CanvasRenderingContext2D) {
+    public draw(ctx : Board_CanvasRenderingContext2D) {
 
         if(this.boardState != BoardState.OFF) {
+
+            ctx.translate(this.boardOffset.x, this.boardOffset.y);
 
             // Board text & non-objects
             switch(this.boardType) {
@@ -282,10 +375,10 @@ export default class Board extends GameObject {
 
                         ctx.fillStyle = "#111";
                         ctx.font = "32px Font04b_08";
-                        ctx.fillText("Hint :", this.boardOffset.x + 272, this.boardOffset.y - 328);
+                        ctx.fillText("Hint :", 272, -328);
                         wrapText(ctx, this.hint, 556).forEach((l, i) => {
         
-                            ctx.fillText(l, this.boardOffset.x + 272, this.boardOffset.y - 328 + i * 32 + 32);
+                            ctx.fillText(l, 272, -328 + i * 32 + 32);
                         });
                     }
                     break;
@@ -294,32 +387,25 @@ export default class Board extends GameObject {
 
                         ctx.fillStyle = "#FFF";
                         ctx.font = "64px Font04b_08";
-                        ctx.fillText("level complete!", this.boardOffset.x + 194, this.boardOffset.y - 444);
+                        ctx.fillText("level complete!", 194, -444);
 
                         ctx.fillStyle = "#111";
                         ctx.font = "32px Font04b_08";
-                        ctx.fillText(`moves:${this.counter?.count}`, this.boardOffset.x + 190, this.boardOffset.y - 134);
+                        ctx.fillText(`moves:${this.counter?.count}`, 190, -134);
 
                         ctx.fillStyle = "#555";
                         // Under par
                         if(this.counter?.underPar) {
 
-                            ctx.fillText("gold award", this.boardOffset.x + 218, this.boardOffset.y - 100);
-
-                            ctx.drawImage(this.gold, this.boardOffset.x + 193, this.boardOffset.y - 118);
+                            ctx.fillText("gold award", 218, -100);
+                            ctx.drawImage(this.gold, 193, -118);
                         }
                         // Over par
                         else {
 
                             ctx.font = "16px Font04b_08";
-
-                            ctx.fillText(`beat this level in ${this.counter?.par} or fewer`, 
-                                this.boardOffset.x + 190, 
-                                this.boardOffset.y - 108);
-
-                            ctx.fillText("moves to get the gold award.",
-                                this.boardOffset.x + 190, 
-                                this.boardOffset.y - 92);
+                            ctx.fillText(`beat this level in ${this.counter?.par} or fewer`, 190, -108);
+                            ctx.fillText("moves to get the gold award.", 190, -92);
                         }
                     }
                     break;
@@ -328,10 +414,33 @@ export default class Board extends GameObject {
 
                         ctx.fillStyle = "#FFF";
                         ctx.font = "64px Font04b_08";
-                        ctx.fillText("OUCH!", this.boardOffset.x + 370, this.boardOffset.y - 310);
+                        ctx.fillText("OUCH!", 375, -310);
 
                         ctx.font = "32px Font04b_08";
-                        ctx.fillText("Why me?", this.boardOffset.x + 370, this.boardOffset.y - 270);
+                        ctx.fillText("Why me?", 375, -270);
+                    }
+                    break;
+                
+                case BoardType.START : {
+
+                        let levelNumber = Number(this.level?.tag.split("_").pop());
+                        let buildingNumber = Math.ceil(levelNumber / 15);
+
+                        if (buildingNumber > 0 && buildingNumber <= this.buildings.length) {
+
+                            ctx.drawImage(this.buildings[buildingNumber - 1], 312, -338);
+                        }
+                        
+                        ctx.fillStyle = "#FFF";
+                        ctx.font = "32px Font04b_08";
+                        wrapText(ctx, `Level ${levelNumber}: ${this.sequence?.levelName}`, 500).forEach((l, i) => {
+                            ctx.fillText(l, 313, -246 + i * 32 + 32);
+                        });
+
+                        ctx.letterSpacing = "4px";
+                        ctx.scale(1.1, 1);
+                        ctx.font = "60px FontStencil";
+                        ctx.fillText(`BUILDING ${buildingNumber}`, 410, -255);
                     }
                     break;
             }
@@ -367,17 +476,17 @@ export default class Board extends GameObject {
         }
 
         // Setup and activate board
-        this.boardState = BoardState.OPEN;              // Board starts by opening
-        this.boardOffset = Vect.zero;                   // Reset board position
-        this.boardType = boardType;                     // Set board type
-        this.boardObjects[boardType].forEach(oo => {    // Reset objects for this type
+        this.boardState = BoardState.OPEN;                      // Board starts by opening
+        this.boardOffset = Vect.zero;                           // Reset board position
+        this.boardType = boardType;                             // Set board type
+        this.boardSets[boardType].boardObjects.forEach(oo => {  // Reset objects for this type
             oo.gameObject.isActive = true;
             oo.gameObject.spos = oo.offset.get;
         });
-        this.level?.pause();                            // Pause the level
+        this.level?.pause();                                    // Pause the level
     }
 
-    /** Close the board */
+    /** Close the board, optionally setup another board type to open afterwards */
     public closeBoard(boardType? : BoardType) {
 
         this.boardState = BoardState.CLOSE;

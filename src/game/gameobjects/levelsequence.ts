@@ -17,8 +17,6 @@ export default class LevelSequence extends GameObject {
     private font: string;
     /** Level name display color */
     private color: string;
-    /** Level name */
-    private levelName: string;
 
     /** Publicly exposed level names for next & prev */
     public levels: {
@@ -28,6 +26,8 @@ export default class LevelSequence extends GameObject {
         level: string;
     }[];
 
+    /** Publically exposed level name */
+    public levelName: string;
     /** Publically exposed par for counter */
     public par: number;
     /** Publically exposed hint text */
