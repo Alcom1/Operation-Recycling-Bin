@@ -12,6 +12,7 @@ interface ButtonParams extends GameObjectParams {
     font?: string;
     text?: string;
     isCenterUI?: boolean;
+    isFocus?: boolean;
 }
 
 export default class Button extends GameObject {
@@ -48,8 +49,13 @@ export default class Button extends GameObject {
     /** Button text */
     protected text: string;
 
-    /* If this button is horizontally centered around the UI */
+    /** If this button is horizontally centered around the UI */
     private isCenterUI: boolean;
+
+    /** If this button has focus decor */
+    private isFocus: boolean;
+
+    /** Images for various button states */
     private images = new Map<boolean, Map<boolean, HTMLImageElement>>([[false, new Map()], [true, new Map()]]);
 
     /** Constructor */
@@ -78,6 +84,9 @@ export default class Button extends GameObject {
         // Set special position
         this.isCenterUI = !!params.isCenterUI;
 
+        // Set button focus decoration
+        this.isFocus = !!params.isFocus;
+
         // Bake buttons
         // Bake press & unpress
         for (const press of [false, true]) {
@@ -91,7 +100,7 @@ export default class Button extends GameObject {
                     ctx => this.drawButton(ctx, press, hover),
                     this.size.x + this.depth + 100,   
                     this.size.y + this.depth + 100,   
-                    `BUTTON.${this.text}.${press ? "PRESS" : "UNPRS"}.${hover ? "HOVER" : "OUTSD"}`            
+                    `BUTTON.${this.text}.${press ? "PRESS" : "UNPRS"}.${hover ? "HOVER" : "OUTSD"}.${this.isFocus ? "FOCUS" : "UNFOC"}`            
                 );
 
                 this.images.get(press)?.set(hover, img);
@@ -226,6 +235,15 @@ export default class Button extends GameObject {
             this.size.x,                // Button width
             this.size.y                 // Button height
         );
+
+        // Focus decor, non-hover only
+        if(this.isFocus) {
+
+            // Focus decor color
+            ctx.strokeStyle = hover ? this.bhColorDark : this.bgColorDark;
+            ctx.lineWidth = 2;
+            ctx.strokeRect(4, 4, this.size.x - 8, this.size.y - 8);
+        }
 
         // Draw button text
         let fontSize = Number(this.font.split("px ")[0]);

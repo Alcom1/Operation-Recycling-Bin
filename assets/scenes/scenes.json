@@ -58,23 +58,10 @@
         "zIndex": -50000
       },
       {
-        "name": "ButtonHint",
-        "subPosition": {
-          "x": 0,
-          "y": 660
-        },
-        "isCenterUI": true,
-        "size": {
-          "x": 200,
-          "y": 64
-        },
-        "text": "Hint"
-      },
-      {
         "name": "ButtonScene",
         "subPosition": {
           "x": 0,
-          "y": 728
+          "y": 676
         },
         "isCenterUI": true,
         "size": {
@@ -87,7 +74,7 @@
         "name": "ButtonScene",
         "subPosition": {
           "x": 0,
-          "y": 780
+          "y": 728
         },
         "isCenterUI": true,
         "size": {
@@ -95,6 +82,19 @@
           "y": 32
         },
         "text": "Previous Level"
+      },
+      {
+        "name": "ButtonHint",
+        "subPosition": {
+          "x": 0,
+          "y": 780
+        },
+        "isCenterUI": true,
+        "size": {
+          "x": 200,
+          "y": 32
+        },
+        "text": "Hint"
       },
       {
         "name": "FPSCounter",
