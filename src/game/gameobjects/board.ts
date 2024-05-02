@@ -8,6 +8,8 @@ import Counter from "./counter";
 import LevelSequence from "./levelsequence";
 import BoxShadow from "./boxshadow";
 import SpriteSet from "./spriteset";
+import Button from "./button";
+import ButtonFailHint from "./buttonfailhint";
 
 /** Armor states of a bot character */
 enum BoardState {
@@ -35,6 +37,7 @@ export default class Board extends GameObject {
 
     private boardState : BoardState = BoardState.OFF;   // State of the current board
     private boardType : BoardType = BoardType.HINT;     // Current type of board
+    private nextBoardType : BoardType | null = null     // Next board type queued
 
     private boardObjects : OffsetGameObject[][] = [];   // Objects to be displayed for each board type
 
@@ -44,7 +47,7 @@ export default class Board extends GameObject {
     private counter : Counter | null = null;            // Counter for current level
     private level : Scene | null = null;                // Current level scene
 
-    private boardSpeed : number = 2000;                  // Speed of board transitions
+    private boardSpeed : number = 1000;                 // Speed of board transitions
     private boardOffset : Vect = Vect.zero;             // Current position of board
     private openStops : number[] = [                    // Vertical position where board stops
         674,    //HINT
@@ -138,6 +141,54 @@ export default class Board extends GameObject {
 
         // Objects for failure board
         let objectsFail : OffsetGameObject[] = [];
+        objectsFail.push({
+            gameObject : this.parent.pushGO(new BoxShadow({
+                ...params,
+                tags : [],
+                size : { x : 670, y : 328},
+                zIndex : -200,
+            })),
+            offset : new Vect(216, -400)
+        },{
+            gameObject : this.parent.pushGO(new SpriteSet({
+                ...params,
+                tags : [],
+                image : "board_small",
+                extension : "svg",
+                zIndex : -100
+            })),
+            offset : new Vect(216, -400)
+        },{
+            gameObject : this.parent.pushGO(new Button({
+                ...params,
+                tags : [],
+                size : { x : 160, y : 68},
+                text : "Select\nLevel",
+                zIndex : 100,
+                font : "32px Font04b_08"
+            })),
+            offset : new Vect(355, -175)
+        },{
+            gameObject : this.parent.pushGO(new ButtonFailHint({
+                ...params,
+                tags : [],
+                size : { x : 160, y : 68},
+                text : "Get\nHint",
+                zIndex : 100,
+                font : "32px Font04b_08"
+            })),
+            offset : new Vect(545, -175)
+        },{
+            gameObject : this.parent.pushGO(new ButtonScene({
+                ...params,
+                tags : [],
+                size : { x : 160, y : 68},
+                text : "Try\nAgain",
+                zIndex : 100,
+                font : "32px Font04b_08"
+            })),
+            offset : new Vect(735, -175)
+        });
         this.boardObjects[BoardType.FAIL] = objectsFail;
         
         // Objects for level start board
@@ -205,7 +256,14 @@ export default class Board extends GameObject {
                     if(this.boardOffset.x < -840) {
                         this.boardState = BoardState.OFF;
                         boardObjectsCurr.forEach(o => o.gameObject.isActive = false);
-                        this.level?.unpause();
+
+                        if(this.nextBoardType != null) {
+                            this.openBoard(this.nextBoardType);
+                            this.nextBoardType = null;
+                        }
+                        else {
+                            this.level?.unpause();
+                        }
                     }
                 }
                 break;
@@ -265,6 +323,17 @@ export default class Board extends GameObject {
                         }
                     }
                     break;
+                
+                case BoardType.FAIL : {
+
+                        ctx.fillStyle = "#FFF";
+                        ctx.font = "64px Font04b_08";
+                        ctx.fillText("OUCH!", this.boardOffset.x + 370, this.boardOffset.y - 310);
+
+                        ctx.font = "32px Font04b_08";
+                        ctx.fillText("Why me?", this.boardOffset.x + 370, this.boardOffset.y - 270);
+                    }
+                    break;
             }
         }
     }
@@ -283,14 +352,18 @@ export default class Board extends GameObject {
     /** Activate and open the board */
     public openBoard(boardType : BoardType = BoardType.HINT) {
 
-        // Hints cannot interupt other boards
-        if(boardType == BoardType.HINT && this.boardType != BoardType.HINT) {
-            return;
-        }
+        //Prevent interuption
+        if(this.boardState != BoardState.OFF) {
 
-        // Do not interupt a board sequence with itself
-        if(boardType == this.boardType && this.boardState != BoardState.OFF) {
-            return;
+            // Hints cannot interupt other boards
+            if(boardType == BoardType.HINT && this.boardType != BoardType.HINT) {
+                return;
+            }
+    
+            // Do not interupt a board sequence with itself
+            if(boardType == this.boardType) {
+                return;
+            }
         }
 
         // Setup and activate board
@@ -305,8 +378,9 @@ export default class Board extends GameObject {
     }
 
     /** Close the board */
-    public closeBoard() {
+    public closeBoard(boardType? : BoardType) {
 
         this.boardState = BoardState.CLOSE;
+        this.nextBoardType = boardType ?? null;
     }
 }

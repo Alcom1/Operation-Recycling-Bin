@@ -6,7 +6,7 @@ import GameObject, { Collision } from "engine/gameobjects/gameobject";
 import SpriteSet, { SpriteParams } from "./spriteset";
 import CharacterBotPart, { CharacterBotPartParams } from "./characterbotpart";
 import Anim, { AnimationParams } from "./anim";
-import Board from "./board";
+import Board, { BoardType } from "./board";
 
 /** Armor states of a bot character */
 enum ArmorState {
@@ -232,6 +232,12 @@ export default class CharacterBot extends Character {
                 this.armorState = ArmorState.NONE;
                 this.timerArmr = 0;
             }
+        }
+
+        // Show failure board if every part has completed its fail sequence
+        if (this.parts.every(p => p.isComplete)) {
+
+            this.board?.openBoard(BoardType.FAIL);
         }
     }
 

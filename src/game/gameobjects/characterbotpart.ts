@@ -41,6 +41,7 @@ export default class CharacterBotPart extends SpriteSet {
         [0, 1, 1, 0],
         [0, 2, 1, 0],
         [1, 3, 2, 1]];
+    public get isComplete() : boolean { return this.imageIndex == this.indexEmotes[3][this.index]; }
 
     /** Constructor */
     constructor(params: CharacterBotPartParams) {

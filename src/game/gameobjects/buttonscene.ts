@@ -11,12 +11,16 @@ export default class ButtonScene extends Button {
         // Get level sequence for the current level
         const levelSequence = this.engine.tag.get("LevelSequence", "Level")[0] as LevelSequence;
 
+        // Get current level
+        const levelCurrentTag = this.engine.tag.getScene("Level")?.tag;
+
         // If the current level has a sequence,
         // get the level in the sequence that matches this button's name
+        // otherwise, get the current level for a restart
         if (levelSequence) {
             this.sceneName = levelSequence.levels.find(l => 
                 l.label.toLowerCase() === 
-                this.text.split(' ').join('').toLowerCase())?.level ?? null;
+                this.text.split(' ').join('').toLowerCase())?.level ?? levelCurrentTag ?? null;
         }
     }
 

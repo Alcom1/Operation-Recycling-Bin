@@ -61,7 +61,7 @@
         "name": "ButtonScene",
         "subPosition": {
           "x": 0,
-          "y": 676
+          "y": 582
         },
         "isCenterUI": true,
         "size": {
@@ -74,7 +74,20 @@
         "name": "ButtonScene",
         "subPosition": {
           "x": 0,
-          "y": 728
+          "y": 634
+        },
+        "isCenterUI": true,
+        "size": {
+          "x": 200,
+          "y": 32
+        },
+        "text": "Restart Level"
+      },
+      {
+        "name": "ButtonScene",
+        "subPosition": {
+          "x": 0,
+          "y": 686
         },
         "isCenterUI": true,
         "size": {

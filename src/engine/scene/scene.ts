@@ -14,6 +14,7 @@ export interface SceneParams {
 export default class Scene {
 
     public name: string;                // Name of this scene
+    public tag: string;                 // Tag for this scene
     public zIndex: number;              // Z-index of this scene, compared to other scenes
     private need: string[];             // Scenes this scene requires
     private gameObjects: GameObject[];  // Game objects in this scene
@@ -26,16 +27,13 @@ export default class Scene {
 
     /** Constructor */
     constructor(
-        private engine: Engine, {
-            name = "unnamed",
-            need = [],
-            zIndex = 0
-        }: SceneParams) {
+        private engine: Engine,
+        params : SceneParams) {
         
-        this.name = name;
-        // Required scenes for this scene to initialize
-        this.need = need;
-        this.zIndex = zIndex;
+        this.name = params.name ?? "unnamed";
+        this.tag = params.tag ?? "notag";
+        this.need = params.need ?? [];  // Required scenes for this scene to initialize
+        this.zIndex = params.zIndex ?? 0;
         this.gameObjects = [];
         this.initialized = false;
     }

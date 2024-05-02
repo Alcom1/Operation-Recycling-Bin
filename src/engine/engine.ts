@@ -208,9 +208,9 @@ export default class Engine {
     }
 
     /** Load a scene */
-    private loadScene(sceneName: string, scenes: Scene[]) {
+    private loadScene(sceneTag: string, scenes: Scene[]) {
 
-        const sceneData = this.sceneDatas.find(s => s.scene.tag == sceneName);
+        const sceneData = this.sceneDatas.find(s => s.scene.tag == sceneTag);
 
         if (sceneData) {
 
@@ -228,7 +228,7 @@ export default class Engine {
             scenes.sort((a, b) => a.zIndex - b.zIndex);
         }
         else {
-            throw new Error(`Scene with tag ${sceneName} does not exist`);
+            throw new Error(`Scene with tag ${sceneTag} does not exist`);
         }
     }
 
