@@ -32,7 +32,7 @@ import CharacterHandler from "./gameobjects/characterhandler";
 import ZIndexHandler from "./gameobjects/zindexhandler";
 import MobileBeam from "./gameobjects/mobilebeam";
 import { TouchStyle } from "engine/modules/settings";
-import Signage from "./gameobjects/signage";
+import Board from "./gameobjects/board";
 import ButtonHint from "./gameobjects/buttonhint";
 
 // Load
@@ -76,7 +76,7 @@ window.onload = function() {
             LevelSequence,
             MobileBeam,
             MobileBubble,
-            Signage,
+            Board,
             SpriteSet,
             Stud,
             ZIndexHandler

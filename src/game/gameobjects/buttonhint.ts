@@ -1,23 +1,23 @@
 import Scene from "engine/scene/scene";
 import Button from "./button";
 import LevelSequence from "./levelsequence";
-import Signage from "./signage";
+import Board from "./board";
 
 export default class ButtonHint extends Button {
 
     /** */
-    private signage : Signage | null = null;
+    private board : Board | null = null;
 
     /** Initialize this scene button */
     public init(ctx: CanvasRenderingContext2D) {
         super.init(ctx);
 
-        this.signage = this.engine.tag.get("Signage", "LevelInterface")[0] as Signage;
+        this.board = this.engine.tag.get("Board", "LevelInterface")[0] as Board;
     }
 
     /** Scene button action */
     protected doButtonAction() {
         
-        this.signage?.openSign();
+        this.board?.openBoard();
     }
 }

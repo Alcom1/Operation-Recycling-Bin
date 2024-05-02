@@ -1,17 +1,17 @@
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import Vect, { Point } from "engine/utilities/vect";
 
-export interface ShadowboxParams extends GameObjectParams {
+export interface BoxShadowParams extends GameObjectParams {
     size : Point;
 }
 
 /** Handles signs and pausing for signs */
-export default class Shadowbox extends GameObject {
+export default class BoxShadow extends GameObject {
 
     private size: Point;
 
     /** Constructor */
-    constructor(params: ShadowboxParams) {
+    constructor(params: BoxShadowParams) {
         super(params);
 
         this.size = params.size;
