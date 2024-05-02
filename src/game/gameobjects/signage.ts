@@ -3,7 +3,9 @@ import Scene from "engine/scene/scene";
 import { wrapText } from "engine/utilities/math";
 import Vect from "engine/utilities/vect";
 import ButtonHintOkay from "./buttonhintokay";
+import Counter from "./counter";
 import LevelSequence from "./levelsequence";
+import Shadowbox from "./shadowbox";
 import SpriteSet from "./spriteset";
 
 /** Armor states of a bot character */
@@ -38,31 +40,31 @@ export default class Signage extends GameObject {
     private binCount : number = 0;                          // Number of bins in the level
     private binEaten : number = 0;                          // Number of bins consumed
     private hint : string = "";                             // Hint text for this level
+    private counter : Counter | null = null;                // Counter for current level
     private level : Scene | null = null;                    // Current level scene
 
     private signSpeed : number = 800;                       // Speed of sign transitions
     private signOffset : Vect = Vect.zero;                  // Current position of sign
     private openStop : number = 674;                        // Vertical position where sign stops
+    private gold : HTMLImageElement;                        // Gold square
 
     /** Constructor */
     constructor(params: GameObjectParams) {
         super(params);
 
-        // Sign is behind its objects
-        this.zIndex = 0;
+        //Gold square image
+        this.gold = this.engine.library.getImage("gold", "svg");
 
         // Objects for hint sign
         let objectsHint : OffsetGameObject[] = [];
         objectsHint.push({
-            gameObject : this.parent.pushGO(new ButtonHintOkay({
+            gameObject : this.parent.pushGO(new Shadowbox({
                 ...params,
                 tags : [],
-                size : { x : 136, y : 68},
-                text : "OK",
-                zIndex : 100,
-                font : "64px Font04b_08"
+                size : { x : 670, y : 400},
+                zIndex : -200,
             })),
-            offset : new Vect(530, -100)
+            offset : new Vect(216, -400)
         },{
             gameObject : this.parent.pushGO(new SpriteSet({
                 ...params,
@@ -72,12 +74,30 @@ export default class Signage extends GameObject {
                 zIndex : -100
             })),
             offset : new Vect(216, -400)
+        },{
+            gameObject : this.parent.pushGO(new ButtonHintOkay({
+                ...params,
+                tags : [],
+                size : { x : 136, y : 68},
+                text : "OK",
+                zIndex : 100,
+                font : "64px Font04b_08"
+            })),
+            offset : new Vect(530, -100)
         });
         this.signObjects[SignType.HINT] = objectsHint;
 
         // Objects for victory sign
         let objectsWin : OffsetGameObject[] = [];        
         objectsWin.push({
+            gameObject : this.parent.pushGO(new Shadowbox({
+                ...params,
+                tags : [],
+                size : { x : 820, y : 548},
+                zIndex : -200,
+            })),
+            offset : new Vect(122, -462)
+        },{
             gameObject : this.parent.pushGO(new SpriteSet({
                 ...params,
                 tags : [],
@@ -114,6 +134,12 @@ export default class Signage extends GameObject {
             this.engine.tag.get(
                 "LevelSequence", 
                 "Level")[0] as LevelSequence).hint;
+
+        // Get move counter
+        this.counter = (
+            this.engine.tag.get(
+                "Counter", 
+                "LevelInterface")[0] as Counter);
 
         // Get level scene
         this.level = this.engine.tag.getScene("Level");
@@ -173,11 +199,10 @@ export default class Signage extends GameObject {
             switch(this.signType) {
 
                 case SignType.HINT : {
+
                         ctx.fillStyle = "#111";
                         ctx.font = "32px Font04b_08";
-        
                         ctx.fillText("Hint :", this.signOffset.x + 272, this.signOffset.y - 328);
-        
                         wrapText(ctx, this.hint, 556).forEach((l, i) => {
         
                             ctx.fillText(l, this.signOffset.x + 272, this.signOffset.y - 328 + i * 32 + 32);
@@ -186,10 +211,36 @@ export default class Signage extends GameObject {
                     break;
                 
                 case SignType.WIN : {
+
                         ctx.fillStyle = "#FFF";
                         ctx.font = "64px Font04b_08";
-
                         ctx.fillText("level complete!", this.signOffset.x + 194, this.signOffset.y - 360);
+
+                        ctx.fillStyle = "#111";
+                        ctx.font = "32px Font04b_08";
+                        ctx.fillText(`moves:${this.counter?.count}`, this.signOffset.x + 190, this.signOffset.y - 50);
+
+                        ctx.fillStyle = "#555";
+                        // Under par
+                        if(this.counter?.underPar) {
+
+                            ctx.fillText("gold award", this.signOffset.x + 218, this.signOffset.y - 16);
+
+                            ctx.drawImage(this.gold, this.signOffset.x + 193, this.signOffset.y - 34);
+                        }
+                        // Over par
+                        else {
+
+                            ctx.font = "16px Font04b_08";
+
+                            ctx.fillText(`beat this level in ${this.counter?.par} or fewer`, 
+                                this.signOffset.x + 190, 
+                                this.signOffset.y - 24);
+
+                            ctx.fillText("moves to get the gold award.",
+                                this.signOffset.x + 190, 
+                                this.signOffset.y - 8);
+                        }
                     }
                     break;
             }
