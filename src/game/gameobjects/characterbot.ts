@@ -143,13 +143,11 @@ export default class CharacterBot extends Character {
             if(this.isZap) {
                 this.partShock.zIndex = this.zIndex;
             }
-            //Normal effect
-            else {
-
-                this.parts.forEach(p => {
-                    p.zIndex = this.zIndex + p.index * 0.1;
-                });
-            }
+            
+            //Parts
+            this.parts.forEach(p => {
+                p.zIndex = this.zIndex + p.index * 0.1;
+            });
         }
     }
     public get zpos() : Point { 
