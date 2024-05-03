@@ -232,8 +232,8 @@ export default class CharacterBot extends Character {
             }
         }
 
-        // Show failure board if every part has completed its fail sequence
-        if (this.parts.every(p => p.isComplete)) {
+        // Show failure board if every part has completed its fail sequence or if this bot has fallen below the level
+        if (this.parts.every(p => p.isComplete) || this.gpos.y > BOUNDARY.maxy + 4) {
 
             this.board?.openBoard(BoardType.FAIL);
         }
