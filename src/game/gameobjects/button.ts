@@ -12,6 +12,7 @@ interface ButtonParams extends GameObjectParams {
     font?: string;
     text?: string;
     isCenterUI?: boolean;
+    isFocus?: boolean;
 }
 
 export default class Button extends GameObject {
@@ -48,8 +49,13 @@ export default class Button extends GameObject {
     /** Button text */
     protected text: string;
 
-    /* If this button is horizontally centered around the UI */
+    /** If this button is horizontally centered around the UI */
     private isCenterUI: boolean;
+
+    /** If this button has focus decor */
+    private isFocus: boolean;
+
+    /** Images for various button states */
     private images = new Map<boolean, Map<boolean, HTMLImageElement>>([[false, new Map()], [true, new Map()]]);
 
     /** Constructor */
@@ -78,6 +84,9 @@ export default class Button extends GameObject {
         // Set special position
         this.isCenterUI = !!params.isCenterUI;
 
+        // Set button focus decoration
+        this.isFocus = !!params.isFocus;
+
         // Bake buttons
         // Bake press & unpress
         for (const press of [false, true]) {
@@ -89,9 +98,9 @@ export default class Button extends GameObject {
 
                 img.src = this.engine.baker.bake(
                     ctx => this.drawButton(ctx, press, hover),
-                    this.size.x + this.depth,   
-                    this.size.y + this.depth,   
-                    `BUTTON.${this.text}.${press ? "PRESS" : "UNPRS"}.${hover ? "HOVER" : "OUTSD"}`            
+                    this.size.x + this.depth + 100,   
+                    this.size.y + this.depth + 100,   
+                    `BUTTON.${this.text}.${press ? "PRESS" : "UNPRS"}.${hover ? "HOVER" : "OUTSD"}.${this.isFocus ? "FOCUS" : "UNFOC"}`            
                 );
 
                 this.images.get(press)?.set(hover, img);
@@ -178,18 +187,31 @@ export default class Button extends GameObject {
     private drawButton(ctx: CanvasRenderingContext2D, press: boolean, hover: boolean): void {
 
         // Handle button depth
-        let currentDepth = press ? this.depth / 2 : this.depth;             // Depth for pressed or unpressed state
-        ctx.translate(this.depth - currentDepth, currentDepth);             // Translate by depth
+        let currentDepth = press ? this.depth / 2 : this.depth; // Depth for pressed or unpressed state
+        let shadowDepth = currentDepth * 1.2;
+        ctx.translate(this.depth - currentDepth, currentDepth); // Translate by depth
+
+        // Button shadow color
+        ctx.fillStyle = "rgba(0, 0, 0, 0.1)"
+
+        // Draw button shadow
+        ctx.beginPath();
+        ctx.moveTo(12 - shadowDepth, this.size.y);
+        ctx.lineTo(12              , this.size.y + shadowDepth);
+        ctx.lineTo(this.size.x + shadowDepth * 2, shadowDepth + this.size.y);
+        ctx.lineTo(this.size.x + shadowDepth * 2, shadowDepth - currentDepth);
+        ctx.lineTo(this.size.x + currentDepth,                - currentDepth);
+        ctx.fill();
 
         // Button top face color
         ctx.fillStyle = hover ? this.bhColorBright : this.bgColorBright;
 
         // Draw button top face
         ctx.beginPath();
-        ctx.moveTo(0,                          0);                          // Lower Right
-        ctx.lineTo(              currentDepth, -currentDepth);              // Upper Right
-        ctx.lineTo(this.size.x + currentDepth, -currentDepth);              // Upper Left
-        ctx.lineTo(this.size.x,                0);                          // Lower Left
+        ctx.moveTo(0,                          0);              // Lower Right
+        ctx.lineTo(              currentDepth, -currentDepth);  // Upper Right
+        ctx.lineTo(this.size.x + currentDepth, -currentDepth);  // Upper Left
+        ctx.lineTo(this.size.x,                0);              // Lower Left
         ctx.fill();
 
         // Button right face color
@@ -214,14 +236,30 @@ export default class Button extends GameObject {
             this.size.y                 // Button height
         );
 
+        // Focus decor, non-hover only
+        if(this.isFocus) {
+
+            // Focus decor color
+            ctx.strokeStyle = hover ? this.bhColorDark : this.bgColorDark;
+            ctx.lineWidth = 2;
+            ctx.strokeRect(4, 4, this.size.x - 8, this.size.y - 8);
+        }
+
         // Draw button text
-        ctx.textAlign = "center";       // Center horizontal
-        ctx.font = this.font;           // Font
-        ctx.fillStyle = this.color;     // Color
-        ctx.fillText(
-            this.text,                  // Fill button text
-            this.size.x / 2, 
-            this.size.y / 2 + 4
-        );
+        this.text.split("\n").forEach((l, i, a) => {
+            
+            let fontSize = Number(this.font.split("px ")[0]);
+
+            let offset = fontSize * ((1 - a.length) / 2 + i)
+
+            ctx.textAlign = "center";       // Center horizontal
+            ctx.font = this.font;           // Font
+            ctx.fillStyle = this.color;     // Color
+            ctx.fillText(
+                l,                  // Fill button text
+                this.size.x / 2 + (fontSize - 16) / 16, 
+                this.size.y / 2 + fontSize * 4.7 / 16 + offset
+            );
+        })
     }
 }

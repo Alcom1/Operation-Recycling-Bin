@@ -1,4 +1,5 @@
 import GameObject from "engine/gameobjects/gameobject";
+import Scene from "engine/scene/scene";
 import { BOUNDARY, col1D, gap1D, GMULTX, GMULTY } from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 
@@ -18,8 +19,14 @@ export default class ZIndexHandler extends GameObject {
 
     private zPoints : ZPoint[] = [];
     private debug : Boolean = false;
+    private isStart: boolean = false;
 
-    /** Initalize the brick handler, get related bricks & game objects, manage bricks */
+    /** Level scene to track pausing */
+    private levelScene: Scene | null = null;
+    /** If level is paused */
+    private get isPaused() : boolean { return this.levelScene?.isPaused ?? false }
+
+    /** Initalize the game object, get related objects */
     public init() {
 
         this.engine.tag.get(
@@ -38,12 +45,19 @@ export default class ZIndexHandler extends GameObject {
                     static : o.zStatic
                 }));
 
+        this.levelScene = this.engine.tag.getScene("Level");
+
         this.processZPoints();
     }
 
     /** Update, check and modify tree */
     public update() {
-        this.processZPoints();
+
+        // Only do z-sort if the level isn't paused
+        if(!this.isPaused || !this.isStart) {
+            this.isStart = true;
+            this.processZPoints();
+        }
     }
 
     /** Process all zPoints */

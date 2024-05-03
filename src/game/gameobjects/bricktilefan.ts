@@ -23,6 +23,8 @@ export default class BrickTileFan extends BrickTileAnim {
     private animations: Anim[] = [];        // Wind animations
     private beams: number[] = [];           // Beams of wind effects
     private characters: Character[] = [];   // Characters being tracked to block wind effects
+    private delayTimers: number[] = [0, 0]; // Timers to delay activation of fully blocked winds
+    private blockDelay = 0.25;              // Duration of delay for activating fully blocked winds
 
     /** Constructor */
     constructor(params: BrickTileParams) {
@@ -45,6 +47,9 @@ export default class BrickTileFan extends BrickTileAnim {
                 } as AnimationParams)) as Anim);
             })
         }
+
+        // Start all wind effects as invisible
+        this.animations.forEach(a => a.isVisible = false);
     }
 
     /** Initialize this fan */
@@ -62,7 +67,17 @@ export default class BrickTileFan extends BrickTileAnim {
     }
 
     /** Update wind beams */
-    public update() {
+    public update(dt: number) {
+
+        // Update timers for fully blocked winds
+        this.delayTimers = this.delayTimers.map(t => {
+            if(t > 0) {
+                return t - dt;
+            }
+            else {
+                return 0;
+            }
+        })
         
         // Set the beams for the collider (also for drawing the animations)
         this.setBeams();
@@ -100,8 +115,15 @@ export default class BrickTileFan extends BrickTileAnim {
             return ret;
         });
 
-        // Set animations
+        // Set beams
         this.beams.forEach((y, x) => {
+
+            //Start timers for fully blocked winds
+            if(this.gpos.y - y == 0) {
+                this.delayTimers[x] = this.blockDelay;
+            }
+
+            //Set animation visibility across beam length
             this.animations.forEach(a => {
                 if (a.gpos.x == this.gpos.x + x + 1) {
                     a.isVisible = this.isOn && a.gpos.y >= y
@@ -112,16 +134,21 @@ export default class BrickTileFan extends BrickTileAnim {
 
     /** Get colliders for this brick. */
     public getColliders() : Collider[] {
-        
+
         // Combine with passive collider from base class
         return super.getColliders().concat(this.isOn ? 
             this.beams.map((b, i) => {
-                return {
-                    mask : MASKS.float,
-                    min : { x : this.gpos.x + i + 1, y : b },
-                    max : this.gpos.getAdd({ x : i + 2, y :  0})
+
+                //Only return colliders for beams that aren't delayed
+                if(this.delayTimers[i] == 0) {
+
+                    return {
+                        mask : MASKS.float,
+                        min : { x : this.gpos.x + i + 1, y : b },
+                        max : this.gpos.getAdd({ x : i + 2, y :  0})
+                    } as Collider
                 }
-            }) : 
-            []);
+
+            }).filter(x => x) as Collider[] : []);  //Sheesh.
     }
 }

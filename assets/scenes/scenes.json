@@ -47,6 +47,9 @@
         "name": "MobileBubble"
       },
       {
+        "name": "Board"
+      },
+      {
         "name": "Counter"
       },
       {
@@ -58,7 +61,7 @@
         "name": "ButtonScene",
         "subPosition": {
           "x": 0,
-          "y": 728
+          "y": 582
         },
         "isCenterUI": true,
         "size": {
@@ -71,7 +74,20 @@
         "name": "ButtonScene",
         "subPosition": {
           "x": 0,
-          "y": 780
+          "y": 634
+        },
+        "isCenterUI": true,
+        "size": {
+          "x": 200,
+          "y": 32
+        },
+        "text": "Restart Level"
+      },
+      {
+        "name": "ButtonScene",
+        "subPosition": {
+          "x": 0,
+          "y": 686
         },
         "isCenterUI": true,
         "size": {
@@ -79,6 +95,19 @@
           "y": 32
         },
         "text": "Previous Level"
+      },
+      {
+        "name": "ButtonHint",
+        "subPosition": {
+          "x": 0,
+          "y": 780
+        },
+        "isCenterUI": true,
+        "size": {
+          "x": 200,
+          "y": 32
+        },
+        "text": "Hint"
       },
       {
         "name": "FPSCounter",
@@ -1166,6 +1195,7 @@
       },
       {
         "levelName": "loading level idea 2",
+        "hint": "",
         "levels": {
           "nextLevel": "LEVEL_01",
           "previousLevel": "LEVEL_60"
@@ -2267,6 +2297,7 @@
       },
       {
         "levelName": "New Employee Training",
+        "hint": "Pick up the two green bricks in front of the trashcan and move them out of the way. ",
         "levels": {
           "nextLevel": "LEVEL_02",
           "previousLevel": "LEVEL_00"
@@ -2685,6 +2716,7 @@
       },
       {
         "levelName": "Art in the Lobby",
+        "hint": "Junkbot can step up and down one brick.  Move the blue brick to make a step up to the trashcan.",
         "levels": {
           "nextLevel": "LEVEL_03",
           "previousLevel": "LEVEL_01"
@@ -2959,6 +2991,7 @@
       },
       {
         "levelName": "Bridge Builder",
+        "hint": "Put bricks under or over other bricks to build bridges. Try sticking the yellow bricks under the grey ones.",
         "levels": {
           "nextLevel": "LEVEL_04",
           "previousLevel": "LEVEL_02"
@@ -3560,6 +3593,7 @@
       },
       {
         "levelName": "Move the Stairs",
+        "hint": "Grab the yellow stairs by the bottom brick and try moving them all at once.",
         "levels": {
           "nextLevel": "LEVEL_05",
           "previousLevel": "LEVEL_03"
@@ -4191,6 +4225,7 @@
       },
       {
         "levelName": "Caution: Fire ",
+        "hint": "Use the green bricks to make bridges just like the one in the center.",
         "levels": {
           "nextLevel": "LEVEL_06",
           "previousLevel": "LEVEL_04"
@@ -4705,6 +4740,7 @@
       },
       {
         "levelName": "Gearbots in Cubicles",
+        "hint": "Pick up one of the white columns from the bottom. Now stack one cubicle on top of another to make a bridge.",
         "levels": {
           "nextLevel": "LEVEL_07",
           "previousLevel": "LEVEL_05"
@@ -5501,6 +5537,7 @@
       },
       {
         "levelName": "Terrarium ",
+        "hint": "Try building one brick at a time. Build out from the center column as well as from both sides.",
         "levels": {
           "nextLevel": "LEVEL_08",
           "previousLevel": "LEVEL_06"
@@ -6309,6 +6346,7 @@
       },
       {
         "levelName": "Caution: Leaky Roof",
+        "hint": "Get Junkbot to the center of the room. Then build a shield like the one on the left over the right pipes.",
         "levels": {
           "nextLevel": "LEVEL_09",
           "previousLevel": "LEVEL_07"
@@ -7186,6 +7224,7 @@
       },
       {
         "levelName": "Fill the Gaps",
+        "hint": "You can move clumps of bricks at once to save moves.",
         "levels": {
           "nextLevel": "LEVEL_10",
           "previousLevel": "LEVEL_08"
@@ -7750,6 +7789,7 @@
       },
       {
         "levelName": "Don't Touch the Gearbots",
+        "hint": "Build another bridge like the one over the first gearbot.",
         "levels": {
           "nextLevel": "LEVEL_11",
           "previousLevel": "LEVEL_09"
@@ -8882,6 +8922,7 @@
       },
       {
         "levelName": "Fire and Ice",
+        "hint": "Build a bridge with the white bricks to keep Junkbot off the fire.",
         "levels": {
           "nextLevel": "LEVEL_12",
           "previousLevel": "LEVEL_10"
@@ -9523,6 +9564,7 @@
       },
       {
         "levelName": "Movin' On Up",
+        "hint": "Use the pre-made stairs. Grab them from the bottom and move them into place.",
         "levels": {
           "nextLevel": "LEVEL_13",
           "previousLevel": "LEVEL_11"
@@ -10196,6 +10238,7 @@
       },
       {
         "levelName": "Bridge over Angry Gearbots",
+        "hint": "Make a bridge to keep Junkbot off the bottom.  Watch the ceiling - Junkbot can't climb if there isn't room.",
         "levels": {
           "nextLevel": "LEVEL_14",
           "previousLevel": "LEVEL_12"
@@ -10434,6 +10477,7 @@
       },
       {
         "levelName": "The Long Umbrella",
+        "hint": "Make a stack of bricks behind the trashcan. Then build a roof that extends underneath the leaky pipes.",
         "levels": {
           "nextLevel": "LEVEL_15",
           "previousLevel": "LEVEL_13"
@@ -10668,6 +10712,7 @@
       },
       {
         "levelName": "Clear the Corners",
+        "hint": "Make some stairs and then use them over again to get to the can in the opposite corner.",
         "levels": {
           "nextLevel": "LEVEL_16",
           "previousLevel": "LEVEL_14"
@@ -11494,6 +11539,7 @@
       },
       {
         "levelName": "Jump Around",
+        "hint": "Jump bricks make Junkbot jump over walls and gaps. You can't move grey jump bricks.",
         "levels": {
           "nextLevel": "LEVEL_17",
           "previousLevel": "LEVEL_15"
@@ -11824,6 +11870,7 @@
       },
       {
         "levelName": "A New Kind of Gearbot",
+        "hint": "Climbbots can go up and down walls. Use the yellow stairs to trap the climbbot underneath Junkbot.",
         "levels": {
           "nextLevel": "LEVEL_18",
           "previousLevel": "LEVEL_16"
@@ -12231,6 +12278,7 @@
       },
       {
         "levelName": "Number One Fan",
+        "hint": "When Junkbot is in the air, putting bricks over the fan will bring him back down.",
         "levels": {
           "nextLevel": "LEVEL_19",
           "previousLevel": "LEVEL_17"
@@ -12733,6 +12781,7 @@
       },
       {
         "levelName": "Air Conditioning",
+        "hint": "The lower fan is tricky. Try building over from the stairs. Don't build too high or Junkbot won't have enough headroom.",
         "levels": {
           "nextLevel": "LEVEL_20",
           "previousLevel": "LEVEL_18"
@@ -13325,6 +13374,7 @@
       },
       {
         "levelName": "The Engine Room",
+        "hint": "Try making the Climbbots drop down to the lower level before you make a bridge for Junkbot.",
         "levels": {
           "nextLevel": "LEVEL_21",
           "previousLevel": "LEVEL_19"
@@ -13658,6 +13708,7 @@
       },
       {
         "levelName": "Ride the Wind",
+        "hint": "Uncover the fans to give Junkbot a lift. Block the fans to make Junkbot drop.",
         "levels": {
           "nextLevel": "LEVEL_22",
           "previousLevel": "LEVEL_20"
@@ -14526,6 +14577,7 @@
       },
       {
         "levelName": "Internal Combustion",
+        "hint": "A central column can help to support the bridge across.",
         "levels": {
           "nextLevel": "LEVEL_23",
           "previousLevel": "LEVEL_21"
@@ -14722,6 +14774,7 @@
       },
       {
         "levelName": "Pardon Me",
+        "hint": "If Junkbot can't go over the Gearbot, move the Gearbot instead.  Gearbots will roll over flat surfaces only.",
         "levels": {
           "nextLevel": "LEVEL_24",
           "previousLevel": "LEVEL_22"
@@ -15854,6 +15907,7 @@
       },
       {
         "levelName": "Trapped in the Freezer",
+        "hint": "Before you move a clump of bricks, think about where they'll go. You may have to dig Junkbot out one brick at a time. ",
         "levels": {
           "nextLevel": "LEVEL_25",
           "previousLevel": "LEVEL_23"
@@ -16253,6 +16307,7 @@
       },
       {
         "levelName": "The Think Tank",
+        "hint": "First build a lid to protect Junkbot from the Gearbots, and then build the plank to get Junkbot to the can.",
         "levels": {
           "nextLevel": "LEVEL_26",
           "previousLevel": "LEVEL_24"
@@ -16426,6 +16481,7 @@
       },
       {
         "levelName": "The Drafty Floor",
+        "hint": "Bots moving over a fan will cut off its breeze momentarily.",
         "levels": {
           "nextLevel": "LEVEL_27",
           "previousLevel": "LEVEL_25"
@@ -17019,6 +17075,7 @@
       },
       {
         "levelName": "The Garage",
+        "hint": "Getting the cans in the right order will help you save moves. Plan carefully.",
         "levels": {
           "nextLevel": "LEVEL_28",
           "previousLevel": "LEVEL_26"
@@ -17597,6 +17654,7 @@
       },
       {
         "levelName": "Up, Up, and Away",
+        "hint": "You can make a zig-zag stairway straight up from Junkbot. Add each new step just before Junkbot will climb it.",
         "levels": {
           "nextLevel": "LEVEL_29",
           "previousLevel": "LEVEL_27"
@@ -17919,6 +17977,7 @@
       },
       {
         "levelName": "Disgruntled Climbbot",
+        "hint": "Open the door for the Climbbot on one side, and then climb up on the other.",
         "levels": {
           "nextLevel": "LEVEL_30",
           "previousLevel": "LEVEL_28"
@@ -18167,6 +18226,7 @@
       },
       {
         "levelName": "Ups and Downs",
+        "hint": " Be sure Junkbot walks out a bit before you cut off the fan, or it will land right back on the old platform.  \u0018",
         "levels": {
           "nextLevel": "LEVEL_31",
           "previousLevel": "LEVEL_29"
@@ -18517,6 +18577,7 @@
       },
       {
         "levelName": "Portable Boost",
+        "hint": "The yellow jump brick can be moved. Use it to get Junkbot from platform to platform.",
         "levels": {
           "nextLevel": "LEVEL_32",
           "previousLevel": "LEVEL_30"
@@ -18850,6 +18911,7 @@
       },
       {
         "levelName": "Hot Air",
+        "hint": "Start building from the center brick to reach both sides.",
         "levels": {
           "nextLevel": "LEVEL_33",
           "previousLevel": "LEVEL_31"
@@ -19295,6 +19357,7 @@
       },
       {
         "levelName": "It's Raining Climbbots!",
+        "hint": "Let the Climbbots fall to the level above or below Junkbot and trap them there to safely build across.",
         "levels": {
           "nextLevel": "LEVEL_34",
           "previousLevel": "LEVEL_32"
@@ -19952,6 +20015,7 @@
       },
       {
         "levelName": "Gearbots That Float",
+        "hint": "Trap the flybots on the right to get the can on the left. Then trap them on the left and get the can on the right.",
         "levels": {
           "nextLevel": "LEVEL_35",
           "previousLevel": "LEVEL_33"
@@ -20915,6 +20979,7 @@
       },
       {
         "levelName": "Thermostat",
+        "hint": "Block off the switch to keep the fires down.",
         "levels": {
           "nextLevel": "LEVEL_36",
           "previousLevel": "LEVEL_34"
@@ -21240,6 +21305,7 @@
       },
       {
         "levelName": "Windy Bridge",
+        "hint": " Go under the bridge using the fans. Make a half bridge from one side and then move it to the other.",
         "levels": {
           "nextLevel": "LEVEL_37",
           "previousLevel": "LEVEL_35"
@@ -21804,6 +21870,7 @@
       },
       {
         "levelName": "Perpetual Motion Machine",
+        "hint": "Remove and add walls to control where Junkbot lands.",
         "levels": {
           "nextLevel": "LEVEL_38",
           "previousLevel": "LEVEL_36"
@@ -22473,6 +22540,7 @@
       },
       {
         "levelName": "Working in the Rain",
+        "hint": "First build cover for Junkbot to get the first two cans.  Then  shuffle the cover around to get the remaining three.",
         "levels": {
           "nextLevel": "LEVEL_39",
           "previousLevel": "LEVEL_37"
@@ -22899,6 +22967,7 @@
       },
       {
         "levelName": "Aerodynamics",
+        "hint": "The fan you uncover should be the one closest to the can.",
         "levels": {
           "nextLevel": "LEVEL_40",
           "previousLevel": "LEVEL_38"
@@ -23632,6 +23701,7 @@
       },
       {
         "levelName": "Happy Holidays!",
+        "hint": "Build over the switches that are off, and not the ones that are on.",
         "levels": {
           "nextLevel": "LEVEL_41",
           "previousLevel": "LEVEL_39"
@@ -24143,6 +24213,7 @@
       },
       {
         "levelName": "Junkbot's Lucky Number",
+        "hint": "If grey bricks are in Junkbot's way, you may have to come around from a different direction.",
         "levels": {
           "nextLevel": "LEVEL_42",
           "previousLevel": "LEVEL_40"
@@ -24432,6 +24503,7 @@
       },
       {
         "levelName": "Look Before You Leap",
+        "hint": "Get Junkbot to the lower platform, and then use the jumps to cross the gaps.",
         "levels": {
           "nextLevel": "LEVEL_43",
           "previousLevel": "LEVEL_41"
@@ -24998,6 +25070,7 @@
       },
       {
         "levelName": "Gotcha",
+        "hint": "The bottom switch doesn't do what you think! Build a bridge over the last fire.",
         "levels": {
           "nextLevel": "LEVEL_44",
           "previousLevel": "LEVEL_42"
@@ -25424,6 +25497,7 @@
       },
       {
         "levelName": "Traffic",
+        "hint": "Take each hazard as it comes; first protect Junkbot against the drip, and then look out for the Gearbot.",
         "levels": {
           "nextLevel": "LEVEL_45",
           "previousLevel": "LEVEL_43"
@@ -26360,6 +26434,7 @@
       },
       {
         "levelName": "The Secret Laboratory",
+        "hint": "Starting with the head, break the monster down. Build a bridge that goes over the grey bricks above the eyebot.",
         "levels": {
           "nextLevel": "LEVEL_46",
           "previousLevel": "LEVEL_44"
@@ -27030,6 +27105,7 @@
       },
       {
         "levelName": "Scary, Scary Eyebot",
+        "hint": "Get the bottom can, and then use the fans to get the upper three.",
         "levels": {
           "nextLevel": "LEVEL_47",
           "previousLevel": "LEVEL_45"
@@ -27324,6 +27400,7 @@
       },
       {
         "levelName": "Eyebot on Patrol",
+        "hint": "Block the Eyebot, and then go for the can.",
         "levels": {
           "nextLevel": "LEVEL_48",
           "previousLevel": "LEVEL_46"
@@ -27952,6 +28029,7 @@
       },
       {
         "levelName": "Junkbot's Secret Weapon",
+        "hint": "The switches are past the fire, so make sure that Junkbot picks up a shield before you try to get the cans.",
         "levels": {
           "nextLevel": "LEVEL_49",
           "previousLevel": "LEVEL_47"
@@ -28159,6 +28237,7 @@
       },
       {
         "levelName": "Raincoat",
+        "hint": "Remember: The shield only protects Junkbot once, so you have to protect him the second time.",
         "levels": {
           "nextLevel": "LEVEL_50",
           "previousLevel": "LEVEL_48"
@@ -28397,6 +28476,7 @@
       },
       {
         "levelName": "Running  the Gauntlet",
+        "hint": "Move as fast as you can, and keep bricks between you and the Eyebots!",
         "levels": {
           "nextLevel": "LEVEL_51",
           "previousLevel": "LEVEL_49"
@@ -28980,6 +29060,7 @@
       },
       {
         "levelName": "Off and On",
+        "hint": "It's all in the timing.  Figure out when the fire will be off, and then keep Junkbot away from the other switches.",
         "levels": {
           "nextLevel": "LEVEL_52",
           "previousLevel": "LEVEL_50"
@@ -29400,6 +29481,7 @@
       },
       {
         "levelName": "Don't Let the Dogs Out",
+        "hint": "First trap the Eyebots, and then go after the cans.",
         "levels": {
           "nextLevel": "LEVEL_53",
           "previousLevel": "LEVEL_51"
@@ -30085,6 +30167,7 @@
       },
       {
         "levelName": "What  is Project X?",
+        "hint": "Use both platforms to construct the bridges.",
         "levels": {
           "nextLevel": "LEVEL_54",
           "previousLevel": "LEVEL_52"
@@ -30778,6 +30861,7 @@
       },
       {
         "levelName": "Which Switch?",
+        "hint": "The real switches are hidden among a number of false ones.  Find them and then turn them off.",
         "levels": {
           "nextLevel": "LEVEL_55",
           "previousLevel": "LEVEL_53"
@@ -31007,6 +31091,7 @@
       },
       {
         "levelName": "Junkbot is Brave",
+        "hint": "It's all in the timing. You'll have to use the jump brick more than once.",
         "levels": {
           "nextLevel": "LEVEL_56",
           "previousLevel": "LEVEL_54"
@@ -31503,6 +31588,7 @@
       },
       {
         "levelName": "Elevator Action",
+        "hint": "Turn off the top two switches first. Then use the fans to get around without turning them back on.",
         "levels": {
           "nextLevel": "LEVEL_57",
           "previousLevel": "LEVEL_55"
@@ -32003,6 +32089,7 @@
       },
       {
         "levelName": "The Quest",
+        "hint": "You need to reach the switch to get to the can, so your first goal is to get a shield to take Junkbot past the drip.",
         "levels": {
           "nextLevel": "LEVEL_58",
           "previousLevel": "LEVEL_56"
@@ -32446,6 +32533,7 @@
       },
       {
         "levelName": "Wind Tunnel",
+        "hint": "Remove the upper bricks first to get Junkbot up the tunnel quickly.  Make sure the Eyebots don't slip in.",
         "levels": {
           "nextLevel": "LEVEL_59",
           "previousLevel": "LEVEL_57"
@@ -32769,6 +32857,7 @@
       },
       {
         "levelName": "All Kinds of Trouble",
+        "hint": "Trap the troublemakers in the lower right corner, and use the fan to help you on the way down.",
         "levels": {
           "nextLevel": "LEVEL_60",
           "previousLevel": "LEVEL_58"
@@ -33598,6 +33687,7 @@
       },
       {
         "levelName": "Art Factory",
+        "hint": "Have fun making your own LEGO sculptures in the Art Factory!",
         "levels": {
           "nextLevel": "LEVEL_00",
           "previousLevel": "LEVEL_59"

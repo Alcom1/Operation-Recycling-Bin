@@ -16,20 +16,6 @@ const CharacterBinTallOverride = Object.freeze({
 /** A bin full of junk. Eat it. */
 export default class CharacterBinTall extends CharacterBin {
 
-    /** z-index get/setters */
-    // public get zpos() : Point { 
-    //     return this.gpos.getAdd({ 
-    //         x : -1,
-    //         y : -this.height + 1
-    //     });
-    // }
-    // public get zSize() : Point {
-    //     return {
-    //         x : 2,
-    //         y : this.height
-    //     }; 
-    // }
-
     /** Constructor */
     constructor(params: CharacterParams) {
         super(Object.assign(params, CharacterBinTallOverride));

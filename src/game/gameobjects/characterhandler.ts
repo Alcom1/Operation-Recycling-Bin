@@ -1,4 +1,5 @@
 import GameObject from "engine/gameobjects/gameobject";
+import Scene from "engine/scene/scene";
 import Vect, { Point } from "engine/utilities/vect";
 import Character from "./character";
 
@@ -6,19 +7,23 @@ import Character from "./character";
 export default class CharacterHandler extends GameObject {
 
     private characters: Character[] = [];
+    private levelScene: Scene | null = null;
     private isStart: boolean = false;
+    private get isPaused() : boolean { return this.levelScene?.isPaused ?? false }
 
-    /** Initalize the brick handler, get related bricks & game objects, manage bricks */
+    /** Initalize the game object, get related objects */
     public init() {
          
         this.characters = this.engine.tag.get(  // Get bricks from scene
             "Character", 
             "Level") as Character[];
+
+        this.levelScene = this.engine.tag.getScene("Level");
     }
 
     /** A second layer of initialization, gets characters out of unwanted starting positions */
-    public update()
-    {
+    public update() {
+
         // If this handler hasn't started yet (after constructor and init)
         if(!this.isStart) {
 
@@ -44,6 +49,11 @@ export default class CharacterHandler extends GameObject {
 
     /** Perform synchronous updates for all characters */
     public updateSync(counter : number, loopLength : number) {
+
+        // Do not update if the level is paused
+        if(this.isPaused) {
+            return;
+        }
 
         // Map character groups as characters with their specific tag
         let charactersTagged = this.characters;

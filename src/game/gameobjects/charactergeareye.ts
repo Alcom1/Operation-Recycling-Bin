@@ -50,6 +50,7 @@ export default class CharacterGearEye extends CharacterGear {
         super(Object.assign(params, CharacterGearEyeOverride));
     }
 
+    /** Get bot for tracking */
     public init() {
         super.init();
         

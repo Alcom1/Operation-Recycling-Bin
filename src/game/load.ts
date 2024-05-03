@@ -32,6 +32,8 @@ import CharacterHandler from "./gameobjects/characterhandler";
 import ZIndexHandler from "./gameobjects/zindexhandler";
 import MobileBeam from "./gameobjects/mobilebeam";
 import { TouchStyle } from "engine/modules/settings";
+import Board from "./gameobjects/board";
+import ButtonHint from "./gameobjects/buttonhint";
 
 // Load
 window.onload = function() {
@@ -56,6 +58,7 @@ window.onload = function() {
             BrickTileHot,
             BrickSuper,
             Button,
+            ButtonHint,
             ButtonScene,
             Character,
             CharacterBot,
@@ -73,6 +76,7 @@ window.onload = function() {
             LevelSequence,
             MobileBeam,
             MobileBubble,
+            Board,
             SpriteSet,
             Stud,
             ZIndexHandler
