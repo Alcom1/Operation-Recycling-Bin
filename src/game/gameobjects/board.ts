@@ -39,6 +39,7 @@ export interface BoardSet {
     size : Vect;
     offset : Vect;
     pressExit : boolean;
+    autoCloseTime : number;
 }
 
 /** Extend canvas context for letter spacing */
@@ -64,6 +65,8 @@ export default class Board extends GameObject {
 
     private boardSpeed : number = 1000;                 // Speed of board transitions
     private boardOffset : Vect = Vect.zero;             // Current position of board
+    private autoCloseTimer : number = 0;                // Timer for auto-close
+
     private gold : HTMLImageElement;                    // Gold square
     private buildings : HTMLImageElement[] = [];        // Buildings
 
@@ -114,7 +117,8 @@ export default class Board extends GameObject {
             stopHeight : 674,
             size : new Vect(670, 400),
             offset : new Vect(216, -400),
-            pressExit : true
+            pressExit : true,
+            autoCloseTime : -1
         };
 
         // Objects for victory board
@@ -161,7 +165,8 @@ export default class Board extends GameObject {
             stopHeight : 730,
             size : new Vect(670, 400),
             offset : new Vect(216, -400),
-            pressExit : false
+            pressExit : false,
+            autoCloseTime : -1
         };
 
         // Objects for failure board
@@ -228,7 +233,8 @@ export default class Board extends GameObject {
             stopHeight : 674,
             size : new Vect(670, 328),
             offset : new Vect(216, -400),
-            pressExit : false
+            pressExit : false,
+            autoCloseTime : -1
         };
         
         // Objects for level start board
@@ -256,7 +262,8 @@ export default class Board extends GameObject {
             stopHeight : 674,
             size : new Vect(670, 328),
             offset : new Vect(216, -400),
-            pressExit : true
+            pressExit : true,
+            autoCloseTime : 2
         };
 
         //All board objects start as inactive
@@ -317,6 +324,15 @@ export default class Board extends GameObject {
                     if(this.boardOffset.y >= stopHeight) {
                         boardObjectsCurr.forEach(o => o.gameObject.spos.y += stopHeight - this.boardOffset.y);
                         this.boardOffset.y = stopHeight;
+                        
+                        let autoCloseTime = this.boardSets[this.boardType].autoCloseTime;
+
+                        if(autoCloseTime > 0) { 
+                            this.autoCloseTimer += dt;
+                            if(this.autoCloseTimer > autoCloseTime) {
+                                this.closeBoard();
+                            }
+                        }
                     }
 
                     let offset = this.boardSets[this.boardType].offset;
