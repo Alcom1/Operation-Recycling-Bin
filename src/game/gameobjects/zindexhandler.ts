@@ -19,6 +19,7 @@ export default class ZIndexHandler extends GameObject {
 
     private zPoints : ZPoint[] = [];
     private debug : Boolean = false;
+    private isStart: boolean = false;
 
     /** Level scene to track pausing */
     private levelScene: Scene | null = null;
@@ -53,7 +54,8 @@ export default class ZIndexHandler extends GameObject {
     public update() {
 
         // Only do z-sort if the level isn't paused
-        if(!this.isPaused) {
+        if(!this.isPaused || !this.isStart) {
+            this.isStart = true;
             this.processZPoints();
         }
     }

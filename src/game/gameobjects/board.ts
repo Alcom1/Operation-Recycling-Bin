@@ -292,8 +292,10 @@ export default class Board extends GameObject {
         // Get level scene
         this.level = this.engine.tag.getScene("Level");
 
-        //Start level with starting board
-        this.openBoard(BoardType.START);
+        //Start level with starting board, unless this is the loading level
+        if(Number(this.level?.tag.split("_").pop()) > 0) {
+            this.openBoard(BoardType.START);
+        }
     }
 
     /** Update board */
@@ -433,7 +435,7 @@ export default class Board extends GameObject {
                         
                         ctx.fillStyle = "#FFF";
                         ctx.font = "32px Font04b_08";
-                        wrapText(ctx, `Level ${levelNumber}: ${this.sequence?.levelName}`, 500).forEach((l, i) => {
+                        wrapText(ctx, `Level ${(levelNumber - 1) % 15 + 1}: ${this.sequence?.levelName}`, 500).forEach((l, i) => {
                             ctx.fillText(l, 313, -246 + i * 32 + 32);
                         });
 

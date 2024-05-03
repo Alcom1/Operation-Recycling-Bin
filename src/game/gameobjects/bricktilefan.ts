@@ -47,6 +47,9 @@ export default class BrickTileFan extends BrickTileAnim {
                 } as AnimationParams)) as Anim);
             })
         }
+
+        // Start all wind effects as invisible
+        this.animations.forEach(a => a.isVisible = false);
     }
 
     /** Initialize this fan */
