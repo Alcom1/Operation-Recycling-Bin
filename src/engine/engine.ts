@@ -37,6 +37,8 @@ export default class Engine {
     private gameObjectTypes = new Map<string, typeof GameObject>();
     /** */
     private isPaused: boolean = false;
+    /** */
+    private tabWasntVisible: boolean = false;
 
     /** If the last frame threw an error */
     private crashed = false;
@@ -92,6 +94,13 @@ export default class Engine {
         // Establish starting scenes
         this.pushSceneNames = startScenes;
 
+        // Track tab visibility to limit updates based on tab leaving/entering
+        document.addEventListener("visibilitychange", (event) => {
+            if (document.visibilityState != "visible") {
+                this.tabWasntVisible = true;
+            }
+        });
+
         // Load each starting & loading scene
         this.loadScenes(sceneSource, this.scenesActive).finally(() => {
             this.physicsFrame();
@@ -110,9 +119,19 @@ export default class Engine {
 
         while (true) {
 
+            //
+
             // Add time difference to count
             let t2 = Date.now();
-            timeCount += t2 - t1;
+            if(this.tabWasntVisible) { //Do not update count if tab wasn't visible prior
+
+                this.tabWasntVisible = false;
+                timeCount += 30;       //Update timer by 30ms just because
+            }
+            else {
+
+                timeCount += t2 - t1;
+            }
             t1 = t2;
 
             // If time difference is beyond minimum, do at least one physics update
@@ -120,8 +139,9 @@ export default class Engine {
 
                 // If exceeded the maximum number of physics updates for large lag spikes, stop
                 if(physicsLagCount >= this.physicsLagUpdateMax) {
-                    timeCount = 0;      // Reset timer, no more updates
-                    break;              // Stop
+                    timeCount = 0;          // Reset timer, no more updates
+                    physicsLagCount = 0;
+                    break;                  // Stop
                 }
 
                 // Perform updates
