@@ -211,6 +211,13 @@ export default class CharacterGearClimb extends CharacterGear {
             this.move.y = 0;
             this.setStateIndex(GearState.NORMAL);
         }
+        // Move back if there is no wall behind
+        else if(!this.isColBack && this.move.y == 1) {
+
+            this.move.y = 0;
+            this.reverse();
+            this.setStateIndex(GearState.NORMAL);
+        }
         // Move up if there is no ceiling
         else if(!this.isColRoof) {
 
@@ -218,10 +225,11 @@ export default class CharacterGearClimb extends CharacterGear {
             this.setStateIndex(GearState.WAIT);
         }
         // Move back if there is no wall behind
-        else if(!this.isColBack) {
+        else if(!this.isColBack && this.move.y == 0) {
 
             this.move.y = 0;
-            this.setStateIndex(GearState.WAIT);
+            this.reverse();
+            this.setStateIndex(GearState.NORMAL);
         }
         // Completely boxed in, just stop
         else {
