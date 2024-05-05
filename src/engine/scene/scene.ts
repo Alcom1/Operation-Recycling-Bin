@@ -18,7 +18,7 @@ export default class Scene {
     public zIndex: number;              // Z-index of this scene, compared to other scenes
     private need: string[];             // Scenes this scene requires
     private gameObjects: GameObject[];  // Game objects in this scene
-    private initialized: boolean;       // If scene is initialized
+    public initialized: boolean;        // If scene is initialized
     private isUpdate: boolean = true;   // If scene should be updating
     private isDraw: boolean = true;     // If scene should be drawing
     public get isPaused() : boolean {   // Scene's paused state

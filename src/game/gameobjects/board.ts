@@ -58,7 +58,6 @@ export default class Board extends GameObject {
 
     private binCount : number = 0;                      // Number of bins in the level
     private binEaten : number = 0;                      // Number of bins consumed
-    private hint : string = "";                         // Hint text for this level
     private counter : Counter | null = null;            // Counter for current level
     private sequence : LevelSequence | null = null;     // Level sequence
     private level : Scene | null = null;                // Current level scene
@@ -278,12 +277,6 @@ export default class Board extends GameObject {
             "CharacterBin", 
             "Level").length;
 
-        // Get hint text
-        this.hint = (
-            this.engine.tag.get(
-                "LevelSequence", 
-                "Level")[0] as LevelSequence).hint;
-
         // Get move counter
         this.counter = (
             this.engine.tag.get(
@@ -394,7 +387,7 @@ export default class Board extends GameObject {
                         ctx.fillStyle = "#111";
                         ctx.font = "32px Font04b_08";
                         ctx.fillText("Hint :", 272, -328);
-                        wrapText(ctx, this.hint, 556).forEach((l, i) => {
+                        wrapText(ctx, this.sequence?.hint ?? "", 556).forEach((l, i) => {
         
                             ctx.fillText(l, 272, -328 + i * 32 + 32);
                         });

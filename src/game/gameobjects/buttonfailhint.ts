@@ -1,6 +1,4 @@
-import Scene from "engine/scene/scene";
 import Button from "./button";
-import LevelSequence from "./levelsequence";
 import Board, { BoardType } from "./board";
 
 export default class ButtonFailHint extends Button {

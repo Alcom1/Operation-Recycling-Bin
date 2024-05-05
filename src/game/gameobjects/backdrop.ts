@@ -39,8 +39,10 @@ export default class Backdrop extends GameObject {
 
     /** Initialize brick sprite */
     public init() {
-
-        this.image.src = this.engine.baker.bake(ctx => this.drawBackdrop(ctx));
+        
+        this.image = this.engine.library.getImageWithSrc(
+            `backdrop_${this.engine.tag.getScene("Level")?.tag.split("_").pop()}`,
+            this.engine.baker.bake(ctx => this.drawBackdrop(ctx)));
     }
 
     /** Draw the image saved for this backdrop */

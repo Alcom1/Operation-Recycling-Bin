@@ -189,9 +189,13 @@ export default class Engine {
         // Reset push list
         this.pushSceneNames = [];
 
-        // Scene actions
+        // If library is loaded from constructor phase, initialize scenes
         if (this.library.getLoaded()) {
             this.initScenes();
+        }
+
+        // If library is loaded from init phase, and init phase is completed, update & draw
+        if (this.library.getLoaded() && this.scenesActive.every(s => s.initialized)) {
             this.updateDrawScenes(this.scenesActive, dt);
         }
         else {
