@@ -1,4 +1,4 @@
-import { Collision } from "engine/gameobjects/gameobject";
+import GameObject, { Collision } from "engine/gameobjects/gameobject";
 import { Collider } from "engine/modules/collision";
 import { MASKS } from "engine/utilities/math";
 import BrickTile, { BrickTileParams } from "./bricktile";
@@ -52,10 +52,10 @@ export default class BrickTileButton extends BrickTile {
     }
     
     /** Flip on/off when pressed */
-    public resolveCollision(mask : number) {
+    public resolveCollision(mask : number, other : GameObject) {
 
-        // Turn off
-        if (mask & MASKS.press) {
+        // Turn off or on, make sure presser is horizontally aligned with the button.
+        if (mask & MASKS.press && other.gpos.x - 1 == this.gpos.x) {
 
             if(!this.isLock) {
 
