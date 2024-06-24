@@ -17,6 +17,25 @@
   },
   {
     "scene": {
+      "name": "Menu",
+      "tag": "Menu",
+      "zIndex": 0
+    },
+    "gameObjects": [
+      {
+        "name": "FPSCounter",
+        "position": {
+          "x": 1,
+          "y": 0
+        }
+      },
+      {
+        "name": "MenuHandler"
+      }
+    ]
+  },
+  {
+    "scene": {
       "name": "LevelInterface",
       "tag": "LevelInterface",
       "need": [
@@ -61,7 +80,7 @@
         "name": "ButtonScene",
         "subPosition": {
           "x": 0,
-          "y": 582
+          "y": 552
         },
         "isCenterUI": true,
         "size": {
@@ -74,7 +93,7 @@
         "name": "ButtonScene",
         "subPosition": {
           "x": 0,
-          "y": 634
+          "y": 604
         },
         "isCenterUI": true,
         "size": {
@@ -87,7 +106,7 @@
         "name": "ButtonScene",
         "subPosition": {
           "x": 0,
-          "y": 686
+          "y": 656
         },
         "isCenterUI": true,
         "size": {
@@ -95,6 +114,21 @@
           "y": 32
         },
         "text": "Previous Level"
+      },
+      {
+        "name": "ButtonScene",
+        "subPosition": {
+          "x": 0,
+          "y": 708
+        },
+        "isCenterUI": true,
+        "size": {
+          "x": 200,
+          "y": 32
+        },
+        "text": "Select Level",
+        "sceneName": "Menu",
+        "isLevelScene": false
       },
       {
         "name": "ButtonHint",

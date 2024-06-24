@@ -3,7 +3,7 @@ import { MouseState } from "engine/modules/mouse";
 import { colorAdd, colorMult, colorTranslate, colPointRect, Z_DEPTH, WIDTH_SIDEPANEL } from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
 
-interface ButtonParams extends GameObjectParams {
+export interface ButtonParams extends GameObjectParams {
     size?: Point;
     depth?: number;
     color?: string;

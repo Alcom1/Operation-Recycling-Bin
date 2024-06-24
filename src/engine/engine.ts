@@ -258,7 +258,8 @@ export default class Engine {
 
     /** Unload scenes pending removal */
     private unloadScenes(killSceneNames: string[]): void {
-        if (killSceneNames.length > 1) {
+        
+        if (killSceneNames.length >= 1) {
 
             // Clear scene names from core
             this.scenesActive = this.scenesActive.filter(s => !this.killSceneNames.includes(s.name)); 
