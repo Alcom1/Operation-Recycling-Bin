@@ -1,7 +1,7 @@
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 
 /** Parameters for a level sequence */
-interface LevelSequenceParams extends GameObjectParams {
+export interface LevelSequenceParams extends GameObjectParams {
     font?: string;
     color?: string;
     levelName: string;

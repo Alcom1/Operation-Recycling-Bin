@@ -46,8 +46,6 @@ export default class FPSCounter extends GameObject {
     public draw(ctx: CanvasRenderingContext2D) {
 
         if(this.hasBackground) {
-            debugger;
-
             ctx.fillStyle = "#7F8887";
             ctx.fillRect(0, 0, 150, 26);
         }

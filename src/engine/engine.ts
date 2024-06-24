@@ -3,6 +3,7 @@ import BakerModule from "./modules/baker";
 import CollisionModule from "./modules/collision";
 import LibraryModule from "./modules/library";
 import MouseModule from "./modules/mouse";
+import ScraperModule from "./modules/scraper";
 import SettingsModule from "./modules/settings";
 import SyncModule from "./modules/sync";
 import TagModule from "./modules/tag";
@@ -48,6 +49,7 @@ export default class Engine {
     public collision: CollisionModule;
     public library: LibraryModule;
     public mouse: MouseModule;
+    public scraper: ScraperModule;
     public settings: SettingsModule;
     public sync: SyncModule;
     public tag: TagModule;
@@ -84,6 +86,7 @@ export default class Engine {
         this.library = new LibraryModule();
         this.mouse = new MouseModule(this, this.canvas);
         this.mouse.setResolution(this.canvas.width, this.canvas.height);
+        this.scraper = new ScraperModule();
         this.settings = new SettingsModule(settings);
         this.sync = new SyncModule(this.physicsPerSecond);
         this.tag = new TagModule();
@@ -227,6 +230,7 @@ export default class Engine {
         const sceneResponse = await fetch(`${this.scenePath}${sceneName}.json`);
 
         this.sceneDatas = await sceneResponse.json();
+        this.scraper.loadSceneDatas(this.sceneDatas);
     }
 
     /** Load a scene */

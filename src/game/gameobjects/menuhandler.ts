@@ -1,6 +1,11 @@
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import ButtonScene, { ButtonSceneParams } from "./buttonscene";
 
+/** Extend canvas context for letter spacing */
+interface Menu_CanvasRenderingContext2D extends CanvasRenderingContext2D {
+    letterSpacing : string;
+}
+
 /** Handler for brick selection, movement, etc. */
 export default class MenuHandler extends GameObject {
 
@@ -23,16 +28,28 @@ export default class MenuHandler extends GameObject {
                     ...params,
                     tags: ["Button"],
                     subPosition: {
-                        x: cPos.x * 250 + 250,
-                        y: cPos.y * 50 + 80
+                        x: cPos.x * 315 + 170,
+                        y: cPos.y * 50 + 110
                       },
                       size: {
-                        x: 200,
+                        x: 300,
                         y: 32
                     },
-                    text: `Level ${i}`,
+                    text: this.engine.scraper.levelNames[i],
                     sceneName: `LEVEL_${String(i).padStart(2, '0')}`
                 } as ButtonSceneParams))
+        }
+    }
+
+    public draw(ctx: Menu_CanvasRenderingContext2D) {
+
+        for(let i = 1; i <= 4; i++) {
+        
+            ctx.letterSpacing = "3px"
+            ctx.fillStyle = "#FFF";
+            ctx.font = "40px FontStencil";
+            ctx.textAlign = "center";
+            ctx.fillText(`BUILDING ${i}`, i * 315 - 140, 70);
         }
     }
 }
