@@ -102,7 +102,8 @@ export default class Engine {
         });
 
         // Load each starting & loading scene
-        this.loadScenes(sceneSource, this.scenesActive).finally(() => {
+        this.loadSceneDatas(sceneSource, this.scenesActive).finally(() => {
+            this.loadScene("Loading", this.scenesLoading);
             this.physicsFrame();
             this.frame();
         });
@@ -118,8 +119,6 @@ export default class Engine {
         let physicsLagCount = 0;
 
         while (true) {
-
-            //
 
             // Add time difference to count
             let t2 = Date.now();
@@ -177,9 +176,6 @@ export default class Engine {
         // Calculate time delta since last frame
         const dt = this.calculateDeltaTime();
 
-        // Clear the canvas
-        this.ctx.clearRect(0, 0, this.width, this.height);
-
         // Unload and load scenes
         this.unloadScenes(this.killSceneNames);
 
@@ -196,6 +192,8 @@ export default class Engine {
 
         // If library is loaded from init phase, and init phase is completed, update & draw
         if (this.library.getLoaded() && this.scenesActive.every(s => s.initialized)) {
+
+            this.ctx.clearRect(0, 0, this.width, this.height);  // Clear the canvas if not loading
             this.updateDrawScenes(this.scenesActive, dt);
         }
         else {
@@ -225,7 +223,7 @@ export default class Engine {
     }
 
     /** Load all scene data */
-    private async loadScenes(sceneName: string, scenes: Scene[]): Promise<void> {
+    private async loadSceneDatas(sceneName: string, scenes: Scene[]): Promise<void> {
         const sceneResponse = await fetch(`${this.scenePath}${sceneName}.json`);
 
         this.sceneDatas = await sceneResponse.json();

@@ -8,8 +8,13 @@ export default class BakerModule {
      * @param element HTML canvas element
     */
     constructor(element: HTMLCanvasElement) {
+
         // Canvas
-        this.canvas = element;
+        this.canvas = document.createElement("canvas");
+
+        // Copy width and height of main canvas
+        this.canvas.width = element.width;
+        this.canvas.height = element.height;
 
         // Canvas Content
         const ctx = this.canvas.getContext('2d');
