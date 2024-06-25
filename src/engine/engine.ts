@@ -3,6 +3,7 @@ import BakerModule from "./modules/baker";
 import CollisionModule from "./modules/collision";
 import LibraryModule from "./modules/library";
 import MouseModule from "./modules/mouse";
+import ScraperModule from "./modules/scraper";
 import SettingsModule from "./modules/settings";
 import SyncModule from "./modules/sync";
 import TagModule from "./modules/tag";
@@ -48,6 +49,7 @@ export default class Engine {
     public collision: CollisionModule;
     public library: LibraryModule;
     public mouse: MouseModule;
+    public scraper: ScraperModule;
     public settings: SettingsModule;
     public sync: SyncModule;
     public tag: TagModule;
@@ -84,6 +86,7 @@ export default class Engine {
         this.library = new LibraryModule();
         this.mouse = new MouseModule(this, this.canvas);
         this.mouse.setResolution(this.canvas.width, this.canvas.height);
+        this.scraper = new ScraperModule();
         this.settings = new SettingsModule(settings);
         this.sync = new SyncModule(this.physicsPerSecond);
         this.tag = new TagModule();
@@ -102,7 +105,8 @@ export default class Engine {
         });
 
         // Load each starting & loading scene
-        this.loadScenes(sceneSource, this.scenesActive).finally(() => {
+        this.loadSceneDatas(sceneSource, this.scenesActive).finally(() => {
+            this.loadScene("Loading", this.scenesLoading);
             this.physicsFrame();
             this.frame();
         });
@@ -118,8 +122,6 @@ export default class Engine {
         let physicsLagCount = 0;
 
         while (true) {
-
-            //
 
             // Add time difference to count
             let t2 = Date.now();
@@ -177,9 +179,6 @@ export default class Engine {
         // Calculate time delta since last frame
         const dt = this.calculateDeltaTime();
 
-        // Clear the canvas
-        this.ctx.clearRect(0, 0, this.width, this.height);
-
         // Unload and load scenes
         this.unloadScenes(this.killSceneNames);
 
@@ -196,6 +195,8 @@ export default class Engine {
 
         // If library is loaded from init phase, and init phase is completed, update & draw
         if (this.library.getLoaded() && this.scenesActive.every(s => s.initialized)) {
+
+            this.ctx.clearRect(0, 0, this.width, this.height);  // Clear the canvas if not loading
             this.updateDrawScenes(this.scenesActive, dt);
         }
         else {
@@ -225,10 +226,11 @@ export default class Engine {
     }
 
     /** Load all scene data */
-    private async loadScenes(sceneName: string, scenes: Scene[]): Promise<void> {
+    private async loadSceneDatas(sceneName: string, scenes: Scene[]): Promise<void> {
         const sceneResponse = await fetch(`${this.scenePath}${sceneName}.json`);
 
         this.sceneDatas = await sceneResponse.json();
+        this.scraper.loadSceneDatas(this.sceneDatas);
     }
 
     /** Load a scene */
@@ -258,7 +260,8 @@ export default class Engine {
 
     /** Unload scenes pending removal */
     private unloadScenes(killSceneNames: string[]): void {
-        if (killSceneNames.length > 1) {
+        
+        if (killSceneNames.length >= 1) {
 
             // Clear scene names from core
             this.scenesActive = this.scenesActive.filter(s => !this.killSceneNames.includes(s.name)); 

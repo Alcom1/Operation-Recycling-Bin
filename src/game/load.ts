@@ -34,6 +34,7 @@ import MobileBeam from "./gameobjects/mobilebeam";
 import { TouchStyle } from "engine/modules/settings";
 import Board from "./gameobjects/board";
 import ButtonHint from "./gameobjects/buttonhint";
+import MenuHandler from "./gameobjects/menuhandler";
 
 // Load
 window.onload = function() {
@@ -44,7 +45,7 @@ window.onload = function() {
         canvas, 
         "scenes/",
         "scenes",
-        ["LevelInterface", "LEVEL_01"],
+        ["Menu"],
         [
             Backdrop,
             BrickHandler,
@@ -74,6 +75,7 @@ window.onload = function() {
             CursorIcon,
             FPSCounter,
             LevelSequence,
+            MenuHandler,
             MobileBeam,
             MobileBubble,
             Board,

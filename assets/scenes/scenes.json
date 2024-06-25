@@ -11,7 +11,27 @@
         "position": {
           "x": 1,
           "y": 0
+        },
+        "hasBackground" : true
+      }
+    ]
+  },
+  {
+    "scene": {
+      "name": "Menu",
+      "tag": "Menu",
+      "zIndex": 0
+    },
+    "gameObjects": [
+      {
+        "name": "FPSCounter",
+        "position": {
+          "x": 1,
+          "y": 0
         }
+      },
+      {
+        "name": "MenuHandler"
       }
     ]
   },
@@ -61,25 +81,12 @@
         "name": "ButtonScene",
         "subPosition": {
           "x": 0,
-          "y": 582
+          "y": 540
         },
         "isCenterUI": true,
         "size": {
           "x": 200,
-          "y": 32
-        },
-        "text": "Next Level"
-      },
-      {
-        "name": "ButtonScene",
-        "subPosition": {
-          "x": 0,
-          "y": 634
-        },
-        "isCenterUI": true,
-        "size": {
-          "x": 200,
-          "y": 32
+          "y": 40
         },
         "text": "Restart Level"
       },
@@ -87,14 +94,16 @@
         "name": "ButtonScene",
         "subPosition": {
           "x": 0,
-          "y": 686
+          "y": 600
         },
         "isCenterUI": true,
         "size": {
           "x": 200,
-          "y": 32
+          "y": 40
         },
-        "text": "Previous Level"
+        "text": "Select Level",
+        "sceneName": "Menu",
+        "isLevelScene": false
       },
       {
         "name": "ButtonHint",
@@ -105,9 +114,10 @@
         "isCenterUI": true,
         "size": {
           "x": 200,
-          "y": 32
+          "y": 40
         },
-        "text": "Hint"
+        "text": "Hint",
+        "font": "32px Font04b_08"
       },
       {
         "name": "FPSCounter",
