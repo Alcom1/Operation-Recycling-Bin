@@ -144,8 +144,10 @@ export default class Board extends GameObject {
                 ...params,
                 tags : [],
                 size : { x : 200, y : 32},
-                text : "Previous Level",
-                zIndex : 100
+                text : "Select Level",
+                zIndex : 100,
+                sceneName : "Menu",
+                isLevelScene : false
             })),
             offset : new Vect(760, -134)
         },{
@@ -197,13 +199,15 @@ export default class Board extends GameObject {
             })),
             offset : new Vect(276, -340)
         },{
-            gameObject : this.parent.pushGO(new Button({
+            gameObject : this.parent.pushGO(new ButtonScene({
                 ...params,
                 tags : [],
                 size : { x : 160, y : 68},
                 text : "Select\nLevel",
                 zIndex : 100,
-                font : "32px Font04b_08"
+                font : "32px Font04b_08",
+                sceneName : "Menu",
+                isLevelScene : false
             })),
             offset : new Vect(355, -175)
         },{

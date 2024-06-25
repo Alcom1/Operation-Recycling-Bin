@@ -81,25 +81,12 @@
         "name": "ButtonScene",
         "subPosition": {
           "x": 0,
-          "y": 552
+          "y": 540
         },
         "isCenterUI": true,
         "size": {
           "x": 200,
-          "y": 32
-        },
-        "text": "Next Level"
-      },
-      {
-        "name": "ButtonScene",
-        "subPosition": {
-          "x": 0,
-          "y": 604
-        },
-        "isCenterUI": true,
-        "size": {
-          "x": 200,
-          "y": 32
+          "y": 40
         },
         "text": "Restart Level"
       },
@@ -107,25 +94,12 @@
         "name": "ButtonScene",
         "subPosition": {
           "x": 0,
-          "y": 656
+          "y": 600
         },
         "isCenterUI": true,
         "size": {
           "x": 200,
-          "y": 32
-        },
-        "text": "Previous Level"
-      },
-      {
-        "name": "ButtonScene",
-        "subPosition": {
-          "x": 0,
-          "y": 708
-        },
-        "isCenterUI": true,
-        "size": {
-          "x": 200,
-          "y": 32
+          "y": 40
         },
         "text": "Select Level",
         "sceneName": "Menu",
@@ -140,9 +114,10 @@
         "isCenterUI": true,
         "size": {
           "x": 200,
-          "y": 32
+          "y": 40
         },
-        "text": "Hint"
+        "text": "Hint",
+        "font": "32px Font04b_08"
       },
       {
         "name": "FPSCounter",

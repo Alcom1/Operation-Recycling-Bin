@@ -100,7 +100,7 @@ export default class Button extends GameObject {
                     ctx => this.drawButton(ctx, press, hover),
                     this.size.x + this.depth + 100,   
                     this.size.y + this.depth + 100,   
-                    `BUTTON.${this.text}.${press ? "PRESS" : "UNPRS"}.${hover ? "HOVER" : "OUTSD"}.${this.isFocus ? "FOCUS" : "UNFOC"}`            
+                    `BUTTON.${this.text}.${this.size.y}.${press ? "PRESS" : "UNPRS"}.${hover ? "HOVER" : "OUTSD"}.${this.isFocus ? "FOCUS" : "UNFOC"}`            
                 );
 
                 this.images.get(press)?.set(hover, img);
@@ -113,7 +113,7 @@ export default class Button extends GameObject {
         
         // Center button horizontally around the sidepanel UI
         if (this.isCenterUI) {
-            this.spos.x = ctx.canvas.width - WIDTH_SIDEPANEL / 2;
+            this.spos.x = ctx.canvas.width - WIDTH_SIDEPANEL / 2 - 4;
         }
     }
 
