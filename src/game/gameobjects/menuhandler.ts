@@ -1,4 +1,5 @@
 import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
+import { pathImg } from "engine/utilities/math";
 import ButtonScene, { ButtonSceneParams } from "./buttonscene";
 
 /** Extend canvas context for letter spacing */
@@ -39,6 +40,9 @@ export default class MenuHandler extends GameObject {
                     sceneName: `LEVEL_${String(i).padStart(2, '0')}`
                 } as ButtonSceneParams))
         }
+
+        //Menu cursor
+        this.engine.mouse.setCursorURL(pathImg("cursor_none"));
     }
 
     public draw(ctx: Menu_CanvasRenderingContext2D) {
