@@ -107,9 +107,39 @@ export default class MouseModule {
         // Prevent scroll events
         e.preventDefault();
         this._mouseType = e.pointerType;
-        this.mousePos.set(
-            e.offsetX * (this.resolution.x / (e.target as HTMLElement).clientWidth),
-            e.offsetY * (this.resolution.y / (e.target as HTMLElement).clientHeight));
+
+        // Pointer positioning for fullscreen mode
+        if(document.fullscreenElement === e.target) {
+
+            let fullScreenSize = { x : window.innerWidth, y : window.innerHeight };
+            let boxingGap = { x : 0, y : 0 };
+
+            //If fullscreen is taller than game resolution, modify y-position.
+            if(this.resolution.x / this.resolution.y > fullScreenSize.x / fullScreenSize.y) {
+                
+                fullScreenSize.y = this.resolution.y / this.resolution.x * fullScreenSize.x;
+                boxingGap.y = (window.innerHeight - fullScreenSize.y) / 2;
+            }
+            //If fullscreen is wider than game resolution, modify x-position.
+            else {
+                
+                fullScreenSize.x = this.resolution.x / this.resolution.y * fullScreenSize.y;
+                boxingGap.x = (window.innerWidth - fullScreenSize.x) / 2;
+            }
+
+            // Set mouse position
+            this.mousePos.set(
+                (e.offsetX - boxingGap.x) * this.resolution.x / fullScreenSize.x, 
+                (e.offsetY - boxingGap.y) * this.resolution.y / fullScreenSize.y);
+        }
+        // Pointer positioning for normal mode
+        else {
+
+            // Set mouse position
+            this.mousePos.set(
+                e.offsetX * (this.resolution.x / (e.target as HTMLElement).clientWidth), 
+                e.offsetY * (this.resolution.y / (e.target as HTMLElement).clientHeight));
+        }
 
         //Handle mouse offset update if enabled and not currently lerping
         if (doUpdateOffset && this.mouseOffCount == 0) {

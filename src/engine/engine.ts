@@ -17,6 +17,8 @@ export default class Engine {
     private canvas: HTMLCanvasElement;
     /** HTML Canvas Context */
     private ctx: CanvasRenderingContext2D;
+    /** Default background color of canvas */
+    private defaultCanvasBackground: string;
     /** Timestamp of last frame for calculating dt */
     private lastTime: number = 0;
     /** Path scenes are located in */
@@ -76,6 +78,7 @@ export default class Engine {
         this.canvas.height = height;
         this.canvas.style.maxWidth = this.canvas.width + "px";
         this.canvas.style.maxHeight = this.canvas.height + "px";
+        this.defaultCanvasBackground = window.getComputedStyle(this.canvas)["backgroundColor"];
         const ctx = this.canvas.getContext('2d');
         if (!ctx) throw new Error("Unable to acquire WebGL context");
         this.ctx = ctx;
@@ -193,10 +196,31 @@ export default class Engine {
             this.initScenes();
         }
 
+        // Black background for fullscreen mode
+        if(document.fullscreenElement === this.canvas) {
+            this.canvas.style.background = "#000";
+        }
+        //Default background for normal mode
+        else {
+            this.canvas.style.background = this.defaultCanvasBackground;
+        }
+
         // If library is loaded from init phase, and init phase is completed, update & draw
         if (this.library.getLoaded() && this.scenesActive.every(s => s.initialized)) {
 
-            this.ctx.clearRect(0, 0, this.width, this.height);  // Clear the canvas if not loading
+            // Screen clear for fullscreen mode
+            if(document.fullscreenElement === this.canvas) {
+                this.ctx.save();
+                this.ctx.fillStyle = this.defaultCanvasBackground;
+                console.log(this.defaultCanvasBackground);
+                this.ctx.fillRect(0, 0, this.width, this.height);
+                this.ctx.restore();
+            }
+            // Default clear for normal mode
+            else {
+                this.ctx.clearRect(0, 0, this.width, this.height);  // Clear the canvas if not loading
+            }
+
             this.updateDrawScenes(this.scenesActive, dt);
         }
         else {

@@ -32,6 +32,11 @@
                 font-family: Font04b_08;
                 z-index: -1;
             }
+            .fullscreen {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+            }
             @media (max-aspect-ratio: 3/2) {
                 canvas {
                     width: 100%;
@@ -62,6 +67,7 @@
         <!-- Canvas -->
         <span class="fontholder">.</span>
         <canvas></canvas>
+        <button class ="fullscreen" onclick="document.querySelector('canvas').requestFullscreen()">fullscreen</button>
 
         <script src='src/game/load.ts' type="module"></script>
     </body>
