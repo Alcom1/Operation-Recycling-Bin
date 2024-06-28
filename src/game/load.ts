@@ -84,7 +84,7 @@ window.onload = function() {
             ZIndexHandler
         ],
         [
-            ["touchStyle", TouchStyle.PUSH],
+            ["touchStyle", TouchStyle.NONE],
             ["touchDragIs1D", true]
         ],
         false
