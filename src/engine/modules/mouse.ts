@@ -18,12 +18,10 @@ export default class MouseModule {
     private engine: Engine;
     private mouseElement: HTMLElement;
     private mousePos = Vect.zero;
-    private mouseOffTrk = Vect.zero;    //Potential new mouse offset being tracked
     private mouseOffOld = Vect.zero;    //Previous mouse offset
     private mouseOffLrp = Vect.zero;    //Lerp between old and new offset
     private mouseOffNew = Vect.zero;    //Newest mouse offset
     private mouseOffLimit = 100;        //Maximum size where the tracking offset becomes a new offset
-    private mouseOffDampStrength = 100; //Strength on the dampening effect on the tracking offset
     private mouseOffCount = 0;
     private mousePressed = false;
     private afterPressed = false;
@@ -32,7 +30,6 @@ export default class MouseModule {
 
     public get pos() { return this.mousePos.get; }
     public get off() { return this.mouseOffLrp.getMult(1 / this.mouseOffLimit); }
-    public get trk() { return this.mouseOffTrk.getMult(1 / this.mouseOffLimit); }
     
     /** Mouse state */
     public get mouseState(): MouseState {
@@ -82,9 +79,6 @@ export default class MouseModule {
 
     /** Update the mouse for a frame (Should be the last action of a frame) */
     public update(dt: number) {
-
-        //Dampen
-        this.mouseOffTrk.sub(this.mouseOffTrk.norm.getMult(dt * this.mouseOffDampStrength));
 
         //Lerp from old to new mouse Vel
         this.mouseOffCount =    //Track timing for lerp
@@ -151,16 +145,6 @@ export default class MouseModule {
             if(this.engine.settings.getBoolean("touchDragIs1D")) {
                 diff.x = 0;
             }
-
-            //Track and update mouse offset
-            this.mouseOffTrk.add(diff);
-            if(this.mouseOffTrk.magnitudeSquared > Math.pow(this.mouseOffLimit, 2)) {
-
-                this.mouseOffOld = this.mouseOffNew.get;
-                this.mouseOffNew = this.mouseOffTrk.norm.getMult(this.mouseOffLimit);
-                this.mouseOffTrk.setToZero();
-                this.mouseOffCount = 1;
-            }
         }
     }
 
@@ -172,7 +156,6 @@ export default class MouseModule {
             direction.norm.getMult(this.mouseOffLimit) :
             new Vect(0, Math.sign(direction) * this.mouseOffLimit);
         
-        this.mouseOffTrk = Vect.zero;
         this.mouseOffOld = Vect.zero;
         this.mouseOffLrp = Vect.zero;
         this.mouseOffNew = newOffset.get;

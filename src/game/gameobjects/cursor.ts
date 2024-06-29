@@ -121,7 +121,7 @@ export default class Cursor extends GameObject {
                     // If pressing the brick returns truthy (up or down)
                     if (direction) {
 
-                        this.enterCarryState(-direction);
+                        this.enterCarryState();
 
                     } else {
                         
@@ -225,7 +225,7 @@ export default class Cursor extends GameObject {
         // Initialize the selection. If doing so caused bricks to be carried, enter carry state
         if (this.brickHandler.initSelection(this.ppos, dir)) {
 
-            this.enterCarryState(dir);
+            this.enterCarryState();
         }  
     }
 
@@ -278,7 +278,7 @@ export default class Cursor extends GameObject {
     }
 
     /** Set the cursor to its carry state */
-    private enterCarryState(dir: number): void {
+    private enterCarryState(): void {
 
         if (this.state != CursorState.CARRY) {
 
@@ -286,7 +286,7 @@ export default class Cursor extends GameObject {
         
             this.brickHandler.cullBrickStuds();         // Reset culled studs
             this.brickHandler.setSnappedBricks(true);   // Carried bricks should start as snapped
-            this.engine.mouse.setMouseOffset(dir);      // Set mouse offset to match selection direction
+            this.engine.mouse.setMouseOffset(-1);      // Set mouse offset to match selection direction
 
             this.state = CursorState.CARRY;             // Set state to NONE stateStart carrying if we selected some bricks
         }

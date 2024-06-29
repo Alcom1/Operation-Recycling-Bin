@@ -51,9 +51,6 @@ export default class MobileBeam extends MobileIndicator {
         let combinedOffset = touchOffset.getSub(boundaryOffset).getAdd(snapOffset);
         let lineStart = combinedOffset.norm.getMult(this.ringSize + 1);
 
-        //Mouse movement tracking
-        let track = this.engine.mouse.trk.magnitude - this.deadZone;
-
         //Canvas style for beam
         let rand = Math.random();
         ctx.fillStyle = ctx.strokeStyle = "#FFF";
@@ -84,30 +81,6 @@ export default class MobileBeam extends MobileIndicator {
             5 + rand, 0, Math.PI * 2);
         ctx.closePath();
         ctx.fill();
-
-        //Tracking arc
-        if (track > 0 && 
-            Math.sign(this.engine.mouse.trk.y) != 
-            Math.sign(touchOffset.y)) {
-            
-            ctx.save();
-            let trackArc = (Math.PI * track) * (1 / (1 - this.deadZone));
-            
-            //Up-down reverse direction
-            if (Math.sign(touchOffset.y) > 0) {
-                ctx.rotate(Math.PI);
-            }
-
-            ctx.beginPath();
-            ctx.arc(
-                0, 
-                0, 
-                this.ringSize + 10, 
-                Math.PI / 2 - trackArc, 
-                Math.PI / 2 + trackArc);
-            ctx.stroke();
-            ctx.restore();
-        }
 
         //Inner circle
         ctx.shadowColor = "rgba(128, 128, 128, 1)";
