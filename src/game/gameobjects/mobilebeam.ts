@@ -1,21 +1,61 @@
+import { GameObjectParams } from "engine/gameobjects/gameobject";
 import { TouchStyle } from "engine/modules/settings";
+import Scene from "engine/scene/scene";
 import { GMULTX, GMULTY, round, TOUCH_EFFECT_MAX, TOUCH_PUSH_OFFSET } from "engine/utilities/math";
-import Vect from "engine/utilities/vect";
+import Vect, { Point } from "engine/utilities/vect";
 import MobileIndicator from "./mobileindicator";
+import NoDragArea from "./nodragarea";
+import NoDragCircle, { NoDragCircleParams } from "./nodragcircle";
 
 /** Visual for picking up bricks with push touch */
 export default class MobileBeam extends MobileIndicator {
 
     private ringSize = 50;
-    private deadZone = 0.25;
+    private flipArea : NoDragArea;
+    private flipAreaRadius = 30;
+    private flipAreaOffset : Point = { x : 90, y : -20 }
+    private levelScene: Scene | null = null;
+
+    /** Constructor */
+    constructor(params: GameObjectParams) {
+        super(params);
+
+        this.flipArea = this.parent.pushGO(new NoDragCircle({
+            ...params, 
+            tags: [],
+            radius : this.flipAreaRadius
+        } as NoDragCircleParams)) as NoDragCircle;
+    
+        this.engine.mouse.addNoMoveArea(this.flipArea);
+    }
+
+    /** Update */
+    public init() {
+
+        this.levelScene = this.engine.tag.getScene("Level");
+    }
+
+    /** Update */
+    public update(dt: number) {
+        super.update(dt);
+
+        this.flipArea!.spos = this.spos.getAdd(this.flipAreaOffset);
+
+        if(this.flipArea.consume()) {
+
+            this.engine.mouse.flipMouseOffset();
+        }
+    }
+
 
     /** Draw this preview */
     public draw(ctx: CanvasRenderingContext2D) {
     
-        //Only display on mobile with push touch-style.
+        //Only display on mobile with push touch-style, and don't display while paused.
         if (this.engine.mouse.mouseType == "mouse" ||
             this.engine.settings.getNumber("touchStyle") != TouchStyle.PUSH ||
-            !TOUCH_EFFECT_MAX.getLessOrEqual(this.size)) {
+            !TOUCH_EFFECT_MAX.getLessOrEqual(this.size) ||
+            this.levelScene?.isPaused) {
 
             return;
         }
@@ -99,17 +139,45 @@ export default class MobileBeam extends MobileIndicator {
         ctx.lineTo(combinedOffset.x, combinedOffset.y);
         ctx.stroke();
 
+        //Circles
+        ctx.strokeStyle = "#CCC";
+        ctx.beginPath();
+        ctx.arc(
+            0, 
+            0, 
+            this.ringSize - 26, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(
+            0, 
+            0, 
+            this.ringSize - 38, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.stroke();
+
+        //Flip button
+        ctx.fillStyle = "#FFF";
+        ctx.beginPath();
+        ctx.arc(
+            this.flipAreaOffset.x,
+            this.flipAreaOffset.y,
+            this.flipArea!.radius, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.fill();
+
         //Arrows
         ctx.fillStyle = "#333";
         ctx.save();
-        for(let i = 0; i <= 3; i++) {
+        ctx.translate(this.flipAreaOffset.x, this.flipAreaOffset.y);
+        for(let i = 0; i <= 1; i++) {
             ctx.beginPath();
-            ctx.moveTo( 12, 15);
-            ctx.lineTo( 0, 28);
-            ctx.lineTo(-12, 15);
+            ctx.moveTo( 15, 5);
+            ctx.lineTo( 0, 24);
+            ctx.lineTo(-15, 5);
             ctx.closePath();
             ctx.fill();
-            ctx.rotate(Math.PI / 2);
+            ctx.rotate(Math.PI);
         }
         ctx.restore();
     }

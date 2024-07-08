@@ -138,7 +138,7 @@ export default class Cursor extends GameObject {
             // If the current state is not carrying or if the bricks are snapped to a valid location
             case MouseState.WASRELEASED:
 
-                if (this.state != CursorState.CARRY || this.isSnap) {
+                if ((this.state != CursorState.CARRY || this.isSnap) && this.engine.mouse.isMaxed) {
                     
                     this.brickHandler.deselectBricks();
 

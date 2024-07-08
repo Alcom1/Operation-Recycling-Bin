@@ -87,7 +87,7 @@ export default class Engine {
         this.baker = new BakerModule(this.canvas);
         this.collision = new CollisionModule();
         this.library = new LibraryModule();
-        this.mouse = new MouseModule(this, this.canvas);
+        this.mouse = new MouseModule(this.canvas);
         this.mouse.setResolution(this.canvas.width, this.canvas.height);
         this.scraper = new ScraperModule();
         this.settings = new SettingsModule(settings);
@@ -212,7 +212,6 @@ export default class Engine {
             if(document.fullscreenElement === this.canvas) {
                 this.ctx.save();
                 this.ctx.fillStyle = this.defaultCanvasBackground;
-                console.log(this.defaultCanvasBackground);
                 this.ctx.fillRect(0, 0, this.width, this.height);
                 this.ctx.restore();
             }
@@ -292,6 +291,7 @@ export default class Engine {
             this.tag.clear(this.killSceneNames);
             this.sync.clear(this.killSceneNames);
             this.collision.clear(this.killSceneNames);
+            this.mouse.clear(this.killSceneNames);
             this.killSceneNames = [];
             this.isPaused = false;
         }

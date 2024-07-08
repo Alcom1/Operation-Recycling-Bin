@@ -1,6 +1,9 @@
 import Engine from "engine/engine";
-import Vect from "engine/utilities/vect";
+import Scene from "engine/scene/scene";
+import Vect, { Point } from "engine/utilities/vect";
+import NoDragArea from "game/gameobjects/nodragarea";
 
+/** Mouse press & release states */
 export enum MouseState {
     /** Mouse is not pressed */
     ISRELEASED,
@@ -15,7 +18,6 @@ export enum MouseState {
 /** Module that manages mouse and touch input. */
 export default class MouseModule {
 
-    private engine: Engine;
     private mouseElement: HTMLElement;
     private mousePos = Vect.zero;
     private mouseOffOld = Vect.zero;    //Previous mouse offset
@@ -27,9 +29,16 @@ export default class MouseModule {
     private afterPressed = false;
     private _mouseType = "";
     private resolution = Vect.zero;
+    private noDragAreas : NoDragArea[] = [];
 
-    public get pos() { return this.mousePos.get; }
-    public get off() { return this.mouseOffLrp.getMult(1 / this.mouseOffLimit); }
+    public get pos() : Vect { return this.mousePos.get; }
+    public get off() : Vect { return this.mouseOffLrp.getMult(1 / this.mouseOffLimit); }
+    public get isMaxed() {
+
+        return (
+            this.mouseOffNew.y == 0 ||
+            Math.abs(this.off.y) == 1);
+    }
     
     /** Mouse state */
     public get mouseState(): MouseState {
@@ -59,9 +68,8 @@ export default class MouseModule {
     }
 
     /** Constructor */
-    constructor(engine : Engine, element: HTMLElement) {
+    constructor(element: HTMLElement) {
         
-        this.engine = engine;
         this.mouseElement = element;
         this.mouseElement.style.touchAction = 'none';
 
@@ -70,7 +78,7 @@ export default class MouseModule {
         }
         this.mouseElement.onpointerdown = e => {
             this.mousePressed = true;
-            this.updatePos(e, false);   // On touch devices, we also need to make sure we register this as a change in cursor position
+            this.updatePos(e);   // On touch devices, we also need to make sure we register this as a change in cursor position
         }
         this.mouseElement.onpointerup = () => this.mousePressed = false;
         this.mouseElement.onpointercancel = () => this.mousePressed = false;
@@ -94,13 +102,13 @@ export default class MouseModule {
     }
 
     /** Update the mouse position */
-    private updatePos(e: PointerEvent, doUpdateOffset : boolean = true) {
-
-        let prev = this.mousePos.get;
+    private updatePos(e: PointerEvent) {
 
         // Prevent scroll events
         e.preventDefault();
         this._mouseType = e.pointerType;
+
+        let newMousePos = Vect.zero;
 
         // Pointer positioning for fullscreen mode
         if(document.fullscreenElement === e.target) {
@@ -122,7 +130,7 @@ export default class MouseModule {
             }
 
             // Set mouse position
-            this.mousePos.set(
+            newMousePos.set(
                 (e.offsetX - boxingGap.x) * this.resolution.x / fullScreenSize.x, 
                 (e.offsetY - boxingGap.y) * this.resolution.y / fullScreenSize.y);
         }
@@ -130,21 +138,26 @@ export default class MouseModule {
         else {
 
             // Set mouse position
-            this.mousePos.set(
+            newMousePos.set(
                 e.offsetX * (this.resolution.x / (e.target as HTMLElement).clientWidth), 
                 e.offsetY * (this.resolution.y / (e.target as HTMLElement).clientHeight));
         }
 
-        //Handle mouse offset update if enabled and not currently lerping
-        if (doUpdateOffset && this.mouseOffCount == 0) {
-            
-            //If the new mouse velocity reaches a threshold, replace the old one and reset for a new velocity.
-            let diff = this.mousePos.getSub(prev);
+        let noDrag = false;
 
-            //Ignore horiziontal difference if drag is 1D.
-            if(this.engine.settings.getBoolean("touchDragIs1D")) {
-                diff.x = 0;
-            }
+        if([MouseState.ISPRESSED, MouseState.WASPRESSED].some(s => s == this.mouseState)) {
+
+            this.noDragAreas.forEach(a => {
+
+                if(a.press(newMousePos, this.mouseState)) {
+                    noDrag = true;
+                }
+            })
+        }
+
+        if(!noDrag) {
+            
+            this.mousePos = newMousePos.get;
         }
     }
 
@@ -162,6 +175,12 @@ export default class MouseModule {
         this.mouseOffCount = 1;
     }
 
+    /** Flips the mouse offset */
+    public flipMouseOffset() {
+        
+        this.setMouseOffset(-Math.sign(this.off.y));
+    }
+
     /** Sets the mouse cursor from a URL */
     public setCursorURL(url?: string) {
 
@@ -172,5 +191,17 @@ export default class MouseModule {
     public setResolution(resx: number, resy: number): void {
 
         this.resolution.set(resx, resy);
+    }
+
+    /** Adds a new no-move area to this mouse */
+    public addNoMoveArea(area : NoDragArea) {
+
+        this.noDragAreas.push(area);
+    }
+
+    /** Clears all no-move areas */
+    public clear(sceneNames: string[]) {
+
+        this.noDragAreas = this.noDragAreas.filter(a => !sceneNames.some(sn => sn === a.parent.name));
     }
 }

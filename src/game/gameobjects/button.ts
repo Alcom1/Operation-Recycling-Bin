@@ -2,6 +2,7 @@ import GameObject, { GameObjectParams } from "engine/gameobjects/gameobject";
 import { MouseState } from "engine/modules/mouse";
 import { colorAdd, colorMult, colorTranslate, colPointRect, Z_DEPTH, WIDTH_SIDEPANEL } from "engine/utilities/math";
 import Vect, { Point } from "engine/utilities/vect";
+import NoDragRect, { NoDragRectParams } from "./nodragrect";
 
 export interface ButtonParams extends GameObjectParams {
     size?: Point;
@@ -27,6 +28,18 @@ export default class Button extends GameObject {
     private size: Vect;
     /** Button z-axis depth */
     private depth: number;
+    /** Full button size including depth */
+    private get fullSize() : Vect {
+        return new Vect(
+            this.size.x + this.depth,
+            this.size.y + this.depth);
+    }
+    /** Top left corner position */
+    private get cpos() : Vect {
+        return new Vect(
+            this.spos.x - this.size.x / 2,
+            this.spos.y - this.size.y / 2);
+    }
 
     /** Button default color */
     private bgColor: string;
@@ -106,6 +119,13 @@ export default class Button extends GameObject {
                 this.images.get(press)?.set(hover, img);
             }
         }
+    
+        // this.engine.mouse.addNoMoveArea(this.parent.pushGO(new NoDragRect({
+        //     ...params, 
+        //     tags: [],
+        //     size : this.fullSize,
+        //     subPosition : this.cpos
+        // } as NoDragRectParams)) as NoDragRect);
     }
 
     /** Initialize this button */
@@ -124,14 +144,13 @@ export default class Button extends GameObject {
         
         // Set hover if the cursor is inside the button area
         this.hover = colPointRect(
-            pos.x,                              // Cursor x-pos
-            pos.y,                              // Cursor y-pos
-            this.spos.x - this.size.x / 2,      // Button x-corner
-            this.spos.y - this.size.y / 2,      // Button y-corner
-            this.size.x + this.depth,           // Button width with depth compensation
-            this.size.y + this.depth            // Button height with depth compensation
-        );
-        
+            pos.x,              // Cursor x-pos
+            pos.y,              // Cursor y-pos
+            this.cpos.x,        // Button x-corner
+            this.cpos.y,        // Button y-corner
+            this.fullSize.x,    // Button width with depth compensation
+            this.fullSize.y);   // Button height with depth compensation
+
         // If mouse cursor is hovering over this button
         if (this.hover) {
 
